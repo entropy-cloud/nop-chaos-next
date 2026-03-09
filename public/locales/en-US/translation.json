@@ -1,0 +1,477 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "confirm": "Confirm",
+    "search": "Search",
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "close": "Close"
+  },
+  "sidebar": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences",
+    "settings": "Settings"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "system": "System Management",
+    "systemUsers": "User Management",
+    "systemRoles": "Role Management",
+    "systemPermissions": "Permission Settings",
+    "analytics": "Data Analytics",
+    "analyticsReports": "Report Center",
+    "analyticsExport": "Data Export",
+    "analyticsOverview": "Statistics Overview",
+    "flow": "Flow Chart",
+    "chart": "Charts",
+    "ai": "AI Integration",
+    "orders": "Order Management",
+    "crud": "CRUD Demo",
+    "layout": "Complex Layout",
+    "pluginDemo": "Plugin Demo",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back! Here's your business overview.",
+    "stats": {
+      "totalUsers": "Total Users",
+      "orders": "Orders",
+      "revenue": "Revenue",
+      "activity": "Activity"
+    },
+    "change": "from last month",
+    "recentOrders": "Recent Orders",
+    "quickAccess": "Quick Access",
+    "statuses": {
+      "completed": "Completed",
+      "processing": "Processing",
+      "pending": "Pending"
+    },
+    "quickLinks": {
+      "flowChart": "Flow Chart",
+      "masterDetail": "Master-Detail",
+      "charts": "Charts",
+      "aiIntegration": "AI Integration"
+    }
+  },
+  "login": {
+    "title": "Login",
+    "description": "Enter your credentials to access the system",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submitButton": "Sign In",
+    "loggingIn": "Signing in...",
+    "success": "Login successful",
+    "error": "Login failed. Please check your credentials",
+    "testHint": "Test account: admin@example.com / admin123"
+  },
+  "orders": {
+    "title": "Order Management",
+    "subtitle": "Supports Tab page details, Drawer creation and more",
+    "newOrder": "New Order",
+    "totalOrders": "Total Orders",
+    "orderList": "Order List (Click row to open detail tab)",
+    "orderDetail": "Order Detail",
+    "table": {
+      "orderNo": "Order No.",
+      "customer": "Customer",
+      "amount": "Amount",
+      "status": "Status",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "drawer": {
+      "title": "New Order",
+      "customerName": "Customer Name",
+      "customerPlaceholder": "Enter customer name",
+      "email": "Email",
+      "emailPlaceholder": "Enter email",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter phone",
+      "status": "Status",
+      "cancel": "Cancel",
+      "submit": "Create Order"
+    },
+    "toast": {
+      "loaded": "Order management page loaded",
+      "loadedDesc": "Supports Tab page details, Drawer creation and more",
+      "created": "Order created successfully",
+      "deleted": "Order deleted",
+      "deletedDesc": "Order has been deleted successfully"
+    },
+    "detail": {
+      "notFound": "Order Not Found",
+      "notFoundDesc": "Order ID not found",
+      "backToList": "Back to Order List",
+      "title": "Order Detail",
+      "subtitle": "Order details information",
+      "basicInfo": "Basic Information",
+      "orderAmount": "Order Amount",
+      "itemsCount": "{{count}} items total",
+      "orderItems": "Order Items",
+      "productName": "Product Name",
+      "quantity": "Quantity",
+      "unitPrice": "Unit Price",
+      "subtotal": "Subtotal"
+    }
+  },
+  "header": {
+    "profile": "Profile",
+    "notificationSettings": "Notification Settings",
+    "logout": "Logout"
+  },
+  "flow": {
+    "nodeProperty": "Node Property",
+    "edgeProperty": "Edge Property",
+    "startNode": "Start",
+    "endNode": "End",
+    "conditionNode": "Condition",
+    "name": "Name",
+    "description": "Description",
+    "icon": "Icon",
+    "color": "Color",
+    "timeout": "Timeout",
+    "timeoutPlaceholder": "No limit",
+    "retryCount": "Retry Count",
+    "asyncExecution": "Async Execution",
+    "deleteNode": "Delete Node",
+    "deleteEdge": "Delete Edge",
+    "label": "Label",
+    "labelPlaceholder": "e.g., Yes/No",
+    "conditionType": "Condition Type",
+    "conditionTypes": {
+      "always": "Always Pass",
+      "expression": "Expression",
+      "script": "Script"
+    },
+    "expression": "Expression",
+    "script": "Script",
+    "expressionPlaceholder": "e.g., result.success === true",
+    "scriptPlaceholder": "e.g., return data.value > 100;",
+    "priority": "Priority",
+    "sourceNode": "Source Node",
+    "targetNode": "Target Node",
+    "lineStyle": "Line Style",
+    "lineStyles": {
+      "solid": "Solid",
+      "dashed": "Dashed",
+      "dotted": "Dotted"
+    },
+    "iconShapes": {
+      "circle": "Circle",
+      "square": "Square",
+      "diamond": "Diamond",
+      "star": "Star",
+      "hexagon": "Hexagon"
+    },
+    "colors": {
+      "green": "Green",
+      "blue": "Blue",
+      "yellow": "Yellow",
+      "red": "Red",
+      "purple": "Purple",
+      "pink": "Pink",
+      "cyan": "Cyan",
+      "orange": "Orange"
+    },
+    "title": "Flow Chart Designer",
+    "subtitle": "Visualize and preview flow editing",
+    "design": "Design",
+    "preview": "Preview",
+    "save": "Save",
+    "load": "Load",
+    "import": "Import",
+    "export": "Export",
+    "undo": "Undo",
+    "redo": "Redo",
+    "copy": "Copy",
+    "paste": "Paste",
+    "reset": "Reset",
+    "toggleGrid": "Grid",
+    "closeGrid": "Close Grid",
+    "openGrid": "Open Grid",
+    "previewMode": "Preview Mode",
+    "previewModeDescription": "Read-only mode to view flow structure",
+    "nodeCount": "Node Count",
+    "edgeCount": "Edge Count",
+    "copyNode": "Node copied",
+    "pasteNode": "Node pasted",
+    "saveSuccess": "Saved successfully",
+    "loadSuccess": "Loaded successfully",
+    "loadFailed": "Load failed",
+    "importSuccess": "Imported successfully",
+    "importFailed": "Import failed",
+    "tooltip": {
+      "copy": "Copy",
+      "settings": "Settings",
+      "delete": "Delete"
+    },
+    "nodePanelTitle": "Node Components",
+    "nodeGroups": {
+      "basic": "Basic Nodes",
+      "flowControl": "Flow Control",
+      "task": "Task Nodes",
+      "dataProcessing": "Data Processing"
+    },
+    "nodeTypes": {
+      "processData": "Process Data",
+      "validate": "Validate",
+      "success": "Success",
+      "fail": "Fail",
+      "yes": "Yes",
+      "no": "No",
+      "parallel": "Parallel",
+      "loop": "Loop",
+      "task": "Task",
+      "script": "Script",
+      "api": "API Call",
+      "email": "Send Email",
+      "transform": "Transform",
+      "filter": "Filter",
+      "merge": "Merge"
+    },
+    "nodeDescriptions": {
+      "start": "Process start node",
+      "end": "Process end node",
+      "condition": "Branch based on condition",
+      "parallel": "Execute multiple branches simultaneously",
+      "loop": "Repeat execution",
+      "task": "Execute task",
+      "script": "Execute script code",
+      "api": "Call external API",
+      "email": "Send email",
+      "transform": "Transform data format",
+      "filter": "Filter data",
+      "merge": "Merge multiple data sources"
+    },
+    "propertyPanel": "Property Panel",
+    "propertyPanelDescription": "Select a node or edge to view and edit properties",
+    "shape": "Shape",
+    "hint": "Hint: Double-click node or edge to open property dialog | Ctrl+Z undo | Ctrl+Shift+Z/Ctrl+Y redo | Ctrl+C copy | Ctrl+V paste | Delete to delete"
+  },
+  "chart": {
+    "title": "Statistical Charts",
+    "subtitle": "Various chart types demonstrated with Recharts",
+    "lineChart": "Line Chart",
+    "barChart": "Bar Chart",
+    "pieChart": "Pie Chart",
+    "areaChart": "Area Chart",
+    "months": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun"
+    },
+    "products": {
+      "productA": "Product A",
+      "productB": "Product B",
+      "productC": "Product C",
+      "productD": "Product D",
+      "productE": "Product E"
+    },
+    "channels": {
+      "directVisit": "Direct Visit",
+      "emailMarketing": "Email Marketing",
+      "affiliateAds": "Affiliate Ads",
+      "videoAds": "Video Ads"
+    }
+  },
+  "crud": {
+    "title": "Master-Detail Table",
+    "subtitle": "CRUD demo with order master and detail tables",
+    "newOrder": "New Order",
+    "editOrder": "Edit Order",
+    "orderList": "Order List",
+    "orderDetail": "Order Details",
+    "customerName": "Customer Name",
+    "customer": "Customer",
+    "orderNo": "Order No.",
+    "amount": "Amount",
+    "status": "Status",
+    "actions": "Actions",
+    "productName": "Product Name",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "subtotal": "Subtotal",
+    "statuses": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "language": {
+    "switchLanguage": "Switch Language"
+  },
+  "theme": {
+    "title": "Theme Settings",
+    "description": "Customize the appearance and color scheme",
+    "displayMode": "Display Mode",
+    "light": "Light",
+    "lightDesc": "Bright and clean",
+    "dark": "Dark",
+    "darkDesc": "Easy on eyes",
+    "system": "System",
+    "systemDesc": "Auto adapt",
+    "colorTheme": "Color Theme",
+    "visualStyle": "Visual Style",
+    "default": "Default",
+    "defaultDesc": "Clean and simple",
+    "glassmorphism": "Glassmorphism",
+    "glassmorphismDesc": "Modern look"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage system configuration and preferences",
+    "personalInfo": {
+      "title": "Personal Information",
+      "description": "Update your personal profile information",
+      "name": "Name",
+      "email": "Email",
+      "saveChanges": "Save Changes"
+    },
+    "systemConfig": {
+      "title": "System Configuration",
+      "description": "Configure system-level settings",
+      "apiUrl": "API URL",
+      "timezone": "Timezone",
+      "saveConfig": "Save Configuration"
+    },
+    "about": {
+      "title": "About System",
+      "description": "System version and tech stack information",
+      "version": "Version",
+      "framework": "Framework",
+      "uiComponents": "UI Components",
+      "stateManagement": "State Management",
+      "dataFetching": "Data Fetching"
+    }
+  },
+  "layoutDemo": {
+    "title": "Complex Layouts",
+    "subtitle": "Demonstrations of various complex layout patterns",
+    "tabs": {
+      "grid": "Grid Layout",
+      "sidebar": "Sidebar Layout",
+      "dashboard": "Dashboard Layout",
+      "form": "Form Layout"
+    },
+    "grid": {
+      "title": "Grid System",
+      "description": "Grid layout using Tailwind CSS"
+    },
+    "sidebar": {
+      "title": "Sidebar Layout",
+      "description": "Classic two-column layout with sidebar",
+      "menu": "Navigation Menu",
+      "mainContent": "Main Content Area",
+      "mainContentDescription": "This is the main content area, where different content can be displayed as needed. The sidebar can be fixed or collapsible.",
+      "items": {
+        "home": "Home",
+        "products": "Products",
+        "orders": "Orders",
+        "users": "Users",
+        "settings": "Settings"
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard Layout",
+      "description": "Grid arrangement of statistical cards",
+      "stats": {
+        "users": "Users",
+        "orders": "Orders",
+        "revenue": "Revenue",
+        "conversionRate": "Conversion Rate"
+      },
+      "trendChart": "Trend Chart",
+      "chartArea": "Chart Area",
+      "recentActivity": "Recent Activity",
+      "activityRecord": "Activity Record {{number}}"
+    },
+    "form": {
+      "title": "Form Layout",
+      "description": "Responsive form layout example",
+      "name": "Name",
+      "namePlaceholder": "Enter name",
+      "email": "Email",
+      "emailPlaceholder": "Enter email",
+      "province": "Province",
+      "provincePlaceholder": "Province",
+      "city": "City",
+      "cityPlaceholder": "City",
+      "district": "District",
+      "districtPlaceholder": "District",
+      "cancel": "Cancel",
+      "submit": "Submit"
+    }
+  },
+  "ai": {
+    "title": "AI Integration",
+    "subtitle": "Chat demo based on Vercel AI SDK",
+    "assistant": "AI Assistant",
+    "inputPlaceholder": "Type a message...",
+    "welcomeMessage": "Hello! I'm an AI assistant. This is a demo environment, feel free to send messages to chat with me.",
+    "responses": {
+      "greeting": "Hello! I'm an AI assistant, happy to help you. What can I do for you?",
+      "intro": "This is an AI integration demo built with Vercel AI SDK. In a real project, you can connect to various AI models like OpenAI, Claude, etc.",
+      "features": "This framework provides the following features:\n1. Flow Chart Editor\n2. Statistical Charts\n3. AI Chat Integration\n4. Master-Detail CRUD\n5. Complex Layout Demo\n6. Multi-tab Management\n7. Theme Switching",
+      "default": "Thank you for your message! This is a demo environment. In a real project, it would connect to a real AI model for responses."
+    }
+  },
+  "dynamicPage": {
+    "pageConfigNotFound": "Page configuration not found",
+    "componentNotRegistered": "Component {{componentName}} not registered",
+    "pluginModuleLoadFailed": "Failed to load plugin module",
+    "loadFailed": "Failed to load",
+    "loading": "Loading..."
+  },
+  "dynamicModule": {
+    "clickToLoad": "Click the button below to load this module",
+    "loadModule": "Load Module",
+    "loading": "Loading module...",
+    "loadFailed": "Load failed",
+    "cannotLoad": "Cannot load module {{moduleName}}",
+    "reloading": "Reloading module...",
+    "retry": "Retry"
+  },
+  "plugin": {
+    "title": "Plugin Demo Module",
+    "subtitle": "Demonstrates loading plugins from external sources",
+    "toast": {
+      "success": "Plugin is working!"
+    },
+    "sharedDeps": {
+      "title": "Shared Dependencies",
+      "description": "This plugin uses shared React, Radix UI components and utilities from the main framework. No duplicate dependencies are bundled."
+    },
+    "systemjs": {
+      "title": "SystemJS Loading",
+      "description": "Plugins are loaded via SystemJS format, automatically resolving and using global dependencies from the main framework.",
+      "testButton": "Test Plugin"
+    },
+    "hotPlugin": {
+      "title": "Hot Swapping",
+      "description": "Plugins can be developed and deployed independently, dynamically loaded by the main framework at runtime without restarting the app."
+    },
+    "basePackages": {
+      "title": "Base Package List"
+    }
+  }
+}
