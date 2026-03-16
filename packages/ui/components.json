@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@nop-chaos/ui/components",
+    "utils": "@nop-chaos/ui/lib/utils",
+    "ui": "@nop-chaos/ui/components/ui",
+    "lib": "@nop-chaos/ui/lib",
+    "hooks": "@nop-chaos/ui/hooks"
+  }
+}

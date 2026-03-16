@@ -1,32 +1,33 @@
-import { defineConfig, devices } from "@playwright/test"
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
-  testDir: "./tests",
+  testDir: './tests/e2e',
+  timeout: 30_000,
+  expect: {
+    timeout: 10_000
+  },
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
+  forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+  reporter: 'html',
   use: {
-    baseURL: "http://localhost:5173",
-    trace: "on-first-retry",
-    screenshot: "only-on-failure",
-    locale: "zh-CN",
-    timezoneId: "Asia/Shanghai",
+    baseURL: 'http://127.0.0.1:4175',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure'
   },
   projects: [
     {
-      name: "chromium",
+      name: 'chromium',
       use: {
-        ...devices["Desktop Chrome"],
-        actionTimeout: 10000,
-      },
-    },
+        ...devices['Desktop Chrome']
+      }
+    }
   ],
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:5173",
+    command: 'pnpm build && pnpm --filter @nop-chaos/main exec vite preview --host 127.0.0.1 --port 4175 --strictPort',
+    url: 'http://127.0.0.1:4175',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+    timeout: 180_000
+  }
 })

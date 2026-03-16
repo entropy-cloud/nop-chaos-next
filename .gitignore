@@ -1,55 +1,8 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# Dependencies
-node_modules
-
-# Build output
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Test files
-test-results
-playwright-report
-playwright/.cache
-*.tsbuildinfo
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Temporary files
-*.tmp
-*.temp
-
-*.js
-!postcss.config.js
-!tailwind.config.js
-!eslint.config.js
-!vite.config.js
-!vitest.config.js
-!public/mockServiceWorker.js
-
-# Test plugins (generated)
-public/test-plugin*.js
-public/debug-plugin.js
-public/plugin-demo.system.js
+node_modules/
+dist/
+.vite/
+.turbo/
+coverage/
+playwright-report/
+test-results/
+pnpm-lock.yaml

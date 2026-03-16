@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@nop-chaos/shared": ["packages/shared/src/index.ts"],
+      "@nop-chaos/shared/*": ["packages/shared/src/*"],
+      "@nop-chaos/amis-core": ["packages/amis-core/src/index.ts"],
+      "@nop-chaos/amis-core/*": ["packages/amis-core/src/*"],
+      "@nop-chaos/amis-react": ["packages/amis-react/src/index.ts"],
+      "@nop-chaos/amis-react/*": ["packages/amis-react/src/*"],
+      "@nop-chaos/plugin-bridge": ["packages/plugin-bridge/src/index.ts"],
+      "@nop-chaos/plugin-bridge/*": ["packages/plugin-bridge/src/*"],
+      "@nop-chaos/core": ["packages/core/src/index.ts"],
+      "@nop-chaos/core/*": ["packages/core/src/*"],
+      "@nop-chaos/ui": ["packages/ui/src/index.ts"],
+      "@nop-chaos/ui/*": ["packages/ui/src/*"]
+    }
+  }
+}

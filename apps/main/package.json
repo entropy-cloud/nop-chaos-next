@@ -1,0 +1,37 @@
+{
+  "name": "@nop-chaos/main",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "prebuild": "pnpm --filter @nop-chaos/plugin-demo build",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@nop-chaos/amis-core": "workspace:*",
+    "@nop-chaos/amis-react": "workspace:*",
+    "@nop-chaos/core": "workspace:*",
+    "@nop-chaos/plugin-bridge": "workspace:*",
+    "@nop-chaos/shared": "workspace:*",
+    "@nop-chaos/ui": "workspace:*",
+    "@tanstack/react-query": "^5.90.21",
+    "@xyflow/react": "^12.10.1",
+    "amis": "^6.12.0",
+    "i18next": "^25.8.14",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^3.0.2",
+    "lucide-react": "^0.577.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-i18next": "^16.5.6",
+    "react-router-dom": "^7.13.1",
+    "recharts": "^2.12.0",
+    "sonner": "^2.0.7",
+    "zustand": "^5.0.11"
+  }
+}

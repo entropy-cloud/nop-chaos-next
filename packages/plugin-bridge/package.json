@@ -1,0 +1,21 @@
+{
+  "name": "@nop-chaos/plugin-bridge",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@nop-chaos/shared": "workspace:*",
+    "i18next": "^25.8.14",
+    "react": "^19.2.0",
+    "sonner": "^2.0.7",
+    "zustand": "^5.0.11"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run --passWithNoTests"
+  }
+}
