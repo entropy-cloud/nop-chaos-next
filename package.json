@@ -52,10 +52,5 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "zustand": "^5.0.11"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "uncontrollable@7.2.1": "patches/uncontrollable@7.2.1.patch"
-    }
   }
 }
