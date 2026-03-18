@@ -1,177 +1,183 @@
-# Mock 数据要求
+# Mock 数据说明
 
-> 本文档描述开发环境中 Mock 数据的要求和控制方式。
-
----
-
-## 1. 必须 Mock 的数据
-
-### 1.1 数据类型列表
-
-| 数据类型 | 说明 | 关联模块 |
-|---------|------|----------|
-| 仪表盘指标和图表数据 | 支持时间范围过滤 | Dashboard |
-| 流程列表与流程详情 | 完整的流程结构 | Flow Editor |
-| 插件列表与状态 | 至少一个 demo 插件 | Plugins |
-| AI 助手的回复文本 | 支持流式输出 | AI Workbench |
-| 菜单配置数据 | 符合 `MenuItem` 结构 | Navigation |
-| 用户信息 | 符合 `User` 结构 | Auth |
-| 主子表数据 | 主表 + 多个子表 | Master-Detail |
+> 本文档描述当前仓库里的 mock 运行方式、数据入口和适用范围。当前实现以 `apps/main/src/services/mockApi/*` 为主，不使用 MSW 作为主链路。
 
 ---
 
-## 2. Mock 控制方式
+## 1. 当前结论
 
-### 2.1 环境变量
+- 主应用通过环境变量 `VITE_ENABLE_MOCK` 控制 mock 开关
+- 推荐使用 `pnpm dev:mock` 启动主应用 mock 模式
+- 当前 mock 数据主入口是 `apps/main/src/services/mockApi.ts`
+- 具体数据按领域拆分在 `apps/main/src/services/mockApi/*`
+- mock 既覆盖认证、菜单、amis provider 回退，也覆盖演示页面数据
 
-```bash
-VITE_ENABLE_MOCK=true  # 启用 Mock
-VITE_ENABLE_MOCK=false # 禁用 Mock
-```
+---
 
-主应用已提供专用启动命令：
+## 2. 启动方式
+
+### 2.1 推荐命令
 
 ```bash
 pnpm dev:mock
 ```
 
-该命令会启动 `@nop-chaos/main` 的 `mock` mode，并加载 `apps/main/.env.mock`。
+对应主应用脚本位置：`apps/main/package.json`
 
-### 2.2 默认行为
+该命令实际执行：
 
-| 环境 | 默认状态 |
-|------|----------|
-| `pnpm dev` / `pnpm dev:main` | 读取本地 env，按当前配置运行 |
-| `pnpm dev:mock` | 强制启用 Mock |
-| 生产构建 | 默认禁用 Mock，除非显式注入 env |
+```bash
+vite --mode mock
+```
 
-### 2.3 当前主应用覆盖范围
+### 2.2 环境变量
 
-- `VITE_ENABLE_MOCK=true` 时，登录、当前用户、登出不访问后台 HTTP
-- 菜单、amis page provider、amis dict provider 会走 mock 分支
-- dashboard、flow editor、master-detail、plugin management、ai workbench 等演示页继续使用本地 mock 数据
-- 仍会读取前端静态资源，如 `/data/menu-config.json` 或本地 schema 文件；这属于前端资源加载，不是访问后台业务接口
+```env
+VITE_ENABLE_MOCK=true
+```
 
----
+默认约定：
 
-## 3. Mock 数据场景覆盖
-
-### 3.1 场景要求
-
-Mock 数据需要足够丰富，支持各种场景：
-
-| 场景 | 说明 |
+| 场景 | 行为 |
 |------|------|
-| 正常数据 | 标准的、完整的数据 |
-| 空数据 | 空列表、空状态 |
-| 错误数据 | 模拟接口错误 |
-| 大量数据 | 用于测试性能和分页 |
-| 边界数据 | 极端值、特殊字符 |
+| `pnpm dev` / `pnpm dev:main` | 按当前本地 env 运行 |
+| `pnpm dev:mock` | 进入 mock 模式 |
+| 生产构建 | 默认不应启用 mock，除非显式注入 env |
 
 ---
 
-## 4. Mock 实现方式
+## 3. 当前 mock 覆盖范围
 
-### 4.1 推荐工具
+### 3.1 认证
 
-- Mock Service Worker (MSW)
+相关文件：
 
-### 4.2 文件结构
+- `apps/main/src/services/authApi.ts`
+- `apps/main/src/services/mockApi/auth.ts`
 
-```
-apps/main/src/
-├── mocks/
-│   ├── handlers/
-│   │   ├── dashboard.ts
-│   │   ├── flow.ts
-│   │   ├── plugins.ts
-│   │   ├── ai.ts
-│   │   ├── menu.ts
-│   │   ├── auth.ts
-│   │   └── master-detail.ts
-│   ├── data/
-│   │   ├── dashboard.ts
-│   │   ├── flows.ts
-│   │   ├── plugins.ts
-│   │   └── ...
-│   └── browser.ts
-```
+开启 mock 时：
+
+- 登录走 `mockLoginWithPassword(...)`
+- 当前用户信息走 `fetchMockCurrentUser(...)`
+- 登出走 `mockLogoutRequest()`
+
+### 3.2 菜单
+
+相关文件：
+
+- `apps/main/src/services/menuApi.ts`
+- `apps/main/src/services/mockApi/menu.ts`
+
+开启 mock 时：
+
+- 菜单由本地 mock 数据返回
+- 返回结果仍会继续经过系统内置菜单合并逻辑
+
+### 3.3 amis page / dict 回退
+
+相关文件：
+
+- `apps/main/src/amis/providers.ts`
+
+当前行为：
+
+- `mock://preview` 固定返回内置测试 schema
+- dict provider 在 mock 模式下返回空数组结构，作为低风险回退
+- 真实 page provider / dict provider 联调时，应关闭 mock
+
+### 3.4 演示页面数据
+
+当前 mock 聚合入口：`apps/main/src/services/mockApi.ts`
+
+已包含：
+
+- `mockApi/dashboard.ts`
+- `mockApi/flow.ts`
+- `mockApi/orders.ts`
+- `mockApi/plugins.ts`
+- `mockApi/aiWorkbench.ts`
+
+这些数据主要服务于：
+
+- Dashboard
+- Flow Editor
+- Master-Detail
+- Plugins Management
+- AI Workbench
 
 ---
 
-## 5. 各模块 Mock 数据示例
+## 4. 当前目录结构
 
-### 5.1 仪表盘数据
-
-```typescript
-// mocks/data/dashboard.ts
-export const dashboardMetrics = {
-  todayRequests: { value: 12580, trend: '+12.5%', up: true },
-  successRate: { value: '99.2%', trend: '+0.3%', up: true },
-  avgResponseTime: { value: '45ms', trend: '-5ms', up: false },
-  activeSessions: { value: 342, trend: '+28', up: true }
-};
-
-export const trendData = [
-  { date: '2024-01-01', requests: 8500, success: 8400, error: 100 },
-  // ... 7天数据
-];
+```text
+apps/main/src/services/
+  mockApi.ts
+  mockApi/
+    aiWorkbench.ts
+    auth.ts
+    dashboard.ts
+    flow.ts
+    menu.ts
+    orders.ts
+    plugins.ts
+    shared.ts
+    types.ts
 ```
 
-### 5.2 流程数据
+说明：
 
-```typescript
-// mocks/data/flows.ts
-export const flows = [
-  {
-    id: 'flow-1',
-    name: '用户注册流程',
-    description: '新用户注册验证流程',
-    status: 'enabled',
-    nodes: [...],
-    edges: [...],
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-20T14:30:00Z'
-  },
-  // ... 更多流程
-];
-```
+- `mockApi.ts` 是统一导出入口
+- `mockApi/shared.ts` 提供 wait、本地存储读写等通用辅助方法
+- `mockApi/types.ts` 放 mock 相关类型
+- 每个领域模块维护自己的 seed 数据和读取逻辑
 
-### 5.3 AI 回复（流式）
+---
 
-```typescript
-// mocks/handlers/ai.ts
-// 使用定时器模拟流式输出
-const simulateStreamOutput = async (message: string, onChunk: (chunk: string) => void) => {
-  const words = message.split(' ');
-  for (const word of words) {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    onChunk(word + ' ');
-  }
-};
-```
+## 5. 数据组织约定
 
-### 5.4 主子表数据
+### 5.1 建议遵循的规则
 
-```typescript
-// mocks/data/master-detail.ts
-export const orders = [
-  {
-    id: 'order-1',
-    orderNo: 'ORD-2024-001',
-    customerName: '张三',
-    status: 'completed',
-    items: [
-      { id: 'item-1', productName: '商品A', quantity: 2, unitPrice: 100 },
-      { id: 'item-2', productName: '商品B', quantity: 1, unitPrice: 200 },
-    ],
-    addresses: [
-      { id: 'addr-1', receiverName: '张三', phone: '13800138000', province: '北京', city: '北京', address: 'xxx街道', isDefault: true },
-    ],
-    logistics: [
-      { id: 'log-1', company: '顺丰', trackingNo: 'SF123456', status: '已签收', estimatedDelivery: '2024-01-18' },
-    ]
-  },
-  // ... 更多订单
-];
-```
+- 每个业务域单独一个 mock 文件
+- 能复用共享类型时，优先复用 `@nop-chaos/shared`
+- 允许使用 `localStorage` 做轻量持久化，便于页面刷新后保留演示状态
+- 模拟异步时统一使用共享的延迟方法，避免页面交互表现过于“瞬时”
+
+### 5.2 当前已有示例
+
+例如插件数据：`apps/main/src/services/mockApi/plugins.ts`
+
+当前实现包含：
+
+- `seedPluginManifests`
+- `getPluginSeeds()`
+- `persistPluginSeeds(...)`
+- `fetchPluginList()`
+
+这种模式适合继续扩展到其他演示数据。
+
+---
+
+## 6. 适用边界
+
+mock 适合用于：
+
+- UI 演示
+- 页面联调前的结构验证
+- 本地开发时避免依赖真实后端
+- 演示复杂交互状态，例如插件启停、流程编辑、AI 会话等
+
+mock 不适合用于：
+
+- 验证真实接口字段结构
+- 验证真实鉴权与会话恢复链路
+- 验证真实 amis schema / dict / action 协议兼容性
+
+这些场景应参考：`docs/16-nop-chaos-integration-checklist.md`
+
+---
+
+## 7. 后续维护建议
+
+- 新增演示页面时，优先在 `apps/main/src/services/mockApi/` 下补领域文件
+- 不要把未采用的 MSW 目录结构写成当前事实
+- 如果未来真的切换到 MSW，应新建文档说明迁移，而不是继续沿用本文
