@@ -77,10 +77,10 @@ import 'amis/lib/themes/cxd.css'
 
 ## 5. 当前处理方式
 
-当前仓库已采用最小修复方案：
+当前仓库的处理方式：
 
 - 保留 `amis/lib/themes/cxd.css`
-- 去掉 `amis/lib/helper.css`
+- 从未引入 `amis/lib/helper.css`（避免与 Tailwind 工具类冲突）
 
 当前文件：`apps/main/src/amis/init.ts`
 

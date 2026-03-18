@@ -55,14 +55,14 @@
 ### 产物要求
 
 - 默认导出 React 组件
-- 输出格式为 `system`
+- 输出格式为 `system`（通过 Rollup 构建）
 - 共享依赖通过 external 排除
 
-### 叺考实现
+### 参考实现
 
-- `apps/plugin-demo/package.json`
-- `apps/plugin-demo/vite.config.ts`
-- `apps/main/src/plugins/sharedModules.ts`
+- `apps/plugin-demo/package.json` — 查看 build 脚本
+- `apps/plugin-demo/scripts/build-with-rollup.mjs` — Rollup 构建配置
+- `apps/main/src/plugins/sharedModules.ts` — 共享模块注册
 
 ---
 
@@ -87,11 +87,25 @@ apps/plugin-demo/
 ```json
 {
   "peerDependencies": {
+    "@nop-chaos/plugin-bridge": "workspace:*",
+    "@nop-chaos/shared": "workspace:*",
+    "@nop-chaos/ui": "workspace:*",
+    "@tanstack/react-query": "^5",
+    "i18next": "^25",
+    "react-i18next": "^16",
+    "react-router-dom": "^7",
+    "recharts": "^2",
+    "sonner": "^2",
+    "zustand": "^5"
+  },
+  "devDependencies": {
     "react": "^18",
-    "@nop-chaos/plugin-bridge": "workspace:*"
+    "react-dom": "^18"
   }
 }
 ```
+
+> 注意：`react` 和 `react-dom` 放在 devDependencies 中用于本地开发，运行时由宿主提供。
 
 ---
 
@@ -99,7 +113,7 @@ apps/plugin-demo/
 
 - 直接 import `@nop-chaos/core` 获取运行时能力
 - 在插件里复制 React、i18n 或 UI 运行时
-- 过度依赖整包 `usePluginBridge()`
+- 过度依赖整包 `usePluginBridge()`（推荐使用细粒度 hooks）
 
 ---
 

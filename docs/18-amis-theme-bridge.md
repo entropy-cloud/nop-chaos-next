@@ -50,7 +50,7 @@ AMIS 默认使用 FontAwesome 字体图标，需要安装：
 pnpm --filter @nop-chaos/main add @fortawesome/fontawesome-free
 ```
 
-导入位置：`apps/main/src/main.tsx`
+加载位置：`apps/main/src/main.tsx`
 
 ```ts
 import '@fortawesome/fontawesome-free/css/all.min.css'
@@ -62,7 +62,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 
 | 文件 | 用途 |
 |------|------|
-| `apps/main/src/main.tsx` | 加载 Font Awesome CSS |
+| `apps/main/index.html` | 通过 script 标签加载 Font Awesome CSS |
 | `apps/main/src/styles/amis-theme-bridge.css` | CSS 变量映射 |
 | `apps/main/src/styles/amis-fix.css` | 组件级样式修复 |
 | `packages/amis-core/src/page/transform.ts` | Schema 转换，注入类名 |

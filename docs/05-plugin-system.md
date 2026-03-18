@@ -47,7 +47,7 @@ Mock 数据： `apps/main/src/services/mockApi/plugins.ts`
 ## 4. 数据来源
 
 - 查询：`fetchPluginList()` (`apps/main/src/services/mockApi/plugins.ts`)
-- 状态管理：`usePluginStore()` (packages/plugin-bridge 或 apps/main/src/store)
+- 状态管理：`usePluginStore()` (`apps/main/src/store/pluginStore.ts`)
 
 ---
 

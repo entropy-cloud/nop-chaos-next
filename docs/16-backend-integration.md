@@ -31,27 +31,30 @@ pnpm dev
 
 ### 认证接口
 
-| 文件 | API |
-|------|-----|
-| `apps/main/src/services/authApi.ts` | `LoginApi__login` / `LoginApi__getLoginUserInfo` / `LoginApi__logout` |
+| 文件 | 导出函数 | 后端端点 |
+|------|----------|----------|
+| `apps/main/src/services/authApi.ts` | `loginWithPassword` | `/r/LoginApi__login` |
+| `apps/main/src/services/authApi.ts` | `fetchCurrentUser` | `@query:LoginApi__getLoginUserInfo` |
+| `apps/main/src/services/authApi.ts` | `logoutRequest` | `@mutation:LoginApi__logout` |
 
 ### 菜单接口
 
-| 文件 | API |
-|------|-----|
-| `apps/main/src/services/menuApi.ts` | `SiteMapApi__getSiteMap` |
+| 文件 | 导出函数 | 后端端点 |
+|------|----------|----------|
+| `apps/main/src/services/menuApi.ts` | `fetchMenuConfig` | `/r/SiteMapApi__getSiteMap` |
 
 ### AMIS 接口
 
-| 文件 | API |
-|------|-----|
-| `apps/main/src/amis/providers.ts` | `PageProvider__getPage` / `DictProvider__getDict` |
+| 文件 | 导出对象 | 方法 |
+|------|----------|------|
+| `apps/main/src/amis/providers.ts` | `mainAmisPageProvider` | `.getPage(schemaPath)` |
+| `apps/main/src/amis/providers.ts` | `mainAmisDictProvider` | `.getDict(dictName, options)` |
 
 ### HTTP 客户端
 
 | 文件 | 说明 |
 |------|------|
-| `apps/main/src/services/http.ts` | 基于 `@nop-chaos/shared` 的 HTTP 客户端 |
+| `apps/main/src/services/http.ts` | 基于 `@nop-chaos/shared` 的 HTTP 客户端，导出 `mainHttpClient`、`ajaxFetch`、`ajaxQuery` |
 
 ---
 

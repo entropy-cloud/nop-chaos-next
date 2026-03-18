@@ -51,6 +51,10 @@ interface ShellContribution {
   
   // 初始化钩子
   setup?: (context: ContributionSetupContext) => void | Promise<void>
+
+  
+  // 环境变量
+  env?: Record<string, string>
 }
 ```
 
