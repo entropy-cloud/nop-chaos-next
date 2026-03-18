@@ -4,6 +4,19 @@ import * as React from "react"
 
 import { cn } from "@nop-chaos/ui/lib/utils"
 
+const tableRowClassNames = {
+  default:
+    "border-b transition-colors duration-200 hover:bg-[color-mix(in_hsl,hsl(var(--primary))_6%,transparent)] data-[state=selected]:bg-[color-mix(in_hsl,hsl(var(--primary))_10%,transparent)]",
+  interactive:
+    "cursor-pointer hover:bg-[linear-gradient(90deg,color-mix(in_hsl,hsl(var(--primary))_9%,transparent),transparent)] data-[state=selected]:bg-[color-mix(in_hsl,hsl(var(--primary))_12%,transparent)]",
+  subtle:
+    "hover:bg-white/45 dark:hover:bg-slate-900/45"
+} as const
+
+function getTableRowClassName(variant: keyof typeof tableRowClassNames = 'default') {
+  return tableRowClassNames[variant]
+}
+
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
@@ -56,10 +69,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-row"
-      className={cn(
-        "border-b transition-colors duration-200 hover:bg-[color-mix(in_hsl,hsl(var(--primary))_6%,transparent)] data-[state=selected]:bg-[color-mix(in_hsl,hsl(var(--primary))_10%,transparent)]",
-        className
-      )}
+      className={cn(getTableRowClassName(), className)}
       {...props}
     />
   )
@@ -113,4 +123,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  getTableRowClassName,
 }

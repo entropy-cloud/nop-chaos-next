@@ -35,9 +35,64 @@ export const testAmisSchema = {
       ]
     },
     {
+      'xui:component': 'host.page-section',
+      title: 'xui:component validation',
+      description: 'This block is transformed by the host xui component registry before amis renders the final schema.',
+      body: {
+        type: 'grid',
+        columns: [
+          {
+            md: 6,
+            body: {
+              type: 'tpl',
+              tpl: '<ul><li>xui:component resolved</li><li>host transform applied</li><li>children continue through schema processing</li></ul>'
+            }
+          },
+          {
+            md: 6,
+            body: {
+              type: 'alert',
+              level: 'info',
+              body: 'Use this section to verify the React host can register Nop-style schema transforms.'
+            }
+          }
+        ]
+      }
+    },
+    {
       type: 'tpl',
-      className: 'text-muted',
+      className: 'text-[hsl(var(--muted-foreground))]',
       tpl: 'This page is intentionally static and is used only to verify the first integration milestone.'
+    },
+    {
+      'xui:import': '/mock/preview.lib.js',
+      type: 'panel',
+      title: 'xui:import and action scope validation',
+      body: [
+        {
+          type: 'tpl',
+          tpl: '<ul><li>@action resolves imported module functions</li><li>Imported modules can call host actions</li><li>@fn keeps the original source for schema serialization</li></ul>'
+        },
+        {
+          type: 'button-toolbar',
+          buttons: [
+            {
+              type: 'button',
+              label: 'Run imported @action',
+              level: 'primary',
+              actionType: 'ajax',
+              api: '@action:preview.toast'
+            },
+            {
+              type: 'button',
+              label: 'Imported navigation action',
+              level: 'default',
+              actionType: 'ajax',
+              api: '@action:preview.navigatePlugins'
+            }
+          ]
+        }
+      ]
     },
     {
       type: 'button-group',

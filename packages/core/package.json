@@ -10,12 +10,13 @@
     "@nop-chaos/ui": "workspace:*",
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",
-    "react": "^19.2.0",
+    "react": "^18.3.1",
     "react-router-dom": "^7.13.1",
     "systemjs": "^6.15.1"
   },
   "peerDependencies": {
-    "react-dom": "^19.2.0"
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.0.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",

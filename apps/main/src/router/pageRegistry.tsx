@@ -1,11 +1,11 @@
 import { lazy } from 'react'
-import type { ComponentType, LazyExoticComponent } from 'react'
+import type { ContributionBuiltinPageComponent } from '@nop-chaos/shared'
 import LoginPage from '../pages/auth/login'
 import ForbiddenPage from '../pages/errors/403'
 import NotFoundPage from '../pages/errors/404'
 import ServerErrorPage from '../pages/errors/500'
 
-type BuiltinPage = ComponentType | LazyExoticComponent<ComponentType>
+type BuiltinPage = ContributionBuiltinPageComponent
 
 const AIWorkbenchPage = lazy(() => import('../pages/ai-workbench'))
 const DashboardPage = lazy(() => import('../pages/dashboard'))
@@ -41,8 +41,20 @@ export const builtinPageRegistry: Record<string, BuiltinPage> = {
   'settings-theme': SettingsThemePage
 }
 
+const contributedBuiltinPageRegistry: Record<string, BuiltinPage> = {}
+
+export function registerBuiltinPages(pages: Array<{ componentId: string; component: BuiltinPage }>) {
+  for (const page of pages) {
+    contributedBuiltinPageRegistry[page.componentId] = page.component
+  }
+}
+
 export function getBuiltinPage(componentId?: string): BuiltinPage | undefined {
-  return componentId ? builtinPageRegistry[componentId] : undefined
+  if (!componentId) {
+    return undefined
+  }
+
+  return contributedBuiltinPageRegistry[componentId] ?? builtinPageRegistry[componentId]
 }
 
 export { ForbiddenPage, LoginPage, NotFoundPage, ServerErrorPage }

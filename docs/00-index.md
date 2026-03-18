@@ -16,7 +16,14 @@
 | [06-layout-settings.md](./06-layout-settings.md) | 布局设置详细设计 | 侧边栏宽度配置、标签页导航、交互细节 |
 | [07-mock-data.md](./07-mock-data.md) | Mock 数据要求 | 数据类型、控制方式 |
 | [08-plugin-dev-guide.md](./08-plugin-dev-guide.md) | 插件开发规范 | 依赖边界、bridge 设计、开发态联调、SystemJS 构建 |
+| [09-style-interaction-guidelines.md](./09-style-interaction-guidelines.md) | 整体样式与交互规则 | hover、pointer、侧栏收起态、移动端 top bar、表格行约定、第三方样式边界 |
 | [11-amis-react-implementation-plan.md](./11-amis-react-implementation-plan.md) | Amis React 落地方案 | 包结构、接口设计、路由模型、Phase 1 文件清单与测试建议 |
+| [12-amis-helper-css-conflict.md](./12-amis-helper-css-conflict.md) | amis 样式冲突说明 | `helper.css` 与 Tailwind CSS 4 的全局工具类冲突、排查过程与处理建议 |
+| [13-nop-chaos-migration-analysis.md](./13-nop-chaos-migration-analysis.md) | 旧版迁移分析 | 旧仓库 amis、登录、菜单、动态路由与 Nop 协议能力盘点，及新框架差异与迁移优先级 |
+| [14-nop-chaos-migration-execution-plan.md](./14-nop-chaos-migration-execution-plan.md) | 迁移执行清单 | 按阶段列出认证、菜单、amis provider、Nop 扩展与稳定性加固的文件级改造计划 |
+| [15-shell-contribution-esm-design.md](./15-shell-contribution-esm-design.md) | Shell Contribution ESM 加载设计 | 宿主通过 `loadContributions()` 加载外部 ESM 贡献包，扩展 theme、i18n、plugin、menu 与运行时配置 |
+| [16-nop-chaos-integration-checklist.md](./16-nop-chaos-integration-checklist.md) | 真实后端联调清单 | 环境变量、mock/真实切换、auth/menu/amis 验证顺序、常见问题与当前已知限制 |
+| [17-icon-naming-and-rendering.md](./17-icon-naming-and-rendering.md) | Icon 命名与渲染约定 | `AppIconName` 命名规范、`LowCodeIcon`/`renderIcon()` 通用渲染链路、菜单与插件场景的当前实现与不一致点 |
 
 ---
 

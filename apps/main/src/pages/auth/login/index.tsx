@@ -5,27 +5,34 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, toast } from '@nop-chaos/ui'
 import { AppBrand } from '../../../components/layout/AppBrand'
-import { languageOptions } from '../../../config/i18n/languages'
+import { isMockEnabled } from '../../../config/env'
+import { getLanguageOptions } from '../../../config/i18n/languages'
 import { useAuth } from '../../../hooks/useAuth'
-import { loginRequest } from '../../../services/mockApi'
+import { useMenuConfigQuery } from '../../../hooks/useMenuConfig'
+import { loginWithPassword } from '../../../services/authApi'
 
 export default function LoginPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const { login } = useAuth()
-  const [username, setUsername] = useState('admin')
-  const [password, setPassword] = useState('123456')
+  const languageOptions = getLanguageOptions()
+  const mockMode = isMockEnabled()
+  const [username, setUsername] = useState(mockMode ? 'nop' : '')
+  const [password, setPassword] = useState(mockMode ? '123' : '')
   const [submitting, setSubmitting] = useState(false)
+  const menuQuery = useMenuConfigQuery(false)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     try {
       setSubmitting(true)
-      const payload = await loginRequest(username, password)
+      const payload = await loginWithPassword(username, password)
       login(payload)
+      const menuResponse = await menuQuery.refetch()
+      const homePath = menuResponse.data?.home ?? '/'
       toast.success(t('auth.loginSuccess'))
-      navigate('/dashboard', { replace: true })
+      navigate(homePath, { replace: true })
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('auth.loginFailed'))
     } finally {
@@ -100,9 +107,11 @@ export default function LoginPage() {
                 {submitting ? t('common.loading') : t('auth.login')}
                 <ArrowRight className="size-4" />
               </Button>
-              <div className="rounded-2xl border border-dashed border-[hsl(var(--border))] bg-[color-mix(in_hsl,hsl(var(--primary))_6%,transparent)] px-4 py-3 text-sm text-muted-foreground">
-                {t('login.demoHint')}
-              </div>
+              {mockMode ? (
+                <div className="rounded-2xl border border-dashed border-[hsl(var(--border))] bg-[color-mix(in_hsl,hsl(var(--primary))_6%,transparent)] px-4 py-3 text-sm text-muted-foreground">
+                  {t('login.demoHint')}
+                </div>
+              ) : null}
             </form>
           </CardContent>
         </Card>

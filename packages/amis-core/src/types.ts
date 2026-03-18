@@ -1,7 +1,8 @@
-import type { ThemeConfig, User } from '@nop-chaos/shared'
+import type { HttpRequestOptions, HttpResponse, ThemeConfig, User } from '@nop-chaos/shared'
 import type { i18n } from 'i18next'
 
 export type AmisToastType = 'info' | 'success' | 'error' | 'warning'
+export type AmisAction = (...args: unknown[]) => unknown
 
 export interface AmisRequestOptions {
   method?: string
@@ -9,9 +10,19 @@ export interface AmisRequestOptions {
   query?: Record<string, unknown>
   data?: unknown
   headers?: Record<string, string>
-  responseType?: 'json' | 'blob'
+  responseType?: 'json' | 'blob' | 'text'
   silent?: boolean
   rawResponse?: boolean
+  useAlert?: boolean
+  responseKey?: string
+  withToken?: boolean
+  useApiUrl?: boolean
+  gqlSelection?: string
+  delimiter?: string
+  valueField?: string
+  labelField?: string
+  filter?: Record<string, unknown>
+  cancelExecutor?: (cancel: () => void) => void
   _page?: AmisPageObject
 }
 
@@ -19,6 +30,10 @@ export interface AmisFetcherResult<T = unknown> {
   status: number
   data: T
   headers?: Record<string, string>
+}
+
+export function isAmisFetcherResult(value: unknown): value is AmisFetcherResult {
+  return typeof value === 'object' && value !== null && 'status' in value && 'data' in value
 }
 
 export interface AmisPageProvider {
@@ -32,8 +47,8 @@ export interface AmisDictProvider {
 export interface AmisPageObject {
   id: string
   schemaPath?: string
-  registerAction: (name: string, action: Function) => void
-  getAction: (name: string) => Function | undefined
+  registerAction: (name: string, action: AmisAction) => void
+  getAction: (name: string) => AmisAction | undefined
   resetActions: () => void
   getComponent: (name: string) => unknown
   getScopedStore: (name: string) => unknown
@@ -60,8 +75,9 @@ export interface AmisRuntimeAdapter {
   dictProvider: AmisDictProvider
   processRequest?: (request: AmisRequestOptions) => AmisRequestOptions
   processResponse?: <T>(response: Promise<T>) => Promise<T>
-  resolveAction?: (name: string, page: AmisPageObject) => Function | undefined
-  compileFunction?: (code: string, page: AmisPageObject) => Function
+  request?: <T>(request: HttpRequestOptions) => Promise<HttpResponse<T>>
+  resolveAction?: (name: string, page: AmisPageObject) => AmisAction | undefined
+  compileFunction?: (code: string, page: AmisPageObject) => AmisAction
 }
 
 export type AmisSchemaRecord = Record<string, unknown>

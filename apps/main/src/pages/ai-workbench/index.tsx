@@ -1,177 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Bot, Copy, MessageSquarePlus, Pencil, Search, Sparkles, Square, Trash2, Wand2 } from 'lucide-react'
+import { MessageSquarePlus } from 'lucide-react'
 import {
-  Badge,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Input,
-  ScrollArea,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Switch,
-  Textarea,
   toast
 } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import { PageHeader } from '../../components/common/PageHeader'
 import { assistantCatalog, createMockAiReply, seedWorkbenchSessions, type AssistantOption, type WorkbenchMessage, type WorkbenchSession } from '../../services/mockApi'
+import { ContextPanel } from './components/ContextPanel'
+import { ConversationPanel } from './components/ConversationPanel'
+import { SessionSidebar } from './components/SessionSidebar'
+import { aiWorkbenchTestUtils } from './markdown'
+import { buildHistoricalMessages, getAssistantName } from './utils'
 
-type MarkdownBlock =
-  | { type: 'paragraph'; text: string }
-  | { type: 'list'; ordered: boolean; items: string[] }
-  | { type: 'code'; code: string }
-
-function renderInlineMarkdown(text: string) {
-  const segments = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean)
-  return segments.map((segment, index) => {
-    if (segment.startsWith('**') && segment.endsWith('**')) {
-      return <strong key={`${segment}-${index}`} className="font-semibold text-foreground">{segment.slice(2, -2)}</strong>
-    }
-
-    return <span key={`${segment}-${index}`}>{segment}</span>
-  })
-}
-
-function parseMarkdownBlocks(content: string): MarkdownBlock[] {
-  const lines = content.replace(/\r\n/g, '\n').split('\n')
-  const blocks: MarkdownBlock[] = []
-  let index = 0
-
-  while (index < lines.length) {
-    const line = lines[index]
-    const trimmed = line.trim()
-
-    if (!trimmed) {
-      index += 1
-      continue
-    }
-
-    if (trimmed.startsWith('```')) {
-      const codeLines: string[] = []
-      index += 1
-      while (index < lines.length && !lines[index].trim().startsWith('```')) {
-        codeLines.push(lines[index])
-        index += 1
-      }
-      blocks.push({ type: 'code', code: codeLines.join('\n') })
-      index += 1
-      continue
-    }
-
-    if (/^-\s+/.test(trimmed)) {
-      const items: string[] = []
-      while (index < lines.length && /^-\s+/.test(lines[index].trim())) {
-        items.push(lines[index].trim().replace(/^-\s+/, ''))
-        index += 1
-      }
-      blocks.push({ type: 'list', ordered: false, items })
-      continue
-    }
-
-    if (/^\d+\.\s+/.test(trimmed)) {
-      const items: string[] = []
-      while (index < lines.length && /^\d+\.\s+/.test(lines[index].trim())) {
-        items.push(lines[index].trim().replace(/^\d+\.\s+/, ''))
-        index += 1
-      }
-      blocks.push({ type: 'list', ordered: true, items })
-      continue
-    }
-
-    const paragraphLines: string[] = []
-    while (index < lines.length) {
-      const current = lines[index].trim()
-      if (!current || current.startsWith('```') || /^-\s+/.test(current) || /^\d+\.\s+/.test(current)) {
-        break
-      }
-      paragraphLines.push(current)
-      index += 1
-    }
-    blocks.push({ type: 'paragraph', text: paragraphLines.join(' ') })
-  }
-
-  return blocks
-}
-
-function renderMarkdownBlocks(content: string) {
-  return parseMarkdownBlocks(content).map((block, index) => {
-    if (block.type === 'code') {
-      return (
-        <pre key={`code-${index}`} className="overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-slate-950/90 px-4 py-3 text-[12px] text-slate-100">
-          <code>{block.code}</code>
-        </pre>
-      )
-    }
-
-    if (block.type === 'list') {
-      const Tag = block.ordered ? 'ol' : 'ul'
-      return (
-        <Tag key={`list-${index}`} className={block.ordered ? 'list-decimal space-y-2 pl-5' : 'list-disc space-y-2 pl-5'}>
-          {block.items.map((item, itemIndex) => (
-            <li key={`${item}-${itemIndex}`}>{renderInlineMarkdown(item)}</li>
-          ))}
-        </Tag>
-      )
-    }
-
-    return (
-      <p key={`paragraph-${index}`} className="leading-6">
-        {renderInlineMarkdown(block.text)}
-      </p>
-    )
-  })
-}
-
-function getAssistantName(t: (key: string, options?: Record<string, unknown>) => string, option: AssistantOption) {
-  return t(`aiWorkbench.assistants.${option.id}.name`, { defaultValue: option.name })
-}
-
-function getAssistantDescription(t: (key: string, options?: Record<string, unknown>) => string, option: AssistantOption) {
-  return t(`aiWorkbench.assistants.${option.id}.description`, { defaultValue: option.description })
-}
-
-function formatAssistantLabel(t: (key: string, options?: Record<string, unknown>) => string, option: AssistantOption) {
-  return `${getAssistantName(t, option)} · ${getAssistantDescription(t, option)}`
-}
-
-function buildHistoricalMessages(
-  t: (key: string, options?: Record<string, unknown>) => string,
-  session: WorkbenchSession
-): WorkbenchMessage[] {
-  const assistant = assistantCatalog.find((item) => item.id === session.assistantId) ?? assistantCatalog[0]
-  return [
-    {
-      id: `${session.id}-history-user-1`,
-      role: 'user',
-      content: t('aiWorkbench.history.userPrompt', { title: session.title }),
-      createdAt: t('aiWorkbench.timestamps.earlier')
-    },
-    {
-      id: `${session.id}-history-assistant-1`,
-      role: 'assistant',
-      content: t('aiWorkbench.history.assistantReply', { assistant: getAssistantName(t, assistant) }),
-      createdAt: t('aiWorkbench.timestamps.earlier')
-    },
-    {
-      id: `${session.id}-history-assistant-2`,
-      role: 'assistant',
-      content: t('aiWorkbench.history.checklist'),
-      createdAt: t('aiWorkbench.timestamps.earlier')
-    }
-  ]
-}
-
-export function aiWorkbenchTestUtils() {
-  return {
-    parseMarkdownBlocks
-  }
-}
+export { aiWorkbenchTestUtils }
 
 export default function AIWorkbenchPage() {
   const { t } = useTranslation()
@@ -385,6 +232,10 @@ export default function AIWorkbenchPage() {
     toast.success(t('aiWorkbench.copySuccess'))
   }
 
+  const setScrollContainer = (node: HTMLDivElement | null) => {
+    scrollRef.current = node
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -422,72 +273,19 @@ export default function AIWorkbenchPage() {
         }
       />
 
-      <div className="relative flex min-h-[42rem] overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-white/30 backdrop-blur-md dark:bg-slate-950/25">
-        <div className="flex h-full flex-col border-r border-[hsl(var(--border))] bg-[var(--card-surface)]/70" style={{ width: sidebarWidth }}>
-            <div className="border-b border-[hsl(var(--border))] p-4">
-              <div className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-white/50 px-3 dark:bg-slate-900/35">
-                <Search className="size-4 text-muted-foreground" />
-                <Input className="border-none bg-transparent shadow-none focus-visible:ring-0" placeholder={t('aiWorkbench.searchPlaceholder')} value={search} onChange={(event) => setSearch(event.target.value)} />
-              </div>
-            </div>
-            <ScrollArea className="flex-1">
-              <div className="space-y-2 p-3">
-                {filteredSessions.map((session) => {
-                  const assistant = assistantCatalog.find((item) => item.id === session.assistantId) ?? assistantCatalog[0]
-                  const active = session.id === activeSessionId
-                  return (
-                    <div
-                      key={session.id}
-                      role="button"
-                      tabIndex={0}
-                      className={`w-full rounded-xl border p-3 text-left transition ${active ? 'border-transparent bg-[linear-gradient(135deg,color-mix(in_hsl,hsl(var(--primary))_20%,white),color-mix(in_hsl,hsl(var(--secondary))_16%,transparent))] shadow-md' : 'border-[hsl(var(--border))] bg-white/40 hover:bg-white/55 dark:bg-slate-900/35 dark:hover:bg-slate-900/50'}`}
-                      onClick={() => setActiveSessionId(session.id)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault()
-                          setActiveSessionId(session.id)
-                        }
-                      }}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          {renameId === session.id ? (
-                            <Input
-                              autoFocus
-                              className="h-8 bg-white/80 dark:bg-slate-900/50"
-                              defaultValue={session.title}
-                              onBlur={(event) => {
-                                updateSession(session.id, (item) => ({ ...item, title: event.target.value || item.title }))
-                                setRenameId(null)
-                              }}
-                              onClick={(event) => event.stopPropagation()}
-                            />
-                          ) : (
-                            <div className="truncate text-sm font-semibold text-foreground">{session.title}</div>
-                          )}
-                          <div className="mt-1.5 flex items-center gap-2 text-sm text-muted-foreground">
-                            <Badge variant="outline">{getAssistantName(t, assistant)}</Badge>
-                            <span>{session.updatedAt}</span>
-                          </div>
-                        </div>
-                        <Bot className="size-4 shrink-0" style={{ color: assistant.color }} />
-                      </div>
-                      <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                            <button className="inline-flex items-center gap-1" onClick={(event) => { event.stopPropagation(); setRenameId(session.id) }} type="button">
-                              <Pencil className="size-4" />
-                              {t('aiWorkbench.rename')}
-                            </button>
-                        <button className="inline-flex items-center gap-1" onClick={(event) => { event.stopPropagation(); handleDeleteSession(session.id) }} type="button">
-                          <Trash2 className="size-4" />
-                          {t('common.delete')}
-                        </button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </ScrollArea>
-          </div>
+        <div className="relative flex min-h-[42rem] overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-white/30 backdrop-blur-md dark:bg-slate-950/25">
+          <SessionSidebar
+            sidebarWidth={sidebarWidth}
+            search={search}
+            setSearch={setSearch}
+            filteredSessions={filteredSessions}
+            activeSessionId={activeSessionId}
+            renameId={renameId}
+            setRenameId={setRenameId}
+            setActiveSessionId={setActiveSessionId}
+            updateSession={updateSession}
+            handleDeleteSession={handleDeleteSession}
+          />
 
         <div
           aria-label="resize sessions panel"
@@ -503,143 +301,31 @@ export default function AIWorkbenchPage() {
           </div>
         </div>
 
-        <div className="grid h-full min-w-0 flex-1 gap-0 xl:grid-cols-[1.35fr_0.65fr]">
-            <div className="flex h-full flex-col border-r border-[hsl(var(--border))]">
-              <div className="border-b border-[hsl(var(--border))] p-5">
-                <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[hsl(var(--border))] bg-white/45 p-4 backdrop-blur-xl dark:bg-slate-900/35">
-                  <div>
-                    <div className="text-sm font-semibold text-foreground">{activeSession?.title}</div>
-                     <div className="mt-1 text-sm text-muted-foreground">{formatAssistantLabel(t, currentAssistant)}</div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="secondary" onClick={() => handleRegenerate()}>
-                      <Wand2 className="size-4" />
-                      {t('aiWorkbench.regenerate')}
-                    </Button>
-                    <Button variant="outline" onClick={() => activeSession && updateSession(activeSession.id, (session) => ({ ...session, messages: [] }))}>
-                      <Trash2 className="size-4" />
-                      {t('aiWorkbench.clearConversation')}
-                    </Button>
-                  </div>
-                </div>
-              </div>
+          <div className="grid h-full min-w-0 flex-1 gap-0 xl:grid-cols-[1.35fr_0.65fr]">
+            <ConversationPanel
+              activeSession={activeSession}
+              currentAssistant={currentAssistant}
+              historyLoadedIds={historyLoadedIds}
+              historyLoadingId={historyLoadingId}
+              loadOlderMessages={loadOlderMessages}
+              updateSession={updateSession}
+              handleRegenerate={handleRegenerate}
+              handleCopy={handleCopy}
+              draft={draft}
+              setDraft={setDraft}
+              handleSend={handleSend}
+              handleStop={handleStop}
+              streaming={streaming}
+              setScrollContainer={setScrollContainer}
+            />
 
-              <div ref={scrollRef} className="flex-1 overflow-y-auto p-5">
-                <div className="mb-4 flex justify-center">
-                  {!activeSession || historyLoadedIds.includes(activeSession.id) ? (
-                      <div className="text-sm text-muted-foreground">{t('aiWorkbench.historyStart')}</div>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={historyLoadingId === activeSession.id}
-                      onClick={() => loadOlderMessages(activeSession.id)}
-                    >
-                      {historyLoadingId === activeSession.id ? t('common.loading') : t('aiWorkbench.loadOlder')}
-                    </Button>
-                  )}
-                </div>
-                <div className="space-y-4">
-                  {(activeSession?.messages ?? []).map((message) => (
-                    <div key={message.id} className={message.role === 'user' ? 'ml-auto max-w-[82%]' : 'max-w-[86%]'}>
-                      <div
-                        className={
-                          message.role === 'user'
-                            ? 'rounded-xl rounded-br-md bg-[linear-gradient(135deg,hsl(var(--primary)),color-mix(in_hsl,hsl(var(--secondary))_70%,white))] px-5 py-4 text-sm text-white shadow-primary-md'
-                            : 'rounded-xl rounded-bl-md border border-[hsl(var(--border))] bg-white/55 px-5 py-4 text-sm text-muted-foreground backdrop-blur-xl dark:bg-slate-900/40'
-                        }
-                      >
-                        <div className="space-y-2">{renderMarkdownBlocks(message.content)}</div>
-                        <div className={`mt-3 flex items-center justify-between text-sm ${message.role === 'user' ? 'text-white/80' : 'text-muted-foreground'}`}>
-                          <span>{message.createdAt}</span>
-                          <div className="flex items-center gap-3">
-                            <button className="inline-flex items-center gap-1" onClick={() => void handleCopy(message)} type="button">
-                              <Copy className="size-4" />
-                              {t('common.copy')}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t border-[hsl(var(--border))] p-5">
-                <div className="rounded-xl border border-[hsl(var(--border))] bg-white/50 p-4 backdrop-blur-xl dark:bg-slate-900/35">
-                  <Textarea
-                    className="min-h-[7rem] border-none bg-transparent px-0 shadow-none focus-visible:ring-0"
-                    placeholder={t('aiWorkbench.promptPlaceholder')}
-                    value={draft}
-                    onChange={(event) => setDraft(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter' && !event.shiftKey) {
-                        event.preventDefault()
-                        void handleSend()
-                      }
-                    }}
-                  />
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <div className="text-sm text-muted-foreground">{t('aiWorkbench.sendHint')}</div>
-                    <div className="flex flex-wrap gap-2">
-                      {streaming ? (
-                        <Button variant="outline" onClick={handleStop}>
-                          <Square className="size-4" />
-                          {t('aiWorkbench.stop')}
-                        </Button>
-                      ) : null}
-                      <Button onClick={() => void handleSend()}>
-                        <Sparkles className="size-4" />
-                        {t('aiWorkbench.generate')}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex h-full flex-col bg-[color-mix(in_hsl,hsl(var(--primary))_4%,transparent)]/40 p-5">
-              <Card className="theme-card shadow-none">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between gap-3 text-lg">
-                    <span>{t('aiWorkbench.contextAttachment')}</span>
-                    <Switch checked={contextEnabled} onCheckedChange={setContextEnabled} />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm text-muted-foreground">
-                  <div className="rounded-xl border border-[hsl(var(--border))] bg-white/45 p-4 dark:bg-slate-900/35">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="font-medium text-foreground">{t('aiWorkbench.contextStatus')}</div>
-                      <Badge variant={contextEnabled ? 'success' : 'outline'}>{contextEnabled ? t('aiWorkbench.contextEnabled') : t('aiWorkbench.contextDisabled')}</Badge>
-                    </div>
-                    <p className="mt-3 leading-6">{t('aiWorkbench.contextStatusDescription')}</p>
-                  </div>
-                  <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-white/35 p-4 dark:bg-slate-900/20">
-                    <div className="eyebrow-text">{t('aiWorkbench.contextPreview')}</div>
-                    <div className="mt-3 leading-6">{contextSummary}</div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="theme-card mt-4 shadow-none">
-                <CardHeader>
-                  <CardTitle className="text-lg">{t('aiWorkbench.assistantGuide')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-muted-foreground">
-                  {assistantCatalog.map((assistant) => (
-                    <div key={assistant.id} className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="font-medium text-foreground">{getAssistantName(t, assistant)}</div>
-                        <div className="h-3 w-3 rounded-full" style={{ backgroundColor: assistant.color }} />
-                      </div>
-                      <p className="mt-2 leading-6">{getAssistantDescription(t, assistant)}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
+            <ContextPanel
+              contextEnabled={contextEnabled}
+              setContextEnabled={setContextEnabled}
+              contextSummary={contextSummary}
+            />
           </div>
+        </div>
       </div>
-    </div>
   )
 }

@@ -117,6 +117,16 @@
     "sidebarHint": "Persisted layout preferences keep your workspace familiar across sessions.",
     "mobileHint": "Tap a menu item to close the drawer."
   },
+  "tabsBar": {
+    "refresh": "Refresh",
+    "closeCurrent": "Close current",
+    "closeOthers": "Close others",
+    "closeAll": "Close all",
+    "enterFullscreenWorkspace": "Enter fullscreen workspace",
+    "exitFullscreenWorkspace": "Exit fullscreen workspace",
+    "enterFullscreen": "Enter fullscreen",
+    "exitFullscreen": "Exit fullscreen"
+  },
   "dashboard": {
     "eyebrow": "Overview",
     "title": "Operations dashboard",

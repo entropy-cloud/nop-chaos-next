@@ -12,3 +12,10 @@ export interface AuthState {
   isAuthenticated: boolean
   token?: string
 }
+
+export type AuthBootstrapStatus = 'idle' | 'pending' | 'ready' | 'anonymous'
+
+export interface AuthSession {
+  user: User
+  token: string
+}

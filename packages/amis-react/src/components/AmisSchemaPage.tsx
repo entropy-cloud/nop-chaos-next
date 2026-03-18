@@ -36,28 +36,42 @@ function cloneSchema<T>(schema: T): T {
 
 export function AmisSchemaPage({ adapter, schema, schemaPath, title, initialData }: AmisSchemaPageProps) {
   const page = useMemo(() => createAmisPageObject(schemaPath), [schemaPath])
-  const [transformedSchema, setTransformedSchema] = useState<unknown | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [schemaState, setSchemaState] = useState<{
+    schema: unknown
+    transformedSchema: unknown | null
+    error: string | null
+  }>({
+    schema,
+    transformedSchema: null,
+    error: null
+  })
   const containerRef = useRef<HTMLDivElement | null>(null)
   const amisRootRef = useRef<Root | null>(null)
+  const transformedSchema = schemaState.schema === schema ? schemaState.transformedSchema : null
+  const error = schemaState.schema === schema ? schemaState.error : null
 
   useEffect(() => {
     registerAmisRuntimeAdapter(adapter)
     let active = true
-    setTransformedSchema(null)
 
     void transformPageJson(cloneSchema(schema))
       .then((nextSchema) => bindActions(nextSchema, page))
       .then((nextSchema) => {
         if (active) {
-          setTransformedSchema(nextSchema)
-          setError(null)
+          setSchemaState({
+            schema,
+            transformedSchema: nextSchema,
+            error: null
+          })
         }
       })
       .catch((reason: unknown) => {
         if (active) {
-          setError(reason instanceof Error ? reason.message : 'Failed to transform amis schema')
-          setTransformedSchema(null)
+          setSchemaState({
+            schema,
+            transformedSchema: null,
+            error: reason instanceof Error ? reason.message : 'Failed to transform amis schema'
+          })
         }
       })
 
@@ -98,8 +112,9 @@ export function AmisSchemaPage({ adapter, schema, schemaPath, title, initialData
   }, [adapter, error, initialData, page, transformedSchema])
 
   useEffect(() => {
+    const container = containerRef.current
+
     return () => {
-      const container = containerRef.current
       const root = amisRootRef.current ?? (container ? amisRoots.get(container) ?? null : null)
 
       amisRootRef.current = null

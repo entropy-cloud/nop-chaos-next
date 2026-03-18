@@ -1,10 +1,20 @@
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
+import type {
+  DefaultLegendContentProps,
+  LegendPayload,
+  TooltipContentProps,
+  TooltipPayloadEntry,
+} from "recharts"
+import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
 
 import { cn } from "@nop-chaos/ui/lib/utils"
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
+
+type ChartTooltipValue = ValueType
+type ChartTooltipName = NameType
 
 export type ChartConfig = {
   [k in string]: {
@@ -116,8 +126,9 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+}: TooltipContentProps<ChartTooltipValue, ChartTooltipName> &
   React.ComponentProps<"div"> & {
+    active?: boolean
     hideLabel?: boolean
     hideIndicator?: boolean
     indicator?: "line" | "dot" | "dashed"
@@ -178,15 +189,15 @@ function ChartTooltipContent({
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
         {payload
-          .filter((item) => item.type !== "none")
-          .map((item, index) => {
+          .filter((item: TooltipPayloadEntry<ChartTooltipValue, ChartTooltipName>) => item.type !== "none")
+          .map((item: TooltipPayloadEntry<ChartTooltipValue, ChartTooltipName>, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
-            const indicatorColor = color || item.payload.fill || item.color
+            const indicatorColor = color || item.payload?.fill || item.color
 
             return (
               <div
-                key={item.dataKey}
+                key={`${item.dataKey || item.name || "value"}-${index}`}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                   indicator === "dot" && "items-center"
@@ -232,7 +243,7 @@ function ChartTooltipContent({
                           {itemConfig?.label || item.name}
                         </span>
                       </div>
-                      {item.value && (
+                      {item.value !== undefined && item.value !== null && (
                         <span className="font-mono font-medium text-foreground tabular-nums">
                           {item.value.toLocaleString()}
                         </span>
@@ -257,7 +268,7 @@ function ChartLegendContent({
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> &
-  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+  Pick<DefaultLegendContentProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean
     nameKey?: string
   }) {
@@ -316,28 +327,21 @@ function getPayloadConfigFromPayload(
     return undefined
   }
 
+  const payloadRecord = payload as Record<string, unknown>
   const payloadPayload =
-    "payload" in payload &&
-    typeof payload.payload === "object" &&
-    payload.payload !== null
-      ? payload.payload
+    typeof payloadRecord.payload === "object" && payloadRecord.payload !== null
+      ? (payloadRecord.payload as Record<string, unknown>)
       : undefined
 
   let configLabelKey: string = key
 
-  if (
-    key in payload &&
-    typeof payload[key as keyof typeof payload] === "string"
-  ) {
-    configLabelKey = payload[key as keyof typeof payload] as string
+  if (typeof payloadRecord[key] === "string") {
+    configLabelKey = payloadRecord[key] as string
   } else if (
     payloadPayload &&
-    key in payloadPayload &&
-    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+    typeof payloadPayload[key] === "string"
   ) {
-    configLabelKey = payloadPayload[
-      key as keyof typeof payloadPayload
-    ] as string
+    configLabelKey = payloadPayload[key] as string
   }
 
   return configLabelKey in config

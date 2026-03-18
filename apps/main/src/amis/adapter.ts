@@ -1,6 +1,8 @@
-import type { AmisDictProvider, AmisPageProvider, AmisRuntimeAdapter } from '@nop-chaos/amis-core'
+import type { AmisAction, AmisDictProvider, AmisPageProvider, AmisRuntimeAdapter } from '@nop-chaos/amis-core'
+import type { HttpRequestOptions } from '@nop-chaos/shared'
 import { toast } from '@nop-chaos/ui'
 import i18n from '../config/i18n'
+import { mainHttpClient } from '../services/http'
 import { useAuthStore } from '../store/authStore'
 import { useThemeStore } from '../store/themeStore'
 
@@ -25,14 +27,22 @@ export function createMainAmisAdapter({ currentPath, navigate, pageProvider, dic
         return
       }
 
-      if (state.user) {
-        state.login({ user: state.user, token })
-      }
+      state.setToken(token)
     },
     hasRole: (role) => (useAuthStore.getState().user?.roles ?? []).includes(role),
     getThemeConfig: () => useThemeStore.getState().themeConfig,
     navigate,
     isCurrentUrl: (to) => currentPath === to,
+    request: async <T>(options: HttpRequestOptions) => {
+      const response = await mainHttpClient.request<T>(options)
+
+      if (response.status === 401) {
+        useAuthStore.getState().logout()
+        navigate('/auth/login', { replace: true })
+      }
+
+      return response
+    },
     resolveAction: (name) => {
       if (name === 'preview.notify') {
         return () => {
@@ -76,6 +86,6 @@ export function createMainAmisAdapter({ currentPath, navigate, pageProvider, dic
     },
     pageProvider,
     dictProvider,
-    compileFunction: (code, page) => new Function('page', `return (${code})`)(page) as Function
+    compileFunction: (code, page) => new Function('page', `return (${code})`)(page) as AmisAction
   }
 }

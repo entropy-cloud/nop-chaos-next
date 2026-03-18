@@ -5,7 +5,6 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -41,21 +40,25 @@ export function SidebarUserMenu({ collapsed = false, onLogout, onToggleSidebar, 
 
   return (
     <DropdownMenu>
-      <div className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[var(--card-surface)] px-2 py-2 shadow-sm backdrop-blur-xl">
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <Avatar className="h-9 w-9 shrink-0">
-            <AvatarImage src={user?.avatar} alt={displayName} />
-            <AvatarFallback>{displayName.slice(0, 1).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          {collapsed ? null : <span className="truncate text-sm font-medium text-foreground">{displayName}</span>}
-        </div>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon-sm" className="shrink-0 rounded-full" title={t('common.moreActions')}>
+      <DropdownMenuTrigger asChild>
+        <button
+          className="flex w-full items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[var(--card-surface)] px-2 py-2 text-left shadow-sm backdrop-blur-xl transition-colors hover:bg-[color-mix(in_hsl,hsl(var(--primary))_6%,var(--card-surface))]"
+          title={t('common.moreActions')}
+          type="button"
+        >
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <Avatar className="h-9 w-9 shrink-0">
+              <AvatarImage src={user?.avatar} alt={displayName} />
+              <AvatarFallback>{displayName.slice(0, 1).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            {collapsed ? null : <span className="truncate text-sm font-medium text-foreground">{displayName}</span>}
+          </div>
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors group-data-[state=open]:bg-black/5 group-data-[state=open]:text-foreground dark:group-data-[state=open]:bg-white/10">
             <MoreHorizontal className="size-4" />
-          </Button>
-        </DropdownMenuTrigger>
-      </div>
-      <DropdownMenuContent align="end" side="top" className="w-64">
+          </span>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-64">
         <DropdownMenuLabel className="py-2">
           <div className="flex min-w-0 items-center gap-3">
             <Avatar className="h-10 w-10 shrink-0">

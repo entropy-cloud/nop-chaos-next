@@ -62,11 +62,11 @@ function assertOptionalStringArray(value: unknown, fieldPath: string): string[] 
 }
 
 function assertPageType(value: unknown, fieldPath: string): MenuItem['pageType'] {
-  if (value === 'builtin' || value === 'plugin' || value === 'amis') {
+  if (value === 'builtin' || value === 'plugin' || value === 'amis' || value === 'iframe' || value === 'external') {
     return value
   }
 
-  throw new Error(`Invalid menu config: '${fieldPath}' must be 'builtin', 'plugin', or 'amis'`)
+  throw new Error(`Invalid menu config: '${fieldPath}' must be 'builtin', 'plugin', 'amis', 'iframe', or 'external'`)
 }
 
 function validateMenuItem(value: unknown, fieldPath: string): MenuItem {
@@ -82,6 +82,8 @@ function validateMenuItem(value: unknown, fieldPath: string): MenuItem {
   const componentId = assertOptionalString(value.componentId, `${fieldPath}.componentId`)
   const pluginUrl = assertOptionalString(value.pluginUrl, `${fieldPath}.pluginUrl`)
   const schemaPath = assertOptionalString(value.schemaPath, `${fieldPath}.schemaPath`)
+  const frameSrc = assertOptionalString(value.frameSrc, `${fieldPath}.frameSrc`)
+  const externalUrl = assertOptionalString(value.externalUrl, `${fieldPath}.externalUrl`)
   const badge = assertOptionalString(value.badge, `${fieldPath}.badge`)
   const sort = assertOptionalNumber(value.sort, `${fieldPath}.sort`)
   const hideInMenu = assertOptionalBoolean(value.hideInMenu, `${fieldPath}.hideInMenu`)
@@ -107,6 +109,14 @@ function validateMenuItem(value: unknown, fieldPath: string): MenuItem {
     throw new Error(`Invalid menu config: '${fieldPath}.schemaPath' is required for amis pages`)
   }
 
+  if (pageType === 'iframe' && !frameSrc) {
+    throw new Error(`Invalid menu config: '${fieldPath}.frameSrc' is required for iframe pages`)
+  }
+
+  if (pageType === 'external' && !externalUrl) {
+    throw new Error(`Invalid menu config: '${fieldPath}.externalUrl' is required for external pages`)
+  }
+
   const children = value.children === undefined ? undefined : validateMenuItems(value.children, `${fieldPath}.children`)
 
   return {
@@ -121,6 +131,8 @@ function validateMenuItem(value: unknown, fieldPath: string): MenuItem {
     componentId,
     pluginUrl,
     schemaPath,
+    frameSrc,
+    externalUrl,
     roles,
     sort,
     hideInMenu

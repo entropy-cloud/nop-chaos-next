@@ -1,0 +1,187 @@
+body.is-modalOpened .ant-popover {
+  z-index: 1400;
+}
+
+/* ===== Amis Tooltip 全局修复 ===== */
+/* tooltip 可能渲染在 modal 容器中，需要在全局级别覆盖 */
+.cxd-Tooltip {
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.cxd-Tooltip-body {
+  color: hsl(var(--foreground));
+}
+
+.cxd-Tooltip-arrow::after {
+  border-top-color: hsl(var(--card)) !important;
+}
+
+.cxd-Tooltip--bottom .cxd-Tooltip-arrow::after {
+  border-bottom-color: hsl(var(--card)) !important;
+}
+
+.cxd-Tooltip--left .cxd-Tooltip-arrow::after {
+  border-left-color: hsl(var(--card)) !important;
+}
+
+.cxd-Tooltip--right .cxd-Tooltip-arrow::after {
+  border-right-color: hsl(var(--card)) !important;
+}
+
+/* data-tooltip 属性的纯CSS tooltip */
+[data-tooltip]:not(.is-disabled):hover:after {
+  background: hsl(var(--foreground) / 0.9) !important;
+  color: hsl(var(--background)) !important;
+  border-color: transparent !important;
+}
+
+/* 暗色模式 */
+:root[data-mode='dark'] .cxd-Tooltip {
+  background: hsl(var(--gray-800)) !important;
+  border-color: hsl(var(--gray-700)) !important;
+}
+
+:root[data-mode='dark'] .cxd-Tooltip-body {
+  color: hsl(var(--gray-100));
+}
+
+:root[data-mode='dark'] .cxd-Tooltip-arrow::after {
+  border-top-color: hsl(var(--gray-800)) !important;
+}
+
+:root[data-mode='dark'] .cxd-Tooltip--bottom .cxd-Tooltip-arrow::after {
+  border-bottom-color: hsl(var(--gray-800)) !important;
+}
+
+:root[data-mode='dark'] .cxd-Tooltip--left .cxd-Tooltip-arrow::after {
+  border-left-color: hsl(var(--gray-800)) !important;
+}
+
+:root[data-mode='dark'] .cxd-Tooltip--right .cxd-Tooltip-arrow::after {
+  border-right-color: hsl(var(--gray-800)) !important;
+}
+
+:root[data-mode='dark'] [data-tooltip]:not(.is-disabled):hover:after {
+  background: hsl(var(--gray-800)) !important;
+  color: hsl(var(--gray-100)) !important;
+}
+
+/* ===== Amis 组件样式修复 ===== */
+.nop-amis-page {
+  font-family: inherit;
+}
+
+.nop-amis-page .cxd-Pagination > li > a,
+.nop-amis-page .cxd-Pagination > li > span {
+  height: auto;
+}
+
+.nop-amis-page .cxd-Table--autoFillHeight .cxd-Table-footToolbar {
+  padding: 0;
+}
+
+.nop-amis-page .cxd-Panel.no-heading > .cxd-Panel-heading {
+  display: none;
+}
+
+.nop-amis-page .cxd-Panel.actions-center > .cxd-Panel-footerWrap > .cxd-Panel-btnToolbar {
+  text-align: center;
+}
+
+.nop-amis-page .cxd-TreeControl.h-full > .cxd-Tree {
+  max-height: none;
+}
+
+/* ===== 主题适配增强 ===== */
+.nop-amis-page .cxd-Button {
+  transition: all var(--transition-fast);
+}
+
+.nop-amis-page .cxd-Button--primary {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.nop-amis-page .cxd-Button--primary:hover {
+  background: hsl(var(--primary-dark));
+  border-color: hsl(var(--primary-dark));
+}
+
+.nop-amis-page .cxd-Card {
+  background: hsl(var(--card));
+  border-color: hsl(var(--border));
+  border-radius: var(--radius-md);
+}
+
+.nop-amis-page .cxd-Panel {
+  background: hsl(var(--card));
+  border-color: hsl(var(--border));
+  border-radius: var(--radius-md);
+}
+
+.nop-amis-page .cxd-Table-table {
+  background: hsl(var(--card));
+}
+
+.nop-amis-page .cxd-Table-th {
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+.nop-amis-page .cxd-Table td {
+  border-color: hsl(var(--border));
+}
+
+.nop-amis-page .cxd-Form-item {
+  margin-bottom: var(--sizes-base-8, 1rem);
+}
+
+.nop-amis-page .cxd-Input {
+  background: hsl(var(--background));
+  border-color: hsl(var(--input));
+  border-radius: var(--radius-sm);
+  color: hsl(var(--foreground));
+}
+
+.nop-amis-page .cxd-Input:focus {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+}
+
+.nop-amis-page .cxd-Select {
+  background: hsl(var(--background));
+  border-color: hsl(var(--input));
+  border-radius: var(--radius-sm);
+}
+
+.nop-amis-page .cxd-Alert {
+  border-radius: var(--radius-md);
+}
+
+.nop-amis-page .cxd-Alert--info {
+  background: hsl(var(--primary-bg));
+  border-color: hsl(var(--primary) / 0.3);
+  color: hsl(var(--primary-dark));
+}
+
+.nop-amis-page .cxd-Alert--success {
+  background: hsl(var(--success-bg));
+  border-color: hsl(var(--success) / 0.3);
+  color: hsl(var(--success));
+}
+
+.nop-amis-page .cxd-Alert--danger,
+.nop-amis-page .cxd-Alert--error {
+  background: hsl(var(--danger-bg));
+  border-color: hsl(var(--danger) / 0.3);
+  color: hsl(var(--danger));
+}
+
+.nop-amis-page .cxd-Alert--warning {
+  background: hsl(var(--warning-bg));
+  border-color: hsl(var(--warning) / 0.3);
+  color: hsl(var(--warning));
+}

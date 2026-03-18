@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import type { MenuResponse } from '@nop-chaos/shared'
-import { fetchMenuConfig } from '../services/mockApi'
+import { fetchMenuConfig } from '../services/menuApi'
 
 export function useMenuConfigQuery(enabled = true) {
   return useQuery<MenuResponse>({

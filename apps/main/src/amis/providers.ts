@@ -1,4 +1,7 @@
 import type { AmisDictProvider, AmisPageProvider } from '@nop-chaos/amis-core'
+import { isMockEnabled } from '../config/env'
+import { fetchDictOptions } from '../services/dictApi'
+import { fetchAmisPage } from '../services/pageApi'
 import { testAmisSchema } from './testSchema'
 
 export const mainAmisPageProvider: AmisPageProvider = {
@@ -7,29 +10,32 @@ export const mainAmisPageProvider: AmisPageProvider = {
       return testAmisSchema
     }
 
-    const response = await fetch(schemaPath, {
-      headers: {
-        Accept: 'application/json'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to load amis schema: ${response.status}`)
-    }
-
-    return response.json()
+    return fetchAmisPage(schemaPath)
   }
 }
 
 export const mainAmisDictProvider: AmisDictProvider = {
-  async getDict(dictName) {
+  async getDict(dictName, options) {
+    if (isMockEnabled()) {
+      return {
+        status: 200,
+        data: {
+          status: 0,
+          msg: '',
+          data: [],
+          dictName
+        }
+      }
+    }
+
+    const data = await fetchDictOptions(dictName, options.silent)
+
     return {
       status: 200,
       data: {
         status: 0,
         msg: '',
-        data: [],
-        dictName
+        data
       }
     }
   }

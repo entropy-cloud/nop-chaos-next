@@ -1,12 +1,12 @@
 import { getAmisRuntimeAdapter } from '../adapter'
-import type { AmisPageObject } from '../types'
+import type { AmisAction, AmisPageObject } from '../types'
 
 function createPageId() {
   return `amis-page-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 export function createAmisPageObject(schemaPath?: string): AmisPageObject {
-  const actions = new Map<string, Function>()
+  const actions = new Map<string, AmisAction>()
   const state = new Map<string, unknown>()
 
   const getAction = (name: string) => {

@@ -1,24 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { LowCodeIcon } from '@nop-chaos/core'
 import {
-  BadgeHelp,
-  Blocks,
-  BookOpenText,
-  Bot,
-  Database,
-  Edit,
-  GitBranch,
-  Languages,
-  LayoutDashboard,
-  List,
-  Palette,
-  PanelsTopLeft,
-  PlugZap,
-  Puzzle,
   Settings2,
-  Table,
-  Workflow,
-  type LucideIcon
 } from 'lucide-react'
 import {
   Badge,
@@ -42,27 +26,6 @@ import { useTranslation } from 'react-i18next'
 import { PageHeader } from '../../../components/common/PageHeader'
 import { fetchPluginList } from '../../../services/mockApi'
 import { usePluginStore } from '../../../store/pluginStore'
-
-const pluginIconMap: Record<string, LucideIcon> = {
-  'badge-help': BadgeHelp,
-  blocks: Blocks,
-  'book-open-text': BookOpenText,
-  bot: Bot,
-  database: Database,
-  edit: Edit,
-  'git-branch': GitBranch,
-  languages: Languages,
-  'layout-dashboard': LayoutDashboard,
-  list: List,
-  palette: Palette,
-  'panels-top-left': PanelsTopLeft,
-  'plug-zap': PlugZap,
-  puzzle: Puzzle,
-  'settings-2': Settings2,
-  table: Table,
-  workflow: Workflow,
-  Blocks
-}
 
 export default function PluginsManagementPage() {
   const { t } = useTranslation()
@@ -88,14 +51,12 @@ export default function PluginsManagementPage() {
       <PageHeader eyebrow={t('plugins.extensionHostEyebrow')} title={t('plugins.managementTitle')} description={t('plugins.managementPageDescription')} />
       <div className="grid gap-4">
         {items.map((plugin) => {
-          const PluginIcon = pluginIconMap[plugin.icon] ?? Blocks
-
           return (
             <Card key={plugin.id} className="theme-card overflow-hidden">
               <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3">
                 <div className="flex min-w-0 items-start gap-3">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[linear-gradient(135deg,hsl(var(--primary)),color-mix(in_hsl,hsl(var(--secondary))_70%,white))] text-white shadow-primary-md">
-                    <PluginIcon className="size-5" />
+                    <LowCodeIcon className="size-5" name={plugin.icon} />
                   </div>
                   <div className="min-w-0">
                     <CardTitle className="truncate text-base">{plugin.name}</CardTitle>

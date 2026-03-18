@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import { PageHeader } from '../../../components/common/PageHeader'
-import { languageOptions } from '../../../config/i18n/languages'
+import { getLanguageOptions } from '../../../config/i18n/languages'
 
 export default function SettingsLanguagePage() {
   const { t, i18n } = useTranslation()
+  const languageOptions = getLanguageOptions()
 
   return (
     <div className="space-y-6">

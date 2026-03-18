@@ -1,10 +1,11 @@
 import { Languages } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@nop-chaos/ui'
-import { languageOptions } from '../../config/i18n/languages'
+import { getLanguageOptions } from '../../config/i18n/languages'
 
 export function LanguageSwitcher() {
   const { i18n, t } = useTranslation()
+  const languageOptions = getLanguageOptions()
 
   return (
     <div className="hidden items-center gap-2 rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] px-3 py-1.5 backdrop-blur-xl sm:flex">

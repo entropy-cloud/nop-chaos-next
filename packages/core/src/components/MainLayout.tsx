@@ -22,7 +22,7 @@ export function MainLayout({
 }: MainLayoutProps) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
-      <div className={cn('hidden lg:flex', workspaceFullscreen && 'lg:hidden')}>
+      <div className={cn('max-lg:hidden', workspaceFullscreen && 'lg:hidden')}>
         <aside className="fixed inset-y-0 left-0 z-30">{sidebar}</aside>
       </div>
       <div
@@ -35,13 +35,13 @@ export function MainLayout({
       </div>
       <div
         className={cn(
-          'flex min-h-screen flex-col',
+          'flex h-screen flex-col',
           workspaceFullscreen ? 'lg:pl-0' : 'lg:pl-[var(--sidebar-width,var(--sidebar-width-expanded,18rem))]'
         )}
       >
         {topBar ? <header className="sticky top-0 z-20">{topBar}</header> : null}
         <div className="sticky top-0 z-10">{tabsBar}</div>
-        <main className="flex-1 px-4 pb-6 pt-4 sm:px-6">{children}</main>
+        <main className="flex-1 overflow-auto px-4 pb-6 pt-4 sm:px-6">{children}</main>
       </div>
     </div>
   )

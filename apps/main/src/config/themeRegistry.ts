@@ -6,7 +6,7 @@ export interface ThemeDefinition {
   descriptionKey?: string
 }
 
-const themeRegistry: ThemeDefinition[] = [
+const defaultThemes: ThemeDefinition[] = [
   {
     id: 'classic',
     labelKey: 'settings.themeOptions.classic.label',
@@ -19,8 +19,23 @@ const themeRegistry: ThemeDefinition[] = [
   }
 ]
 
+const themeRegistry: ThemeDefinition[] = [...defaultThemes]
+
+export function registerThemes(themes: ThemeDefinition[]): void {
+  for (const theme of themes) {
+    const index = themeRegistry.findIndex((item) => item.id === theme.id)
+
+    if (index >= 0) {
+      themeRegistry[index] = theme
+      continue
+    }
+
+    themeRegistry.push(theme)
+  }
+}
+
 export function getThemeRegistry(): ThemeDefinition[] {
-  return themeRegistry
+  return [...themeRegistry]
 }
 
 export function getDefaultThemeId(): ThemeId {

@@ -21,6 +21,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  getTableRowClassName,
   toast
 } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
@@ -139,7 +140,7 @@ export default function FlowEditorPage() {
               </TableHeader>
               <TableBody>
                 {pageRows.map((flow) => (
-                  <TableRow key={flow.id} className="hover:bg-white/45 dark:hover:bg-slate-900/45">
+                  <TableRow key={flow.id} className={getTableRowClassName('interactive')}>
                     <TableCell className="font-medium text-foreground">{flow.name}</TableCell>
                     <TableCell className="max-w-[22rem] whitespace-normal text-muted-foreground">{flow.description}</TableCell>
                     <TableCell>

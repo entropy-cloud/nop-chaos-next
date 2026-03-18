@@ -29,12 +29,28 @@ VITE_ENABLE_MOCK=true  # 启用 Mock
 VITE_ENABLE_MOCK=false # 禁用 Mock
 ```
 
+主应用已提供专用启动命令：
+
+```bash
+pnpm dev:mock
+```
+
+该命令会启动 `@nop-chaos/main` 的 `mock` mode，并加载 `apps/main/.env.mock`。
+
 ### 2.2 默认行为
 
 | 环境 | 默认状态 |
 |------|----------|
-| 开发环境（dev） | 启用 Mock |
-| 生产构建 | 禁用 Mock |
+| `pnpm dev` / `pnpm dev:main` | 读取本地 env，按当前配置运行 |
+| `pnpm dev:mock` | 强制启用 Mock |
+| 生产构建 | 默认禁用 Mock，除非显式注入 env |
+
+### 2.3 当前主应用覆盖范围
+
+- `VITE_ENABLE_MOCK=true` 时，登录、当前用户、登出不访问后台 HTTP
+- 菜单、amis page provider、amis dict provider 会走 mock 分支
+- dashboard、flow editor、master-detail、plugin management、ai workbench 等演示页继续使用本地 mock 数据
+- 仍会读取前端静态资源，如 `/data/menu-config.json` 或本地 schema 文件；这属于前端资源加载，不是访问后台业务接口
 
 ---
 

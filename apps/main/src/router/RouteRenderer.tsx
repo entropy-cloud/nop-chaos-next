@@ -70,6 +70,30 @@ export function RouteRenderer({ item }: RouteRendererProps) {
     return <AmisPageRoute adapter={amisAdapter} schemaPath={item.schemaPath} title={title} />
   }
 
+  if (item.pageType === 'iframe' && item.frameSrc) {
+    return (
+      <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[hsl(var(--border))] bg-[var(--card-surface)] shadow-md">
+        <iframe className="h-[calc(100vh-11rem)] w-full" src={item.frameSrc} title={title} />
+      </div>
+    )
+  }
+
+  if (item.pageType === 'external' && item.externalUrl) {
+    return (
+      <Card className="theme-card">
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <div>{item.externalUrl}</div>
+          <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href={item.externalUrl} rel="noreferrer" target="_blank">
+            {t('common.viewDetails')}
+          </a>
+        </CardContent>
+      </Card>
+    )
+  }
+
   const Page = getBuiltinPage(item.componentId)
 
   if (!Page) {

@@ -1,21 +1,49 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
 
 function includesAny(id: string, segments: string[]) {
   return segments.some((segment) => id.includes(segment))
 }
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  resolve: {
+    tsconfigPaths: true
+  },
+  plugins: [react()],
   server: {
-    port: 4173
+    port: 4173,
+    proxy: {
+      '/r': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/graphql': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/p': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/f': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/q': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      }
+    }
   },
   preview: {
     port: 4173
   },
+  css: {
+    transformer: 'postcss'
+  },
   build: {
     sourcemap: true,
+    cssMinify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks(id) {

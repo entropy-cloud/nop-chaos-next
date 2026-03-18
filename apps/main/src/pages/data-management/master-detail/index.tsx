@@ -26,6 +26,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  getTableRowClassName,
   toast
 } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
@@ -268,7 +269,7 @@ export default function MasterDetailPage() {
                 </TableHeader>
                 <TableBody>
                   {pagedRows.map((row) => (
-                    <TableRow key={row.id} className="cursor-pointer hover:bg-[linear-gradient(90deg,color-mix(in_hsl,hsl(var(--primary))_9%,transparent),transparent)]" onClick={() => openDetail(row)}>
+                    <TableRow key={row.id} className={getTableRowClassName('interactive')} onClick={() => openDetail(row)}>
                       <TableCell className="py-2" onClick={(event) => event.stopPropagation()}>
                         <Checkbox checked={selectedIds.includes(row.id)} onCheckedChange={() => toggleSelection(row.id)} />
                       </TableCell>

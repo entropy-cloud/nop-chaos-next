@@ -1,0 +1,162 @@
+/*
+ * Amis Theme Bridge
+ * 将 amis CSS 变量映射到宿主主题变量，支持主题切换
+ */
+
+.nop-amis-page {
+  color-scheme: inherit;
+
+  /* ===== 品牌色 ===== */
+  --colors-brand-1: hsl(var(--primary) / 0.08);
+  --colors-brand-2: hsl(var(--primary) / 0.16);
+  --colors-brand-3: hsl(var(--primary) / 0.28);
+  --colors-brand-4: hsl(var(--primary) / 0.48);
+  --colors-brand-5: hsl(var(--primary));
+  --colors-brand-6: hsl(var(--primary-light));
+  --colors-brand-7: hsl(var(--primary-light) / 0.75);
+  --colors-brand-8: hsl(var(--primary-bg));
+  --colors-brand-9: hsl(var(--primary-bg) / 0.6);
+  --colors-brand-10: hsl(var(--primary-bg) / 0.3);
+
+  /* ===== 文本色 ===== */
+  --colors-neutral-text-1: hsl(var(--foreground));
+  --colors-neutral-text-2: hsl(var(--foreground) / 0.88);
+  --colors-neutral-text-3: hsl(var(--foreground) / 0.76);
+  --colors-neutral-text-4: hsl(var(--muted-foreground));
+  --colors-neutral-text-5: hsl(var(--muted-foreground) / 0.85);
+  --colors-neutral-text-6: hsl(var(--muted-foreground) / 0.7);
+  --colors-neutral-text-7: hsl(var(--border));
+  --colors-neutral-text-8: hsl(var(--muted));
+  --colors-neutral-text-9: hsl(var(--muted) / 0.6);
+  --colors-neutral-text-10: hsl(var(--background));
+  --colors-neutral-text-11: #ffffff;
+
+  /* ===== 填充色 ===== */
+  --colors-neutral-fill-1: hsl(var(--foreground));
+  --colors-neutral-fill-2: hsl(var(--foreground) / 0.85);
+  --colors-neutral-fill-3: hsl(var(--foreground) / 0.7);
+  --colors-neutral-fill-4: hsl(var(--muted-foreground));
+  --colors-neutral-fill-5: hsl(var(--muted-foreground) / 0.7);
+  --colors-neutral-fill-6: hsl(var(--border));
+  --colors-neutral-fill-7: hsl(var(--muted));
+  --colors-neutral-fill-8: hsl(var(--muted) / 0.75);
+  --colors-neutral-fill-9: hsl(var(--card));
+  --colors-neutral-fill-10: hsl(var(--background));
+  --colors-neutral-fill-11: hsl(var(--card));
+  --colors-neutral-fill-12: hsl(var(--primary-bg));
+
+  /* ===== 线条色 ===== */
+  --colors-neutral-line-1: hsl(var(--foreground) / 0.8);
+  --colors-neutral-line-2: hsl(var(--foreground) / 0.6);
+  --colors-neutral-line-3: hsl(var(--foreground) / 0.4);
+  --colors-neutral-line-4: hsl(var(--muted-foreground));
+  --colors-neutral-line-5: hsl(var(--border));
+  --colors-neutral-line-6: hsl(var(--border) / 0.8);
+  --colors-neutral-line-7: hsl(var(--muted));
+  --colors-neutral-line-8: hsl(var(--muted) / 0.6);
+  --colors-neutral-line-9: hsl(var(--muted) / 0.3);
+  --colors-neutral-line-10: hsl(var(--background));
+  --colors-neutral-line-11: transparent;
+
+  /* ===== 状态色 - 错误 ===== */
+  --colors-error-1: hsl(var(--danger) / 0.15);
+  --colors-error-2: hsl(var(--danger) / 0.25);
+  --colors-error-3: hsl(var(--danger) / 0.4);
+  --colors-error-4: hsl(var(--danger) / 0.65);
+  --colors-error-5: hsl(var(--danger));
+  --colors-error-6: hsl(var(--danger) / 0.85);
+  --colors-error-7: hsl(var(--danger) / 0.65);
+  --colors-error-8: hsl(var(--danger-bg));
+  --colors-error-9: hsl(var(--danger-bg) / 0.6);
+  --colors-error-10: hsl(var(--danger-bg) / 0.3);
+
+  /* ===== 状态色 - 成功 ===== */
+  --colors-success-1: hsl(var(--success) / 0.15);
+  --colors-success-2: hsl(var(--success) / 0.25);
+  --colors-success-3: hsl(var(--success) / 0.4);
+  --colors-success-4: hsl(var(--success) / 0.65);
+  --colors-success-5: hsl(var(--success));
+  --colors-success-6: hsl(var(--success) / 0.85);
+  --colors-success-7: hsl(var(--success) / 0.65);
+  --colors-success-8: hsl(var(--success-bg));
+  --colors-success-9: hsl(var(--success-bg) / 0.6);
+  --colors-success-10: hsl(var(--success-bg) / 0.3);
+
+  /* ===== 状态色 - 警告 ===== */
+  --colors-warning-1: hsl(var(--warning) / 0.15);
+  --colors-warning-2: hsl(var(--warning) / 0.25);
+  --colors-warning-3: hsl(var(--warning) / 0.4);
+  --colors-warning-4: hsl(var(--warning) / 0.65);
+  --colors-warning-5: hsl(var(--warning));
+  --colors-warning-6: hsl(var(--warning) / 0.85);
+  --colors-warning-7: hsl(var(--warning) / 0.65);
+  --colors-warning-8: hsl(var(--warning-bg));
+  --colors-warning-9: hsl(var(--warning-bg) / 0.6);
+  --colors-warning-10: hsl(var(--warning-bg) / 0.3);
+
+  /* ===== 链接/信息色 (使用品牌色) ===== */
+  --colors-link-1: hsl(var(--primary) / 0.08);
+  --colors-link-2: hsl(var(--primary) / 0.16);
+  --colors-link-3: hsl(var(--primary) / 0.28);
+  --colors-link-4: hsl(var(--primary) / 0.48);
+  --colors-link-5: hsl(var(--primary));
+  --colors-link-6: hsl(var(--primary-light));
+  --colors-link-7: hsl(var(--primary-light) / 0.75);
+  --colors-link-8: hsl(var(--primary-bg));
+  --colors-link-9: hsl(var(--primary-bg) / 0.6);
+  --colors-link-10: hsl(var(--primary-bg) / 0.3);
+  --colors-info-1: var(--colors-link-1);
+  --colors-info-2: var(--colors-link-2);
+  --colors-info-3: var(--colors-link-3);
+  --colors-info-4: var(--colors-link-4);
+  --colors-info-5: var(--colors-link-5);
+  --colors-info-6: var(--colors-link-6);
+  --colors-info-7: var(--colors-link-7);
+  --colors-info-8: var(--colors-link-8);
+  --colors-info-9: var(--colors-link-9);
+  --colors-info-10: var(--colors-link-10);
+  --colors-other-1: var(--colors-link-1);
+  --colors-other-2: var(--colors-link-2);
+  --colors-other-3: var(--colors-link-3);
+  --colors-other-4: var(--colors-link-4);
+  --colors-other-5: var(--colors-link-5);
+  --colors-other-6: var(--colors-link-6);
+  --colors-other-7: var(--colors-link-7);
+  --colors-other-8: var(--colors-link-8);
+  --colors-other-9: var(--colors-link-9);
+  --colors-other-10: var(--colors-link-10);
+
+  /* ===== 圆角 ===== */
+  --borders-radius-1: 0;
+  --borders-radius-2: 4px;
+  --borders-radius-3: var(--radius-sm);
+  --borders-radius-4: var(--radius-sm);
+  --borders-radius-5: var(--radius-md);
+  --borders-radius-6: var(--radius-lg);
+  --borders-radius-7: 50%;
+
+  /* ===== 阴影 ===== */
+  --shadows-shadow-none: none;
+  --shadows-shadow-sm: var(--shadow-xs);
+  --shadows-shadow-normal: var(--shadow-sm);
+  --shadows-shadow-md: var(--shadow-md);
+  --shadows-shadow-lg: var(--shadow-lg);
+  --shadows-shadow-xl: var(--shadow-xl);
+  --shadows-shadow-2xl: var(--shadow-xl);
+
+  /* ===== 组件级变量覆盖 ===== */
+  --background: hsl(var(--card));
+  --Tooltip-bg: hsl(var(--card));
+  --Tooltip-boxShadow: var(--shadow-md);
+  --Tooltip--attr-bg: hsl(var(--foreground) / 0.9);
+  --Tooltip--attr-color: hsl(var(--background));
+  --common-popover-border: 1px solid hsl(var(--border));
+}
+
+/* ===== 暗色模式特殊调整 ===== */
+:root[data-mode='dark'] .nop-amis-page {
+  --colors-neutral-text-11: hsl(var(--card));
+  --Tooltip-bg: hsl(var(--gray-800));
+  --Tooltip--attr-bg: hsl(var(--gray-800));
+  --Tooltip--attr-color: hsl(var(--gray-100));
+}

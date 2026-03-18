@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, Maximize2, Menu, Minimize2, MoreHorizontal, RefreshCcw, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, MoreHorizontal, RefreshCcw, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { AppTab } from '@nop-chaos/shared'
 import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, cn } from '@nop-chaos/ui'
 import { resolveIcon } from '../utils/iconMap'
@@ -38,15 +39,17 @@ interface TabContextMenuProps {
 }
 
 function TabContextMenu({ menuState, onClose, onRefresh, onCloseCurrent, onCloseOthers, onCloseAll }: TabContextMenuProps) {
+  const { t } = useTranslation()
+
   if (!menuState) {
     return null
   }
 
   const items = [
-    { label: 'Refresh', action: () => onRefresh(menuState.path) },
-    { label: 'Close current', action: () => onCloseCurrent(menuState.path) },
-    { label: 'Close others', action: () => onCloseOthers(menuState.path) },
-    { label: 'Close all', action: onCloseAll }
+    { label: t('tabsBar.refresh'), action: () => onRefresh(menuState.path) },
+    { label: t('tabsBar.closeCurrent'), action: () => onCloseCurrent(menuState.path) },
+    { label: t('tabsBar.closeOthers'), action: () => onCloseOthers(menuState.path) },
+    { label: t('tabsBar.closeAll'), action: onCloseAll }
   ]
 
   const top = Math.max(VIEWPORT_PADDING, Math.min(menuState.y, window.innerHeight - MENU_HEIGHT - VIEWPORT_PADDING))
@@ -97,6 +100,7 @@ export function TabsBar({
   onToggleFullscreen,
   isFullscreen = false
 }: TabsBarProps) {
+  const { t } = useTranslation()
   const [menuState, setMenuState] = useState<MenuState | null>(null)
   const [isOverflowing, setIsOverflowing] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -158,14 +162,9 @@ export function TabsBar({
 
   return (
     <>
-      <div className="border-b border-[hsl(var(--border))] bg-[var(--app-tabs-bg)]/90 backdrop-blur-2xl">
+      <div className="hidden border-b border-[hsl(var(--border))] bg-[var(--app-tabs-bg)]/90 backdrop-blur-2xl lg:block">
         <div className="flex h-12 items-center gap-3 px-4 py-2 sm:px-6">
           <div className="flex min-w-0 flex-1 items-center gap-2">
-            {onToggleSidebar ? (
-              <Button variant="ghost" size="icon-sm" className="shrink-0 lg:hidden" onClick={onToggleSidebar}>
-                <Menu className="h-4 w-4" />
-              </Button>
-            ) : null}
             {isOverflowing ? (
               <Button variant="ghost" size="icon-sm" className="shrink-0" disabled={!canScrollLeft} onClick={() => scrollTabs('left')}>
                 <ChevronLeft className="h-4 w-4" />
@@ -232,14 +231,14 @@ export function TabsBar({
                     <Button
                       variant="ghost"
                       size="icon"
-                      aria-label={isFullscreen ? 'Exit fullscreen workspace' : 'Enter fullscreen workspace'}
+                      aria-label={isFullscreen ? t('tabsBar.exitFullscreenWorkspace') : t('tabsBar.enterFullscreenWorkspace')}
                       onClick={onToggleFullscreen}
                     >
                       {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" sideOffset={8}>
-                    {isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                    {isFullscreen ? t('tabsBar.exitFullscreen') : t('tabsBar.enterFullscreen')}
                     {' '}
                     <span className="opacity-80">Ctrl+Shift+F</span>
                   </TooltipContent>

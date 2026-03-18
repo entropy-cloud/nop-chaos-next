@@ -6,12 +6,13 @@ import { Button, Skeleton, toast } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { AppBrand } from '../components/layout/AppBrand'
+import { MobileTopBar } from '../components/layout/MobileTopBar'
 import { SidebarUserMenu } from '../components/layout/SidebarUserMenu'
 import { toRem } from '../config/layout'
 import { useAuth } from '../hooks/useAuth'
 import { useMenuConfigQuery } from '../hooks/useMenuConfig'
 import { useTabManagement } from '../hooks/useTabManagement'
-import { logoutRequest } from '../services/mockApi'
+import { logoutRequest } from '../services/authApi'
 import { useLayoutStore } from '../store/layoutStore'
 import { useTabStore } from '../store/tabStore'
 
@@ -37,7 +38,7 @@ export function AppShell() {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
+  const { user, token, logout } = useAuth()
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const shellRef = useRef<HTMLDivElement | null>(null)
   const sidebarCollapsed = useLayoutStore((state) => state.sidebarCollapsed)
@@ -160,7 +161,7 @@ export function AppShell() {
       return
     }
 
-    await logoutRequest()
+    await logoutRequest(token)
     logout()
     navigate('/auth/login', { replace: true })
     toast.success(t('auth.loggedOut'))
@@ -184,7 +185,7 @@ export function AppShell() {
       <Button
         variant="outline"
         size="icon-sm"
-        className="absolute -right-4 top-7 z-10 hidden rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] shadow-md lg:inline-flex"
+        className="absolute -right-4 top-7 z-10 max-lg:hidden rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] shadow-md"
         onClick={toggleSidebar}
       >
         {sidebarCollapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
@@ -203,6 +204,7 @@ export function AppShell() {
     >
       <MainLayout
         sidebar={shellSidebar}
+        topBar={<MobileTopBar title={currentMenu?.title ?? t('common.loading')} onToggleSidebar={() => setMobileSidebarOpen((value) => !value)} onLogout={() => void handleLogout()} />}
         mobileSidebar={
           <div className="w-[var(--sidebar-width-expanded)] max-w-[80vw]">
             <Sidebar

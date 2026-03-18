@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:mock": "vite --mode mock",
     "prebuild": "pnpm --filter @nop-chaos/plugin-demo build",
     "build": "tsc -p tsconfig.json --noEmit && vite build",
     "preview": "vite preview",
@@ -13,6 +14,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.2.0",
     "@nop-chaos/amis-core": "workspace:*",
     "@nop-chaos/amis-react": "workspace:*",
     "@nop-chaos/core": "workspace:*",
@@ -26,8 +28,8 @@
     "i18next-browser-languagedetector": "^8.2.1",
     "i18next-http-backend": "^3.0.2",
     "lucide-react": "^0.577.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-i18next": "^16.5.6",
     "react-router-dom": "^7.13.1",
     "recharts": "^2.12.0",

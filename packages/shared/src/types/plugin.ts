@@ -1,7 +1,9 @@
+import type { AppIconName } from './icon'
+
 export interface PluginManifest {
   id: string
   name: string
-  icon: string
+  icon: AppIconName
   description: string
   version: string
   author: string
