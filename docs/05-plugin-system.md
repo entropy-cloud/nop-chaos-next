@@ -1,36 +1,28 @@
-# 插件管理页面说明
+# 插件管理页面
 
-> 本文档只描述主应用里的“插件管理页面”和插件展示入口交互。插件架构、依赖边界、bridge 与 SystemJS 构建规范，请以 `docs/08-plugin-dev-guide.md` 为准。
+> 本文档描述插件管理页面的功能和交互。
 
 ---
 
 ## 1. 页面目标
 
-插件管理页面用于让用户查看当前已注册插件，并对插件做基础管理操作：
-
+插件管理页面用于：
 - 查看插件状态
 - 启用或禁用插件
 - 查看插件详情
 - 修改插件运行配置
 
-当前页面实现位置：`apps/main/src/pages/plugins/management/index.tsx`
+实现位置：`apps/main/src/pages/plugins/management/index.tsx`
 
 ---
 
 ## 2. 列表内容
 
-每个插件卡片当前展示：
+每个插件卡片展示：
+- 图标、名称、描述、版本号、 作者、 来源
+- 更新时间、 启用状态
 
-- 图标
-- 名称
-- 描述
-- 版本号
-- 作者
-- 来源
-- 更新时间
-- 当前启用状态
-
-对应 mock 数据结构可参考：`apps/main/src/services/mockApi/plugins.ts`
+Mock 数据： `apps/main/src/services/mockApi/plugins.ts`
 
 ---
 
@@ -38,88 +30,37 @@
 
 ### 3.1 启用 / 禁用
 
-- 使用 `Switch` 切换插件状态
-- 切换前弹出浏览器确认框
-- 确认后更新本地 store 中的插件状态
-- 成功后通过 toast 提示结果
-
-说明：
-
-- 当前是前端演示态管理
-- 状态变更落在主应用 store 和 mock 数据链路中
-- 不代表已经存在真实后端插件管理接口
+- 使用 `Switch` 切换状态
+- 切换前弹出确认框
+- 确认后更新本地 store
 
 ### 3.2 查看详情
 
-- 点击“查看详情”打开对话框
-- 展示插件基础信息
-- 用于快速确认插件元数据是否正确
+点击"查看详情"打开对话框，展示插件基础信息。
 
 ### 3.3 配置插件
 
-- 点击“配置”打开对话框
-- 根据 `configSchema` 渲染简单配置项
-- 当前支持的输入类型以文本、数字、简单选项为主
-- 修改后直接写回插件 store 中的 `settings`
+点击"配置"打开对话框，根据 `configSchema` 渲染配置项。
 
 ---
 
 ## 4. 数据来源
 
-当前页面数据查询函数：
-
-- `fetchPluginList()`
-
-所在文件：
-
-- `apps/main/src/services/mockApi/plugins.ts`
-
-当前主要依赖：
-
-- `useQuery()` 负责页面查询
-- `usePluginStore()` 负责插件状态读写
-
-说明：
-
-- 当前插件管理页以 mock 数据和本地状态为主
-- 如果后续接真实后端，可保持页面结构不变，只替换数据层
+- 查询：`fetchPluginList()` (`apps/main/src/services/mockApi/plugins.ts`)
+- 状态管理：`usePluginStore()` (packages/plugin-bridge 或 apps/main/src/store)
 
 ---
 
-## 5. 页面与插件运行时的关系
+## 5. 插件展示入口
 
-插件管理页面负责“管理入口”，不负责定义插件运行协议。
+- **插件管理页**：查看和配置插件
+- **业务页面中的插件路由**：渲染插件内容（`pageType: 'plugin'`）
 
-当前职责边界：
-
-- 本页负责展示和编辑插件元数据
-- 插件页面实际加载仍通过主路由和插件渲染链路完成
-- 插件与宿主的能力交互通过 `@nop-chaos/plugin-bridge` 完成
-
-相关现行规范见：
-
-- `docs/08-plugin-dev-guide.md`
+"插件已注册"与"插件已在页面中显示"是两个不同层次的概念。
 
 ---
 
-## 6. 插件展示入口
+## 6. 相关文档
 
-当前插件体系至少包含两类展示入口：
-
-- 插件管理页：用于查看和配置插件
-- 业务页面中的插件路由 / 插件挂载区：用于实际渲染插件内容
-
-例如：
-
-- Dashboard 可预留插件挂载区
-- 菜单中的 `pageType: 'plugin'` 页面会进入插件渲染链路
-
-因此，“插件已注册”与“插件已在某个页面中显示”是两个不同层次的概念。
-
----
-
-## 7. 后续扩展建议
-
-- 如接入真实后端，可把启停和配置保存改为真实 API
-- 如插件元数据字段增加，应优先更新 `PluginManifest` 与 mock seed
-- 插件架构规则不要继续堆叠在本文，统一维护在 `docs/08-plugin-dev-guide.md`
+- 插件开发规范：`docs/08-plugin-dev-guide.md`
+- Contribution 系统：`docs/15-contribution-system.md`

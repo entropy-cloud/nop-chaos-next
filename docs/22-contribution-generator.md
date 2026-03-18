@@ -1,6 +1,6 @@
-# Contribution Generator
+# Contribution 生成器
 
-> 本文档说明如何使用仓库内置脚手架生成一个新的 contribution 项目，并把它接到主应用联调命令里。
+> 本文档说明如何使用脚手架生成新的 contribution 项目。
 
 ---
 
@@ -9,126 +9,104 @@
 在仓库根目录执行：
 
 ```bash
-pnpm generate:contribution sales-ops-demo
+pnpm generate:contribution <name> [port]
 ```
 
-其中 `sales-ops-demo` 是你要生成的 contribution 名称。
-
-也可以显式指定端口：
-
+示例：
 ```bash
+pnpm generate:contribution sales-ops-demo
 pnpm generate:contribution sales-ops-demo 4190
 ```
 
-第二个参数用于设置该 contribution 的默认 dev / preview 端口，同时写入主应用联调 env。
-
-生成后会创建：
-
-- `examples/sales-ops-demo`
-- 根脚本 `dev:sales-ops-demo`
-- 根脚本 `dev:sales-ops-demo:host`
-- 根脚本 `dev:main:sales-ops-demo`
-- 主应用脚本 `apps/main/package.json` 中的 `dev:sales-ops-demo`
-- 主应用联调环境文件 `apps/main/.env.sales-ops-demo`
-
-如果目标目录或主应用 env 文件已存在，生成器会直接报出清晰错误，不会覆盖现有内容。
+第二个参数为可选端口，默认自动分配。
 
 ---
 
 ## 2. 生成内容
 
-脚手架会提供一套可直接运行的 contribution 基础结构：
+生成器创建：
+- `examples/<name>/` 目录结构
+- 根 `package.json` 中的脚本：
+  - `dev:<name>` - 独立开发
+  - `dev:<name>:host` - host 模式
+  - `dev:main:<name>` - 主应用联调
 
-- `package.json`
-- `vite.config.ts`
-- `tsconfig.json`
-- `tailwind.config.ts`
-- `index.html`
-- `src/index.ts`
-- `src/pages/*`
-- `src/standalone/main.tsx`
-- `src/theme.css`
-- `src/shell.css`
-- `src/component-page.css`
-- `README.md`
-
-默认是一个最小可运行的 builtin page contribution。
-
----
-
-## 3. 日常开发命令
-
-以 `sales-ops-demo` 为例：
-
-### 3.1 独立开发
-
-```bash
-pnpm dev:sales-ops-demo
-```
-
-用途：
-
-- 本地开发页面
-- 调样式
-- 调独立交互
-
-### 3.2 host mode
-
-```bash
-pnpm dev:sales-ops-demo:host
-```
-
-用途：
-
-- 以宿主共享运行时方式提供远程入口
-- 验证 React / UI / Router / bridge 共享边界
-
-### 3.3 主应用联调
-
-```bash
-pnpm dev:main:sales-ops-demo
-```
-
-用途：
-
-- 启动主应用并自动使用 `apps/main/.env.sales-ops-demo`
-- 自动接入刚生成的 contribution 远程入口和资源源站配置
-
-推荐双终端联调：
-
-```bash
-pnpm dev:sales-ops-demo:host
-pnpm dev:main:sales-ops-demo
+生成目录结构：
+```text
+examples/<name>/
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── tailwind.config.ts
+├── index.html
+├── src/
+│   ├── index.ts
+│   ├── pages/
+│   ├── standalone/main.tsx
+│   ├── theme.css
+│   ├── shell.css
+│   └── component-page.css
+└── README.md
 ```
 
 ---
 
-## 4. 生成后通常要改什么
+## 3. 开发命令
 
-生成器提供的是骨架，不是最终业务实现。通常需要继续调整：
+### 独立开发
 
-- `src/index.ts`
-  - contribution id
-  - theme / styles / menus / builtinPages
-  - i18n resources
-- `src/pages/*`
-  - 替换成真实页面
-- `src/standalone/main.tsx`
-  - 替换独立调试入口文案或包壳
-- `src/theme.css`
-- `src/shell.css`
-- `src/component-page.css`
-- `README.md`
+```bash
+pnpm dev:<name>
+```
+
+用途：本地页面开发、样式调试
+
+### Host 模式
+
+```bash
+pnpm dev:<name>:host
+```
+
+用途：以宿主共享运行时方式提供远程入口
+
+### 主应用联调
+
+```bash
+pnpm dev:main:<name>
+```
+
+用途：启动主应用并自动接入 contribution
+
+推荐双终端：
+```bash
+# 终端 1
+pnpm dev:<name>:host
+
+# 终端 2
+pnpm dev:main:<name>
+```
 
 ---
 
-## 5. 命名约定
+## 4. 命名约定
 
 输入名称会被标准化成 slug：
 
-- 输入：`Sales Ops Demo`
-- 输出目录：`examples/sales-ops-demo`
-- 包名：`@nop-chaos/example-sales-ops-demo`
-- 主应用联调命令：`pnpm dev:main:sales-ops-demo`
+| 输入 | 输出 |
+|------|------|
+| `Sales Ops Demo` | `sales-ops-demo` |
+| `My App` | `my-app` |
 
-建议直接使用小写短横线命名。
+- 目录：`examples/sales-ops-demo`
+- 包名： `@nop-chaos/example-sales-ops-demo`
+- 命令： `pnpm dev:sales-ops-demo`
+
+---
+
+## 5. 生成后需要修改
+
+- `src/index.ts` - contribution id、主题、菜单、内置页面
+- `src/pages/*` - 替换成真实页面
+- `src/standalone/main.tsx` - 独立调试入口
+- `src/theme.css` / `src/shell.css` / `src/component-page.css` - 样式文件
+- `README.md` - 项目说明
