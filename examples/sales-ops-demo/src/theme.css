@@ -1,0 +1,7 @@
+:root {
+  --sales-ops-demo-accent: 210 84% 56%;
+}
+
+body {
+  background-image: radial-gradient(circle at top right, hsl(var(--sales-ops-demo-accent) / 0.18), transparent 40%);
+}

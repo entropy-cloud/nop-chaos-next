@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import type { ContributionBuiltinPageComponent } from '@nop-chaos/shared'
+import { getSystemPageComponentId } from '../contributions/runtime'
 import LoginPage from '../pages/auth/login'
 import ForbiddenPage from '../pages/errors/403'
 import NotFoundPage from '../pages/errors/404'
@@ -38,7 +39,11 @@ export const builtinPageRegistry: Record<string, BuiltinPage> = {
   'settings-home': SettingsHomePage,
   'settings-language': SettingsLanguagePage,
   'settings-layout': SettingsLayoutPage,
-  'settings-theme': SettingsThemePage
+  'settings-theme': SettingsThemePage,
+  'system-login': LoginPage,
+  'system-forbidden': ForbiddenPage,
+  'system-not-found': NotFoundPage,
+  'system-server-error': ServerErrorPage
 }
 
 const contributedBuiltinPageRegistry: Record<string, BuiltinPage> = {}
@@ -55,6 +60,21 @@ export function getBuiltinPage(componentId?: string): BuiltinPage | undefined {
   }
 
   return contributedBuiltinPageRegistry[componentId] ?? builtinPageRegistry[componentId]
+}
+
+const defaultSystemPageIds = {
+  login: 'system-login',
+  forbidden: 'system-forbidden',
+  notFound: 'system-not-found',
+  serverError: 'system-server-error',
+  dashboard: 'dashboard'
+} as const
+
+export type SystemPageKey = keyof typeof defaultSystemPageIds
+
+export function getSystemPage(pageKey: SystemPageKey): BuiltinPage | undefined {
+  const componentId = getSystemPageComponentId(pageKey) ?? defaultSystemPageIds[pageKey]
+  return getBuiltinPage(componentId)
 }
 
 export { ForbiddenPage, LoginPage, NotFoundPage, ServerErrorPage }

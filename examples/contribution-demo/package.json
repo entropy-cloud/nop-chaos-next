@@ -5,26 +5,31 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "dev:host": "vite --mode host",
+    "build": "tsc -p tsconfig.json --noEmit && vite build --mode host",
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
+    "@nop-chaos/plugin-bridge": "workspace:*",
     "@nop-chaos/shared": "workspace:*",
     "@nop-chaos/tailwind-preset": "workspace:*",
     "@nop-chaos/theme-tokens": "workspace:*",
     "@nop-chaos/ui": "workspace:*",
     "@vitejs/plugin-react": "^6.0.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3",
     "vite": "^8.0.0"
   },
   "peerDependencies": {
+    "@nop-chaos/plugin-bridge": "workspace:*",
     "@nop-chaos/shared": "workspace:*",
-    "react": "^19.2.4"
+    "@nop-chaos/ui": "workspace:*",
+    "react": "^18.3.1"
   }
 }

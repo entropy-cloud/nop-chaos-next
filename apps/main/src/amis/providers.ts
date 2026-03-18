@@ -2,12 +2,16 @@ import type { AmisDictProvider, AmisPageProvider } from '@nop-chaos/amis-core'
 import { isMockEnabled } from '../config/env'
 import { fetchDictOptions } from '../services/dictApi'
 import { fetchAmisPage } from '../services/pageApi'
-import { testAmisSchema } from './testSchema'
+
+async function getPreviewSchema() {
+  const module = await import('./testSchema')
+  return module.testAmisSchema
+}
 
 export const mainAmisPageProvider: AmisPageProvider = {
   async getPage(schemaPath) {
     if (schemaPath === 'mock://preview') {
-      return testAmisSchema
+      return getPreviewSchema()
     }
 
     return fetchAmisPage(schemaPath)

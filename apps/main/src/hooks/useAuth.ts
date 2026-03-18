@@ -34,7 +34,11 @@ export function useAuthBootstrap() {
       try {
         state.setBootstrapStatus('pending')
         const user = await fetchCurrentUser(state.token)
-        useAuthStore.getState().setSession({ user, token: state.token })
+        useAuthStore.getState().setSession({
+          user,
+          token: state.token,
+          tokens: state.tokens
+        })
       } catch {
         useAuthStore.getState().logout()
       }

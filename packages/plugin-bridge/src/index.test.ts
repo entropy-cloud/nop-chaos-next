@@ -10,7 +10,7 @@ function createBridge(): PluginBridge {
 
   return {
     i18n: {
-      language: 'en',
+      language: 'en-US',
       t: (key: string) => key
     } as PluginBridge['i18n'],
     notifications: {
@@ -40,7 +40,7 @@ function createBridge(): PluginBridge {
     subscribe: () => () => undefined,
     getSnapshot: () => ({
       i18n: {
-        language: 'en',
+        language: 'en-US',
         t: (key: string) => key
       } as PluginBridge['i18n'],
       themeConfig,

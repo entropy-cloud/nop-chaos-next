@@ -59,7 +59,7 @@ const BRIDGE_LISTENERS_KEY = '__NOP_PLUGIN_BRIDGE_LISTENERS__'
 const FALLBACK_THEME_CONFIG: ThemeConfig = { themeId: 'classic', displayMode: 'light' }
 
 const fallbackI18n = {
-  language: 'en',
+  language: 'en-US',
   t: (key: string) => key
 } as i18n
 

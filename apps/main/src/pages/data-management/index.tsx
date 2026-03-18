@@ -7,7 +7,7 @@ export default function DataManagementPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow={t('common.frontendShell')} title={t('dataManagement.title')} description={t('dataManagement.placeholder')} />
+      <PageHeader title={t('dataManagement.title')} description={t('dataManagement.placeholder')} />
       <Card className="theme-card">
         <CardHeader>
           <CardTitle>{t('dataManagement.title')}</CardTitle>

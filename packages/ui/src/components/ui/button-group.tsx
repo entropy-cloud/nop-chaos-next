@@ -1,3 +1,4 @@
+import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
@@ -37,25 +38,34 @@ function ButtonGroup({
   )
 }
 
-function ButtonGroupText({
-  className,
-  asChild = false,
-  ...props
-}: React.ComponentProps<"div"> & {
+type ButtonGroupTextProps = React.HTMLAttributes<HTMLDivElement> & {
   asChild?: boolean
-}) {
-  const Comp = asChild ? Slot.Root : "div"
-
-  return (
-    <Comp
-      className={cn(
-        "flex items-center gap-2 rounded-md border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
-        className
-      )}
-      {...props}
-    />
-  )
 }
+
+const ButtonGroupText = React.forwardRef<HTMLDivElement, ButtonGroupTextProps>(
+  function ButtonGroupText({ className, asChild = false, ...props }, ref) {
+    const classNames = cn(
+      "flex items-center gap-2 rounded-md border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+      className
+    )
+
+    if (asChild) {
+      return React.createElement(Slot.Root as any, {
+        ref: ref as any,
+        className: classNames,
+        ...props,
+      })
+    }
+
+    return React.createElement('div', {
+      ref,
+      className: classNames,
+      ...props,
+    })
+  }
+)
+
+ButtonGroupText.displayName = 'ButtonGroupText'
 
 function ButtonGroupSeparator({
   className,

@@ -1,0 +1,5 @@
+.contribution-hero {
+  background:
+    linear-gradient(135deg, hsl(var(--background) / 0.94), hsl(var(--background) / 0.72)),
+    radial-gradient(circle at top right, hsl(var(--primary) / 0.18), transparent 38%);
+}

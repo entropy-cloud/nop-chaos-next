@@ -1,8 +1,8 @@
+import type { HTMLAttributes } from 'react'
 import type { AppIconName } from '@nop-chaos/shared'
-import type { LucideProps } from 'lucide-react'
 import { renderIcon } from '../utils/iconMap'
 
-export interface LowCodeIconProps extends LucideProps {
+export interface LowCodeIconProps extends HTMLAttributes<HTMLSpanElement> {
   name?: string
   fallback?: AppIconName
 }

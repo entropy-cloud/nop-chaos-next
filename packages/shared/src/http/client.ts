@@ -73,47 +73,89 @@ async function parseResponseBody(response: Response, responseType: HttpRequestOp
 }
 
 export function createHttpClient(runtime: HttpRuntime) {
+  let refreshPromise: Promise<string> | null = null
+
+  async function getValidToken(): Promise<string | undefined> {
+    if (runtime.getValidToken) {
+      return runtime.getValidToken()
+    }
+    return runtime.getAuthToken()
+  }
+
+  async function doRefreshToken(): Promise<string> {
+    if (refreshPromise) {
+      return refreshPromise
+    }
+
+    if (runtime.refreshAccessToken) {
+      refreshPromise = runtime.refreshAccessToken().finally(() => {
+        refreshPromise = null
+      })
+      return refreshPromise
+    }
+
+    throw new Error('Token refresh not available')
+  }
+
+  async function doRequest<T>(options: HttpRequestOptions, token?: string): Promise<HttpResponse<T>> {
+    const headers = new Headers({
+      Accept: 'application/json',
+      'nop-locale': runtime.getLocale(),
+      'x-requested-with': 'XMLHttpRequest',
+      ...options.headers
+    })
+
+    if (options.withAuth !== false && token) {
+      headers.set('x-access-token', token)
+      headers.set('authorization', `Bearer ${token}`)
+      headers.set('x-timestamp', String(Date.now()))
+      headers.set('x-tenant-id', headers.get('x-tenant-id') ?? '0')
+      headers.set('x-version', headers.get('x-version') ?? 'v3')
+      headers.set('nop-app-id', headers.get('nop-app-id') ?? DEFAULT_APP_ID)
+    }
+
+    const method = options.method ?? (options.data === undefined ? 'GET' : 'POST')
+    const response = await fetch(resolveRequestUrl(options.url, options.query, runtime.getBaseUrl()), {
+      method,
+      headers,
+      signal: options.signal,
+      body: method.toUpperCase() === 'GET' ? undefined : serializeRequestBody(options.data, headers)
+    })
+
+    const responseToken = response.headers.get('x-access-token')
+    if (responseToken) {
+      runtime.setAuthToken?.(responseToken)
+    }
+
+    return {
+      status: response.status,
+      headers: normalizeHeaders(response.headers),
+      data: (await parseResponseBody(response, options.responseType)) as T
+    }
+  }
+
   return {
     async request<T = unknown>(options: HttpRequestOptions): Promise<HttpResponse<T>> {
-      const token = runtime.getAuthToken()
-      const headers = new Headers({
-        Accept: 'application/json',
-        'nop-locale': runtime.getLocale(),
-        'x-requested-with': 'XMLHttpRequest',
-        ...options.headers
-      })
+      const token = options.withAuth === false ? runtime.getAuthToken() : await getValidToken()
+      let response = await doRequest<T>(options, token)
 
-      if (options.withAuth !== false && token) {
-        headers.set('x-access-token', token)
-        headers.set('authorization', `Bearer ${token}`)
-        headers.set('x-timestamp', String(Date.now()))
-        headers.set('x-tenant-id', headers.get('x-tenant-id') ?? '0')
-        headers.set('x-version', headers.get('x-version') ?? 'v3')
-        headers.set('nop-app-id', headers.get('nop-app-id') ?? DEFAULT_APP_ID)
+      if (response.status === 401 && options.withAuth !== false) {
+        const refreshToken = runtime.getRefreshToken?.()
+        if (refreshToken) {
+          try {
+            const newToken = await doRefreshToken()
+            response = await doRequest<T>(options, newToken)
+            return response
+          } catch {
+            runtime.clearTokens?.()
+            runtime.onUnauthorized?.()
+          }
+        } else {
+          runtime.onUnauthorized?.()
+        }
       }
 
-      const method = options.method ?? (options.data === undefined ? 'GET' : 'POST')
-      const response = await fetch(resolveRequestUrl(options.url, options.query, runtime.getBaseUrl()), {
-        method,
-        headers,
-        signal: options.signal,
-        body: method.toUpperCase() === 'GET' ? undefined : serializeRequestBody(options.data, headers)
-      })
-      const responseToken = response.headers.get('x-access-token')
-
-      if (responseToken) {
-        runtime.setAuthToken?.(responseToken)
-      }
-
-      if (response.status === 401) {
-        runtime.onUnauthorized?.()
-      }
-
-      return {
-        status: response.status,
-        headers: normalizeHeaders(response.headers),
-        data: (await parseResponseBody(response, options.responseType)) as T
-      }
+      return response
     }
   }
 }

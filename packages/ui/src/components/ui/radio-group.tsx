@@ -4,25 +4,29 @@ import { RadioGroup as RadioGroupPrimitive } from "radix-ui"
 
 import { cn } from "@nop-chaos/ui/lib/utils"
 
-function RadioGroup({
-  className,
-  ...props
-}: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
+const RadioGroup = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
+>(function RadioGroup({ className, ...props }, ref) {
   return (
     <RadioGroupPrimitive.Root
+      ref={ref}
       data-slot="radio-group"
       className={cn("grid gap-3", className)}
       {...props}
     />
   )
-}
+})
 
-function RadioGroupItem({
-  className,
-  ...props
-}: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {
+RadioGroup.displayName = 'RadioGroup'
+
+const RadioGroupItem = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
+>(function RadioGroupItem({ className, ...props }, ref) {
   return (
     <RadioGroupPrimitive.Item
+      ref={ref}
       data-slot="radio-group-item"
       className={cn(
         "aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
@@ -38,6 +42,8 @@ function RadioGroupItem({
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
-}
+})
+
+RadioGroupItem.displayName = 'RadioGroupItem'
 
 export { RadioGroup, RadioGroupItem }

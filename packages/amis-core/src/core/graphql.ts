@@ -34,6 +34,10 @@ function isSpecialVarName(name: string) {
   return name.startsWith('__') || name.startsWith('@') || name.startsWith('v_')
 }
 
+function getGraphQLSelection(options: AmisRequestOptions) {
+  return options['gql:selection']
+}
+
 function splitGraphQLData(data: Record<string, unknown>) {
   const body: Record<string, unknown> = {}
   const params: Record<string, unknown> = {}
@@ -204,7 +208,7 @@ function normalizePickerLoadOptions(data: Record<string, unknown>, options: Amis
   if (operationName !== 'findPage' || data.op !== 'loadOptions') {
     return {
       data,
-      selection: options.gqlSelection
+      selection: getGraphQLSelection(options)
     }
   }
 

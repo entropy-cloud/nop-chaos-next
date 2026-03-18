@@ -65,4 +65,19 @@ describe('transformGraphQLRequest', () => {
       name: 'id'
     })
   })
+
+  it('reads legacy gql selection option names', () => {
+    const transformed = transformGraphQLRequest({
+      url: '@query:NopAuthDept__findList',
+      data: {
+        limit: 10
+      },
+      'gql:selection': 'id,deptName,parentId'
+    })
+
+    const payload = transformed?.request.data as { query: string }
+
+    expect(payload.query).toContain('NopAuthDept__findList(query:$query){')
+    expect(payload.query).toContain('{\nid,deptName,parentId\n}')
+  })
 })

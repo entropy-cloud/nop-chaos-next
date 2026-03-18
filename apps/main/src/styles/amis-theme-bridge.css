@@ -3,7 +3,8 @@
  * 将 amis CSS 变量映射到宿主主题变量，支持主题切换
  */
 
-.nop-amis-page {
+.amis,
+.amis-dialog-widget {
   color-scheme: inherit;
 
   /* ===== 品牌色 ===== */
@@ -154,7 +155,8 @@
 }
 
 /* ===== 暗色模式特殊调整 ===== */
-:root[data-mode='dark'] .nop-amis-page {
+:root[data-mode='dark'] .amis,
+:root[data-mode='dark'] .amis-dialog-widget {
   --colors-neutral-text-11: hsl(var(--card));
   --Tooltip-bg: hsl(var(--gray-800));
   --Tooltip--attr-bg: hsl(var(--gray-800));

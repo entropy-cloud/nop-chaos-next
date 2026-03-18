@@ -39,7 +39,7 @@ describe('authApi', () => {
   it('delegates login to backend HTTP when mock mode is disabled', async () => {
     vi.stubEnv('VITE_ENABLE_MOCK', 'false')
     ajaxFetch.mockResolvedValue({
-      token: 'real-token',
+      accessToken: 'real-token',
       userInfo: {
         username: 'alice',
         nickname: 'Alice',
@@ -53,6 +53,12 @@ describe('authApi', () => {
     expect(ajaxFetch).toHaveBeenCalledOnce()
     expect(session).toEqual({
       token: 'real-token',
+      tokens: {
+        accessToken: 'real-token',
+        expiresAt: undefined,
+        refreshToken: undefined,
+        refreshExpiresAt: undefined
+      },
       user: {
         id: 'alice',
         username: 'alice',

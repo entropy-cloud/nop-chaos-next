@@ -8,7 +8,7 @@ export default function PluginsHomePage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow={t('common.frontendShell')} title={t('plugins.title')} description={t('plugins.homeDescription')} />
+      <PageHeader title={t('plugins.title')} description={t('plugins.homeDescription')} />
       <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
         <Card className="theme-card">
           <CardHeader>

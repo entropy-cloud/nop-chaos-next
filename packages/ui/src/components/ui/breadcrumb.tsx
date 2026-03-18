@@ -31,23 +31,33 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   )
 }
 
-function BreadcrumbLink({
-  asChild,
-  className,
-  ...props
-}: React.ComponentProps<"a"> & {
+type BreadcrumbLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   asChild?: boolean
-}) {
-  const Comp = asChild ? Slot.Root : "a"
-
-  return (
-    <Comp
-      data-slot="breadcrumb-link"
-      className={cn("transition-colors hover:text-foreground", className)}
-      {...props}
-    />
-  )
 }
+
+const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
+  function BreadcrumbLink({ asChild, className, ...props }, ref) {
+    const classNames = cn("transition-colors hover:text-foreground", className)
+
+    if (asChild) {
+      return React.createElement(Slot.Root as any, {
+        ref: ref as any,
+        'data-slot': 'breadcrumb-link',
+        className: classNames,
+        ...props,
+      })
+    }
+
+    return React.createElement('a', {
+      ref,
+      'data-slot': 'breadcrumb-link',
+      className: classNames,
+      ...props,
+    })
+  }
+)
+
+BreadcrumbLink.displayName = 'BreadcrumbLink'
 
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (

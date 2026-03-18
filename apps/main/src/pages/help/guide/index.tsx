@@ -7,7 +7,7 @@ export default function HelpGuidePage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow={t('common.frontendShell')} title={t('help.guideTitle')} description={t('help.guideDescription')} />
+      <PageHeader title={t('help.guideTitle')} description={t('help.guideDescription')} />
       <Card className="theme-card">
         <CardHeader>
           <CardTitle>{t('help.guideTitle')}</CardTitle>

@@ -69,118 +69,141 @@ body.is-modalOpened .ant-popover {
 }
 
 /* ===== Amis 组件样式修复 ===== */
-.nop-amis-page {
+.amis {
   font-family: inherit;
 }
 
-.nop-amis-page .cxd-Pagination > li > a,
-.nop-amis-page .cxd-Pagination > li > span {
+.amis .cxd-Pagination > li > a,
+.amis .cxd-Pagination > li > span {
   height: auto;
 }
 
-.nop-amis-page .cxd-Table--autoFillHeight .cxd-Table-footToolbar {
+.amis .cxd-Table--autoFillHeight .cxd-Table-footToolbar {
   padding: 0;
 }
 
-.nop-amis-page .cxd-Panel.no-heading > .cxd-Panel-heading {
+.amis .cxd-Panel.no-heading > .cxd-Panel-heading {
   display: none;
 }
 
-.nop-amis-page .cxd-Panel.actions-center > .cxd-Panel-footerWrap > .cxd-Panel-btnToolbar {
+.amis .cxd-Panel.actions-center > .cxd-Panel-footerWrap > .cxd-Panel-btnToolbar {
   text-align: center;
 }
 
-.nop-amis-page .cxd-TreeControl.h-full > .cxd-Tree {
+.amis .cxd-TreeControl.h-full > .cxd-Tree {
   max-height: none;
 }
 
+.amis-dialog-widget .cxd-Dialog-content,
+.amis-dialog-widget .cxd-Modal-content,
+.amis-dialog-widget .cxd-Modal-header,
+.amis-dialog-widget .cxd-Modal-body,
+.amis-dialog-widget .cxd-Modal-footer,
+.amis-dialog-widget .cxd-Drawer-content,
+.amis-dialog-widget .cxd-Drawer-header,
+.amis-dialog-widget .cxd-Drawer-body,
+.amis-dialog-widget .cxd-Drawer-footer {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+}
+
+.amis-dialog-widget .cxd-Modal-content,
+.amis-dialog-widget .cxd-Dialog-content,
+.amis-dialog-widget .cxd-Drawer-content {
+  border-color: hsl(var(--border));
+}
+
+.amis-dialog-widget .cxd-Modal-overlay {
+  background: hsl(var(--foreground) / 0.36);
+}
+
 /* ===== 主题适配增强 ===== */
-.nop-amis-page .cxd-Button {
+.amis .cxd-Button {
   transition: all var(--transition-fast);
 }
 
-.nop-amis-page .cxd-Button--primary {
+.amis .cxd-Button--primary {
   background: hsl(var(--primary));
   border-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }
 
-.nop-amis-page .cxd-Button--primary:hover {
+.amis .cxd-Button--primary:hover {
   background: hsl(var(--primary-dark));
   border-color: hsl(var(--primary-dark));
 }
 
-.nop-amis-page .cxd-Card {
+.amis .cxd-Card {
   background: hsl(var(--card));
   border-color: hsl(var(--border));
   border-radius: var(--radius-md);
 }
 
-.nop-amis-page .cxd-Panel {
+.amis .cxd-Panel {
   background: hsl(var(--card));
   border-color: hsl(var(--border));
   border-radius: var(--radius-md);
 }
 
-.nop-amis-page .cxd-Table-table {
+.amis .cxd-Table-table {
   background: hsl(var(--card));
 }
 
-.nop-amis-page .cxd-Table-th {
+.amis .cxd-Table-th {
   background: hsl(var(--muted));
   color: hsl(var(--muted-foreground));
 }
 
-.nop-amis-page .cxd-Table td {
+.amis .cxd-Table td {
   border-color: hsl(var(--border));
 }
 
-.nop-amis-page .cxd-Form-item {
+.amis .cxd-Form-item {
   margin-bottom: var(--sizes-base-8, 1rem);
 }
 
-.nop-amis-page .cxd-Input {
+.amis .cxd-Input {
   background: hsl(var(--background));
   border-color: hsl(var(--input));
   border-radius: var(--radius-sm);
   color: hsl(var(--foreground));
 }
 
-.nop-amis-page .cxd-Input:focus {
+.amis .cxd-Input:focus {
   border-color: hsl(var(--ring));
   box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
 }
 
-.nop-amis-page .cxd-Select {
+.amis .cxd-Select {
   background: hsl(var(--background));
   border-color: hsl(var(--input));
   border-radius: var(--radius-sm);
 }
 
-.nop-amis-page .cxd-Alert {
+.amis .cxd-Alert {
   border-radius: var(--radius-md);
 }
 
-.nop-amis-page .cxd-Alert--info {
+.amis .cxd-Alert--info {
   background: hsl(var(--primary-bg));
   border-color: hsl(var(--primary) / 0.3);
   color: hsl(var(--primary-dark));
 }
 
-.nop-amis-page .cxd-Alert--success {
+.amis .cxd-Alert--success {
   background: hsl(var(--success-bg));
   border-color: hsl(var(--success) / 0.3);
   color: hsl(var(--success));
 }
 
-.nop-amis-page .cxd-Alert--danger,
-.nop-amis-page .cxd-Alert--error {
+.amis .cxd-Alert--danger,
+.amis .cxd-Alert--error {
   background: hsl(var(--danger-bg));
   border-color: hsl(var(--danger) / 0.3);
   color: hsl(var(--danger));
 }
 
-.nop-amis-page .cxd-Alert--warning {
+.amis .cxd-Alert--warning {
   background: hsl(var(--warning-bg));
   border-color: hsl(var(--warning) / 0.3);
   color: hsl(var(--warning));

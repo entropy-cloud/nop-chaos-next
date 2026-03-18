@@ -1,5 +1,5 @@
 import type { AppIconName, MenuItem, MenuResponse } from '@nop-chaos/shared'
-import { isAppIconName, validateMenuResponse } from '@nop-chaos/shared'
+import { normalizeAppIconName, validateMenuResponse } from '@nop-chaos/shared'
 import { mergeContributionMenus } from '../contributions/runtime'
 
 export interface LegacySiteMapResource {
@@ -107,7 +107,7 @@ function toIcon(icon?: string): AppIconName | undefined {
     return undefined
   }
 
-  return isAppIconName(icon) ? icon : 'home'
+  return normalizeAppIconName(icon) ?? 'home'
 }
 
 function extractRoles(resource: LegacySiteMapResource) {

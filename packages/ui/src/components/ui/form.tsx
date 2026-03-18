@@ -85,14 +85,15 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function FormLabel({
-  className,
-  ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>) {
+const FormLabel = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(function FormLabel({ className, ...props }, ref) {
   const { error, formItemId } = useFormField()
 
   return (
     <Label
+      ref={ref}
       data-slot="form-label"
       data-error={!!error}
       className={cn("data-[error=true]:text-destructive", className)}
@@ -100,25 +101,28 @@ function FormLabel({
       {...props}
     />
   )
-}
+})
 
-function FormControl({ ...props }: React.ComponentProps<typeof Slot.Root>) {
+FormLabel.displayName = 'FormLabel'
+
+const FormControl = React.forwardRef<HTMLElement, React.ComponentProps<typeof Slot.Root>>(
+  function FormControl(props, ref) {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
-  return (
-    <Slot.Root
-      data-slot="form-control"
-      id={formItemId}
-      aria-describedby={
-        !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
-      }
-      aria-invalid={!!error}
-      {...props}
-    />
-  )
-}
+    return React.createElement(Slot.Root as any, {
+      ref: ref as any,
+      'data-slot': 'form-control',
+      id: formItemId,
+      'aria-describedby': !error
+        ? `${formDescriptionId}`
+        : `${formDescriptionId} ${formMessageId}`,
+      'aria-invalid': !!error,
+      ...props,
+    })
+  }
+)
+
+FormControl.displayName = 'FormControl'
 
 function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
   const { formDescriptionId } = useFormField()

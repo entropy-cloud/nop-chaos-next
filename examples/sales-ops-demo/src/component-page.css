@@ -1,0 +1,7 @@
+.contribution-panel {
+  border: 1px solid hsl(var(--border));
+  border-radius: 1.25rem;
+  background: hsl(var(--background) / 0.72);
+  padding: 1.25rem;
+  backdrop-filter: blur(18px);
+}

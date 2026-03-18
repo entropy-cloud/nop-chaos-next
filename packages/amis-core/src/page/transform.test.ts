@@ -41,7 +41,7 @@ describe('transformPageJson', () => {
     })
   })
 
-  it('adds nop-amis-page class to dialog bodyClassName', async () => {
+  it('adds amis class to dialog className and bodyClassName', async () => {
     registerAmisRuntimeAdapter(createMockAdapter())
 
     const transformed = (await transformPageJson({
@@ -54,10 +54,27 @@ describe('transformPageJson', () => {
     })) as AmisSchemaRecord
 
     const dialog = transformed.onClick as AmisSchemaRecord
-    expect(dialog.bodyClassName).toContain('nop-amis-page')
+    expect(dialog.className).toContain('amis')
+    expect(dialog.bodyClassName).toContain('amis')
   })
 
-  it('adds nop-amis-page class to drawer className', async () => {
+  it('preserves existing dialog className and bodyClassName when adding amis', async () => {
+    registerAmisRuntimeAdapter(createMockAdapter())
+
+    const transformed = (await transformPageJson({
+      type: 'dialog',
+      className: 'dialog-shell',
+      bodyClassName: 'dialog-body',
+      body: 'content'
+    })) as AmisSchemaRecord
+
+    expect(transformed.className).toContain('amis')
+    expect(transformed.className).toContain('dialog-shell')
+    expect(transformed.bodyClassName).toContain('amis')
+    expect(transformed.bodyClassName).toContain('dialog-body')
+  })
+
+  it('adds amis class to drawer className', async () => {
     registerAmisRuntimeAdapter(createMockAdapter())
 
     const transformed = (await transformPageJson({
@@ -70,10 +87,10 @@ describe('transformPageJson', () => {
     })) as AmisSchemaRecord
 
     const drawer = transformed.onClick as AmisSchemaRecord
-    expect(drawer.className).toContain('nop-amis-page')
+    expect(drawer.className).toContain('amis')
   })
 
-  it('preserves existing className when adding nop-amis-page', async () => {
+  it('preserves existing className when adding amis', async () => {
     registerAmisRuntimeAdapter(createMockAdapter())
 
     const transformed = (await transformPageJson({
@@ -82,7 +99,20 @@ describe('transformPageJson', () => {
       body: 'content'
     })) as AmisSchemaRecord
 
-    expect(transformed.className).toContain('nop-amis-page')
+    expect(transformed.className).toContain('amis')
     expect(transformed.className).toContain('existing-class')
+  })
+
+  it('adds amis class to modal className and bodyClassName', async () => {
+    registerAmisRuntimeAdapter(createMockAdapter())
+
+    const transformed = (await transformPageJson({
+      type: 'modal',
+      title: 'Test Modal',
+      body: 'modal content'
+    })) as AmisSchemaRecord
+
+    expect(transformed.className).toContain('amis')
+    expect(transformed.bodyClassName).toContain('amis')
   })
 })

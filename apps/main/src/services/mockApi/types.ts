@@ -61,7 +61,7 @@ export interface AssistantOption {
   name: string
   color: string
   description: string
-  icon: 'bot' | 'line-chart' | 'git-branch'
+  icon: 'bot' | 'chart-line' | 'git-branch'
 }
 
 export interface WorkbenchMessage {

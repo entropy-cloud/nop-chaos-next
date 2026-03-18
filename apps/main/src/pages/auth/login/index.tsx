@@ -9,18 +9,25 @@ import { isMockEnabled } from '../../../config/env'
 import { getLanguageOptions } from '../../../config/i18n/languages'
 import { useAuth } from '../../../hooks/useAuth'
 import { useMenuConfigQuery } from '../../../hooks/useMenuConfig'
+import { useShellConfig } from '../../../hooks/useShellConfig'
 import { loginWithPassword } from '../../../services/authApi'
 
 export default function LoginPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const { login } = useAuth()
+  const { loginUi } = useShellConfig()
   const languageOptions = getLanguageOptions()
   const mockMode = isMockEnabled()
   const [username, setUsername] = useState(mockMode ? 'nop' : '')
   const [password, setPassword] = useState(mockMode ? '123' : '')
   const [submitting, setSubmitting] = useState(false)
   const menuQuery = useMenuConfigQuery(false)
+  const loginTitle = loginUi.cardTitleKey ? t(loginUi.cardTitleKey) : t('auth.login')
+  const heroTitle = loginUi.heroTitleKey ? t(loginUi.heroTitleKey) : t('login.heroTitle')
+  const heroDescription = loginUi.heroDescriptionKey ? t(loginUi.heroDescriptionKey) : t('login.heroDescription')
+  const cardDescription = loginUi.cardDescriptionKey ? t(loginUi.cardDescriptionKey) : t('login.cardDescription')
+  const showDemoHint = loginUi.showDemoHint ?? mockMode
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -51,15 +58,15 @@ export default function LoginPage() {
             <AppBrand />
             <div className="space-y-4">
               <div className="eyebrow-text tracking-[0.26em]">{t('common.adaptiveFrontendShell')}</div>
-              <h1 className="max-w-xl text-5xl font-semibold leading-tight text-foreground">{t('login.heroTitle')}</h1>
-              <p className="max-w-xl text-lg text-muted-foreground">{t('login.heroDescription')}</p>
+              <h1 className="max-w-xl text-5xl font-semibold leading-tight text-foreground">{heroTitle}</h1>
+              <p className="max-w-xl text-lg text-muted-foreground">{heroDescription}</p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
-            {['layout', 'routing', 'themes'].map((feature) => (
-              <div key={feature} className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-5 backdrop-blur-xl dark:bg-slate-900/40">
-                <div className="text-sm font-semibold text-foreground">{t(`login.feature.${feature}.title`)}</div>
-                <div className="mt-2 text-sm text-muted-foreground">{t(`login.feature.${feature}.description`)}</div>
+            {loginUi.features.map((feature) => (
+              <div key={feature.titleKey} className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-5 backdrop-blur-xl dark:bg-slate-900/40">
+                <div className="text-sm font-semibold text-foreground">{t(feature.titleKey)}</div>
+                <div className="mt-2 text-sm text-muted-foreground">{t(feature.descriptionKey)}</div>
               </div>
             ))}
           </div>
@@ -68,8 +75,8 @@ export default function LoginPage() {
           <CardHeader className="space-y-4 pb-2">
             <AppBrand />
             <div>
-              <CardTitle className="text-3xl">{t('auth.login')}</CardTitle>
-              <CardDescription>{t('login.cardDescription')}</CardDescription>
+              <CardTitle className="text-3xl">{loginTitle}</CardTitle>
+              <CardDescription>{cardDescription}</CardDescription>
             </div>
           </CardHeader>
           <CardContent>
@@ -107,7 +114,7 @@ export default function LoginPage() {
                 {submitting ? t('common.loading') : t('auth.login')}
                 <ArrowRight className="size-4" />
               </Button>
-              {mockMode ? (
+              {showDemoHint ? (
                 <div className="rounded-2xl border border-dashed border-[hsl(var(--border))] bg-[color-mix(in_hsl,hsl(var(--primary))_6%,transparent)] px-4 py-3 text-sm text-muted-foreground">
                   {t('login.demoHint')}
                 </div>

@@ -41,6 +41,54 @@ export interface ContributionAppConfig {
   defaultLanguage?: string
 }
 
+export interface ContributionBrandingConfig {
+  name?: string
+  shortName?: string
+  logoUrl?: string
+  markUrl?: string
+  documentTitle?: string
+  faviconUrl?: string
+}
+
+export interface ContributionLoginUiFeature {
+  titleKey: string
+  descriptionKey: string
+}
+
+export interface ContributionLoginUiConfig {
+  heroTitleKey?: string
+  heroDescriptionKey?: string
+  cardTitleKey?: string
+  cardDescriptionKey?: string
+  features?: ContributionLoginUiFeature[]
+  showDemoHint?: boolean
+}
+
+export interface ContributionShellConfig {
+  defaultHomePath?: string
+  helpUrl?: string
+  aboutUrl?: string
+  supportUrl?: string
+}
+
+export interface ContributionSystemPagesConfig {
+  login?: string
+  forbidden?: string
+  notFound?: string
+  serverError?: string
+  dashboard?: string
+}
+
+export type TokenStorageType = 'sessionStorage' | 'localStorage' | 'memory' | 'none'
+
+export interface ContributionAuthConfig {
+  tokenStorage?: TokenStorageType
+  persistRefreshToken?: boolean
+  tokenRefreshBeforeExpiry?: number
+  enableAutoRefresh?: boolean
+  refreshTokenEndpoint?: string
+}
+
 export interface ContributionSource {
   id: string
   entry: string
@@ -61,6 +109,10 @@ export interface ShellContribution {
   id: string
   order?: number
   app?: ContributionAppConfig
+  branding?: ContributionBrandingConfig
+  loginUi?: ContributionLoginUiConfig
+  shell?: ContributionShellConfig
+  systemPages?: ContributionSystemPagesConfig
   env?: Record<string, string>
   languages?: ContributionLanguage[]
   i18nResources?: ContributionI18nResource[]
@@ -69,6 +121,7 @@ export interface ShellContribution {
   builtinPages?: ContributionBuiltinPage[]
   plugins?: PluginManifest[]
   menus?: MenuItem[]
+  auth?: ContributionAuthConfig
   setup?: (context: ContributionSetupContext) => void | Promise<void>
 }
 

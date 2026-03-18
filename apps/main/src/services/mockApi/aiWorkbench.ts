@@ -13,7 +13,7 @@ export const assistantCatalog: AssistantOption[] = [
     name: '数据分析助手',
     color: 'hsl(var(--success))',
     description: '擅长分析指标、图表和报表结论。',
-    icon: 'line-chart'
+    icon: 'chart-line'
   },
   {
     id: 'flow',

@@ -1,113 +1,344 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { visualizer } from 'rollup-plugin-visualizer'
+import compressPlugin from 'vite-plugin-compression'
 
 function includesAny(id: string, segments: string[]) {
   return segments.some((segment) => id.includes(segment))
 }
 
-export default defineConfig({
-  resolve: {
-    tsconfigPaths: true
-  },
-  plugins: [react()],
-  server: {
-    port: 4173,
-    proxy: {
-      '/r': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
-      },
-      '/graphql': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
-      },
-      '/p': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
-      },
-      '/f': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
-      },
-      '/q': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
+function normalizeId(id: string) {
+  return id.replace(/\\/g, '/')
+}
+
+function getNodeModulePackageName(id: string) {
+  const normalized = normalizeId(id)
+  const marker = '/node_modules/'
+  const index = normalized.lastIndexOf(marker)
+
+  if (index < 0) {
+    return undefined
+  }
+
+  const remainder = normalized.slice(index + marker.length)
+  const [first, second] = remainder.split('/')
+
+  if (!first) {
+    return undefined
+  }
+
+  if (first.startsWith('@') && second) {
+    return `${first}/${second}`
+  }
+
+  return first
+}
+
+function getWorkspacePackageName(id: string) {
+  const normalized = normalizeId(id)
+  const match = normalized.match(/\/packages\/([^/]+)\//)
+
+  if (!match) {
+    return undefined
+  }
+
+  return `@nop-chaos/${match[1]}`
+}
+
+function toChunkName(prefix: string, packageName: string) {
+  return `${prefix}-${packageName.replace(/^@/, '').replace(/\//g, '-').replace(/\./g, '-')}`
+}
+
+function getWorkspaceChunkName(packageName: string) {
+  if (packageName === '@nop-chaos/ui') {
+    return 'pkg-ui'
+  }
+
+  if (packageName === '@nop-chaos/core') {
+    return 'pkg-core'
+  }
+
+  if (packageName === '@nop-chaos/shared') {
+    return 'pkg-shared'
+  }
+
+  if (packageName === '@nop-chaos/plugin-bridge') {
+    return 'pkg-plugin-bridge'
+  }
+
+  return toChunkName('pkg', packageName)
+}
+
+function getHostRuntimeChunkName(id: string) {
+  const normalized = normalizeId(id)
+
+  if (includesAny(normalized, ['/src/main.tsx', '/src/App.tsx'])) {
+    return 'host-entry'
+  }
+
+  if (includesAny(normalized, ['/src/amis/init.ts', '/src/amis/xuiComponents.ts'])) {
+    return 'host-amis-bootstrap'
+  }
+
+  if (includesAny(normalized, ['/src/amis/adapter.ts', '/src/amis/providers.ts'])) {
+    return 'host-amis-adapter'
+  }
+
+  if (includesAny(normalized, ['/src/amis/testSchema.ts'])) {
+    return 'host-amis-preview'
+  }
+
+  if (includesAny(normalized, ['/src/amis/AmisRouteRenderer'])) {
+    return 'host-amis-route-runtime'
+  }
+
+  if (includesAny(normalized, ['/src/router/AppRoutes', '/src/router/RouteRenderer', '/src/router/pageRegistry', '/src/plugins/', '/src/components/layout/'])) {
+    return 'host-shell-runtime'
+  }
+
+  if (includesAny(normalized, ['/src/config/', '/src/contributions/'])) {
+    return 'host-config-runtime'
+  }
+
+  if (includesAny(normalized, ['/src/services/', '/src/store/', '/src/hooks/', '/src/components/auth/'])) {
+    return 'host-app-runtime'
+  }
+
+  return 'host-runtime-misc'
+}
+
+function getVendorChunkName(packageName: string) {
+  if (packageName === 'amis') {
+    return 'vendor-amis'
+  }
+
+  if (packageName === 'office-viewer') {
+    return 'vendor-office-viewer'
+  }
+
+  if (packageName === 'amis-ui') {
+    return 'vendor-amis-ui'
+  }
+
+  if (packageName === 'amis-formula') {
+    return 'vendor-amis-formula'
+  }
+
+  if (packageName === 'monaco-editor' || packageName.startsWith('@codingame/')) {
+    return 'vendor-monaco-editor'
+  }
+
+  if (packageName === 'codemirror' || packageName.startsWith('@codemirror/') || packageName.startsWith('@lezer/')) {
+    return 'vendor-codemirror'
+  }
+
+  if (packageName === 'echarts' || packageName === 'zrender' || packageName === 'echarts-wordcloud') {
+    return 'vendor-echarts'
+  }
+
+  if (packageName === 'react' || packageName === 'react-dom' || packageName === 'scheduler') {
+    return 'vendor-react'
+  }
+
+  if (packageName === 'react-router' || packageName === 'react-router-dom' || packageName === 'history') {
+    return 'vendor-react-router'
+  }
+
+  if (packageName.startsWith('@tanstack/')) {
+    return 'vendor-tanstack-react-query'
+  }
+
+  if (packageName === 'i18next' || packageName === 'react-i18next' || packageName === 'i18next-browser-languagedetector' || packageName === 'i18next-http-backend') {
+    return 'vendor-i18next'
+  }
+
+  if (packageName === 'systemjs') {
+    return 'vendor-systemjs'
+  }
+
+  if (packageName === 'recharts') {
+    return 'vendor-recharts'
+  }
+
+  if (packageName === '@xyflow/react') {
+    return 'vendor-xyflow-react'
+  }
+
+  if (packageName === 'markdown-it' || packageName === 'markdown-it-html5-media' || packageName === 'linkify-it' || packageName === 'mdurl' || packageName === 'uc.micro' || packageName === 'punycode') {
+    return 'vendor-markdown-it'
+  }
+
+  if (packageName === 'jsbarcode') {
+    return 'vendor-jsbarcode'
+  }
+
+  if (packageName === 'react-color' || packageName === 'reactcss' || packageName === 'tinycolor2' || packageName === 'material-colors') {
+    return 'vendor-react-color'
+  }
+
+  if (packageName === 'tinymce') {
+    return 'vendor-tinymce'
+  }
+
+  if (packageName === 'froala-editor') {
+    return 'vendor-froala-editor'
+  }
+
+  if (packageName === 'react-pdf' || packageName === 'make-cancellable-promise' || packageName === 'make-event-props') {
+    return 'vendor-react-pdf'
+  }
+
+  if (packageName === 'react-cropper' || packageName === 'cropperjs') {
+    return 'vendor-react-cropper'
+  }
+
+  if (packageName === 'react-json-view') {
+    return 'vendor-react-json-view'
+  }
+
+  if (packageName === 'lodash' || packageName === 'lodash-es') {
+    return 'vendor-lodash'
+  }
+
+  if (packageName === 'exceljs' || packageName === 'xlsx' || packageName === 'pdfjs-dist' || packageName === 'hls.js' || packageName === 'mpegts.js' || packageName === 'sonner' || packageName === 'lucide-react' || packageName === 'zustand' || packageName === '@fortawesome/fontawesome-free') {
+    return toChunkName('vendor', packageName)
+  }
+
+  return 'vendor-misc'
+}
+
+export default defineConfig(({ mode }) => {
+  const analyze = mode === 'analyze'
+
+  return {
+    resolve: {
+      tsconfigPaths: true
+    },
+    plugins: [
+      react(),
+      compressPlugin({
+        ext: '.gz',
+        threshold: 1024 * 100,
+        filter(file) {
+          const normalized = normalizeId(file)
+          return normalized.endsWith('.js') && normalized.includes('/assets/')
+        },
+      }),
+      analyze
+        ? visualizer({
+            filename: 'dist/stats.html',
+            gzipSize: true,
+            brotliSize: true,
+            template: 'treemap'
+          })
+        : null
+    ].filter(Boolean),
+    server: {
+      port: 4173,
+      proxy: {
+        '/r': {
+          target: 'http://localhost:8080',
+          changeOrigin: true
+        },
+        '/graphql': {
+          target: 'http://localhost:8080',
+          changeOrigin: true
+        },
+        '/p': {
+          target: 'http://localhost:8080',
+          changeOrigin: true
+        },
+        '/f': {
+          target: 'http://localhost:8080',
+          changeOrigin: true
+        },
+        '/q': {
+          target: 'http://localhost:8080',
+          changeOrigin: true
+        }
       }
-    }
-  },
-  preview: {
-    port: 4173
-  },
-  css: {
-    transformer: 'postcss'
-  },
-  build: {
-    sourcemap: true,
-    cssMinify: 'esbuild',
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('/src/router/AppShell')) {
-            return 'shell'
-          }
+    },
+    preview: {
+      port: 4173
+    },
+    css: {
+      transformer: 'postcss'
+    },
+    build: {
+      sourcemap: true,
+      cssMinify: 'esbuild',
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            const normalized = normalizeId(id)
 
-          if (includesAny(id, ['/src/pages/dashboard/', '/src/components/common/MetricCard'])) {
-            return 'page-dashboard'
-          }
+            if (normalized.includes('/src/router/AppShell')) {
+              return 'shell-core'
+            }
 
-          if (includesAny(id, ['/src/pages/flow-editor/'])) {
-            return 'page-flow-editor'
-          }
+            if (includesAny(normalized, ['/src/pages/help/', '/src/pages/settings/', '/src/pages/plugins/', '/src/pages/data-management/'])) {
+              return 'page-secondary'
+            }
 
-          if (includesAny(id, ['/src/pages/ai-workbench/'])) {
-            return 'page-ai-workbench'
-          }
+            if (includesAny(normalized, ['/src/pages/dashboard/', '/src/components/common/MetricCard'])) {
+              return 'page-dashboard'
+            }
 
-          if (includesAny(id, ['/src/pages/data-management/'])) {
-            return 'page-data-management'
-          }
+            if (includesAny(normalized, ['/src/pages/flow-editor/'])) {
+              return 'page-flow-editor'
+            }
 
-          if (includesAny(id, ['/src/pages/plugins/', '/src/components/plugin/'])) {
-            return 'page-plugins'
-          }
+            if (includesAny(normalized, ['/src/pages/ai-workbench/'])) {
+              return 'page-ai-workbench'
+            }
 
-          if (includesAny(id, ['/src/pages/settings/'])) {
-            return 'page-settings'
-          }
+            if (includesAny(normalized, ['/src/components/plugin/'])) {
+              return 'page-secondary'
+            }
 
-          if (includesAny(id, ['/src/pages/help/'])) {
-            return 'page-help'
-          }
+            if (
+              includesAny(normalized, [
+                '/src/main.tsx',
+                '/src/App.tsx',
+                '/src/amis/',
+                '/src/components/layout/',
+                '/src/components/auth/',
+                '/src/config/',
+                '/src/contributions/',
+                '/src/hooks/',
+                '/src/plugins/',
+                '/src/router/AppRoutes',
+                '/src/router/RouteRenderer',
+                '/src/router/pageRegistry',
+                '/src/services/',
+                '/src/store/'
+              ])
+            ) {
+              return getHostRuntimeChunkName(normalized)
+            }
 
-          if (!id.includes('node_modules')) {
-            return undefined
-          }
+            const workspacePackageName = getWorkspacePackageName(id)
 
-          if (id.includes('systemjs')) {
-            return 'systemjs'
-          }
+            if (workspacePackageName) {
+              if (workspacePackageName === '@nop-chaos/amis-react' || workspacePackageName === '@nop-chaos/amis-core') {
+                return 'vendor-amis-bridge'
+              }
 
-          if (
-            id.includes('/react/') ||
-            id.includes('/react-dom/') ||
-            id.includes('/react-router-dom/')
-          ) {
-            return 'react-vendor'
-          }
+              return getWorkspaceChunkName(workspacePackageName)
+            }
 
-          if (id.includes('/@tanstack/')) {
-            return 'query-vendor'
-          }
+            if (!id.includes('node_modules')) {
+              return undefined
+            }
 
-          if (id.includes('/i18next/') || id.includes('/react-i18next/')) {
-            return 'i18n-vendor'
-          }
+            const nodeModulePackageName = getNodeModulePackageName(id)
 
-          if (id.includes('/sonner/')) {
-            return 'feedback-vendor'
-          }
+            if (!nodeModulePackageName) {
+              return 'vendor-misc'
+            }
 
-          return undefined
+            return getVendorChunkName(nodeModulePackageName)
+          }
         }
       }
     }

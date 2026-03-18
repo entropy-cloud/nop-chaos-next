@@ -16,8 +16,8 @@ export interface AmisRequestOptions {
   useAlert?: boolean
   responseKey?: string
   withToken?: boolean
+  'gql:selection'?: string
   useApiUrl?: boolean
-  gqlSelection?: string
   delimiter?: string
   valueField?: string
   labelField?: string

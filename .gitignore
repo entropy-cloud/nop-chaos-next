@@ -8,3 +8,4 @@ test-results/
 pnpm-lock.yaml
 .opencode/
 .env.local
+nop-task.md

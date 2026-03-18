@@ -1,5 +1,6 @@
 import * as ReactLib from 'react'
 import * as ReactDOMLib from 'react-dom'
+import * as ReactJsxDevRuntimeLib from 'react/jsx-dev-runtime'
 import * as ReactJsxRuntimeLib from 'react/jsx-runtime'
 import * as ReactQueryLib from '@tanstack/react-query'
 import * as ReactRouterDomLib from 'react-router-dom'
@@ -14,9 +15,14 @@ import * as PluginBridgeLib from '@nop-chaos/plugin-bridge'
 import { registerSharedModules } from '@nop-chaos/core'
 import * as UiLib from '@nop-chaos/ui'
 
+declare global {
+  var __NOP_SHARED__: Record<string, unknown> | undefined
+}
+
 const baseSharedModules = {
   react: ReactLib,
   'react-dom': ReactDOMLib,
+  'react/jsx-dev-runtime': ReactJsxDevRuntimeLib,
   'react/jsx-runtime': ReactJsxRuntimeLib,
   'react-router-dom': ReactRouterDomLib,
   zustand: ZustandLib,
@@ -33,7 +39,16 @@ const baseSharedModules = {
 
 let didRegisterBaseModules = false
 
+export function registerHostSharedModules() {
+  globalThis.__NOP_SHARED__ = {
+    ...(globalThis.__NOP_SHARED__ ?? {}),
+    ...baseSharedModules
+  }
+}
+
 export function registerBaseSharedModules() {
+  registerHostSharedModules()
+
   if (didRegisterBaseModules) {
     return
   }

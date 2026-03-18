@@ -1,16 +1,17 @@
-import { Suspense } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { AmisPageRoute } from '@nop-chaos/amis-react'
+import { lazy, Suspense } from 'react'
 import type { MenuItem } from '@nop-chaos/shared'
 import { PluginSlot, usePermissionGuard } from '@nop-chaos/core'
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui'
-import { createMainAmisAdapter } from '../amis/adapter'
-import { mainAmisDictProvider, mainAmisPageProvider } from '../amis/providers'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { ensurePluginSharedModules } from '../plugins/sharedModules'
 import { usePluginStore } from '../store/pluginStore'
-import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry'
+import { getBuiltinPage, getSystemPage } from './pageRegistry'
+
+const AmisRouteRenderer = lazy(async () => {
+  const module = await import('../amis/AmisRouteRenderer')
+  return { default: module.AmisRouteRenderer }
+})
 
 interface RouteRendererProps {
   item: MenuItem
@@ -19,17 +20,11 @@ interface RouteRendererProps {
 export function RouteRenderer({ item }: RouteRendererProps) {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const location = useLocation()
-  const navigate = useNavigate()
   const plugins = usePluginStore((state) => state.plugins)
   const allowed = usePermissionGuard(user?.roles ?? [], item.roles)
   const title = item.title ?? t('common.loading')
-  const amisAdapter = createMainAmisAdapter({
-    currentPath: location.pathname,
-    navigate,
-    pageProvider: mainAmisPageProvider,
-    dictProvider: mainAmisDictProvider
-  })
+  const ForbiddenPage = getSystemPage('forbidden')
+  const ServerErrorPage = getSystemPage('serverError')
 
   const loadingView = (
     <Card className="theme-card">
@@ -39,6 +34,10 @@ export function RouteRenderer({ item }: RouteRendererProps) {
         <CardContent>{t('common.loading')}</CardContent>
       </Card>
   )
+
+  if (!ForbiddenPage || !ServerErrorPage) {
+    return loadingView
+  }
 
   if (!allowed) {
     return <ForbiddenPage />
@@ -67,7 +66,11 @@ export function RouteRenderer({ item }: RouteRendererProps) {
   }
 
   if (item.pageType === 'amis' && item.schemaPath) {
-    return <AmisPageRoute adapter={amisAdapter} schemaPath={item.schemaPath} title={title} />
+    return (
+      <Suspense fallback={loadingView}>
+        <AmisRouteRenderer key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
+      </Suspense>
+    )
   }
 
   if (item.pageType === 'iframe' && item.frameSrc) {

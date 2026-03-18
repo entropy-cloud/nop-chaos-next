@@ -11,6 +11,18 @@ import '../../../packages/theme-tokens/src/styles.css'
 import '../../../packages/ui/src/styles/index.css'
 import './styles/index.css'
 
+function registerContributionDevGlobals() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const hostWindow = window as Window & { __NOP_HOST_ORIGIN__?: string }
+
+  if (import.meta.env.VITE_DEMO_CONTRIBUTION_ASSET_ORIGIN) {
+    hostWindow.__NOP_HOST_ORIGIN__ = import.meta.env.VITE_DEMO_CONTRIBUTION_ASSET_ORIGIN
+  }
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -22,18 +34,17 @@ const queryClient = new QueryClient({
 
 function renderApp() {
   ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <HashRouter>
-          <App />
-          <Toaster richColors position="top-right" />
-        </HashRouter>
-      </QueryClientProvider>
-    </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <HashRouter>
+        <App />
+        <Toaster richColors position="top-right" />
+      </HashRouter>
+    </QueryClientProvider>
   )
 }
 
 async function bootstrap() {
+  registerContributionDevGlobals()
   await bootstrapContributions()
   renderApp()
 }

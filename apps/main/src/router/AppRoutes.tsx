@@ -4,7 +4,7 @@ import { filterMenusByRoles, flattenMenus, sortMenus } from '@nop-chaos/shared'
 import { useAuth } from '../hooks/useAuth'
 import { useMenuConfigQuery } from '../hooks/useMenuConfig'
 import { RouteRenderer } from './RouteRenderer'
-import { ForbiddenPage, LoginPage, NotFoundPage, ServerErrorPage } from './pageRegistry'
+import { getSystemPage } from './pageRegistry'
 
 const AppShell = lazy(() => import('./AppShell').then((module) => ({ default: module.AppShell })))
 
@@ -16,6 +16,15 @@ export function AppRoutes() {
   const { isAuthenticated, user, bootstrapStatus } = useAuth()
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending'
   const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending)
+  const LoginPage = getSystemPage('login')
+  const ForbiddenPage = getSystemPage('forbidden')
+  const NotFoundPage = getSystemPage('notFound')
+  const ServerErrorPage = getSystemPage('serverError')
+
+  if (!LoginPage || !ForbiddenPage || !NotFoundPage || !ServerErrorPage) {
+    return <div className="min-h-screen bg-background" />
+  }
+
   const items = useMemo(
     () => flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? [])),
     [menuQuery.data?.items, user?.roles]

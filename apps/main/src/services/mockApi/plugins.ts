@@ -1,11 +1,7 @@
-import { isAppIconName, type PluginManifest } from '@nop-chaos/shared'
+import type { PluginManifest } from '@nop-chaos/shared'
 import { readStoredJson, wait, writeStoredJson } from './shared'
 
 const pluginStorageKey = 'plugins:manifests:v1'
-
-type StoredPluginManifest = Omit<PluginManifest, 'icon'> & {
-  icon: string
-}
 
 export const seedPluginManifests: PluginManifest[] = [
   {
@@ -32,15 +28,8 @@ export const seedPluginManifests: PluginManifest[] = [
   }
 ]
 
-function normalizePluginManifest(plugin: StoredPluginManifest): PluginManifest {
-  return {
-    ...plugin,
-    icon: isAppIconName(plugin.icon) ? plugin.icon : 'blocks'
-  }
-}
-
 export function getPluginSeeds(): PluginManifest[] {
-  return readStoredJson<StoredPluginManifest[]>(pluginStorageKey, seedPluginManifests).map(normalizePluginManifest)
+  return readStoredJson(pluginStorageKey, seedPluginManifests)
 }
 
 export function persistPluginSeeds(value: PluginManifest[]) {

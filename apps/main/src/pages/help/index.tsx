@@ -7,7 +7,7 @@ export default function HelpHomePage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow={t('common.frontendShell')} title={t('help.title')} description={t('help.placeholder')} />
+      <PageHeader title={t('help.title')} description={t('help.placeholder')} />
       <Card className="theme-card">
         <CardHeader>
           <CardTitle>{t('help.title')}</CardTitle>

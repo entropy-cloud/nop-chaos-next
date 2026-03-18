@@ -7,7 +7,7 @@ export default function SettingsHomePage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow={t('common.frontendShell')} title={t('settings.title')} description={t('settings.placeholder')} />
+      <PageHeader title={t('settings.title')} description={t('settings.placeholder')} />
       <Card className="theme-card">
         <CardHeader>
           <CardTitle>{t('settings.title')}</CardTitle>

@@ -32,9 +32,10 @@ function addClassName(value: AmisSchemaRecord, key: string, className: string): 
 
 function addDialogDrawerClass(value: AmisSchemaRecord): void {
   if (value.type === 'dialog' || value.type === 'modal') {
-    addClassName(value, 'bodyClassName', 'nop-amis-page')
+    addClassName(value, 'className', 'amis')
+    addClassName(value, 'bodyClassName', 'amis')
   } else if (value.type === 'drawer') {
-    addClassName(value, 'className', 'nop-amis-page')
+    addClassName(value, 'className', 'amis')
   }
 }
 

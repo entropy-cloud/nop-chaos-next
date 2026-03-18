@@ -1,21 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { createRoot, type Root } from 'react-dom/client'
-import { render as renderAmis, setDefaultLocale } from 'amis'
+import { useEffect, useMemo, useState } from 'react'
+import { clearStoresCache, render as renderAmis, setDefaultLocale } from 'amis'
 import { bindActions, createAmisPageObject, registerAmisRuntimeAdapter, transformPageJson, type AmisRuntimeAdapter } from '@nop-chaos/amis-core'
 import { createAmisEnv } from '../env'
 import { AmisErrorView } from './AmisErrorView'
 import { AmisLoadingView } from './AmisLoadingView'
 
-const amisRoots = new WeakMap<HTMLDivElement, Root>()
-const amisUnmountTimers = new WeakMap<HTMLDivElement, number>()
-
-function clearScheduledUnmount(container: HTMLDivElement) {
-  const timerId = amisUnmountTimers.get(container)
-
-  if (timerId !== undefined) {
-    window.clearTimeout(timerId)
-    amisUnmountTimers.delete(container)
+function normalizeAmisLocale(locale: string) {
+  if (locale === 'en') {
+    return 'en-US'
   }
+
+  if (locale === 'zh') {
+    return 'zh-CN'
+  }
+
+  return locale
 }
 
 export interface AmisSchemaPageProps {
@@ -36,6 +35,7 @@ function cloneSchema<T>(schema: T): T {
 
 export function AmisSchemaPage({ adapter, schema, schemaPath, title, initialData }: AmisSchemaPageProps) {
   const page = useMemo(() => createAmisPageObject(schemaPath), [schemaPath])
+  const env = useMemo(() => createAmisEnv(page), [page])
   const [schemaState, setSchemaState] = useState<{
     schema: unknown
     transformedSchema: unknown | null
@@ -45,8 +45,6 @@ export function AmisSchemaPage({ adapter, schema, schemaPath, title, initialData
     transformedSchema: null,
     error: null
   })
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const amisRootRef = useRef<Root | null>(null)
   const transformedSchema = schemaState.schema === schema ? schemaState.transformedSchema : null
   const error = schemaState.schema === schema ? schemaState.error : null
 
@@ -77,69 +75,38 @@ export function AmisSchemaPage({ adapter, schema, schemaPath, title, initialData
 
     return () => {
       active = false
+      clearStoresCache(page.id)
       page.destroy()
     }
   }, [adapter, page, schema])
 
   useEffect(() => {
-    const container = containerRef.current
-
-    if (!container) {
-      return
-    }
-
-    clearScheduledUnmount(container)
-
-    const root = amisRootRef.current ?? amisRoots.get(container) ?? createRoot(container)
-    amisRootRef.current = root
-    amisRoots.set(container, root)
-
     if (!transformedSchema || error) {
-      root.render(null)
       return
     }
 
     registerAmisRuntimeAdapter(adapter)
-    setDefaultLocale(adapter.getLocale())
+    setDefaultLocale(normalizeAmisLocale(adapter.getLocale()))
+  }, [adapter, error, transformedSchema])
 
-    const renderProps = {
-      data: initialData ?? {},
-      locale: adapter.getLocale(),
-      theme: 'cxd'
-    }
+  if (error) {
+    return <AmisErrorView title={title} message={error} />
+  }
 
-    root.render(renderAmis(transformedSchema as unknown as never, renderProps as unknown as never, createAmisEnv(page) as unknown as never))
-  }, [adapter, error, initialData, page, transformedSchema])
+  if (!transformedSchema) {
+    return <AmisLoadingView title={title} />
+  }
 
-  useEffect(() => {
-    const container = containerRef.current
-
-    return () => {
-      const root = amisRootRef.current ?? (container ? amisRoots.get(container) ?? null : null)
-
-      amisRootRef.current = null
-
-      if (!container || !root) {
-        return
-      }
-
-      clearScheduledUnmount(container)
-
-      const timerId = window.setTimeout(() => {
-        root.unmount()
-        amisRoots.delete(container)
-        amisUnmountTimers.delete(container)
-      }, 0)
-
-      amisUnmountTimers.set(container, timerId)
-    }
-  }, [])
+  const locale = normalizeAmisLocale(adapter.getLocale())
+  const renderProps = {
+    data: initialData ?? {},
+    locale,
+    theme: 'cxd'
+  }
 
   return (
-    <>
-      <div ref={containerRef} className={error || !transformedSchema ? 'hidden nop-amis-page' : 'nop-amis-page'} />
-      {error ? <AmisErrorView title={title} message={error} /> : null}
-      {!error && !transformedSchema ? <AmisLoadingView title={title} /> : null}
-    </>
+    <div className="amis">
+      {renderAmis(transformedSchema as unknown as never, renderProps as unknown as never, env as unknown as never)}
+    </div>
   )
 }

@@ -4,6 +4,11 @@ export interface HttpRuntime {
   getAuthToken: () => string | undefined
   setAuthToken?: (token?: string) => void
   onUnauthorized?: () => void
+  getRefreshToken?: () => string | undefined
+  setTokens?: (accessToken: string, refreshToken?: string, expiresIn?: number, refreshExpiresIn?: number) => void
+  clearTokens?: () => void
+  refreshAccessToken?: () => Promise<string>
+  getValidToken?: () => Promise<string | undefined>
 }
 
 export interface HttpRequestOptions {

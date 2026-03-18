@@ -2,6 +2,7 @@ import type { AmisAction, AmisDictProvider, AmisPageProvider, AmisRuntimeAdapter
 import type { HttpRequestOptions } from '@nop-chaos/shared'
 import { toast } from '@nop-chaos/ui'
 import i18n from '../config/i18n'
+import { normalizeLanguageCode } from '../config/i18n/languages'
 import { mainHttpClient } from '../services/http'
 import { useAuthStore } from '../store/authStore'
 import { useThemeStore } from '../store/themeStore'
@@ -16,7 +17,7 @@ interface CreateMainAmisAdapterOptions {
 export function createMainAmisAdapter({ currentPath, navigate, pageProvider, dictProvider }: CreateMainAmisAdapterOptions): AmisRuntimeAdapter {
   return {
     getI18n: () => i18n,
-    getLocale: () => i18n.language,
+    getLocale: () => normalizeLanguageCode(i18n.language),
     getCurrentUser: () => useAuthStore.getState().user,
     getAuthToken: () => useAuthStore.getState().token,
     setAuthToken: (token) => {

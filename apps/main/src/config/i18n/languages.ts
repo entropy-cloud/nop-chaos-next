@@ -3,9 +3,27 @@ export interface LanguageOption {
   labelKey: string
 }
 
+export function normalizeLanguageCode(languageCode: string | null | undefined): string {
+  const normalizedCode = languageCode?.replace('_', '-')
+
+  if (!normalizedCode) {
+    return 'zh-CN'
+  }
+
+  if (normalizedCode === 'en') {
+    return 'en-US'
+  }
+
+  if (normalizedCode === 'zh') {
+    return 'zh-CN'
+  }
+
+  return normalizedCode
+}
+
 const defaultLanguageOptions: LanguageOption[] = [
   { code: 'zh-CN', labelKey: 'settings.languageOptions.zhCN' },
-  { code: 'en', labelKey: 'settings.languageOptions.en' }
+  { code: 'en-US', labelKey: 'settings.languageOptions.en' }
 ]
 
 const languageRegistry: LanguageOption[] = [...defaultLanguageOptions]

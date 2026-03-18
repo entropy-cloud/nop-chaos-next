@@ -1,6 +1,9 @@
 import { normalizeGraphQLResponse, transformGraphQLRequest } from '@nop-chaos/amis-core'
 import type { AmisRequestOptions } from '@nop-chaos/amis-core'
-import { createHttpClient, unwrapApiPayload } from '@nop-chaos/shared'
+import { clearTokens as clearManagedTokens, createHttpClient, getValidToken, setRefreshTokenFetcher, setTokens as setManagedTokens, unwrapApiPayload } from '@nop-chaos/shared'
+import i18n from '../config/i18n'
+import { normalizeLanguageCode } from '../config/i18n/languages'
+import { refreshAccessToken as requestRefreshAccessToken } from './authApi'
 import { useAuthStore } from '../store/authStore'
 
 interface AjaxRequestOptions {
@@ -23,23 +26,49 @@ function getApiBaseUrl() {
 }
 
 function getLocaleHeader() {
-  if (typeof document === 'undefined') {
-    return 'zh-CN'
-  }
-
-  return document.documentElement.lang?.replace('_', '-') || navigator.language || 'zh-CN'
+  return normalizeLanguageCode(i18n.language)
 }
+
+function syncStoreTokens(accessToken: string, refreshToken?: string, expiresIn?: number, refreshExpiresIn?: number) {
+  useAuthStore.getState().setTokens(accessToken, refreshToken, expiresIn, refreshExpiresIn)
+}
+
+async function refreshWithStore(refreshToken: string) {
+  const refreshed = await requestRefreshAccessToken(refreshToken)
+  syncStoreTokens(refreshed.accessToken, refreshed.refreshToken ?? refreshToken, refreshed.expiresIn, refreshed.refreshExpiresIn)
+  setManagedTokens(refreshed.accessToken, refreshed.refreshToken ?? refreshToken, refreshed.expiresIn, refreshed.refreshExpiresIn)
+  return refreshed
+}
+
+setRefreshTokenFetcher(refreshWithStore)
 
 export const mainHttpClient = createHttpClient({
   getBaseUrl: getApiBaseUrl,
   getLocale: getLocaleHeader,
   getAuthToken: () => useAuthStore.getState().token,
+  getRefreshToken: () => useAuthStore.getState().tokens?.refreshToken,
+  getValidToken,
+  refreshAccessToken: async () => {
+    const refreshToken = useAuthStore.getState().tokens?.refreshToken
+
+    if (!refreshToken) {
+      throw new Error('No refresh token available')
+    }
+
+    const refreshed = await refreshWithStore(refreshToken)
+    return refreshed.accessToken
+  },
   setAuthToken: (token) => {
     if (token) {
       useAuthStore.getState().setToken(token)
     }
   },
+  clearTokens: () => {
+    clearManagedTokens()
+    useAuthStore.getState().clearTokens()
+  },
   onUnauthorized: () => {
+    clearManagedTokens()
     useAuthStore.getState().logout()
   }
 })

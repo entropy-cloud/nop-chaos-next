@@ -1,4 +1,4 @@
-import { isAppIconName } from '../types/icon'
+import { normalizeAppIconName } from '../types/icon'
 import type { MenuItem, MenuResponse } from '../types/menu'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -89,7 +89,9 @@ function validateMenuItem(value: unknown, fieldPath: string): MenuItem {
   const hideInMenu = assertOptionalBoolean(value.hideInMenu, `${fieldPath}.hideInMenu`)
   const roles = assertOptionalStringArray(value.roles, `${fieldPath}.roles`)
 
-  if (value.icon !== undefined && (typeof value.icon !== 'string' || !isAppIconName(value.icon))) {
+  const normalizedIcon = typeof value.icon === 'string' ? normalizeAppIconName(value.icon) : undefined
+
+  if (value.icon !== undefined && (typeof value.icon !== 'string' || !normalizedIcon)) {
     throw new Error(`Invalid menu config: '${fieldPath}.icon' must be a supported icon name`)
   }
 
@@ -124,7 +126,7 @@ function validateMenuItem(value: unknown, fieldPath: string): MenuItem {
     title,
     titleKey,
     path,
-    icon: value.icon as MenuItem['icon'] | undefined,
+    icon: normalizedIcon,
     children,
     badge,
     pageType,

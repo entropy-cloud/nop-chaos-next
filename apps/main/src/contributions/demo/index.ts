@@ -37,7 +37,7 @@ const demoContribution: ShellContribution = {
       }
     },
     {
-      lng: 'en',
+      lng: 'en-US',
       resource: {
         settings: {
           languageOptions: {
