@@ -1,4 +1,4 @@
-import type { TokenStorageType } from '../types/contribution'
+import type { TokenStorageType } from '../types/extension'
 
 export interface AuthRuntimeConfig {
   tokenStorage: TokenStorageType

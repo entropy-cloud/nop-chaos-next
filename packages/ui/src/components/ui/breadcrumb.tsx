@@ -2,7 +2,7 @@ import * as React from "react"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
 import { Slot } from "radix-ui"
 
-import { cn } from "@nop-chaos/ui/lib/utils"
+import { cn } from '../../lib/utils'
 
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
@@ -40,8 +40,8 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
     const classNames = cn("transition-colors hover:text-foreground", className)
 
     if (asChild) {
-      return React.createElement(Slot.Root as any, {
-        ref: ref as any,
+      return React.createElement(Slot.Root as React.ElementType, {
+        ref: ref as never,
         'data-slot': 'breadcrumb-link',
         className: classNames,
         ...props,

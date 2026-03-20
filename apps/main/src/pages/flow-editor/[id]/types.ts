@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react'
-import type { Node, Edge, XYPosition } from '@xyflow/react'
+import type { Node, Edge } from '@xyflow/react'
 import type { LucideIcon } from 'lucide-react'
 
 import type { FlowNodeKind } from '../../../services/mockApi'

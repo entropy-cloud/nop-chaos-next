@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:contribution-demo": "vite --mode contribution-demo",
+    "dev:extensions": "vite --mode extension-demo",
     "dev:mock": "vite --mode mock",
     "build:analyze": "vite build --mode analyze",
     "prebuild": "pnpm --filter @nop-chaos/plugin-demo build",

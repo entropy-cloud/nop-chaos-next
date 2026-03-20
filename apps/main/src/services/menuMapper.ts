@@ -1,6 +1,6 @@
 import type { AppIconName, MenuItem, MenuResponse } from '@nop-chaos/shared'
 import { normalizeAppIconName, validateMenuResponse } from '@nop-chaos/shared'
-import { mergeContributionMenus } from '../contributions/runtime'
+import { mergeExtensionMenus } from '../extensions/runtime'
 
 export interface LegacySiteMapResource {
   id: string
@@ -191,7 +191,7 @@ function mapLegacyResource(resource: LegacySiteMapResource): MenuItem {
 export function mapLegacySiteMapToMenuResponse(payload: LegacySiteMapResponse): MenuResponse {
   const items = getSiteMapResources(payload).map(mapLegacyResource)
 
-  return mergeContributionMenus(validateMenuResponse({
+  return mergeExtensionMenus(validateMenuResponse({
     home: findLeafHomePath(items) ?? '/',
     items
   }))

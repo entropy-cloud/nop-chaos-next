@@ -808,7 +808,7 @@ export interface MenuResponse {
     - 插件可以获取当前用户信息。
 
 5. **plugin-demo 子项目**
-    - 在 apps/plugin-demo 目录下创建一个独立的插件项目。
+    - 在 examples/plugin-demo 目录下创建一个独立的插件项目。
     - 插件必须能够独立开发、构建、部署。
     - 插件项目需要有自己的 package.json 和 vite 配置。
     - 插件必须使用 SystemJS 格式构建。

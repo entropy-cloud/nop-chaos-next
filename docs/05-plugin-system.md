@@ -63,4 +63,4 @@ Mock 数据： `apps/main/src/services/mockApi/plugins.ts`
 ## 6. 相关文档
 
 - 插件开发规范：`docs/08-plugin-dev-guide.md`
-- Contribution 系统：`docs/15-contribution-system.md`
+- Extension 系统：`docs/15-extension-system.md`

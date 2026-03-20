@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
+import { login } from './support/auth'
 
 const demoRoutesMenuResponse = {
   status: 0,
@@ -66,25 +67,12 @@ async function useSeededDemoMenu(page: Page) {
       body: JSON.stringify(demoRoutesMenuResponse)
     })
   })
-
-  await page.route('**/plugins/plugin-demo.system.js**', async (route) => {
-    await route.fulfill({
-      path: 'C:\\can\\nop\\nop-chaos-next-wt\\nop-chaos-next-feat-upgrade-amis\\apps\\main\\public\\plugins\\plugin-demo.system.js'
-    })
-  })
-}
-
-async function login(page: Page) {
-  await useSeededDemoMenu(page)
-  await page.goto('/')
-  await page.locator('input').first().fill('nop')
-  await page.locator('input[type="password"]').fill('123')
-  await page.locator('button[type="submit"]').click()
-  await expect(page).toHaveURL(/\/flow-editor$/)
 }
 
 test('plugin demo reuses host navigation and shared shell context with seeded demo routes', async ({ page }) => {
-  await login(page)
+  await login(page, {
+    setup: () => useSeededDemoMenu(page)
+  })
 
   await page.getByText(/plugin demo/i).first().click()
   await expect(page).toHaveURL(/\/plugins\/demo$/)

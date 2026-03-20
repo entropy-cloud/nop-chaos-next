@@ -1,5 +1,5 @@
 import { flattenMenus, type MenuItem, type MenuResponse } from '@nop-chaos/shared'
-import { getContributionDefaultHomePath } from '../contributions/runtime'
+import { getExtensionDefaultHomePath } from '../extensions/runtime'
 
 const builtinSystemMenuItems: MenuItem[] = [
   {
@@ -125,11 +125,11 @@ function mergeMenuItems(existingItems: MenuItem[] | undefined, builtinItems: Men
 export function mergeBuiltinSystemMenus(menuResponse: MenuResponse): MenuResponse {
   const items = mergeMenuItems(menuResponse.items, builtinSystemMenuItems) ?? []
   const availablePaths = new Set(flattenMenus(items).map((item) => item.path))
-  const contributionHome = getContributionDefaultHomePath()
+  const extensionHome = getExtensionDefaultHomePath()
   const homeCandidate = menuResponse.home && availablePaths.has(menuResponse.home)
     ? menuResponse.home
-    : contributionHome && availablePaths.has(contributionHome)
-      ? contributionHome
+    : extensionHome && availablePaths.has(extensionHome)
+      ? extensionHome
       : '/dashboard'
 
   return {

@@ -3,25 +3,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 import { Slot } from "radix-ui"
 
-import { useIsMobile } from "@nop-chaos/ui/hooks/use-mobile"
-import { cn } from "@nop-chaos/ui/lib/utils"
-import { Button } from "@nop-chaos/ui/components/ui/button"
-import { Input } from "@nop-chaos/ui/components/ui/input"
-import { Separator } from "@nop-chaos/ui/components/ui/separator"
+import { useIsMobile } from '../../hooks/use-mobile'
+import { cn } from '../../lib/utils'
+import { Button } from './button'
+import { Input } from './input'
+import { Separator } from './separator'
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@nop-chaos/ui/components/ui/sheet"
-import { Skeleton } from "@nop-chaos/ui/components/ui/skeleton"
+} from './sheet'
+import { Skeleton } from './skeleton'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@nop-chaos/ui/components/ui/tooltip"
+} from './tooltip'
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -406,8 +406,8 @@ const SidebarGroupLabel = React.forwardRef<
   )
 
   if (asChild) {
-    return React.createElement(Slot.Root as any, {
-      ref: ref as any,
+    return React.createElement(Slot.Root as React.ElementType, {
+      ref: ref as never,
       'data-slot': 'sidebar-group-label',
       'data-sidebar': 'group-label',
       className: classNames,
@@ -441,8 +441,8 @@ const SidebarGroupAction = React.forwardRef<
   )
 
   if (asChild) {
-    return React.createElement(Slot.Root as any, {
-      ref: ref as any,
+    return React.createElement(Slot.Root as React.ElementType, {
+      ref: ref as never,
       'data-slot': 'sidebar-group-action',
       'data-sidebar': 'group-action',
       className: classNames,
@@ -550,9 +550,9 @@ const SidebarMenuButton = React.forwardRef<
   }
 
   const button = asChild
-    ? React.createElement(Slot.Root as any, {
+    ? React.createElement(Slot.Root as React.ElementType, {
         ...buttonProps,
-        ref: ref as any,
+        ref: ref as never,
       })
     : React.createElement('button', buttonProps)
 
@@ -607,8 +607,8 @@ const SidebarMenuAction = React.forwardRef<
   )
 
   if (asChild) {
-    return React.createElement(Slot.Root as any, {
-      ref: ref as any,
+    return React.createElement(Slot.Root as React.ElementType, {
+      ref: ref as never,
       'data-slot': 'sidebar-menu-action',
       'data-sidebar': 'menu-action',
       className: classNames,
@@ -737,8 +737,8 @@ const SidebarMenuSubButton = React.forwardRef<
   )
 
   if (asChild) {
-    return React.createElement(Slot.Root as any, {
-      ref: ref as any,
+    return React.createElement(Slot.Root as React.ElementType, {
+      ref: ref as never,
       'data-slot': 'sidebar-menu-sub-button',
       'data-sidebar': 'menu-sub-button',
       'data-size': size,

@@ -1,4 +1,4 @@
-import { Button, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@nop-chaos/ui'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import { EdgeInspector } from './EdgeInspector'
 import { NodeInspector } from './NodeInspector'

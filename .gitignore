@@ -1,11 +1,12 @@
 node_modules/
 dist/
+.idea/
 .vite/
 .turbo/
+extensions/
 coverage/
 playwright-report/
 test-results/
-pnpm-lock.yaml
 .opencode/
 .env.local
 nop-task.md

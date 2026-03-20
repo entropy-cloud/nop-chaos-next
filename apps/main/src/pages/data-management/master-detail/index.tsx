@@ -35,8 +35,7 @@ import { deleteOrders, fetchOrderList, type OrderRecord } from '../../../service
 import { useTabStore } from '../../../store/tabStore'
 
 type SortKey = 'orderNo' | 'customerName' | 'status' | 'createdAt' | 'updatedAt' | 'amount'
-
-const statusOptions = ['all', 'active', 'review', 'draft', 'closed'] as const
+type StatusFilter = 'all' | 'active' | 'review' | 'draft' | 'closed'
 
 export default function MasterDetailPage() {
   const { t } = useTranslation()
@@ -45,7 +44,7 @@ export default function MasterDetailPage() {
   const orderQuery = useQuery({ queryKey: ['orders'], queryFn: fetchOrderList })
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [keyword, setKeyword] = useState('')
-  const [status, setStatus] = useState<(typeof statusOptions)[number]>('all')
+  const [status, setStatus] = useState<StatusFilter>('all')
   const [channel, setChannel] = useState('')
   const [owner, setOwner] = useState('')
   const [dateFrom, setDateFrom] = useState('')
@@ -194,7 +193,7 @@ export default function MasterDetailPage() {
               }}
             />
           </div>
-          <Select value={status} onValueChange={(value) => setStatus(value as (typeof statusOptions)[number])}>
+          <Select value={status} onValueChange={(value) => setStatus(value as StatusFilter)}>
             <SelectTrigger className="h-9 w-[9rem] bg-white/55 dark:bg-slate-900/35">
               <SelectValue />
             </SelectTrigger>

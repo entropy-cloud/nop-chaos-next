@@ -6,7 +6,7 @@
 
 ## 1. 核心原则
 
-- 插件使用 `SystemJS` 远程加载
+- 插件远程加载支持 `SystemJS` 和原生 `ESM`
 - 共享依赖由宿主统一注册，插件构建时 external
 - 宿主特有能力通过 `@nop-chaos/plugin-bridge` 获取
 - 插件不应直接依赖 `@nop-chaos/core`
@@ -55,13 +55,13 @@
 ### 产物要求
 
 - 默认导出 React 组件
-- 输出格式为 `system`（通过 Rollup 构建）
+- 可输出为 `system`（通过 Rollup 构建）或原生 `esm`
 - 共享依赖通过 external 排除
 
 ### 参考实现
 
-- `apps/plugin-demo/package.json` — 查看 build 脚本
-- `apps/plugin-demo/scripts/build-with-rollup.mjs` — Rollup 构建配置
+- `examples/plugin-demo/package.json` — 查看 build 脚本
+- `examples/plugin-demo/scripts/build-with-rollup.mjs` — Rollup 构建配置
 - `apps/main/src/plugins/sharedModules.ts` — 共享模块注册
 
 ---
@@ -69,7 +69,7 @@
 ## 5. 目录结构
 
 ```text
-apps/plugin-demo/
+examples/plugin-demo/
   src/
     components/
     hooks/
@@ -119,5 +119,5 @@ apps/plugin-demo/
 
 ## 8. 参考实现
 
-- `apps/plugin-demo/src/index.tsx`
+- `examples/plugin-demo/src/index.tsx`
 - `packages/plugin-bridge/src/index.ts`

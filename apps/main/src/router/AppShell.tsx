@@ -233,7 +233,6 @@ export function AppShell() {
             onCloseOthers={tabs.closeOtherTabs}
             onCloseAll={tabs.closeAllTabs}
             onRefresh={() => window.location.reload()}
-            onToggleSidebar={() => setMobileSidebarOpen((value) => !value)}
             onToggleFullscreen={() => void handleToggleWorkspaceFullscreen()}
             isFullscreen={workspaceFullscreen}
           />

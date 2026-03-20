@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { aiWorkbenchTestUtils } from './index'
+import { aiWorkbenchTestUtils } from './markdown'
 
 describe('aiWorkbenchTestUtils.parseMarkdownBlocks', () => {
   it('parses unordered lists, ordered lists, and code blocks', () => {

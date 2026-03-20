@@ -24,7 +24,7 @@
 | [07-mock-data.md](./07-mock-data.md) | Mock 数据说明 |
 | [08-plugin-dev-guide.md](./08-plugin-dev-guide.md) | 插件开发规范 |
 | [09-style-interaction-guidelines.md](./09-style-interaction-guidelines.md) | 样式与交互规则 |
-| [22-contribution-generator.md](./22-contribution-generator.md) | Contribution 生成器 |
+| [22-extension-generator.md](./22-extension-generator.md) | Extension 生成器 |
 
 ---
 
@@ -32,7 +32,7 @@
 
 | 文件 | 内容 |
 |------|------|
-| [15-contribution-system.md](./15-contribution-system.md) | Contribution 系统 |
+| [15-extension-system.md](./15-extension-system.md) | Extension 系统 |
 | [16-backend-integration.md](./16-backend-integration.md) | 后端联调指南 |
 | [17-icon-naming-and-rendering.md](./17-icon-naming-and-rendering.md) | Icon 系统 |
 | [18-amis-theme-bridge.md](./18-amis-theme-bridge.md) | AMIS 主题桥接 |

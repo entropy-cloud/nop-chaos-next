@@ -13,7 +13,6 @@ interface TabsBarProps {
   onCloseOthers: (path: string) => void
   onCloseAll: () => void
   onRefresh: (path: string) => void
-  onToggleSidebar?: () => void
   onToggleFullscreen?: () => void
   isFullscreen?: boolean
 }
@@ -96,7 +95,6 @@ export function TabsBar({
   onCloseOthers,
   onCloseAll,
   onRefresh,
-  onToggleSidebar,
   onToggleFullscreen,
   isFullscreen = false
 }: TabsBarProps) {

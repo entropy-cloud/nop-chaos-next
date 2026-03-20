@@ -1,5 +1,5 @@
 import { Bot, Pencil, Search, Trash2 } from 'lucide-react'
-import { Badge, Button, Input, ScrollArea } from '@nop-chaos/ui'
+import { Badge, Input, ScrollArea } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import { assistantCatalog, type WorkbenchSession } from '../../../services/mockApi'
 import { getAssistantName } from '../utils'

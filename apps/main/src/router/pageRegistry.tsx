@@ -1,12 +1,12 @@
 import { lazy } from 'react'
-import type { ContributionBuiltinPageComponent } from '@nop-chaos/shared'
-import { getSystemPageComponentId } from '../contributions/runtime'
+import type { ExtensionBuiltinPageComponent } from '@nop-chaos/shared'
+import { getSystemPageComponentId } from '../extensions/runtime'
 import LoginPage from '../pages/auth/login'
 import ForbiddenPage from '../pages/errors/403'
 import NotFoundPage from '../pages/errors/404'
 import ServerErrorPage from '../pages/errors/500'
 
-type BuiltinPage = ContributionBuiltinPageComponent
+type BuiltinPage = ExtensionBuiltinPageComponent
 
 const AIWorkbenchPage = lazy(() => import('../pages/ai-workbench'))
 const DashboardPage = lazy(() => import('../pages/dashboard'))

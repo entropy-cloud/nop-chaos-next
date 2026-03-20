@@ -3,12 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { RefreshCw, RotateCcw, Save } from 'lucide-react'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import {
-  Badge,
-  Button,
-  Input,
-  toast
-} from '@nop-chaos/ui'
+import { Button, toast } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import { PageHeader } from '../../../../components/common/PageHeader'
 import { fetchOrderDetail, saveOrderDetail, type AddressRecord, type LogisticsRecord, type OrderItem, type OrderRecord } from '../../../../services/mockApi'

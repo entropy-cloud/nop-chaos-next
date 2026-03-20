@@ -1,5 +1,5 @@
 import { Copy, Sparkles, Square, Trash2, Wand2 } from 'lucide-react'
-import { Button, ScrollArea, Textarea } from '@nop-chaos/ui'
+import { Button, Textarea } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import type { AssistantOption, WorkbenchMessage, WorkbenchSession } from '../../../services/mockApi'
 import { renderMarkdownBlocks } from '../markdown'

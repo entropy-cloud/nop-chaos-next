@@ -74,7 +74,7 @@ export const mainHttpClient = createHttpClient({
 })
 
 function buildRequestOptions(path: string, options: AjaxRequestOptions): { request: AjaxRequestOptions & { url: string }; operationName?: string } {
-  const { data, headers, query, silent: _silent, ...requestOptions } = options
+  const { data, headers, query, ...requestOptions } = options
   const amisRequest: AmisRequestOptions = {
     method: requestOptions.method,
     url: path,

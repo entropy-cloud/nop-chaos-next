@@ -2,7 +2,7 @@ import * as React from "react"
 import { CircleIcon } from "lucide-react"
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui"
 
-import { cn } from "@nop-chaos/ui/lib/utils"
+import { cn } from '../../lib/utils'
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,

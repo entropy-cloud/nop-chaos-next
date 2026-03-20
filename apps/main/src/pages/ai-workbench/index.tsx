@@ -15,10 +15,7 @@ import { assistantCatalog, createMockAiReply, seedWorkbenchSessions, type Assist
 import { ContextPanel } from './components/ContextPanel'
 import { ConversationPanel } from './components/ConversationPanel'
 import { SessionSidebar } from './components/SessionSidebar'
-import { aiWorkbenchTestUtils } from './markdown'
 import { buildHistoricalMessages, getAssistantName } from './utils'
-
-export { aiWorkbenchTestUtils }
 
 export default function AIWorkbenchPage() {
   const { t } = useTranslation()

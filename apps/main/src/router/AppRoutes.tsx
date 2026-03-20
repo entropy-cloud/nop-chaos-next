@@ -16,6 +16,10 @@ export function AppRoutes() {
   const { isAuthenticated, user, bootstrapStatus } = useAuth()
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending'
   const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending)
+  const items = useMemo(
+    () => flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? [])),
+    [menuQuery.data?.items, user?.roles]
+  )
   const LoginPage = getSystemPage('login')
   const ForbiddenPage = getSystemPage('forbidden')
   const NotFoundPage = getSystemPage('notFound')
@@ -25,10 +29,6 @@ export function AppRoutes() {
     return <div className="min-h-screen bg-background" />
   }
 
-  const items = useMemo(
-    () => flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? [])),
-    [menuQuery.data?.items, user?.roles]
-  )
   const shellView = (
     <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <AppShell />

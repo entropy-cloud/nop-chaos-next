@@ -4,14 +4,14 @@ import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react"
 
-import { cn } from "@nop-chaos/ui/lib/utils"
-import { Button } from "@nop-chaos/ui/components/ui/button"
+import { cn } from '../../lib/utils'
+import { Button } from './button'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@nop-chaos/ui/components/ui/input-group"
+} from './input-group'
 
 const Combobox = ComboboxPrimitive.Root
 

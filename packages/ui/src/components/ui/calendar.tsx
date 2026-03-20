@@ -10,8 +10,8 @@ import {
   type DayButton,
 } from "react-day-picker"
 
-import { cn } from "@nop-chaos/ui/lib/utils"
-import { Button, buttonVariants } from "@nop-chaos/ui/components/ui/button"
+import { cn } from '../../lib/utils'
+import { Button, buttonVariants } from './button'
 
 function Calendar({
   className,

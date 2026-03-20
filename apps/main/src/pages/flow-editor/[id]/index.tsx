@@ -4,8 +4,7 @@ import {
   useMemo,
   useRef,
   useState,
-  type DragEvent as ReactDragEvent,
-  type MouseEvent as ReactMouseEvent
+  type DragEvent as ReactDragEvent
 } from 'react'
 import {
   addEdge,
@@ -22,16 +21,8 @@ import {
   type XYPosition
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import {
-  Copy,
-  Trash2
-} from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
-import {
-  Button,
-  cn,
-  toast
-} from '@nop-chaos/ui'
+import { cn, toast } from '@nop-chaos/ui'
 import { useTranslation } from 'react-i18next'
 import { fetchFlowDetail, saveFlowDetail, type FlowDocument, type FlowNodeKind } from '../../../services/mockApi'
 import { nodeMeta } from './constants'
@@ -44,12 +35,11 @@ import { FlowInspectorPanel } from './components/FlowInspectorPanel'
 import { FlowMobilePanels } from './components/FlowMobilePanels'
 import { FlowNodePalette } from './components/FlowNodePalette'
 import { FlowNodeCard } from './components/FlowNodeCard'
-import { cloneEdges, cloneNodes, createNode, flowEditorTestUtils, getEdgeStyle, normalizeEdge, shouldRecordEdgeChangeHistory, shouldRecordNodeChangeHistory } from './utils'
+import { cloneEdges, cloneNodes, createNode, getEdgeStyle, normalizeEdge, shouldRecordEdgeChangeHistory, shouldRecordNodeChangeHistory } from './utils'
 import type { DeleteTarget, FlowEdge, FlowEditorActions, FlowNode, FlowNodeData, FlowSelectionSummary } from './types'
 import { useFlowHistory } from './useFlowHistory'
 import { useFlowKeyboardShortcuts } from './useFlowKeyboardShortcuts'
 
-export { flowEditorTestUtils }
 function FlowEditorPageInner() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -160,7 +150,7 @@ function FlowEditorPageInner() {
     applyState(nextNodes, edges)
     setSelectedNodeId(nextNode.id)
     setSelectedEdgeId(null)
-  }, [applyState, edges, nodes])
+  }, [applyState, edges, nodes, t])
 
   const duplicateNode = useCallback((nodeId: string) => {
     const source = nodes.find((node) => node.id === nodeId)
@@ -177,7 +167,7 @@ function FlowEditorPageInner() {
     applyState(nextNodes, edges)
     setSelectedNodeId(duplicated.id)
     setSelectedEdgeId(null)
-  }, [applyState, edges, nodes])
+  }, [applyState, edges, nodes, t])
 
   const requestDelete = useCallback((target: DeleteTarget) => {
     setDeleteTarget(target)

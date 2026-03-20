@@ -2,13 +2,12 @@ import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 import type {
   DefaultLegendContentProps,
-  LegendPayload,
   TooltipContentProps,
   TooltipPayloadEntry,
 } from "recharts"
 import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
 
-import { cn } from "@nop-chaos/ui/lib/utils"
+import { cn } from '../../lib/utils'
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const

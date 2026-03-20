@@ -5,13 +5,13 @@
 - Apply these rules to the entire repository.
 - This repo is a PNPM workspace monorepo.
 - Primary host app: `apps/main`.
-- Remote demo plugin: `apps/plugin-demo`.
+- Remote demo plugin: `examples/plugin-demo`.
 - Shared packages: `packages/shared`, `packages/ui`, `packages/core`, `packages/plugin-bridge`.
 
 ## Workspace Layout
 
 - `apps/main`: host React shell, routes, stores, pages, theme, i18n.
-- `apps/plugin-demo`: SystemJS-loaded remote plugin example.
+- `examples/plugin-demo`: remote plugin example for SystemJS and ESM loading.
 - `packages/shared`: shared types and pure utilities.
 - `packages/ui`: reusable UI components, styles, and `cn()` helper.
 - `packages/core`: shell components, permission helpers, SystemJS utilities.
@@ -145,7 +145,7 @@
 
 - Current menu model supports `pageType: 'builtin' | 'plugin'`.
 - Builtin pages resolve through `apps/main/src/router/pageRegistry.tsx`.
-- Plugin pages resolve through `PluginSlot` and SystemJS loading.
+- Plugin pages resolve through `PluginSlot` and runtime remote loading.
 - Permission checks happen both in menu filtering and route rendering; preserve both layers.
 - Avoid bundling duplicate React/runtime dependencies into remote plugins.
 - Shared plugin dependencies are registered from the host via SystemJS import maps.

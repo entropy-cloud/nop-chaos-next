@@ -1,5 +1,5 @@
 import { validateMenuResponse, type MenuResponse } from '@nop-chaos/shared'
-import { mergeContributionMenus } from '../../contributions/runtime'
+import { mergeExtensionMenus } from '../../extensions/runtime'
 import { wait } from './shared'
 
 export async function fetchMenuConfig(): Promise<MenuResponse> {
@@ -13,5 +13,5 @@ export async function fetchMenuConfig(): Promise<MenuResponse> {
     throw new Error(`Failed to load menu config: ${response.status}`)
   }
 
-  return wait(mergeContributionMenus(validateMenuResponse(await response.json())), 260)
+  return wait(mergeExtensionMenus(validateMenuResponse(await response.json())), 260)
 }

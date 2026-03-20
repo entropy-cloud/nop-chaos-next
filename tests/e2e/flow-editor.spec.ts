@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
+import { login } from './support/auth'
 
 const demoRoutesMenuResponse = {
   status: 0,
@@ -68,17 +69,12 @@ async function useSeededDemoMenu(page: Page) {
   })
 }
 
-async function login(page: Page) {
-  await useSeededDemoMenu(page)
-  await page.goto('/')
-  await page.locator('input').first().fill('nop')
-  await page.locator('input[type="password"]').fill('123')
-  await page.locator('button[type="submit"]').click()
-  await expect(page).toHaveURL(/\/flow-editor$/)
-}
-
 test('flow editor supports grouped palette, canvas editing, and minimap with seeded demo routes', async ({ page }) => {
-  await login(page)
+  await login(page, {
+    setup: () => useSeededDemoMenu(page)
+  })
+  await page.goto('/#/flow-editor')
+  await expect(page).toHaveURL(/\/flow-editor$/)
 
   await page.getByRole('row', { name: /customer onboarding/i }).getByRole('button', { name: /^edit$/i }).click()
   await expect(page).toHaveURL(/\/flow-editor\/flow-101$/)

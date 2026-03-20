@@ -15,8 +15,30 @@ function getSystem() {
   return (globalThis as typeof globalThis & { System: SystemApi }).System
 }
 
+function getBaseOrigin() {
+  return typeof window === 'undefined' ? 'http://localhost' : window.location.origin
+}
+
 function toModuleUrl(path: string) {
-  return new URL(path, globalThis.location.origin).href
+  return new URL(path, getBaseOrigin()).href
+}
+
+export function isSystemJsEntry(url: string) {
+  return new URL(url, getBaseOrigin()).pathname.endsWith('.system.js')
+}
+
+async function importRemoteModule(url: string) {
+  if (isSystemJsEntry(url)) {
+    const system = getSystem()
+
+    if (!system?.import) {
+      throw new Error(`SystemJS is required to load plugin module: ${url}`)
+    }
+
+    return system.import<RemoteComponentModule>(url)
+  }
+
+  return import(/* @vite-ignore */ url) as Promise<RemoteComponentModule>
 }
 
 export function registerSharedModules(sharedModules: Record<string, unknown>, basePath = '/nop-shared/') {
@@ -36,6 +58,6 @@ export function registerSharedModules(sharedModules: Record<string, unknown>, ba
 }
 
 export async function loadRemoteComponent(url: string): Promise<ComponentType> {
-  const module = await getSystem().import<RemoteComponentModule>(url)
+  const module = await importRemoteModule(url)
   return module.default
 }

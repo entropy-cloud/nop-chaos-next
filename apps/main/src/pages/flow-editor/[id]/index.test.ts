@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { flowEditorTestUtils } from './index'
+import { flowEditorTestUtils } from './utils'
 
 const { createNode, normalizeEdge, createFlowStateSnapshot, getEdgeStyle, shouldRecordNodeChangeHistory, shouldRecordEdgeChangeHistory } = flowEditorTestUtils()
 

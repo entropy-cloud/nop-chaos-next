@@ -11,8 +11,8 @@ import {
   type FieldValues,
 } from "react-hook-form"
 
-import { cn } from "@nop-chaos/ui/lib/utils"
-import { Label } from "@nop-chaos/ui/components/ui/label"
+import { cn } from '../../lib/utils'
+import { Label } from './label'
 
 const Form = FormProvider
 
@@ -107,10 +107,10 @@ FormLabel.displayName = 'FormLabel'
 
 const FormControl = React.forwardRef<HTMLElement, React.ComponentProps<typeof Slot.Root>>(
   function FormControl(props, ref) {
-  const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+    const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
-    return React.createElement(Slot.Root as any, {
-      ref: ref as any,
+    return React.createElement(Slot.Root as React.ElementType, {
+      ref: ref as never,
       'data-slot': 'form-control',
       id: formItemId,
       'aria-describedby': !error

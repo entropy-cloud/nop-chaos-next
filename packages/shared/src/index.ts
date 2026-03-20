@@ -1,5 +1,5 @@
 export * from './types/icon'
-export * from './types/contribution'
+export * from './types/extension'
 export * from './types/menu'
 export * from './types/plugin'
 export * from './types/tab'

@@ -1,7 +1,11 @@
-import { defineConfig } from 'vite'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 import compressPlugin from 'vite-plugin-compression'
+
+const appRoot = dirname(fileURLToPath(import.meta.url))
 
 function includesAny(id: string, segments: string[]) {
   return segments.some((segment) => id.includes(segment))
@@ -96,7 +100,7 @@ function getHostRuntimeChunkName(id: string) {
     return 'host-shell-runtime'
   }
 
-  if (includesAny(normalized, ['/src/config/', '/src/contributions/'])) {
+  if (includesAny(normalized, ['/src/config/', '/src/extensions/'])) {
     return 'host-config-runtime'
   }
 
@@ -209,10 +213,23 @@ function getVendorChunkName(packageName: string) {
 
 export default defineConfig(({ mode }) => {
   const analyze = mode === 'analyze'
+  const env = loadEnv(mode, appRoot, '')
+  const extensionAliasPath = env.VITE_DEMO_EXTENSION_ALIAS_PATH
+  const aliasedExtensionPath = extensionAliasPath
+    ? resolve(appRoot, extensionAliasPath)
+    : undefined
 
   return {
     resolve: {
-      tsconfigPaths: true
+      tsconfigPaths: true,
+      alias: aliasedExtensionPath
+        ? [
+            {
+              find: '@demo-extension',
+              replacement: aliasedExtensionPath
+            }
+          ]
+        : undefined
     },
     plugins: [
       react(),
@@ -235,6 +252,12 @@ export default defineConfig(({ mode }) => {
     ].filter(Boolean),
     server: {
       port: 4173,
+      strictPort: false,
+      fs: aliasedExtensionPath
+        ? {
+            allow: [appRoot, dirname(aliasedExtensionPath)]
+          }
+        : undefined,
       proxy: {
         '/r': {
           target: 'http://localhost:8080',
@@ -244,22 +267,23 @@ export default defineConfig(({ mode }) => {
           target: 'http://localhost:8080',
           changeOrigin: true
         },
-        '/p': {
+        '^/p/': {
           target: 'http://localhost:8080',
           changeOrigin: true
         },
-        '/f': {
+        '^/f/': {
           target: 'http://localhost:8080',
           changeOrigin: true
         },
-        '/q': {
+        '^/q/': {
           target: 'http://localhost:8080',
           changeOrigin: true
         }
       }
     },
     preview: {
-      port: 4173
+      port: 4173,
+      strictPort: true
     },
     css: {
       transformer: 'postcss'
@@ -304,7 +328,7 @@ export default defineConfig(({ mode }) => {
                 '/src/components/layout/',
                 '/src/components/auth/',
                 '/src/config/',
-                '/src/contributions/',
+                '/src/extensions/',
                 '/src/hooks/',
                 '/src/plugins/',
                 '/src/router/AppRoutes',

@@ -6,7 +6,7 @@ const config: Config = {
   content: [
     './apps/main/index.html',
     './apps/main/src/**/*.{ts,tsx}',
-    './apps/plugin-demo/src/**/*.{ts,tsx}',
+    './examples/plugin-demo/src/**/*.{ts,tsx}',
     './packages/ui/src/**/*.{ts,tsx}',
     './packages/core/src/**/*.{ts,tsx}'
   ]

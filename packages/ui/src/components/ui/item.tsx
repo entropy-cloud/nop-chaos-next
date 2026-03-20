@@ -2,8 +2,8 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
-import { cn } from "@nop-chaos/ui/lib/utils"
-import { Separator } from "@nop-chaos/ui/components/ui/separator"
+import { cn } from '../../lib/utils'
+import { Separator } from './separator'
 
 function ItemGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -66,8 +66,8 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(function Item({
   const classNames = cn(itemVariants({ variant, size, className }))
 
   if (asChild) {
-    return React.createElement(Slot.Root as any, {
-      ref: ref as any,
+    return React.createElement(Slot.Root as React.ElementType, {
+      ref: ref as never,
       'data-slot': 'item',
       'data-variant': variant,
       'data-size': size,
