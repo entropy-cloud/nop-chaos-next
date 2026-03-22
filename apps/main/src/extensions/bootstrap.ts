@@ -108,6 +108,36 @@ function applyExtensionI18nResources(loaded: LoadedExtension[]) {
   }
 }
 
+export async function loadExtensionI18nFromBaseUrl(loaded: LoadedExtension[]) {
+  for (const { extension } of loaded) {
+    if (!extension.i18n) {
+      continue
+    }
+
+    const { baseUrl, languages } = extension.i18n
+
+    await Promise.all(
+      languages.map(async (lng) => {
+        try {
+          const url = `${baseUrl}/${lng}/translation.json`
+          const response = await fetch(url)
+
+          if (!response.ok) {
+            logger.warn(`Failed to load i18n for ${extension.id} language ${lng}: ${response.status}`)
+            return
+          }
+
+          const resource = await response.json()
+          i18n.addResourceBundle(lng, 'translation', resource, true, true)
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'Unknown error'
+          logger.warn(`Failed to load i18n for ${extension.id} language ${lng}: ${message}`)
+        }
+      })
+    )
+  }
+}
+
 export async function bootstrapExtensions(): Promise<LoadedExtension[]> {
   registerHostSharedModules()
 
@@ -131,6 +161,7 @@ export async function bootstrapExtensions(): Promise<LoadedExtension[]> {
   setLoadedExtensions(loaded)
   applyDocumentBranding(loaded)
   await initializeI18n()
+  await loadExtensionI18nFromBaseUrl(loaded)
   applyExtensionI18nResources(loaded)
 
   return loaded

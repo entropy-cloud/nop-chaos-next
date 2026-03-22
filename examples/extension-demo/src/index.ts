@@ -7,6 +7,7 @@ const harborMarkHref = new URL('./harbor-mark.svg', import.meta.url).href
 const harborThemeHref = new URL('./harbor.css', import.meta.url).href
 const harborShellHref = new URL('./shell.css', import.meta.url).href
 const harborPageHref = new URL('./component-page.css', import.meta.url).href
+const i18nBaseUrl = new URL('../locales', import.meta.url).href
 
 const extension: ShellExtension = {
   id: 'example-extension-demo',
@@ -100,86 +101,10 @@ const extension: ShellExtension = {
       sort: 980
     }
   ],
-  i18nResources: [
-    {
-      lng: 'en-US',
-      resource: {
-        extensionDemo: {
-          login: {
-            cardTitle: 'Enter Harbor',
-            heroTitle: 'Bring shell branding, themes, and extension points together for each business application.',
-            heroDescription: 'This demo extension shows how a reused host shell can present a different product identity without replacing the entire framework.',
-            cardDescription: 'Use the default account to enter the Harbor workspace.',
-            feature: {
-              coordination: {
-                title: 'Shell coordination',
-                description: 'Branding, menus, and default routes stay aligned through one extension.'
-              },
-              themes: {
-                title: 'App-tailored themes',
-                description: 'Each application can publish its own visual language on top of the same host shell.'
-              },
-              bridge: {
-                title: 'Shared runtime bridge',
-                description: 'Built-in pages and plugins still reuse the same host runtime modules.'
-              }
-            }
-          }
-        },
-        settings: {
-          languageOptions: {
-            en: 'English',
-            frFR: 'French'
-          },
-          themeOptions: {
-            harbor: {
-              label: 'Harbor',
-              description: 'Cool coastal colors for shared dashboards and operations screens.'
-            }
-          }
-        }
-      }
-    },
-    {
-      lng: 'fr-FR',
-      resource: {
-        extensionDemo: {
-          login: {
-            cardTitle: 'Entrer dans Harbor',
-            heroTitle: "Unifier branding, themes et points d'extension du shell pour chaque application metier.",
-            heroDescription: 'Cette extension de demonstration montre comment reutiliser le meme host shell avec une identite produit differente.',
-            cardDescription: "Utilisez le compte par defaut pour entrer dans l'espace Harbor.",
-            feature: {
-              coordination: {
-                title: 'Coordination du shell',
-                description: 'Branding, menus et route par defaut restent alignes via une seule extension.'
-              },
-              themes: {
-                title: 'Themes adaptes',
-                description: 'Chaque application peut publier son propre style visuel au-dessus du meme shell hote.'
-              },
-              bridge: {
-                title: 'Pont runtime partage',
-                description: 'Les pages internes et plugins continuent de reutiliser les modules du host runtime.'
-              }
-            }
-          }
-        },
-        settings: {
-          languageOptions: {
-            en: 'Anglais',
-            frFR: 'Francais'
-          },
-          themeOptions: {
-            harbor: {
-              label: 'Harbor',
-              description: "Couleurs cotieres pour tableaux de bord et ecrans d'operations."
-            }
-          }
-        }
-      }
-    }
-  ]
+  i18n: {
+    baseUrl: i18nBaseUrl,
+    languages: ['en-US', 'fr-FR']
+  }
 }
 
 export default extension

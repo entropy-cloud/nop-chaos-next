@@ -20,6 +20,11 @@ export interface ExtensionI18nResource {
   resource: Record<string, unknown>
 }
 
+export interface ExtensionI18nConfig {
+  baseUrl: string
+  languages: string[]
+}
+
 export interface ExtensionTheme {
   id: string
   labelKey: string
@@ -131,6 +136,7 @@ export interface ShellExtension {
   env?: Record<string, string>
   languages?: ExtensionLanguage[]
   supportedLanguages?: ExtensionLanguage[]
+  i18n?: ExtensionI18nConfig
   i18nResources?: ExtensionI18nResource[]
   themes?: ExtensionTheme[]
   styles?: ExtensionStyleAsset[]
