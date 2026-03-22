@@ -46,7 +46,9 @@ export function AppRoutes() {
         <Route path="404" element={<NotFoundPage />} />
         <Route path="500" element={<ServerErrorPage />} />
         {menuQuery.isSuccess
-          ? items.map((item) => <Route key={item.id} path={normalizePath(item.path)} element={<RouteRenderer item={item} />} />)
+          ? items.map((item) => (
+              <Route key={item.id} path={normalizePath(item.path)} element={<RouteRenderer item={item} />} />
+            ))
           : null}
         <Route path="*" element={menuQuery.isSuccess ? <NotFoundPage /> : shellFallback} />
       </Route>

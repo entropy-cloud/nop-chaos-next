@@ -1,7 +1,7 @@
 import { resetTokenStorage, setAuthConfig } from '@nop-chaos/shared'
 import type { ExtensionLogger, LoadedExtension } from '@nop-chaos/shared'
 import i18n, { initializeI18n } from '../config/i18n'
-import { registerLanguages, setDefaultLanguage } from '../config/i18n/languages'
+import { registerLanguages, replaceLanguages, setDefaultLanguage } from '../config/i18n/languages'
 import { registerThemes } from '../config/themeRegistry'
 import { registerHostSharedModules } from '../plugins/sharedModules'
 import { registerBuiltinPages } from '../router/pageRegistry'
@@ -68,7 +68,9 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
       setDefaultLanguage(extension.app.defaultLanguage)
     }
 
-    if (extension.languages) {
+    if (extension.supportedLanguages) {
+      replaceLanguages(extension.supportedLanguages)
+    } else if (extension.languages) {
       registerLanguages(extension.languages)
     }
 

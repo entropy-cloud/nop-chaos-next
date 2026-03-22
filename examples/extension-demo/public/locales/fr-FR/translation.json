@@ -1,0 +1,36 @@
+{
+  "extensionDemo": {
+    "login": {
+      "cardTitle": "Entrer dans Harbor",
+      "heroTitle": "Unifier branding, themes et points d'extension du shell pour chaque application metier.",
+      "heroDescription": "Cette extension de demonstration montre comment reutiliser le meme host shell avec une identite produit differente.",
+      "cardDescription": "Utilisez le compte par defaut pour entrer dans l'espace Harbor.",
+      "feature": {
+        "coordination": {
+          "title": "Coordination du shell",
+          "description": "Branding, menus et route par defaut restent alignes via une seule extension."
+        },
+        "themes": {
+          "title": "Themes adaptes",
+          "description": "Chaque application peut publier son propre style visuel au-dessus du meme shell hote."
+        },
+        "bridge": {
+          "title": "Pont runtime partage",
+          "description": "Les pages internes et plugins continuent de reutiliser les modules du host runtime."
+        }
+      }
+    }
+  },
+  "settings": {
+    "languageOptions": {
+      "en": "Anglais",
+      "frFR": "Francais"
+    },
+    "themeOptions": {
+      "harbor": {
+        "label": "Harbor",
+        "description": "Couleurs cotieres pour tableaux de bord et ecrans d'operations."
+      }
+    }
+  }
+}

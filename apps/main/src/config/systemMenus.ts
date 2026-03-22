@@ -1,5 +1,5 @@
 import { flattenMenus, type MenuItem, type MenuResponse } from '@nop-chaos/shared'
-import { getExtensionDefaultHomePath } from '../extensions/runtime'
+import { getExtensionDefaultHomePath, hasMenuOverride } from '../extensions/runtime'
 
 const builtinSystemMenuItems: MenuItem[] = [
   {
@@ -123,6 +123,18 @@ function mergeMenuItems(existingItems: MenuItem[] | undefined, builtinItems: Men
 }
 
 export function mergeBuiltinSystemMenus(menuResponse: MenuResponse): MenuResponse {
+  if (hasMenuOverride()) {
+    const availablePaths = new Set(flattenMenus(menuResponse.items).map((item) => item.path))
+    const homeCandidate = menuResponse.home && availablePaths.has(menuResponse.home)
+      ? menuResponse.home
+      : menuResponse.items[0]?.path ?? '/'
+
+    return {
+      ...menuResponse,
+      home: homeCandidate
+    }
+  }
+
   const items = mergeMenuItems(menuResponse.items, builtinSystemMenuItems) ?? []
   const availablePaths = new Set(flattenMenus(items).map((item) => item.path))
   const extensionHome = getExtensionDefaultHomePath()

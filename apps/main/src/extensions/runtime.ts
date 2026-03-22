@@ -184,15 +184,35 @@ export function getSystemPageComponentId(page: keyof ExtensionSystemPagesConfig)
 }
 
 export function mergeExtensionMenus(menuResponse: MenuResponse): MenuResponse {
-  const extensionMenus = loadedExtensions.flatMap((item) => item.extension.menus ?? [])
+  const sorted = [...loadedExtensions].sort((a, b) => (a.extension.order ?? 0) - (b.extension.order ?? 0))
 
-  if (extensionMenus.length === 0) {
-    return menuResponse
+  let items = [...menuResponse.items]
+  let home = menuResponse.home
+
+  for (const { extension } of sorted) {
+    const extMenus = extension.menus ?? []
+
+    if (extMenus.length === 0) {
+      continue
+    }
+
+    if (extension.overrideMenus) {
+      items = [...extMenus]
+      home = extMenus[0]?.path ?? home
+      continue
+    }
+
+    items = [...items, ...extMenus]
+    home = home ?? extMenus[0]?.path ?? '/'
   }
 
   return validateMenuResponse({
     ...menuResponse,
-    items: [...menuResponse.items, ...extensionMenus],
-    home: menuResponse.home ?? extensionMenus[0]?.path ?? '/'
+    items,
+    home
   })
+}
+
+export function hasMenuOverride(): boolean {
+  return loadedExtensions.some((item) => item.extension.overrideMenus)
 }

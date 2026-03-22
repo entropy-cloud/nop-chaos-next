@@ -42,6 +42,11 @@ export function registerLanguages(languages: LanguageOption[]): void {
   }
 }
 
+export function replaceLanguages(languages: LanguageOption[]): void {
+  languageRegistry.length = 0
+  languageRegistry.push(...languages)
+}
+
 export function getLanguageOptions(): LanguageOption[] {
   return [...languageRegistry]
 }

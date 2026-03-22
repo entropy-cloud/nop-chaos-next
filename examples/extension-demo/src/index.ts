@@ -51,11 +51,9 @@ const extension: ShellExtension = {
     notFound: 'extension-harbor-not-found',
     dashboard: 'extension-harbor-page'
   },
-  languages: [
-    {
-      code: 'fr-FR',
-      labelKey: 'settings.languageOptions.frFR'
-    }
+  supportedLanguages: [
+    { code: 'en-US', labelKey: 'settings.languageOptions.en' },
+    { code: 'fr-FR', labelKey: 'settings.languageOptions.frFR' }
   ],
   themes: [
     {
@@ -104,44 +102,6 @@ const extension: ShellExtension = {
   ],
   i18nResources: [
     {
-      lng: 'zh-CN',
-      resource: {
-        extensionDemo: {
-          login: {
-            cardTitle: 'Enter Harbor',
-            heroTitle: 'Bring shell branding, themes, and extension points together for each business application.',
-            heroDescription: 'This demo extension shows how a reused host shell can present a different product identity without replacing the entire framework.',
-            cardDescription: 'Use the default account to enter the Harbor workspace.',
-            feature: {
-              coordination: {
-                title: 'Shell coordination',
-                description: 'Branding, menus, and default routes stay aligned through one extension.'
-              },
-              themes: {
-                title: 'App-tailored themes',
-                description: 'Each application can publish its own visual language on top of the same host shell.'
-              },
-              bridge: {
-                title: 'Shared runtime bridge',
-                description: 'Built-in pages and plugins still reuse the same host runtime modules.'
-              }
-            }
-          }
-        },
-        settings: {
-          languageOptions: {
-            frFR: 'French'
-          },
-          themeOptions: {
-            harbor: {
-              label: 'Harbor',
-              description: 'Cool coastal colors for shared dashboards and operations screens.'
-            }
-          }
-        }
-      }
-    },
-    {
       lng: 'en-US',
       resource: {
         extensionDemo: {
@@ -168,6 +128,7 @@ const extension: ShellExtension = {
         },
         settings: {
           languageOptions: {
+            en: 'English',
             frFR: 'French'
           },
           themeOptions: {
@@ -185,9 +146,9 @@ const extension: ShellExtension = {
         extensionDemo: {
           login: {
             cardTitle: 'Entrer dans Harbor',
-            heroTitle: 'Unifier branding, themes et points d extension du shell pour chaque application metier.',
+            heroTitle: "Unifier branding, themes et points d'extension du shell pour chaque application metier.",
             heroDescription: 'Cette extension de demonstration montre comment reutiliser le meme host shell avec une identite produit differente.',
-            cardDescription: 'Utilisez le compte par defaut pour entrer dans l espace Harbor.',
+            cardDescription: "Utilisez le compte par defaut pour entrer dans l'espace Harbor.",
             feature: {
               coordination: {
                 title: 'Coordination du shell',
@@ -206,12 +167,13 @@ const extension: ShellExtension = {
         },
         settings: {
           languageOptions: {
+            en: 'Anglais',
             frFR: 'Francais'
           },
           themeOptions: {
             harbor: {
               label: 'Harbor',
-              description: 'Cool coastal colors for shared dashboards and operations screens.'
+              description: "Couleurs cotieres pour tableaux de bord et ecrans d'operations."
             }
           }
         }

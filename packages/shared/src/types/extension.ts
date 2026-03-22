@@ -130,12 +130,14 @@ export interface ShellExtension {
   systemPages?: ExtensionSystemPagesConfig
   env?: Record<string, string>
   languages?: ExtensionLanguage[]
+  supportedLanguages?: ExtensionLanguage[]
   i18nResources?: ExtensionI18nResource[]
   themes?: ExtensionTheme[]
   styles?: ExtensionStyleAsset[]
   builtinPages?: ExtensionBuiltinPage[]
   plugins?: PluginManifest[]
   menus?: MenuItem[]
+  overrideMenus?: boolean
   auth?: ExtensionAuthConfig
   setup?: (context: ExtensionSetupContext) => void | Promise<void>
 }

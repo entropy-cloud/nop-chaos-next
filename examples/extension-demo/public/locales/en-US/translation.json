@@ -1,0 +1,36 @@
+{
+  "extensionDemo": {
+    "login": {
+      "cardTitle": "Enter Harbor",
+      "heroTitle": "Bring shell branding, themes, and extension points together for each business application.",
+      "heroDescription": "This demo extension shows how a reused host shell can present a different product identity without replacing the entire framework.",
+      "cardDescription": "Use the default account to enter the Harbor workspace.",
+      "feature": {
+        "coordination": {
+          "title": "Shell coordination",
+          "description": "Branding, menus, and default routes stay aligned through one extension."
+        },
+        "themes": {
+          "title": "App-tailored themes",
+          "description": "Each application can publish its own visual language on top of the same host shell."
+        },
+        "bridge": {
+          "title": "Shared runtime bridge",
+          "description": "Built-in pages and plugins still reuse the same host runtime modules."
+        }
+      }
+    }
+  },
+  "settings": {
+    "languageOptions": {
+      "en": "English",
+      "frFR": "French"
+    },
+    "themeOptions": {
+      "harbor": {
+        "label": "Harbor",
+        "description": "Cool coastal colors for shared dashboards and operations screens."
+      }
+    }
+  }
+}
