@@ -10,6 +10,6 @@ test('can start from login and enter dashboard', async ({ page }) => {
     return
   }
 
-  await expect(page).toHaveURL(/\/report\/demo\/pages\/demo$/)
-  await expect(page.locator('aside')).toContainText(/报表演示|demo/i)
+  await expect(page).toHaveURL(/#\/dashboard$/)
+  await expect(page.locator('aside')).toContainText(/Dashboard/i)
 })

@@ -93,6 +93,14 @@ function cloneMenuItem(item: MenuItem): MenuItem {
   }
 }
 
+function hideMenuItem(item: MenuItem): MenuItem {
+  return {
+    ...item,
+    hideInMenu: true,
+    children: item.children?.map(hideMenuItem)
+  }
+}
+
 function isSameMenuItem(left: MenuItem, right: MenuItem) {
   return left.id === right.id || left.path === right.path
 }
@@ -123,19 +131,25 @@ function mergeMenuItems(existingItems: MenuItem[] | undefined, builtinItems: Men
 }
 
 export function mergeBuiltinSystemMenus(menuResponse: MenuResponse): MenuResponse {
+  // System pages (settings, help, etc.) should always be available,
+  // even when overrideMenus is true. They are accessed from the user menu,
+  // not from the sidebar navigation.
   if (hasMenuOverride()) {
-    const availablePaths = new Set(flattenMenus(menuResponse.items).map((item) => item.path))
+    const items = mergeMenuItems(menuResponse.items, builtinSystemMenuItems.map(hideMenuItem)) ?? []
+    const availablePaths = new Set(flattenMenus(items).map((item) => item.path))
     const homeCandidate = menuResponse.home && availablePaths.has(menuResponse.home)
       ? menuResponse.home
       : menuResponse.items[0]?.path ?? '/'
 
     return {
       ...menuResponse,
-      home: homeCandidate
+      home: homeCandidate,
+      items
     }
   }
 
   const items = mergeMenuItems(menuResponse.items, builtinSystemMenuItems) ?? []
+
   const availablePaths = new Set(flattenMenus(items).map((item) => item.path))
   const extensionHome = getExtensionDefaultHomePath()
   const homeCandidate = menuResponse.home && availablePaths.has(menuResponse.home)

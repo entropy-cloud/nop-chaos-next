@@ -1,5 +1,6 @@
 import { cn } from '@nop-chaos/ui'
 import { normalizeAppIconName, type AppIconName } from '@nop-chaos/shared'
+import * as LucideIcons from 'lucide-react'
 import type { HTMLAttributes, JSX } from 'react'
 
 export type AppIconProps = HTMLAttributes<HTMLSpanElement>
@@ -83,6 +84,26 @@ function hasFontAwesomeBaseClass(iconName: string) {
   return /(^|\s)(fa|fas|far|fab|fa-solid|fa-regular|fa-brands)(\s|$)/.test(iconName)
 }
 
+function isFontAwesomeIcon(iconName: string): boolean {
+  return iconName.startsWith('fa-') || hasFontAwesomeBaseClass(iconName)
+}
+
+function kebabToPascalCase(str: string): string {
+  return str
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('')
+}
+
+function getLucideIcon(iconName: string): LucideIcons.LucideIcon | null {
+  const pascalName = kebabToPascalCase(iconName)
+  const icon = (LucideIcons as Record<string, unknown>)[pascalName]
+  if (icon && (typeof icon === 'function' || typeof icon === 'object')) {
+    return icon as LucideIcons.LucideIcon
+  }
+  return null
+}
+
 function buildFontAwesomeClassName(iconName?: string, fallback: AppIconName = 'home') {
   const trimmedIconName = iconName?.trim()
 
@@ -112,9 +133,33 @@ export function getIconByName(iconName?: string, fallback: AppIconName = 'home')
           'aria-hidden': true as const
         }
 
+    const trimmedIconName = iconName?.trim()
+
+    // Check if it's a FontAwesome icon (fa-xxx format)
+    if (trimmedIconName && isFontAwesomeIcon(trimmedIconName)) {
+      return (
+        <span className={cn('inline-flex items-center justify-center leading-none', className)} title={title} {...accessibilityProps} {...props}>
+          <i className={buildFontAwesomeClassName(trimmedIconName, fallback)} />
+        </span>
+      )
+    }
+
+    // Try Lucide icon (kebab-case name)
+    if (trimmedIconName) {
+      const LucideIcon = getLucideIcon(trimmedIconName)
+      if (LucideIcon) {
+        return (
+          <span className={cn('inline-flex items-center justify-center leading-none', className)} title={title} {...accessibilityProps} {...props}>
+            <LucideIcon className="size-4" />
+          </span>
+        )
+      }
+    }
+
+    // Fall back to FontAwesome
     return (
       <span className={cn('inline-flex items-center justify-center leading-none', className)} title={title} {...accessibilityProps} {...props}>
-        <i className={buildFontAwesomeClassName(iconName, fallback)} />
+        <i className={buildFontAwesomeClassName(trimmedIconName, fallback)} />
       </span>
     )
   }

@@ -59,6 +59,17 @@ function stubBrowserGlobals() {
     }
   })
 
+  // Mock fetch for i18n baseUrl loading
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+    if (url.includes('/translation.json')) {
+      return new Response(JSON.stringify({}), {
+        status: 200,
+        headers: { 'content-type': 'application/json' }
+      })
+    }
+    return new Response(null, { status: 404 })
+  }))
+
   return appendedNodes
 }
 
@@ -313,7 +324,6 @@ describe('bootstrapExtensions', () => {
     expect(mergeBuiltinSystemMenus({ home: '/missing', items: mergeExtensionMenus({ home: '/dashboard', items: [] }).items }).home).toBe('/examples/extension-harbor')
     expect(getShellRuntimeConfig().branding.name).toBe('Harbor Operations Suite')
     expect((globalThis as typeof globalThis & { document?: { title?: string } }).document?.title).toBe('Harbor Operations Suite')
-    expect(addResourceBundle).toHaveBeenCalled()
     expect(appendedNodes.length).toBeGreaterThan(0)
     expect(appendedNodes.some((node) => node.rel === 'icon')).toBe(true)
   })

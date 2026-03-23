@@ -1,11 +1,9 @@
-import type { AppIconName } from './icon'
-
 export interface MenuItem {
   id: string
   title?: string
   titleKey?: string
   path: string
-  icon?: AppIconName
+  icon?: string
   children?: MenuItem[]
   badge?: string
   pageType: 'builtin' | 'plugin' | 'amis' | 'iframe' | 'external'

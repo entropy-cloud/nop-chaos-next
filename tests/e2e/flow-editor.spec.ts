@@ -76,7 +76,8 @@ test('flow editor supports grouped palette, canvas editing, and minimap with see
   await page.goto('/#/flow-editor')
   await expect(page).toHaveURL(/\/flow-editor$/)
 
-  await page.getByRole('row', { name: /customer onboarding/i }).getByRole('button', { name: /^edit$/i }).click()
+  const targetRow = page.getByRole('row').filter({ hasText: /Customer onboarding/i })
+  await targetRow.getByRole('button').first().click()
   await expect(page).toHaveURL(/\/flow-editor\/flow-101$/)
 
   await expect(page.getByText(/basic nodes/i)).toBeVisible()

@@ -1,5 +1,5 @@
-import type { AppIconName, MenuItem, MenuResponse } from '@nop-chaos/shared'
-import { normalizeAppIconName, validateMenuResponse } from '@nop-chaos/shared'
+import type { MenuItem, MenuResponse } from '@nop-chaos/shared'
+import { validateMenuResponse } from '@nop-chaos/shared'
 import { mergeExtensionMenus } from '../extensions/runtime'
 
 export interface LegacySiteMapResource {
@@ -102,12 +102,8 @@ function toBuiltinComponentId(resource: LegacySiteMapResource, path: string) {
   return normalizedPath.replace(/\//g, '-')
 }
 
-function toIcon(icon?: string): AppIconName | undefined {
-  if (!icon) {
-    return undefined
-  }
-
-  return normalizeAppIconName(icon) ?? 'home'
+function toIcon(icon?: string): string | undefined {
+  return icon
 }
 
 function extractRoles(resource: LegacySiteMapResource) {

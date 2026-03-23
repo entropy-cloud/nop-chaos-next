@@ -5,7 +5,8 @@ test('master detail list opens detail in tab and warns on unsaved leave', async 
   await login(page, { username: 'admin', defaultPassword: '123456' })
 
   await page.goto('/#/data-management/master-detail')
-  await page.getByRole('button', { name: /查看|View/ }).first().click()
+  const targetRow = page.getByRole('row').filter({ hasText: /SO-202603-1001/ })
+  await targetRow.click()
   await expect(page).toHaveURL(/\/data-management\/master-detail\//)
   await expect(page.getByText('Core record information')).toBeVisible()
   await expect(page.getByRole('button', { name: /SO-202603-/ }).first()).toBeVisible()

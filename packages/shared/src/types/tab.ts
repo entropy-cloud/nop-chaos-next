@@ -1,8 +1,6 @@
-import type { AppIconName } from './icon'
-
 export interface AppTab {
   path: string
   title: string
-  icon?: AppIconName
+  icon?: string
   closable?: boolean
 }
