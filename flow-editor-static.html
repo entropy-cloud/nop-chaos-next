@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow Editor - Customer onboarding</title>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+      --primary: 221.2 83.2% 53.3%;
+      --primary-foreground: 210 40% 98%;
+      --primary-dark: 221.2 83.2% 40%;
+      --secondary: 210 40% 96.1%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --destructive: 0 84.2% 60.2%;
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 221.2 83.2% 53.3%;
+      --radius-sm: 0.25rem;
+      --radius-md: 0.375rem;
+      --radius-lg: 0.5rem;
+      --radius-xl: 0.75rem;
+      --success: 142.1 76.2% 36.3%;
+      --warning: 38 92% 50%;
+      --danger: 0 84.2% 60.2%;
+      --card-surface: rgba(255, 255, 255, 0.78);
+      --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    .dark {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
+      --card: 222.2 84% 4.9%;
+      --card-foreground: 210 40% 98%;
+      --popover: 222.2 84% 4.9%;
+      --popover-foreground: 210 40% 98%;
+      --primary: 217.2 91.2% 59.8%;
+      --primary-foreground: 222.2 47.4% 11.2%;
+      --primary-dark: 217.2 91.2% 45%;
+      --secondary: 217.2 32.6% 17.5%;
+      --secondary-foreground: 210 40% 98%;
+      --muted: 217.2 32.6% 17.5%;
+      --muted-foreground: 215 20.2% 65.1%;
+      --accent: 217.2 32.6% 17.5%;
+      --accent-foreground: 210 40% 98%;
+      --border: 217.2 32.6% 17.5%;
+      --card-surface: rgba(30, 41, 59, 0.78);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      min-height: 100vh;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(167, 243, 208, 0.15) 0%, rgba(196, 181, 253, 0.12) 50%, rgba(153, 246, 228, 0.1) 100%);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 48px);
+      min-height: 40rem;
+      gap: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      padding: 8px 12px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(20px);
+    }
+
+    .toolbar-left {
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 12px;
+      border: 1px solid hsl(var(--border));
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .btn-icon-sm {
+      padding: 6px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .btn-ghost:hover {
+      background: hsl(var(--accent));
+    }
+
+    .btn-outline {
+      background: transparent;
+    }
+
+    .btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border-color: hsl(var(--primary));
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border: 1px solid hsl(var(--border));
+      background: hsl(var(--background));
+    }
+
+    .badge-success {
+      background: rgba(34, 197, 94, 0.15);
+      color: rgb(22, 163, 74);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: rgb(217, 119, 6);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-outline {
+      background: transparent;
+    }
+
+    .toolbar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toolbar-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .toolbar-meta span {
+      white-space: nowrap;
+    }
+
+    .toolbar-grid-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      border-radius: 9999px;
+      border: 1px solid hsl(var(--border));
+      padding: 6px 12px;
+    }
+
+    .switch {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      background: hsl(var(--muted));
+      border-radius: 9999px;
+      cursor: pointer;
+    }
+
+    .switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 9999px;
+      transition: transform 0.15s;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .switch.checked {
+      background: hsl(var(--primary));
+    }
+
+    .switch.checked::after {
+      transform: translateX(16px);
+    }
+
+    .main-content {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .grid-layout {
+      display: grid;
+      height: 100%;
+      min-height: 0;
+      gap: 12px;
+      grid-template-columns: 15rem minmax(0, 1fr) 22rem;
+    }
+
+    .card {
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(20px);
+    }
+
+    .palette {
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .palette-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid hsl(var(--border));
+      padding: 12px 16px;
+    }
+
+    .palette-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+    }
+
+    .palette-hint {
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      line-height: 1.5;
+    }
+
+    .palette-content {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .palette-group {
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+      background: rgba(255, 255, 255, 0.45);
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .dark .palette-group {
+      background: rgba(15, 23, 42, 0.25);
+    }
+
+    .palette-group-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: hsl(var(--primary-dark));
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    .palette-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      background: rgba(255, 255, 255, 0.7);
+      padding: 8px;
+      margin-bottom: 8px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .dark .palette-item {
+      background: rgba(2, 6, 23, 0.35);
+    }
+
+    .palette-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .palette-item-btn {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .palette-item-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .palette-item-icon.start {
+      background: linear-gradient(to bottom right, #34d399, #10b981);
+    }
+
+    .palette-item-icon.end {
+      background: linear-gradient(to bottom right, #fb7185, #f43f5e);
+    }
+
+    .palette-item-icon.task {
+      background: linear-gradient(to bottom right, #38bdf8, #06b6d4);
+    }
+
+    .palette-item-icon.condition {
+      background: linear-gradient(to bottom right, #fbbf24, #f97316);
+    }
+
+    .palette-item-icon.parallel {
+      background: linear-gradient(to bottom right, #a78bfa, #6366f1);
+    }
+
+    .palette-item-icon.loop {
+      background: linear-gradient(to bottom right, #e879f9, #ec4899);
+    }
+
+    .palette-item-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: hsl(var(--foreground));
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .palette-item-add {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: hsl(var(--muted-foreground));
+      transition: all 0.15s;
+    }
+
+    .palette-item-add:hover {
+      background: hsl(var(--accent));
+      color: hsl(var(--foreground));
+    }
+
+    .canvas-wrapper {
+      min-height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(20px);
+      position: relative;
+    }
+
+    .canvas-bg {
+      height: 100%;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 28%),
+                  radial-gradient(circle at bottom right, rgba(236, 72, 153, 0.1), transparent 30%);
+      position: relative;
+    }
+
+    .canvas-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.6;
+    }
+
+    .canvas-flow {
+      position: absolute;
+      inset: 0;
+    }
+
+    .canvas-hint {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      border-radius: 9999px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      padding: 6px 12px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(20px);
+    }
+
+    .canvas-controls {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .canvas-control-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid hsl(var(--border));
+      cursor: pointer;
+      color: hsl(var(--foreground));
+    }
+
+    .canvas-control-btn:last-child {
+      border-bottom: none;
+    }
+
+    .canvas-minimap {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 208px;
+      height: 128px;
+      border-radius: 16px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+    }
+
+    .minimap-content {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(219, 234, 254, 0.5) 0%, rgba(249, 206, 248, 0.3) 100%);
+      position: relative;
+    }
+
+    .minimap-node {
+      position: absolute;
+      border-radius: 4px;
+      background: color-mix(in hsl, hsl(var(--primary)) 18%, white);
+      border: 1px solid hsl(var(--primary));
+    }
+
+    .flow-node {
+      position: absolute;
+      min-width: 192px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: var(--card-surface);
+      padding: 12px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(20px);
+      transition: all 0.15s;
+    }
+
+    .flow-node.selected {
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 2px color-mix(in hsl, hsl(var(--primary)) 24%, transparent), var(--shadow-lg);
+    }
+
+    .flow-node-handle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 9999px;
+      background: hsl(var(--primary));
+      border: 2px solid white;
+    }
+
+    .flow-node-handle.target {
+      left: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .flow-node-handle.source {
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .flow-node-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .flow-node-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flow-node-icon.start {
+      background: linear-gradient(to bottom right, #34d399, #10b981);
+    }
+
+    .flow-node-icon.end {
+      background: linear-gradient(to bottom right, #fb7185, #f43f5e);
+    }
+
+    .flow-node-icon.task {
+      background: linear-gradient(to bottom right, #38bdf8, #06b6d4);
+    }
+
+    .flow-node-icon.condition {
+      background: linear-gradient(to bottom right, #fbbf24, #f97316);
+    }
+
+    .flow-node-icon.parallel {
+      background: linear-gradient(to bottom right, #a78bfa, #6366f1);
+    }
+
+    .flow-node-icon.loop {
+      background: linear-gradient(to bottom right, #e879f9, #ec4899);
+    }
+
+    .flow-node-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .flow-node-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .flow-node-desc {
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      line-height: 1.4;
+      margin-top: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .flow-node-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .flow-node-chip {
+      border-radius: 9999px;
+      padding: 4px 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .flow-node-chip.start {
+      background: rgb(209, 250, 229);
+      color: rgb(4, 120, 87);
+    }
+
+    .flow-node-chip.end {
+      background: rgb(255, 228, 230);
+      color: rgb(159, 18, 57);
+    }
+
+    .flow-node-chip.task {
+      background: rgb(224, 242, 254);
+      color: rgb(3, 105, 161);
+    }
+
+    .flow-node-chip.condition {
+      background: rgb(254, 243, 199);
+      color: rgb(146, 64, 14);
+    }
+
+    .flow-node-chip.parallel {
+      background: rgb(237, 233, 254);
+      color: rgb(91, 33, 182);
+    }
+
+    .flow-node-chip.loop {
+      background: rgb(250, 232, 255);
+      color: rgb(131, 24, 67);
+    }
+
+    .flow-edge {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .flow-edge-path {
+      fill: none;
+      stroke: hsl(var(--primary));
+      stroke-width: 2;
+    }
+
+    .flow-edge-path.dashed {
+      stroke-dasharray: 6 4;
+    }
+
+    .flow-edge-path.dotted {
+      stroke-dasharray: 2 4;
+    }
+
+    .flow-edge-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+    }
+
+    .flow-edge-label-btn {
+      border-radius: 9999px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: hsl(var(--muted-foreground));
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(20px);
+      cursor: pointer;
+    }
+
+    .flow-edge-label-btn.selected {
+      border-color: hsl(var(--primary));
+      background: color-mix(in hsl, hsl(var(--primary)) 14%, white);
+      color: hsl(var(--foreground));
+    }
+
+    .inspector {
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inspector-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid hsl(var(--border));
+      padding: 12px 16px;
+    }
+
+    .inspector-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+    }
+
+    .inspector-hint {
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      line-height: 1.5;
+    }
+
+    .inspector-content {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .inspector-section {
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+      background: rgba(255, 255, 255, 0.4);
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .dark .inspector-section {
+      background: rgba(15, 23, 42, 0.25);
+    }
+
+    .inspector-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .inspector-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: hsl(var(--primary-dark));
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .inspector-section-value {
+      margin-top: 8px;
+      font-weight: 500;
+      color: hsl(var(--foreground));
+    }
+
+    .inspector-section-text {
+      margin-top: 8px;
+      color: hsl(var(--muted-foreground));
+      line-height: 1.5;
+    }
+
+    .inspector-section-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .inspector-selection {
+      margin-top: 12px;
+    }
+
+    .inspector-selection-title {
+      font-weight: 500;
+      color: hsl(var(--foreground));
+    }
+
+    .inspector-selection-type {
+      color: hsl(var(--muted-foreground));
+      margin-top: 4px;
+    }
+
+    .inspector-selection-desc {
+      color: hsl(var(--muted-foreground));
+      margin-top: 4px;
+    }
+
+    .inspector-empty {
+      color: hsl(var(--muted-foreground));
+      margin-top: 12px;
+    }
+
+    .inspector-shortcuts {
+      color: hsl(var(--muted-foreground));
+      line-height: 1.5;
+    }
+
+    .inspector-shortcuts div {
+      margin-bottom: 8px;
+    }
+
+    .inspector-shortcuts div:last-child {
+      margin-bottom: 0;
+    }
+
+    .inspector-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .inspector-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .inspector-field-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: hsl(var(--foreground));
+    }
+
+    .inspector-field-input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid hsl(var(--border));
+      background: hsl(var(--background));
+      padding: 8px 12px;
+      font-size: 14px;
+      color: hsl(var(--foreground));
+      outline: none;
+    }
+
+    .inspector-field-input:focus {
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 2px color-mix(in hsl, hsl(var(--primary)) 24%, transparent);
+    }
+
+    .inspector-field-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .inspector-field-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 8px center;
+      background-repeat: no-repeat;
+      background-size: 20px;
+      padding-right: 36px;
+    }
+
+    .inspector-toggle {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) translateX(42%);
+      z-index: 20;
+      display: none;
+      width: 32px;
+      height: 128px;
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      background: var(--card-surface);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(20px);
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 8px;
+    }
+
+    .inspector-toggle-icon {
+      color: hsl(var(--foreground));
+    }
+
+    .inspector-toggle-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: hsl(var(--foreground));
+      writing-mode: vertical-rl;
+      letter-spacing: 0.18em;
+    }
+
+    @media (max-width: 1279px) {
+      .grid-layout {
+        grid-template-columns: 15rem minmax(0, 1fr);
+      }
+      
+      .inspector {
+        display: none;
+      }
+      
+      .inspector-toggle {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .grid-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      
+      .palette {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="btn btn-ghost btn-icon-sm">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+        <div>
+          <div class="toolbar-title">Customer onboarding</div>
+          <div class="toolbar-meta">
+            <span class="badge badge-success">已保存</span>
+            <span>6 个节点</span>
+            <span>6 条连线</span>
+          </div>
+        </div>
+      </div>
+      <div class="toolbar-grid-toggle">
+        <span>网格</span>
+        <div class="switch checked"></div>
+      </div>
+      <button class="btn btn-outline btn-sm" disabled>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        撤销
+      </button>
+      <button class="btn btn-outline btn-sm" disabled>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+          <path d="M21 3v5h-5"/>
+        </svg>
+        重做
+      </button>
+      <button class="btn btn-outline btn-sm">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" x2="12" y1="15" y2="3"/>
+        </svg>
+        恢复
+      </button>
+      <button class="btn btn-outline btn-sm">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        JSON
+      </button>
+      <button class="btn btn-primary btn-sm">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        保存
+      </button>
+    </div>
+
+    <div class="main-content">
+      <div class="grid-layout">
+        <div class="card palette">
+          <div class="palette-header">
+            <div>
+              <div class="palette-title">节点库</div>
+              <div class="palette-hint">拖拽或点击添加</div>
+            </div>
+            <span class="badge badge-outline">6</span>
+          </div>
+          <div class="palette-content">
+            <div class="palette-group">
+              <div class="palette-group-title">基础节点</div>
+              <div class="palette-item">
+                <button class="palette-item-btn">
+                  <span class="palette-item-icon start">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                  </span>
+                  <span class="palette-item-label">开始节点</span>
+                </button>
+                <button class="palette-item-add">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="palette-item">
+                <button class="palette-item-btn">
+                  <span class="palette-item-icon end">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                      <line x1="4" x2="4" y1="22" y2="15"/>
+                    </svg>
+                  </span>
+                  <span class="palette-item-label">结束节点</span>
+                </button>
+                <button class="palette-item-add">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="palette-group">
+              <div class="palette-group-title">逻辑节点</div>
+              <div class="palette-item">
+                <button class="palette-item-btn">
+                  <span class="palette-item-icon condition">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="6" x2="6" y1="3" y2="15"/>
+                      <circle cx="18" cy="6" r="3"/>
+                      <circle cx="6" cy="18" r="3"/>
+                      <path d="M18 9a9 9 0 0 1-9 9"/>
+                    </svg>
+                  </span>
+                  <span class="palette-item-label">条件分支</span>
+                </button>
+                <button class="palette-item-add">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="palette-item">
+                <button class="palette-item-btn">
+                  <span class="palette-item-icon parallel">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="7" height="7" x="14" y="3" rx="1"/>
+                      <path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3"/>
+                    </svg>
+                  </span>
+                  <span class="palette-item-label">并行网关</span>
+                </button>
+                <button class="palette-item-add">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="palette-item">
+                <button class="palette-item-btn">
+                  <span class="palette-item-icon loop">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m17 2 4 4-4 4"/>
+                      <path d="M3 11v-1a4 4 0 0 1 4-4h14"/>
+                      <path d="m7 22-4-4 4-4"/>
+                      <path d="M21 13v1a4 4 0 0 1-4 4H3"/>
+                    </svg>
+                  </span>
+                  <span class="palette-item-label">循环节点</span>
+                </button>
+                <button class="palette-item-add">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="palette-group">
+              <div class="palette-group-title">执行节点</div>
+              <div class="palette-item">
+                <button class="palette-item-btn">
+                  <span class="palette-item-icon task">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="18" height="18" x="3" y="3" rx="2"/>
+                      <path d="M3 9h18"/>
+                      <path d="M9 21V9"/>
+                    </svg>
+                  </span>
+                  <span class="palette-item-label">任务节点</span>
+                </button>
+                <button class="palette-item-add">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <div class="canvas-bg">
+            <div class="canvas-grid"></div>
+            <div class="canvas-flow">
+              <svg width="100%" height="100%" style="position: absolute; inset: 0; pointer-events: none;">
+                <defs>
+                  <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="hsl(221.2, 83.2%, 53.3%)" />
+                  </marker>
+                </defs>
+                <path d="M 156 220 C 200 220, 220 220, 260 220" class="flow-edge-path" marker-end="url(#arrowhead)" />
+                <path d="M 452 220 C 520 220, 520 220, 560 220" class="flow-edge-path" marker-end="url(#arrowhead)" />
+                <path d="M 752 220 C 820 220, 820 130, 810 130" class="flow-edge-path dashed" marker-end="url(#arrowhead)" />
+                <path d="M 752 220 C 820 220, 820 320, 810 320" class="flow-edge-path dotted" marker-end="url(#arrowhead)" />
+                <path d="M 1002 130 C 1080 130, 1080 220, 1050 220" class="flow-edge-path" marker-end="url(#arrowhead)" />
+                <path d="M 1002 320 C 1080 320, 1080 220, 1050 220" class="flow-edge-path" marker-end="url(#arrowhead)" />
+              </svg>
+              
+              <div class="flow-edge-label" style="left: 208px; top: 220px;">
+                <button class="flow-edge-label-btn">触发</button>
+              </div>
+              <div class="flow-edge-label" style="left: 506px; top: 220px;">
+                <button class="flow-edge-label-btn">成功</button>
+              </div>
+              <div class="flow-edge-label" style="left: 786px; top: 130px;">
+                <button class="flow-edge-label-btn">企业客户</button>
+              </div>
+              <div class="flow-edge-label" style="left: 786px; top: 320px;">
+                <button class="flow-edge-label-btn">普通客户</button>
+              </div>
+              <div class="flow-edge-label" style="left: 1026px; top: 175px;">
+                <button class="flow-edge-label-btn">完成</button>
+              </div>
+              <div class="flow-edge-label" style="left: 1026px; top: 270px;">
+                <button class="flow-edge-label-btn">完成</button>
+              </div>
+
+              <div class="flow-node selected" style="left: 80px; top: 180px;">
+                <div class="flow-node-handle source"></div>
+                <div class="flow-node-header">
+                  <div class="flow-node-icon start">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                  </div>
+                  <div class="flow-node-info">
+                    <div class="flow-node-label">开始</div>
+                    <div class="flow-node-desc">流程入口</div>
+                  </div>
+                </div>
+                <div class="flow-node-footer">
+                  <span class="flow-node-chip start">开始节点</span>
+                  <span>1 项配置</span>
+                </div>
+              </div>
+
+              <div class="flow-node" style="left: 300px; top: 180px;">
+                <div class="flow-node-handle target"></div>
+                <div class="flow-node-handle source"></div>
+                <div class="flow-node-header">
+                  <div class="flow-node-icon task">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="18" height="18" x="3" y="3" rx="2"/>
+                      <path d="M3 9h18"/>
+                      <path d="M9 21V9"/>
+                    </svg>
+                  </div>
+                  <div class="flow-node-info">
+                    <div class="flow-node-label">发送欢迎邮件</div>
+                    <div class="flow-node-desc">邮件通知</div>
+                  </div>
+                </div>
+                <div class="flow-node-footer">
+                  <span class="flow-node-chip task">任务节点</span>
+                  <span>2 项配置</span>
+                </div>
+              </div>
+
+              <div class="flow-node" style="left: 540px; top: 180px;">
+                <div class="flow-node-handle target"></div>
+                <div class="flow-node-handle source"></div>
+                <div class="flow-node-header">
+                  <div class="flow-node-icon condition">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="6" x2="6" y1="3" y2="15"/>
+                      <circle cx="18" cy="6" r="3"/>
+                      <circle cx="6" cy="18" r="3"/>
+                      <path d="M18 9a9 9 0 0 1-9 9"/>
+                    </svg>
+                  </div>
+                  <div class="flow-node-info">
+                    <div class="flow-node-label">是否企业客户</div>
+                    <div class="flow-node-desc">分配专属路径</div>
+                  </div>
+                </div>
+                <div class="flow-node-footer">
+                  <span class="flow-node-chip condition">条件分支</span>
+                  <span>1 项配置</span>
+                </div>
+              </div>
+
+              <div class="flow-node" style="left: 790px; top: 90px;">
+                <div class="flow-node-handle target"></div>
+                <div class="flow-node-handle source"></div>
+                <div class="flow-node-header">
+                  <div class="flow-node-icon parallel">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="7" height="7" x="14" y="3" rx="1"/>
+                      <path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3"/>
+                    </svg>
+                  </div>
+                  <div class="flow-node-info">
+                    <div class="flow-node-label">并行任务</div>
+                    <div class="flow-node-desc">创建销售任务 + 初始化资料</div>
+                  </div>
+                </div>
+                <div class="flow-node-footer">
+                  <span class="flow-node-chip parallel">并行网关</span>
+                  <span>1 项配置</span>
+                </div>
+              </div>
+
+              <div class="flow-node" style="left: 790px; top: 280px;">
+                <div class="flow-node-handle target"></div>
+                <div class="flow-node-handle source"></div>
+                <div class="flow-node-header">
+                  <div class="flow-node-icon loop">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m17 2 4 4-4 4"/>
+                      <path d="M3 11v-1a4 4 0 0 1 4-4h14"/>
+                      <path d="m7 22-4-4 4-4"/>
+                      <path d="M21 13v1a4 4 0 0 1-4 4H3"/>
+                    </svg>
+                  </div>
+                  <div class="flow-node-info">
+                    <div class="flow-node-label">补全资料轮询</div>
+                    <div class="flow-node-desc">直到资料完整</div>
+                  </div>
+                </div>
+                <div class="flow-node-footer">
+                  <span class="flow-node-chip loop">循环节点</span>
+                  <span>2 项配置</span>
+                </div>
+              </div>
+
+              <div class="flow-node" style="left: 1030px; top: 180px;">
+                <div class="flow-node-handle target"></div>
+                <div class="flow-node-header">
+                  <div class="flow-node-icon end">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                      <line x1="4" x2="4" y1="22" y2="15"/>
+                    </svg>
+                  </div>
+                  <div class="flow-node-info">
+                    <div class="flow-node-label">结束</div>
+                    <div class="flow-node-desc">流程出口</div>
+                  </div>
+                </div>
+                <div class="flow-node-footer">
+                  <span class="flow-node-chip end">结束节点</span>
+                  <span>1 项配置</span>
+                </div>
+              </div>
+            </div>
+            <div class="canvas-hint">拖拽节点 / 滚轮缩放 / 右键菜单</div>
+            <div class="canvas-controls">
+              <button class="canvas-control-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.3-4.3"/>
+                  <path d="M11 8v6"/>
+                  <path d="M8 11h6"/>
+                </svg>
+              </button>
+              <button class="canvas-control-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.3-4.3"/>
+                  <path d="M8 11h6"/>
+                </svg>
+              </button>
+              <button class="canvas-control-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                  <path d="M3 3v5h5"/>
+                </svg>
+              </button>
+              <button class="canvas-control-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                </svg>
+              </button>
+              <button class="canvas-control-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 21H3V3"/>
+                  <path d="M21 3v18"/>
+                </svg>
+              </button>
+            </div>
+            <div class="canvas-minimap">
+              <div class="minimap-content">
+                <div class="minimap-node" style="left: 25px; top: 45px; width: 30px; height: 16px;"></div>
+                <div class="minimap-node" style="left: 60px; top: 45px; width: 30px; height: 16px;"></div>
+                <div class="minimap-node" style="left: 95px; top: 45px; width: 30px; height: 16px;"></div>
+                <div class="minimap-node" style="left: 130px; top: 25px; width: 30px; height: 16px;"></div>
+                <div class="minimap-node" style="left: 130px; top: 65px; width: 30px; height: 16px;"></div>
+                <div class="minimap-node" style="left: 165px; top: 45px; width: 30px; height: 16px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card inspector">
+          <div class="inspector-header">
+            <div>
+              <div class="inspector-title">属性面板</div>
+              <div class="inspector-hint">编辑节点或连线属性</div>
+            </div>
+          </div>
+          <div class="inspector-content">
+            <div class="inspector-section">
+              <div class="inspector-section-title">流程信息</div>
+              <div class="inspector-section-value">Customer onboarding</div>
+              <p class="inspector-section-text">从注册到首单完成的自动化流程。</p>
+              <div class="inspector-section-meta">
+                <span class="badge badge-success">已启用</span>
+                <span>6 个节点</span>
+                <span>6 条连线</span>
+              </div>
+            </div>
+            <div class="inspector-section">
+              <div class="inspector-section-title">当前选中</div>
+              <div class="inspector-selection">
+                <div class="inspector-selection-title">开始</div>
+                <div class="inspector-selection-type">开始节点</div>
+                <p class="inspector-selection-desc">流程入口</p>
+              </div>
+            </div>
+            <div class="inspector-section">
+              <div class="inspector-form">
+                <div class="inspector-field">
+                  <label class="inspector-field-label">名称</label>
+                  <input type="text" class="inspector-field-input" value="开始" />
+                </div>
+                <div class="inspector-field">
+                  <label class="inspector-field-label">描述</label>
+                  <textarea class="inspector-field-input inspector-field-textarea">流程入口</textarea>
+                </div>
+                <div class="inspector-field">
+                  <label class="inspector-field-label">类型</label>
+                  <select class="inspector-field-input inspector-field-select">
+                    <option>开始节点</option>
+                    <option>结束节点</option>
+                    <option>任务节点</option>
+                    <option>条件分支</option>
+                    <option>并行网关</option>
+                    <option>循环节点</option>
+                  </select>
+                </div>
+                <div class="inspector-field">
+                  <label class="inspector-field-label">trigger</label>
+                  <input type="text" class="inspector-field-input" value="注册成功" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="inspector-toggle">
+          <svg class="inspector-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+          <span class="inspector-toggle-label">开始节点</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -3,6 +3,10 @@ import animate from 'tailwindcss-animate'
 
 export const nopTailwindPreset: Partial<Config> = {
   darkMode: ['class', '.dark'],
+  safelist: [
+    'flex-1',
+    'w-full'
+  ],
   theme: {
     extend: {
       colors: {

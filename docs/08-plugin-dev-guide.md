@@ -21,6 +21,7 @@
 - `react-router-dom`
 - `@tanstack/react-query`
 - `zustand`
+- `systemjs`
 - `i18next` / `react-i18next`
 - `@nop-chaos/ui` / `@nop-chaos/shared`
 - `lucide-react`
@@ -96,6 +97,7 @@ examples/plugin-demo/
     "react-router-dom": "^7",
     "recharts": "^2",
     "sonner": "^2",
+    "systemjs": "^6",
     "zustand": "^5"
   },
   "devDependencies": {

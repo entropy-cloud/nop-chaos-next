@@ -69,19 +69,30 @@ export function collectBreadcrumbTrail(items: MenuItem[], currentPath: string, t
 }
 
 export function filterMenusByRoles(items: MenuItem[], userRoles: string[]): MenuItem[] {
-  return items
-    .filter((item) => {
-      if (!item.roles || item.roles.length === 0) {
-        return true
-      }
+  return items.reduce<MenuItem[]>((result, item) => {
+    const filteredChildren = item.children ? filterMenusByRoles(item.children, userRoles) : undefined
+    const hasVisibleChildren = Boolean(filteredChildren && filteredChildren.length > 0)
 
-      const allowed = new Set(item.roles)
-      return userRoles.some((role) => allowed.has(role))
-    })
-    .map((item) => ({
-      ...item,
-      children: item.children ? filterMenusByRoles(item.children, userRoles) : undefined
-    }))
+    if (!item.roles || item.roles.length === 0) {
+      result.push({
+        ...item,
+        children: filteredChildren
+      })
+      return result
+    }
+
+    const allowed = new Set(item.roles)
+    const selfAllowed = userRoles.some((role) => allowed.has(role))
+
+    if (selfAllowed || hasVisibleChildren) {
+      result.push({
+        ...item,
+        children: filteredChildren
+      })
+    }
+
+    return result
+  }, [])
 }
 
 export function sortMenus(items: MenuItem[]): MenuItem[] {

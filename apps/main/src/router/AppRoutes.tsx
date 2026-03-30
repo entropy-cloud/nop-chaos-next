@@ -12,12 +12,27 @@ function normalizePath(path: string): string {
   return path.replace(/^\//, '')
 }
 
+function dedupeRoutesByPath(items: ReturnType<typeof flattenMenus>) {
+  const seenPaths = new Set<string>()
+
+  return items.filter((item) => {
+    const normalized = normalizePath(item.path)
+
+    if (seenPaths.has(normalized)) {
+      return false
+    }
+
+    seenPaths.add(normalized)
+    return true
+  })
+}
+
 export function AppRoutes() {
   const { isAuthenticated, user, bootstrapStatus } = useAuth()
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending'
   const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending)
   const items = useMemo(
-    () => flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? [])),
+    () => dedupeRoutesByPath(flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? []))),
     [menuQuery.data?.items, user?.roles]
   )
   const LoginPage = getSystemPage('login')

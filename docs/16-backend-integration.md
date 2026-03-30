@@ -84,8 +84,10 @@ pnpm dev
 
 重点文件：
 - `apps/main/src/services/menuApi.ts`
+- `apps/main/src/services/menuMapper.ts`
 - `apps/main/src/hooks/useMenuConfig.ts`
 - `apps/main/src/router/AppRoutes.tsx`
+- `apps/main/src/router/RouteRenderer.tsx`
 
 ### Step 3： AMIS 页面
 

@@ -91,6 +91,11 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
     }
 
     for (const style of extension.styles ?? []) {
+      if (style.scope === 'plugin') {
+        logger.info(`Skip global injection for plugin-scoped style '${style.id}' from extension '${extension.id}'`)
+        continue
+      }
+
       ensureStylesheet(`style:${style.id}`, style.href)
     }
 

@@ -208,3 +208,30 @@ body.is-modalOpened .ant-popover {
   border-color: hsl(var(--warning) / 0.3);
   color: hsl(var(--warning));
 }
+
+/* ===== Amis helper.css 兼容类 ===== */
+.amis .m-r-xs {
+  margin-right: 5px;
+}
+
+.amis .m-l-xs {
+  margin-left: 5px;
+}
+
+.amis .m-l-sm {
+  margin-left: 10px;
+}
+
+.amis .m-t-xs {
+  margin-top: 5px;
+}
+
+.amis .m-b-none {
+  margin-bottom: 0 !important;
+}
+
+.amis .clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}

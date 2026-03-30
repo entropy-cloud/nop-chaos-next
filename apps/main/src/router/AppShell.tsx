@@ -161,10 +161,21 @@ export function AppShell() {
       return
     }
 
-    await logoutRequest(token)
+    let remoteLogoutFailed = false
+
+    try {
+      await logoutRequest(token)
+    } catch (error) {
+      remoteLogoutFailed = true
+      toast.error(error instanceof Error ? error.message : t('auth.logoutFailed'))
+    }
+
     logout()
     navigate('/auth/login', { replace: true })
-    toast.success(t('auth.loggedOut'))
+
+    if (!remoteLogoutFailed) {
+      toast.success(t('auth.loggedOut'))
+    }
   }
 
   const shellSidebar = (

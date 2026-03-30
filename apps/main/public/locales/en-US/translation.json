@@ -70,6 +70,7 @@
     "loginSuccess": "Welcome back.",
     "loginFailed": "Unable to sign in.",
     "logoutConfirm": "Are you sure you want to log out?",
+    "logoutFailed": "Remote logout failed. Local sign-out has been completed.",
     "loggedOut": "You have been logged out."
   },
   "login": {

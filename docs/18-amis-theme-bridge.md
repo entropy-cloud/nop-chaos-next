@@ -44,16 +44,15 @@ AMIS 使用自己的 CSS 变量体系（如 `--colors-brand-*`），宿主使用
 
 ## 3. 图标支持
 
-AMIS 默认使用 FontAwesome 字体图标，需要安装：
+AMIS 默认使用 FontAwesome 字体图标。当前项目使用仓库内静态资源：
 
-```bash
-pnpm --filter @nop-chaos/main add @fortawesome/fontawesome-free
-```
+- `apps/main/public/vendor/fontawesome/all.min.css`
+- `apps/main/public/vendor/fontawesome/webfonts/*`
 
-加载位置：`apps/main/src/main.tsx`
+加载位置：`apps/main/index.html`
 
-```ts
-import '@fortawesome/fontawesome-free/css/all.min.css'
+```html
+<link rel="stylesheet" href="/vendor/fontawesome/all.min.css" />
 ```
 
 ---
@@ -62,9 +61,10 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 
 | 文件 | 用途 |
 |------|------|
-| `apps/main/index.html` | 通过 script 标签加载 Font Awesome CSS |
+| `apps/main/index.html` | 通过 `<link rel="stylesheet">` 加载 Font Awesome CSS |
 | `apps/main/src/styles/amis-theme-bridge.css` | CSS 变量映射 |
-| `apps/main/src/styles/amis-fix.css` | 组件级样式修复 |
+| `apps/main/src/styles/amis-fix.css` | 组件级样式修复（由 `apps/main/src/styles/index.css` 引入） |
+| `apps/main/src/amis/init.ts` | AMIS 运行时初始化与主题桥接样式入口 |
 | `packages/amis-core/src/page/transform.ts` | Schema 转换，注入类名 |
 | `packages/amis-react/src/components/AmisSchemaPage.tsx` | 渲染容器 |
 

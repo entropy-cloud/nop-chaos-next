@@ -13,6 +13,11 @@ interface LoginOptions {
 export async function login(page: Page, options: LoginOptions = {}): Promise<LoginVariant> {
   const { setup, username, defaultPassword = '123456', harborPassword = '123456' } = options
 
+  await page.addInitScript(() => {
+    window.localStorage.clear()
+    window.sessionStorage.clear()
+  })
+
   await setup?.()
   await page.goto('/#/auth/login')
 

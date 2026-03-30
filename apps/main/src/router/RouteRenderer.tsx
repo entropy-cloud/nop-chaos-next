@@ -17,6 +17,12 @@ interface RouteRendererProps {
   item: MenuItem
 }
 
+function resolvePluginManifest(item: MenuItem, plugins: Array<{ id: string; url: string; enabled: boolean }>) {
+  return plugins.find((plugin) => plugin.id === item.componentId)
+    ?? plugins.find((plugin) => plugin.id === item.id)
+    ?? plugins.find((plugin) => plugin.url === item.pluginUrl)
+}
+
 export function RouteRenderer({ item }: RouteRendererProps) {
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -44,7 +50,7 @@ export function RouteRenderer({ item }: RouteRendererProps) {
   }
 
   if (item.pageType === 'plugin' && item.pluginUrl) {
-    const manifest = plugins.find((plugin) => plugin.id === item.componentId)
+    const manifest = resolvePluginManifest(item, plugins)
 
     if (!manifest?.enabled) {
       return (

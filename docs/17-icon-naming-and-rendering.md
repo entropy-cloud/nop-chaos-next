@@ -6,9 +6,9 @@
 
 ## 1. 概述
 
-- 内置图标使用 **FontAwesome** 字体图标
+- 内置图标采用 **Lucide + FontAwesome 兼容策略**
 - 对外保持 `name` 传值方式，不暴露底层图标库细节
-- 支持 alias 机制映射到标准 FontAwesome 名称
+- 支持 alias 机制映射到标准业务名与 FontAwesome 名称
 
 ---
 
@@ -16,7 +16,7 @@
 
 | 文件 | 说明 |
 |------|------|
-| `packages/core/src/utils/iconMap.tsx` | `iconRegistry` 映射、 `getIconByName()` 获取组件、 `renderIcon()` 渲染图标 |
+| `packages/core/src/utils/iconMap.tsx` | `iconRegistry` 映射、`getIconByName()`/`resolveIcon()`/`renderIcon()` 渲染入口 |
 | `packages/core/src/components/LowCodeIcon.tsx` | 通用 icon 组件 |
 | `packages/shared/src/types/icon.ts` | `AppIconName` 类型定义 |
 
@@ -41,11 +41,10 @@
 
 ## 4. 渲染规则
 
-1. 如果是业务标准名 → 映射到 FontAwesome 名称
-2. 如果已带 `fa`/ `fas`/ `far`/ `fab` 前缀 → 直接使用
-3. 如果只有 `fa-house` → 自动补齐为 `fa fa-house`
-4. 如果只是 `house` → 自动补齐为 `fa fa-house`
-5. 无法识别 → 使用 fallback（默认 `home`）
+1. 如果是显式 FontAwesome 形式（如 `fa-house`、`fa fa-house`、`fa-solid fa-gear`）→ 直接按 FontAwesome 渲染
+2. 如果是普通 kebab-case 名称（如 `blocks`、`workflow`）→ 先尝试按 Lucide 图标名渲染
+3. 如果 Lucide 未命中 → 走 FontAwesome alias 与 `iconRegistry` 映射
+4. 无法识别 → 使用 fallback（默认 `home`）
 
 ---
 
@@ -57,6 +56,8 @@
 - `home`
 - `plug-zap`
 - `settings-2`
+
+说明：标准业务名会经过 `normalizeAppIconName()` 归一化，再由 `iconRegistry` 落到具体实现。
 
 ### 菜单和低代码
 

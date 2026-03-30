@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4175'
 const useExternalServer = Boolean(process.env.PLAYWRIGHT_BASE_URL)
+const appMode = process.env.PLAYWRIGHT_APP_MODE ?? 'extension-demo'
 
 const rootDir = dirname(fileURLToPath(import.meta.url))
 
@@ -13,7 +14,7 @@ function loadMockEnv() {
     return {}
   }
 
-  const envPath = resolve(rootDir, 'apps/main/.env.mock')
+  const envPath = resolve(rootDir, `apps/main/.env.${appMode}`)
   let fileContent = ''
 
   try {
@@ -77,7 +78,7 @@ export default defineConfig({
   webServer: useExternalServer
     ? undefined
     : {
-        command: 'pnpm --filter @nop-chaos/main exec vite build --mode mock && pnpm --filter @nop-chaos/main exec vite preview --mode mock --host 127.0.0.1 --port 4175 --strictPort',
+        command: `pnpm --filter @nop-chaos/main exec vite build --mode ${appMode} && pnpm --filter @nop-chaos/main exec vite preview --mode ${appMode} --host 127.0.0.1 --port 4175 --strictPort`,
         url: 'http://127.0.0.1:4175',
         env: webServerEnv,
         reuseExistingServer: false,

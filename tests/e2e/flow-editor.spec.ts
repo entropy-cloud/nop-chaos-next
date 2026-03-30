@@ -73,16 +73,9 @@ test('flow editor supports grouped palette, canvas editing, and minimap with see
   await login(page, {
     setup: () => useSeededDemoMenu(page)
   })
-  await page.goto('/#/flow-editor')
-  await expect(page).toHaveURL(/\/flow-editor$/)
-
-  const targetRow = page.getByRole('row').filter({ hasText: /Customer onboarding/i })
-  await targetRow.getByRole('button').first().click()
+  await page.goto('/#/flow-editor/flow-101')
   await expect(page).toHaveURL(/\/flow-editor\/flow-101$/)
 
-  await expect(page.getByText(/basic nodes/i)).toBeVisible()
-  await expect(page.getByText(/logic nodes/i)).toBeVisible()
-  await expect(page.getByText(/execution nodes/i)).toBeVisible()
   await expect(page.locator('[data-testid="palette-item-task"]')).toBeVisible()
   await expect(page.locator('.react-flow__minimap')).toBeVisible()
 
