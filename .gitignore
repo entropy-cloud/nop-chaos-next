@@ -10,4 +10,3 @@ test-results/
 .opencode/
 .env.local
 nop-task.md
-flux-lib/
