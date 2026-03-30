@@ -1,5 +1,9 @@
 node_modules/
 dist/
+!flux-lib/
+!flux-lib/**/
+flux-lib/**/node_modules/
+flux-lib/**/src/
 .idea/
 .vite/
 .turbo/
