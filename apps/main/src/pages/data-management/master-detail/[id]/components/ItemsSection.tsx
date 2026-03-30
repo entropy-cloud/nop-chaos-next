@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react'
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, cn, getTableRowClassName } from '@nop-chaos/ui'
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, cn } from '@nop-chaos/ui'
+import { getTableRowClassName } from '../../../../../lib/table-row-class-name'
 import { useTranslation } from 'react-i18next'
 import type { OrderItem, OrderRecord } from '../../../../../services/mockApi'
 import type { ValidationErrors } from '../types'

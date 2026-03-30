@@ -26,9 +26,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  getTableRowClassName,
   toast
 } from '@nop-chaos/ui'
+import { getTableRowClassName } from '../../../lib/table-row-class-name'
 import { useTranslation } from 'react-i18next'
 import { PageHeader } from '../../../components/common/PageHeader'
 import { deleteOrders, fetchOrderList, type OrderRecord } from '../../../services/mockApi'
