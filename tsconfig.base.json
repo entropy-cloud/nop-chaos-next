@@ -32,8 +32,6 @@
       "@nop-chaos/tailwind-preset/*": ["packages/tailwind-preset/src/*"],
       "@nop-chaos/core": ["packages/core/src/index.ts"],
       "@nop-chaos/core/*": ["packages/core/src/*"],
-      "@nop-chaos/ui": ["packages/ui/src/index.ts"],
-      "@nop-chaos/ui/*": ["packages/ui/src/*"],
       "@demo-extension": ["apps/main/src/extensions/demo/index.ts"]
     }
   }
