@@ -1,0 +1,10 @@
+import type { NopDebugEvent, NopDebugEventQuery, NopDebuggerFilterKind, NopDebuggerOverview, NopDebuggerSessionExport, NopDebuggerSessionExportOptions, NopDebuggerSnapshot, NopDiagnosticReport, NopDiagnosticReportOptions, NopInteractionTrace, NopInteractionTraceQuery, NopNodeDiagnostics, NopNodeDiagnosticsOptions } from './types';
+import type { NormalizedRedactionOptions } from './redaction';
+export declare const DEFAULT_FILTERS: NopDebuggerFilterKind[];
+export declare function matchesEventQuery(event: NopDebugEvent, query: NopDebugEventQuery | undefined): boolean;
+export declare function applyEventQuery(events: NopDebugEvent[], query?: NopDebugEventQuery): NopDebugEvent[];
+export declare function buildOverview(events: NopDebugEvent[]): NopDebuggerOverview;
+export declare function createDiagnosticReport(controllerId: string, snapshot: NopDebuggerSnapshot, options?: NopDiagnosticReportOptions): NopDiagnosticReport;
+export declare function buildNodeDiagnostics(events: NopDebugEvent[], options: NopNodeDiagnosticsOptions): NopNodeDiagnostics;
+export declare function buildInteractionTrace(events: NopDebugEvent[], query: NopInteractionTraceQuery): NopInteractionTrace;
+export declare function buildSessionExport(controllerId: string, sessionId: string, snapshot: NopDebuggerSnapshot, redaction: NormalizedRedactionOptions, options?: NopDebuggerSessionExportOptions): NopDebuggerSessionExport;

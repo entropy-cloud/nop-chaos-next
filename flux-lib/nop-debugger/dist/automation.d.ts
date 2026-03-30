@@ -1,0 +1,32 @@
+import type { NopDebugEvent, NopDebugEventQuery, NopDebuggerAutomationApi, NopDebuggerController, NopDebuggerPinnedErrors, NopDebuggerSessionExport, NopDebuggerSessionExportOptions, NopDebuggerSnapshot, NopDebuggerTab, NopDebuggerWindowConfig, NopDiagnosticReport, NopDiagnosticReportOptions, NopInteractionTrace, NopInteractionTraceQuery, NopNodeDiagnostics, NopNodeDiagnosticsOptions, NopWaitForEventOptions, InstallNopDebuggerWindowFlagOptions } from './types';
+export declare function createAutomationApi(input: {
+    controllerId: string;
+    sessionId: string;
+    getSnapshot(): NopDebuggerSnapshot;
+    getOverview(): ReturnType<NopDebuggerController['getOverview']>;
+    queryEvents(query?: NopDebugEventQuery): NopDebugEvent[];
+    getLatestEvent(query?: NopDebugEventQuery): NopDebugEvent | undefined;
+    getLatestError(): NopDebugEvent | undefined;
+    getEarliestErrors(): NopDebugEvent[];
+    getLatestErrors(): NopDebugEvent[];
+    getPinnedErrors(): NopDebuggerPinnedErrors;
+    getNodeDiagnostics(options: NopNodeDiagnosticsOptions): NopNodeDiagnostics;
+    getInteractionTrace(query: NopInteractionTraceQuery): NopInteractionTrace;
+    createDiagnosticReport(options?: NopDiagnosticReportOptions): NopDiagnosticReport;
+    exportSession(options?: NopDebuggerSessionExportOptions): NopDebuggerSessionExport;
+    waitForEvent(options?: NopWaitForEventOptions): Promise<NopDebugEvent>;
+    clear(): void;
+    pause(): void;
+    resume(): void;
+    show(): void;
+    hide(): void;
+    toggle(): void;
+    setActiveTab(tab: NopDebuggerTab): void;
+    setPanelPosition(position: {
+        x: number;
+        y: number;
+    }): void;
+}): NopDebuggerAutomationApi;
+export declare function registerAutomationApi(controllerId: string, automation: NopDebuggerAutomationApi): void;
+export declare function getNopDebuggerAutomationApi(controllerId?: string): NopDebuggerAutomationApi | undefined;
+export declare function installNopDebuggerWindowFlag(input: boolean | NopDebuggerWindowConfig | InstallNopDebuggerWindowFlagOptions): void;
