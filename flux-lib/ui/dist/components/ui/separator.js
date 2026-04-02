@@ -1,9 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import * as React from "react";
-import { Separator as SeparatorPrimitive } from "radix-ui";
+import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
 import { cn } from '../../lib/utils';
-const Separator = React.forwardRef(function Separator({ className, orientation = "horizontal", decorative = true, ...props }, ref) {
-    return (_jsx(SeparatorPrimitive.Root, { ref: ref, "data-slot": "separator", decorative: decorative, orientation: orientation, className: cn("shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px", className), ...props }));
-});
-Separator.displayName = 'Separator';
+function Separator({ className, orientation = "horizontal", ...props }) {
+    return (_jsx(SeparatorPrimitive, { "data-slot": "separator", orientation: orientation, className: cn("shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch", className), ...props }));
+}
 export { Separator };

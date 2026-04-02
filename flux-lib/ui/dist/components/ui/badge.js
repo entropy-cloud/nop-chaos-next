@@ -1,6 +1,6 @@
-import * as React from "react";
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { cva } from "class-variance-authority";
-import { Slot } from "radix-ui";
 import { cn } from '../../lib/utils';
 const badgeVariants = cva("inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3", {
     variants: {
@@ -19,24 +19,17 @@ const badgeVariants = cva("inline-flex w-fit shrink-0 items-center justify-cente
         variant: "default",
     },
 });
-const Badge = React.forwardRef(function Badge({ className, variant = "default", asChild = false, ...props }, ref) {
-    const classNames = cn(badgeVariants({ variant }), className);
-    if (asChild) {
-        return React.createElement(Slot.Root, {
-            ref: ref,
-            'data-slot': 'badge',
-            'data-variant': variant,
-            className: classNames,
-            ...props,
-        });
-    }
-    return React.createElement('span', {
-        ref,
-        'data-slot': 'badge',
-        'data-variant': variant,
-        className: classNames,
-        ...props,
+function Badge({ className, variant = "default", render, ...props }) {
+    return useRender({
+        defaultTagName: "span",
+        props: mergeProps({
+            className: cn(badgeVariants({ variant }), className),
+        }, props),
+        render,
+        state: {
+            slot: "badge",
+            variant,
+        },
     });
-});
-Badge.displayName = 'Badge';
+}
 export { Badge, badgeVariants };
