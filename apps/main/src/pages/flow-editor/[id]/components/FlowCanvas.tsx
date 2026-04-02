@@ -1,4 +1,4 @@
-import type { DragEvent as ReactDragEvent } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import {
   Background,
   BackgroundVariant,
@@ -30,8 +30,8 @@ interface FlowCanvasProps {
   onNodeDoubleClick: (nodeId: string) => void
   onEdgeClick: (edgeId: string) => void
   onEdgeDoubleClick: (edgeId: string) => void
-  onCanvasDragOver: (event: ReactDragEvent<HTMLDivElement>) => void
-  onCanvasDrop: (event: ReactDragEvent<HTMLDivElement>) => void
+  onCanvasDragOver: (event: DragEvent) => void
+  onCanvasDrop: (event: DragEvent) => void
 }
 
 export function FlowCanvas({
@@ -52,14 +52,33 @@ export function FlowCanvas({
   onCanvasDrop
 }: FlowCanvasProps) {
   const { t } = useTranslation()
+  const dropzoneRef = useRef<HTMLDivElement>(null)
+
+  const dragOverRef = useRef(onCanvasDragOver)
+  const dropRef = useRef(onCanvasDrop)
+  dragOverRef.current = onCanvasDragOver
+  dropRef.current = onCanvasDrop
+
+  const stableDragOver = useCallback((e: DragEvent) => dragOverRef.current(e), [])
+  const stableDrop = useCallback((e: DragEvent) => dropRef.current(e), [])
+
+  useEffect(() => {
+    const el = dropzoneRef.current
+    if (!el) return
+    el.addEventListener('dragover', stableDragOver, true)
+    el.addEventListener('drop', stableDrop, true)
+    return () => {
+      el.removeEventListener('dragover', stableDragOver, true)
+      el.removeEventListener('drop', stableDrop, true)
+    }
+  }, [stableDragOver, stableDrop])
 
   return (
     <div className="min-h-0 overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-[var(--card-surface)] shadow-sm backdrop-blur-xl">
       <div
+        ref={dropzoneRef}
         data-testid="flow-canvas-dropzone"
         className="h-full bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(236,72,153,0.1),transparent_30%)]"
-        onDragOver={onCanvasDragOver}
-        onDrop={onCanvasDrop}
       >
         <ReactFlow
           fitView

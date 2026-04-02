@@ -324,19 +324,21 @@ function FlowEditorPageInner() {
     event.dataTransfer.effectAllowed = 'copy'
   }
 
-  const onCanvasDrop = (event: ReactDragEvent<HTMLDivElement>) => {
+  const onCanvasDrop = (event: DragEvent) => {
     event.preventDefault()
-    const kind = event.dataTransfer.getData('application/x-flow-node') as FlowNodeKind | ''
+    const kind = event.dataTransfer?.getData('application/x-flow-node') as FlowNodeKind | ''
     if (!kind) {
       return
     }
-    const position = screenToFlowPosition({ x: event.clientX, y: event.clientY })
+    const position = screenToFlowPosition({ x: event.clientX, y: event.clientY }) ?? { x: 0, y: 0 }
     addNode(kind, position)
   }
 
-  const onCanvasDragOver = (event: ReactDragEvent<HTMLDivElement>) => {
+  const onCanvasDragOver = (event: DragEvent) => {
     event.preventDefault()
-    event.dataTransfer.dropEffect = 'copy'
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'copy'
+    }
   }
 
   const nodeTypes = useMemo<NodeTypes>(() => ({

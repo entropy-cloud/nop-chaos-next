@@ -38,7 +38,7 @@ export function NodeInspector({ selectedNode, nodes, updateNodeData }: NodeInspe
 
             updateNodeData(selectedNode.id, (node) => ({
               ...node,
-              type: value,
+              type: value ?? undefined,
               data: {
                 ...node.data,
                 kind: value as FlowNodeKind,
