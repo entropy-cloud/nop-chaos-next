@@ -30,6 +30,8 @@
       "@nop-chaos/theme-tokens/*": ["packages/theme-tokens/src/*"],
       "@nop-chaos/tailwind-preset": ["packages/tailwind-preset/src/index.ts"],
       "@nop-chaos/tailwind-preset/*": ["packages/tailwind-preset/src/*"],
+      "@nop-chaos/ui": ["flux-lib/ui/src/index.ts"],
+      "@nop-chaos/ui/*": ["flux-lib/ui/src/*"],
       "@nop-chaos/core": ["packages/core/src/index.ts"],
       "@nop-chaos/core/*": ["packages/core/src/*"],
       "@demo-extension": ["apps/main/src/extensions/demo/index.ts"]

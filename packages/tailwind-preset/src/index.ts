@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 import animate from 'tailwindcss-animate'
 
-export const nopTailwindPreset: Partial<Config> = {
+export const nopTailwindPreset: Partial<Config> & { safelist?: string[] } = {
   darkMode: ['class', '.dark'],
   safelist: [
     'flex-1',
