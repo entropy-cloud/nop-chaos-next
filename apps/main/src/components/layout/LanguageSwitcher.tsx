@@ -10,7 +10,7 @@ export function LanguageSwitcher() {
   return (
     <div className="hidden items-center gap-2 rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] px-3 py-1.5 backdrop-blur-xl sm:flex">
       <Languages className="size-4 text-muted-foreground" />
-      <Select value={i18n.language} onValueChange={(value) => void i18n.changeLanguage(value)}>
+      <Select value={i18n.language} onValueChange={(value) => void i18n.changeLanguage(value ?? undefined)}>
         <SelectTrigger
           size="sm"
           className="h-8 w-[10rem] border-none bg-transparent px-0 pr-7 shadow-none focus:ring-0 focus-visible:ring-0"

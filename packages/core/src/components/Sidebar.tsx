@@ -130,15 +130,15 @@ function SidebarItem({ item, activePath, expandedIds, collapsed, depth, onNaviga
 
   const content = collapsed ? (
     hasChildren ? (
-      <HoverCard openDelay={120} closeDelay={160}>
-        <HoverCardTrigger asChild>{itemButton}</HoverCardTrigger>
+      <HoverCard>
+        <HoverCardTrigger delay={120} closeDelay={160}>{itemButton}</HoverCardTrigger>
         <HoverCardContent align="start" className="w-72 border-[hsl(var(--border))] bg-[var(--card-surface)] p-3 shadow-lg backdrop-blur-2xl" side="right" sideOffset={10}>
           <CollapsedSidebarFlyout item={item} activePath={activePath} onNavigate={onNavigate} />
         </HoverCardContent>
       </HoverCard>
     ) : (
-      <HoverCard openDelay={120} closeDelay={120}>
-        <HoverCardTrigger asChild>{itemButton}</HoverCardTrigger>
+      <HoverCard>
+        <HoverCardTrigger delay={120} closeDelay={120}>{itemButton}</HoverCardTrigger>
         <HoverCardContent align="start" className="w-auto border-[hsl(var(--border))] bg-[var(--card-surface)] px-3 py-2 text-sm font-medium text-foreground shadow-lg backdrop-blur-2xl" side="right" sideOffset={10}>
           {getMenuLabel(item)}
         </HoverCardContent>

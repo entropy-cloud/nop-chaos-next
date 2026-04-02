@@ -73,7 +73,8 @@ export default function PluginsManagementPage() {
                   <Badge variant={plugin.enabled ? 'success' : 'warning'}>{plugin.enabled ? t('common.enabled') : t('common.disabled')}</Badge>
                   <Switch
                     checked={plugin.enabled}
-                    onCheckedChange={(checked) => {
+                    onChange={(e) => {
+                      const checked = e.target.checked
                       const actionKey = checked ? 'common.enable' : 'common.disable'
                       if (!window.confirm(t('plugins.confirmToggle', { action: t(actionKey), name: plugin.name }))) {
                         return

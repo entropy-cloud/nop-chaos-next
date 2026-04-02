@@ -110,11 +110,9 @@ export default function DashboardPage() {
               </SelectContent>
             </Select>
             <Popover>
-              <PopoverTrigger asChild>
-                <Button size="sm" variant="outline">
+              <PopoverTrigger render={<Button size="sm" variant="outline" />}>
                   <CalendarRange className="size-4" />
                   {range === 'custom' ? t('common.selectRange') : t('common.quickDates')}
-                </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
                 <div className="grid gap-3 p-3 text-sm">

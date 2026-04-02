@@ -288,10 +288,8 @@ export default function MasterDetailPage() {
                             {t('masterDetail.view')}
                           </Button>
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="icon-sm" variant="outline" className="h-8 w-8">
+                            <DropdownMenuTrigger render={<Button size="icon-sm" variant="outline" className="h-8 w-8" />}>
                                 <MoreHorizontal className="size-4" />
-                              </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" onClick={(event) => event.stopPropagation()}>
                               <DropdownMenuItem onSelect={() => openDetail(row)}>{t('common.edit')}</DropdownMenuItem>

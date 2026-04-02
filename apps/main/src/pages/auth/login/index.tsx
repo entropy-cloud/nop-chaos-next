@@ -97,7 +97,7 @@ export default function LoginPage() {
               </label>
               <label className="block space-y-2">
                 <span className="text-sm font-medium text-foreground">{t('auth.language')}</span>
-                <Select value={i18n.language} onValueChange={(value) => void i18n.changeLanguage(value)}>
+                <Select value={i18n.language} onValueChange={(value) => void i18n.changeLanguage(value ?? undefined)}>
                   <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>

@@ -15,7 +15,7 @@ export default function SettingsLanguagePage() {
           <CardTitle>{t('settings.activeLanguage')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Select value={i18n.language} onValueChange={(value) => void i18n.changeLanguage(value)}>
+          <Select value={i18n.language} onValueChange={(value) => void i18n.changeLanguage(value ?? undefined)}>
             <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>

@@ -18,7 +18,7 @@ export function ContextPanel({ contextEnabled, setContextEnabled, contextSummary
         <CardHeader>
           <CardTitle className="flex items-center justify-between gap-3 text-lg">
             <span>{t('aiWorkbench.contextAttachment')}</span>
-            <Switch checked={contextEnabled} onCheckedChange={setContextEnabled} />
+            <Switch checked={contextEnabled} onChange={(e) => setContextEnabled(e.target.checked)} />
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">

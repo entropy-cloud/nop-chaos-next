@@ -46,7 +46,7 @@ export function AddressDialog({ open, onOpenChange, editingAddress, setEditingAd
             </div>
             <div className="flex items-center justify-between rounded-xl border border-[hsl(var(--border))] px-3 py-2">
               <span className="text-sm text-muted-foreground">{t('masterDetail.detail.addressFields.default')}</span>
-              <Switch checked={editingAddress.isDefault} onCheckedChange={(checked) => setEditingAddress({ ...editingAddress, isDefault: checked })} />
+              <Switch checked={editingAddress.isDefault} onChange={(e) => setEditingAddress({ ...editingAddress, isDefault: e.target.checked })} />
             </div>
           </div>
         ) : null}

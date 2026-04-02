@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2, MoreHorizontal, RefreshCcw, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { AppTab } from '@nop-chaos/shared'
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, cn } from '@nop-chaos/ui'
+import { Button, cn } from '@nop-chaos/ui'
 import { resolveIcon } from '../utils/iconMap'
 
 interface TabsBarProps {
@@ -223,25 +223,15 @@ export function TabsBar({
               </Button>
             ) : null}
             {onToggleFullscreen ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label={isFullscreen ? t('tabsBar.exitFullscreenWorkspace') : t('tabsBar.enterFullscreenWorkspace')}
-                      onClick={onToggleFullscreen}
-                    >
-                      {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" sideOffset={8}>
-                    {isFullscreen ? t('tabsBar.exitFullscreen') : t('tabsBar.enterFullscreen')}
-                    {' '}
-                    <span className="opacity-80">Ctrl+Shift+F</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={isFullscreen ? t('tabsBar.exitFullscreenWorkspace') : t('tabsBar.enterFullscreenWorkspace')}
+                title={isFullscreen ? t('tabsBar.exitFullscreen') : t('tabsBar.enterFullscreen')}
+                onClick={onToggleFullscreen}
+              >
+                {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+              </Button>
             ) : null}
             <Button
               variant="ghost"
