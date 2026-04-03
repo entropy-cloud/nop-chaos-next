@@ -42,7 +42,7 @@
     "@types/react": "^19.0.10"
   },
   "scripts": {
-    "build": "echo \"No build needed (pre-built package)\"",
+    "build": "tsc -p tsconfig.build.json && node -e \"const fs=require('fs');fs.rmSync('dist/styles',{recursive:true,force:true});fs.cpSync('src/styles','dist/styles',{recursive:true})\"",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run --passWithNoTests",
     "lint": "echo \"Lint skipped (shadcn/ui vendored code)\""
