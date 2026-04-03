@@ -9,7 +9,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "peerDependencies": {
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.2"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
