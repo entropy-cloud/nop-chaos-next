@@ -255,7 +255,7 @@ export default function DashboardPage() {
                 <YAxis yAxisId="right" orientation="right" domain={[90, 100]} tickLine={false} axisLine={false} />
                 <Tooltip
                   contentStyle={chartTooltipStyle()}
-                  formatter={(value: number, name: string, item) => {
+                  formatter={(value, name, item) => {
                     if (name === t('dashboard.successRate')) {
                       return [`${value}%`, name]
                     }
