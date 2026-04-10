@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 import type { MenuItem } from '@nop-chaos/shared'
 import { PluginSlot, usePermissionGuard } from '@nop-chaos/core'
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui'
@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { ensurePluginSharedModules } from '../plugins/sharedModules'
 import { usePluginStore } from '../store/pluginStore'
-import { getBuiltinPage, getSystemPage } from './pageRegistry'
+import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry'
 
 const AmisRouteRenderer = lazy(async () => {
   const module = await import('../amis/AmisRouteRenderer')
@@ -29,8 +29,7 @@ export function RouteRenderer({ item }: RouteRendererProps) {
   const plugins = usePluginStore((state) => state.plugins)
   const allowed = usePermissionGuard(user?.roles ?? [], item.roles)
   const title = item.title ?? t('common.loading')
-  const ForbiddenPage = getSystemPage('forbidden')
-  const ServerErrorPage = getSystemPage('serverError')
+  const Page = useMemo(() => getBuiltinPage(item.componentId), [item.componentId])
 
   const loadingView = (
     <Card className="theme-card">
@@ -40,10 +39,6 @@ export function RouteRenderer({ item }: RouteRendererProps) {
         <CardContent>{t('common.loading')}</CardContent>
       </Card>
   )
-
-  if (!ForbiddenPage || !ServerErrorPage) {
-    return loadingView
-  }
 
   if (!allowed) {
     return <ForbiddenPage />
@@ -102,8 +97,6 @@ export function RouteRenderer({ item }: RouteRendererProps) {
       </Card>
     )
   }
-
-  const Page = getBuiltinPage(item.componentId)
 
   if (!Page) {
     return <ServerErrorPage />

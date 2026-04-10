@@ -4,7 +4,7 @@ import { filterMenusByRoles, flattenMenus, sortMenus } from '@nop-chaos/shared'
 import { useAuth } from '../hooks/useAuth'
 import { useMenuConfigQuery } from '../hooks/useMenuConfig'
 import { RouteRenderer } from './RouteRenderer'
-import { getSystemPage } from './pageRegistry'
+import { ForbiddenPage, LoginPage, NotFoundPage, ServerErrorPage } from './pageRegistry'
 
 const AppShell = lazy(() => import('./AppShell').then((module) => ({ default: module.AppShell })))
 
@@ -35,21 +35,13 @@ export function AppRoutes() {
     () => dedupeRoutesByPath(flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? []))),
     [menuQuery.data?.items, user?.roles]
   )
-  const LoginPage = getSystemPage('login')
-  const ForbiddenPage = getSystemPage('forbidden')
-  const NotFoundPage = getSystemPage('notFound')
-  const ServerErrorPage = getSystemPage('serverError')
 
-  if (!LoginPage || !ForbiddenPage || !NotFoundPage || !ServerErrorPage) {
-    return <div className="min-h-screen bg-background" />
-  }
-
+  const homePath = menuQuery.data?.home ?? '/'
   const shellView = (
     <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <AppShell />
     </Suspense>
   )
-  const homePath = menuQuery.data?.home ?? '/'
   const shellFallback = menuQuery.isError ? <ServerErrorPage /> : <div className="min-h-screen bg-background" />
 
   return (

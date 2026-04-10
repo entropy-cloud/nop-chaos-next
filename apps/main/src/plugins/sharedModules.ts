@@ -1,4 +1,5 @@
 import * as ReactLib from 'react'
+// eslint-disable-next-line no-restricted-imports -- intentional: full module re-exported for plugin system module federation
 import * as ReactDOMLib from 'react-dom'
 import * as ReactJsxDevRuntimeLib from 'react/jsx-dev-runtime'
 import * as ReactJsxRuntimeLib from 'react/jsx-runtime'
