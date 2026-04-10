@@ -15,7 +15,8 @@
     "lint": "pnpm -r run lint",
     "test": "pnpm -r run test",
     "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e:headed": "playwright test --headed",
+    "check:react19": "node scripts/check-react19-legacy-apis.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
