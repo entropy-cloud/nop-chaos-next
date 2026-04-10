@@ -65,11 +65,13 @@ export default function App() {
         info: (message: string) => toast(message)
       },
       navigate: (to: string, options?: { replace?: boolean; state?: unknown }) => navigate(to, options),
+      /* eslint-disable react-compiler/react-compiler -- zustand stores are callable objects (both hooks and plain store references); intentionally passed as store instances for plugin bridge */
       stores: {
         authStore: useAuthStore,
         themeStore: useThemeStore,
         pluginStore: usePluginStore
       },
+      /* eslint-enable react-compiler/react-compiler */
       getCurrentUser: () => user,
       getCurrentPath: () => location.pathname,
       getThemeConfig: () => pluginThemeConfig,
