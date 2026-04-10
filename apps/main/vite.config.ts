@@ -1,7 +1,9 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import babel from '@rolldown/plugin-babel'
+import tailwindcss from '@tailwindcss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import compressPlugin from 'vite-plugin-compression'
 
@@ -232,7 +234,9 @@ export default defineConfig(({ mode }) => {
         : undefined
     },
     plugins: [
+      tailwindcss(),
       react(),
+      babel({ presets: [reactCompilerPreset({ target: '19' })] }),
       compressPlugin({
         ext: '.gz',
         threshold: 1024 * 100,
@@ -284,9 +288,6 @@ export default defineConfig(({ mode }) => {
     preview: {
       port: 4173,
       strictPort: true
-    },
-    css: {
-      transformer: 'postcss'
     },
     build: {
       sourcemap: true,
