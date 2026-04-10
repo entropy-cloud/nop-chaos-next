@@ -246,14 +246,14 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1(@rolldown/plugin-babel@0.2.2(@babel/core@7.29.0)(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.15)(vite@8.0.8(@types/node@25.5.2)(esbuild@0.28.0)(jiti@2.6.1)(yaml@2.8.3)))(babel-plugin-react-compiler@1.0.0)(vite@8.0.8(@types/node@25.5.2)(esbuild@0.28.0)(jiti@2.6.1)(yaml@2.8.3))
       react:
-        specifier: ^18.3.1
-        version: 18.3.1
+        specifier: ^19.0.0
+        version: 19.2.5
       react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
+        specifier: ^19.0.0
+        version: 19.2.5(react@19.2.5)
       react-router-dom:
         specifier: ^7.14.0
-        version: 7.14.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       tailwindcss:
         specifier: ^4.2.2
         version: 4.2.2
@@ -277,37 +277,37 @@ importers:
         version: link:../../flux-lib/ui
       '@tanstack/react-query':
         specifier: ^5.96.1
-        version: 5.97.0(react@18.3.1)
+        version: 5.97.0(react@19.2.5)
       i18next:
         specifier: ^26.0.3
         version: 26.0.4(typescript@6.0.2)
       lucide-react:
         specifier: ^1.7.0
-        version: 1.8.0(react@18.3.1)
+        version: 1.8.0(react@19.2.5)
       react:
-        specifier: ^18.3.1
-        version: 18.3.1
+        specifier: ^19.0.0
+        version: 19.2.5
       react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
+        specifier: ^19.0.0
+        version: 19.2.5(react@19.2.5)
       react-i18next:
         specifier: ^17.0.2
-        version: 17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@6.0.2)
+        version: 17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
       react-router-dom:
         specifier: ^7.14.0
-        version: 7.14.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       recharts:
         specifier: ^3.8.1
-        version: 3.8.1(@types/react@19.2.14)(react-dom@18.3.1(react@18.3.1))(react-is@19.2.5)(react@18.3.1)(redux@5.0.1)
+        version: 3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(redux@5.0.1)
       sonner:
         specifier: ^2.0.7
-        version: 2.0.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.0.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       systemjs:
         specifier: ^6.15.1
         version: 6.15.1
       zustand:
         specifier: ^5.0.12
-        version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@18.3.1)(use-sync-external-store@1.6.0(react@18.3.1))
+        version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5))
 
   flux-lib/ui:
     dependencies:
@@ -413,19 +413,19 @@ importers:
         version: 2.1.1
       lucide-react:
         specifier: ^1.7.0
-        version: 1.8.0(react@18.3.1)
+        version: 1.8.0(react@19.2.5)
       react:
-        specifier: ^18.3.1
-        version: 18.3.1
+        specifier: ^19.0.0
+        version: 19.2.5
       react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
+        specifier: ^19.0.0
+        version: 19.2.5(react@19.2.5)
       react-i18next:
         specifier: ^17.0.0
-        version: 17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@6.0.2)
+        version: 17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
       react-router-dom:
         specifier: ^7.14.0
-        version: 7.14.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       systemjs:
         specifier: ^6.15.1
         version: 6.15.1
@@ -439,17 +439,17 @@ importers:
         specifier: ^26.0.3
         version: 26.0.4(typescript@6.0.2)
       react:
-        specifier: ^18.3.1
-        version: 18.3.1
+        specifier: ^19.0.0
+        version: 19.2.5
       react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
+        specifier: ^19.0.0
+        version: 19.2.5(react@19.2.5)
       sonner:
         specifier: ^2.0.7
-        version: 2.0.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.0.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       zustand:
         specifier: ^5.0.12
-        version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@18.3.1)(use-sync-external-store@1.6.0(react@18.3.1))
+        version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5))
 
   packages/shared: {}
 
@@ -3255,11 +3255,6 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
 
-  react-dom@18.3.1:
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
-    peerDependencies:
-      react: ^18.3.1
-
   react-dom@19.2.5:
     resolution: {integrity: sha512-J5bAZz+DXMMwW/wV3xzKke59Af6CHY7G4uYLN1OvBcKEsWOs4pQExj86BBKamxl/Ik5bx9whOrvBlSDfWzgSag==}
     peerDependencies:
@@ -3436,10 +3431,6 @@ packages:
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
 
-  react@18.3.1:
-    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
-    engines: {node: '>=0.10.0'}
-
   react@19.2.5:
     resolution: {integrity: sha512-llUJLzz1zTUBrskt2pwZgLq59AemifIftw4aB7JxOqf1HY2FDaGDxgwpAPVzHU1kdWabH7FauP4i1oEeer2WCA==}
     engines: {node: '>=0.10.0'}
@@ -3561,9 +3552,6 @@ packages:
   saxes@5.0.1:
     resolution: {integrity: sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==}
     engines: {node: '>=10'}
-
-  scheduler@0.23.2:
-    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
 
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
@@ -4826,18 +4814,6 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
-  '@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@18.3.1)':
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      '@standard-schema/utils': 0.3.0
-      immer: 11.1.4
-      redux: 5.0.1
-      redux-thunk: 3.1.0(redux@5.0.1)
-      reselect: 5.1.1
-    optionalDependencies:
-      react: 18.3.1
-      react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
-
   '@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -5075,11 +5051,6 @@ snapshots:
       vite: 8.0.8(@types/node@25.5.2)(esbuild@0.28.0)(jiti@2.6.1)(yaml@2.8.3)
 
   '@tanstack/query-core@5.97.0': {}
-
-  '@tanstack/react-query@5.97.0(react@18.3.1)':
-    dependencies:
-      '@tanstack/query-core': 5.97.0
-      react: 18.3.1
 
   '@tanstack/react-query@5.97.0(react@19.2.5)':
     dependencies:
@@ -6557,10 +6528,6 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@1.8.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
   lucide-react@1.8.0(react@19.2.5):
     dependencies:
       react: 19.2.5
@@ -6960,12 +6927,6 @@ snapshots:
       date-fns-jalali: 4.1.0-0
       react: 19.2.5
 
-  react-dom@18.3.1(react@18.3.1):
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.3.1
-      scheduler: 0.23.2
-
   react-dom@19.2.5(react@19.2.5):
     dependencies:
       react: 19.2.5
@@ -6988,17 +6949,6 @@ snapshots:
   react-hook-form@7.39.0(react@19.2.5):
     dependencies:
       react: 19.2.5
-
-  react-i18next@17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@6.0.2):
-    dependencies:
-      '@babel/runtime': 7.29.2
-      html-parse-stringify: 3.0.1
-      i18next: 26.0.4(typescript@6.0.2)
-      react: 18.3.1
-      use-sync-external-store: 1.6.0(react@18.3.1)
-    optionalDependencies:
-      react-dom: 18.3.1(react@18.3.1)
-      typescript: 6.0.2
 
   react-i18next@17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2):
     dependencies:
@@ -7072,15 +7022,6 @@ snapshots:
       - encoding
       - supports-color
 
-  react-redux@9.2.0(@types/react@19.2.14)(react@18.3.1)(redux@5.0.1):
-    dependencies:
-      '@types/use-sync-external-store': 0.0.6
-      react: 18.3.1
-      use-sync-external-store: 1.6.0(react@18.3.1)
-    optionalDependencies:
-      '@types/react': 19.2.14
-      redux: 5.0.1
-
   react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1):
     dependencies:
       '@types/use-sync-external-store': 0.0.6
@@ -7114,25 +7055,11 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
-  react-router-dom@7.14.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-router: 7.14.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
   react-router-dom@7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
       react-router: 7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-
-  react-router@7.14.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      cookie: 1.1.1
-      react: 18.3.1
-      set-cookie-parser: 2.7.2
-    optionalDependencies:
-      react-dom: 18.3.1(react@18.3.1)
 
   react-router@7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
@@ -7183,10 +7110,6 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
-  react@18.3.1:
-    dependencies:
-      loose-envify: 1.4.0
-
   react@19.2.5: {}
 
   reactcss@1.2.3(react@19.2.5):
@@ -7213,26 +7136,6 @@ snapshots:
   readdir-glob@1.1.3:
     dependencies:
       minimatch: 5.1.9
-
-  recharts@3.8.1(@types/react@19.2.14)(react-dom@18.3.1(react@18.3.1))(react-is@19.2.5)(react@18.3.1)(redux@5.0.1):
-    dependencies:
-      '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@18.3.1)
-      clsx: 2.1.1
-      decimal.js-light: 2.5.1
-      es-toolkit: 1.45.1
-      eventemitter3: 5.0.4
-      immer: 10.2.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-is: 19.2.5
-      react-redux: 9.2.0(@types/react@19.2.14)(react@18.3.1)(redux@5.0.1)
-      reselect: 5.1.1
-      tiny-invariant: 1.3.3
-      use-sync-external-store: 1.6.0(react@18.3.1)
-      victory-vendor: 37.3.6
-    transitivePeerDependencies:
-      - '@types/react'
-      - redux
 
   recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(redux@5.0.1):
     dependencies:
@@ -7377,10 +7280,6 @@ snapshots:
     dependencies:
       xmlchars: 2.2.0
 
-  scheduler@0.23.2:
-    dependencies:
-      loose-envify: 1.4.0
-
   scheduler@0.27.0: {}
 
   semver@6.3.1: {}
@@ -7428,11 +7327,6 @@ snapshots:
       is-fullwidth-code-point: 5.1.0
 
   smooth-signature@1.1.0: {}
-
-  sonner@2.0.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   sonner@2.0.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
@@ -7674,10 +7568,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
-  use-sync-external-store@1.6.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
   use-sync-external-store@1.6.0(react@19.2.5):
     dependencies:
       react: 19.2.5
@@ -7909,13 +7799,6 @@ snapshots:
       '@types/react': 19.2.14
       immer: 11.1.4
       react: 19.2.5
-
-  zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@18.3.1)(use-sync-external-store@1.6.0(react@18.3.1)):
-    optionalDependencies:
-      '@types/react': 19.2.14
-      immer: 11.1.4
-      react: 18.3.1
-      use-sync-external-store: 1.6.0(react@18.3.1)
 
   zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5)):
     optionalDependencies:
