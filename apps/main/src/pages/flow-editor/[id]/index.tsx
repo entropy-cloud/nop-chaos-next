@@ -59,9 +59,9 @@ function FlowEditorPageInner() {
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(null)
   const [clipboardNode, setClipboardNode] = useState<FlowNode | null>(null)
   const [savedSnapshot, setSavedSnapshot] = useState('')
-  const dirty = initializedRef.current && JSON.stringify({ nodes, edges }) !== savedSnapshot
   const [inspectorCollapsed, setInspectorCollapsed] = useState(false)
   const initializedRef = useRef(false)
+  const dirty = initializedRef.current && JSON.stringify({ nodes, edges }) !== savedSnapshot
   const { canUndo, canRedo, initializeHistory, recordSnapshot, undo, redo } = useFlowHistory()
 
   const selectedNode = useMemo(() => nodes.find((node) => node.id === selectedNodeId) ?? null, [nodes, selectedNodeId])
