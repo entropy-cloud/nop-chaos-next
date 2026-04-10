@@ -56,8 +56,11 @@ export function FlowCanvas({
 
   const dragOverRef = useRef(onCanvasDragOver)
   const dropRef = useRef(onCanvasDrop)
-  dragOverRef.current = onCanvasDragOver
-  dropRef.current = onCanvasDrop
+
+  useEffect(() => {
+    dragOverRef.current = onCanvasDragOver
+    dropRef.current = onCanvasDrop
+  })
 
   const stableDragOver = useCallback((e: DragEvent) => dragOverRef.current(e), [])
   const stableDrop = useCallback((e: DragEvent) => dropRef.current(e), [])

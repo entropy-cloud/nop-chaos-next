@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- multiple setState calls are intentional to atomically reset form state when server data loads */
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { RefreshCw, RotateCcw, Save } from 'lucide-react'

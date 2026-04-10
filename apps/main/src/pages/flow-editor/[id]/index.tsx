@@ -59,7 +59,7 @@ function FlowEditorPageInner() {
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(null)
   const [clipboardNode, setClipboardNode] = useState<FlowNode | null>(null)
   const [savedSnapshot, setSavedSnapshot] = useState('')
-  const [dirty, setDirty] = useState(false)
+  const dirty = initializedRef.current && JSON.stringify({ nodes, edges }) !== savedSnapshot
   const [inspectorCollapsed, setInspectorCollapsed] = useState(false)
   const initializedRef = useRef(false)
   const { canUndo, canRedo, initializeHistory, recordSnapshot, undo, redo } = useFlowHistory()
@@ -96,7 +96,6 @@ function FlowEditorPageInner() {
       setEdges(cloneEdges(normalizedEdges))
       initializeHistory({ nodes: cloneNodes(normalizedNodes), edges: cloneEdges(normalizedEdges) })
       setSavedSnapshot(snapshot)
-      setDirty(false)
       window.setTimeout(() => void fitView({ duration: 250, padding: 0.2 }), 50)
     })
 
@@ -104,14 +103,6 @@ function FlowEditorPageInner() {
       active = false
     }
   }, [fitView, id, initializeHistory])
-
-  useEffect(() => {
-    if (!initializedRef.current) {
-      return
-    }
-
-    setDirty(JSON.stringify({ nodes, edges }) !== savedSnapshot)
-  }, [edges, nodes, savedSnapshot])
 
   useEffect(() => {
     if (selectedNodeId && !nodes.some((node) => node.id === selectedNodeId)) {
@@ -224,7 +215,6 @@ function FlowEditorPageInner() {
     const saved = await saveFlowDetail(payload)
     setFlowDocument(saved)
     setSavedSnapshot(JSON.stringify({ nodes, edges }))
-    setDirty(false)
     toast.success(t('flowEditor.editor.saveSuccess'))
   }
 

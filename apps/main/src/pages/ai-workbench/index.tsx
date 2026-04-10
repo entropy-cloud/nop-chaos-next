@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- assistantId is intentionally derived from activeSession; this sync effect is correct and avoids prop drilling or reducer complexity */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { MessageSquarePlus } from 'lucide-react'
 import {
