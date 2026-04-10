@@ -16,7 +16,9 @@
     "test": "pnpm -r run test",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "check:react19": "node scripts/check-react19-legacy-apis.mjs"
+    "check:react19": "node scripts/check-react19-legacy-apis.mjs",
+    "sync:amis": "bash scripts/sync-amis.sh",
+    "sync:amis:build": "bash scripts/sync-amis.sh --build"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
