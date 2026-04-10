@@ -18,18 +18,23 @@
     "test:e2e:headed": "playwright test --headed"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
     "@eslint/js": "^9.39.4",
     "@playwright/test": "^1.59.1",
+    "@rolldown/plugin-babel": "^0.2.2",
     "@tailwindcss/postcss": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-query": "^5.96.1",
     "@types/node": "^25.5.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^6.0.1",
     "@xyflow/react": "^12.10.2",
     "autoprefixer": "^10.4.27",
+    "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
@@ -41,8 +46,8 @@
     "lucide-react": "^1.7.0",
     "msw": "^2.12.14",
     "postcss": "^8.5.8",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-i18next": "^17.0.2",
     "react-router-dom": "^7.14.0",
     "recharts": "^3.8.1",
@@ -62,10 +67,6 @@
   },
   "pnpm": {
     "overrides": {
-      "react": "18.3.1",
-      "react-dom": "18.3.1",
-      "@types/react": "18.3.28",
-      "@types/react-dom": "18.3.7",
       "webworkify-webpack": "2.1.5"
     }
   }
