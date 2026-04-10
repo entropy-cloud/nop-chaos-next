@@ -22,7 +22,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # amis fork 根目录（可通过环境变量覆盖）
-AMIS_ROOT="${AMIS_ROOT:-$(cd "$REPO_ROOT/../templates/amis" && pwd)}"
+AMIS_ROOT="${AMIS_ROOT:-$(cd "$REPO_ROOT/../amis-react19" && pwd)}"
 
 # 用于解析 pnpm store 路径的消费者包（含有最完整的 amis 依赖 symlink）
 CONSUMER_PKG="$REPO_ROOT/packages/amis-react/node_modules"
