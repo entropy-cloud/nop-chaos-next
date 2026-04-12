@@ -3,10 +3,11 @@ import { toast } from '@nop-chaos/ui'
 import { setPluginBridge } from '@nop-chaos/plugin-bridge'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AppRoutes } from './router/AppRoutes'
-import { ensureAmisRuntime } from './amis/init'
 import { getDefaultThemeId } from './config/themeRegistry'
 import i18n from './config/i18n'
 import { useAuthBootstrap } from './hooks/useAuth'
+import { useMenuConfigQuery } from './hooks/useMenuConfig'
+import { useRuntimeCapabilities } from './hooks/useRuntimeCapabilities'
 import { registerBaseSharedModules } from './plugins/sharedModules'
 import { usePluginStore } from './store/pluginStore'
 import { useAuthStore } from './store/authStore'
@@ -21,8 +22,10 @@ export default function App() {
   const user = useAuthStore((state) => state.user)
   const navigate = useNavigate()
   const location = useLocation()
-
-  useAuthBootstrap()
+  const { isAuthenticated, bootstrapStatus } = useAuthBootstrap()
+  const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending'
+  const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending)
+  const capabilities = useRuntimeCapabilities(menuQuery.data?.items ?? [])
 
   useEffect(() => {
     applyThemeToDocument(themeConfig)
@@ -34,9 +37,15 @@ export default function App() {
     }
 
     registerBaseSharedModules()
-    ensureAmisRuntime()
     didRegisterSharedModules = true
   }, [])
+
+  useEffect(() => {
+    if (capabilities.needsAmis && didRegisterSharedModules) {
+      import('./amis/init').catch(() => {
+      })
+    }
+  }, [capabilities.needsAmis])
 
   const pluginThemeConfig = useMemo(
     () => ({

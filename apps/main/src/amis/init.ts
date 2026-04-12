@@ -12,3 +12,7 @@ export function ensureAmisRuntime() {
   didInitAmisRuntime = true
   registerMainXuiComponents()
 }
+
+export interface AmisInitModule {
+  ensureAmisRuntime: typeof ensureAmisRuntime
+}

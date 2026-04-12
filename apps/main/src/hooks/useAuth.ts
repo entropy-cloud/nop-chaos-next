@@ -16,6 +16,10 @@ export function useAuth() {
 }
 
 export function useAuthBootstrap() {
+  const user = useAuthStore((state) => state.user)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const bootstrapStatus = useAuthStore((state) => state.bootstrapStatus)
+
   useEffect(() => {
     if (didBootstrapAuth) {
       return
@@ -33,9 +37,9 @@ export function useAuthBootstrap() {
 
       try {
         state.setBootstrapStatus('pending')
-        const user = await fetchCurrentUser(state.token)
+        const currentUser = await fetchCurrentUser(state.token)
         useAuthStore.getState().setSession({
-          user,
+          user: currentUser,
           token: state.token,
           tokens: state.tokens
         })
@@ -46,4 +50,6 @@ export function useAuthBootstrap() {
 
     void bootstrap()
   }, [])
+
+  return { isAuthenticated, bootstrapStatus, user }
 }
