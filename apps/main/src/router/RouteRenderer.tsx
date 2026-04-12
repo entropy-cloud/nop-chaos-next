@@ -9,8 +9,17 @@ import { usePluginStore } from '../store/pluginStore'
 import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry'
 
 const AmisRouteRenderer = lazy(async () => {
+  const { ensureAmisRuntime } = await import('../amis/init')
+  ensureAmisRuntime()
   const module = await import('../amis/AmisRouteRenderer')
   return { default: module.AmisRouteRenderer }
+})
+
+const FluxRouteRenderer = lazy(async () => {
+  const { ensureFluxRuntime } = await import('../flux/init')
+  ensureFluxRuntime()
+  const module = await import('../flux/FluxRouteRenderer')
+  return { default: module.FluxRouteRenderer }
 })
 
 interface RouteRendererProps {
@@ -70,6 +79,14 @@ export function RouteRenderer({ item }: RouteRendererProps) {
     return (
       <Suspense fallback={loadingView}>
         <AmisRouteRenderer key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
+      </Suspense>
+    )
+  }
+
+  if (item.pageType === 'flux' && item.schemaPath) {
+    return (
+      <Suspense fallback={loadingView}>
+        <FluxRouteRenderer key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
       </Suspense>
     )
   }

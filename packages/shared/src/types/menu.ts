@@ -6,7 +6,7 @@ export interface MenuItem {
   icon?: string
   children?: MenuItem[]
   badge?: string
-  pageType: 'builtin' | 'plugin' | 'amis' | 'iframe' | 'external'
+  pageType: 'builtin' | 'plugin' | 'amis' | 'flux' | 'iframe' | 'external'
   componentId?: string
   pluginUrl?: string
   schemaPath?: string
