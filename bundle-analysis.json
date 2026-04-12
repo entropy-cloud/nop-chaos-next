@@ -1,0 +1,1767 @@
+{
+  "totalSize": 18334248,
+  "totalSizeMB": 17.484901428222656,
+  "totalSizeKB": 17904.5390625,
+  "files": [
+    {
+      "name": "abap-COhk5egX.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Action-1vdI_pLN.js",
+      "size": 158,
+      "sizeKB": 0.154296875,
+      "sizeMB": 0.0001506805419921875
+    },
+    {
+      "name": "ai-workbench-BFuvQMqu.js",
+      "size": 73,
+      "sizeKB": 0.0712890625,
+      "sizeMB": 0.00006961822509765625
+    },
+    {
+      "name": "Alert-BejoAOgQ.js",
+      "size": 74,
+      "sizeKB": 0.072265625,
+      "sizeMB": 0.0000705718994140625
+    },
+    {
+      "name": "AMIS-BTgF8OcO.js",
+      "size": 73,
+      "sizeKB": 0.0712890625,
+      "sizeMB": 0.00006961822509765625
+    },
+    {
+      "name": "AmisRouteRenderer-DLvhCrH0.js",
+      "size": 89,
+      "sizeKB": 0.0869140625,
+      "sizeMB": 0.00008487701416015625
+    },
+    {
+      "name": "AnchorNav-D-FFyOEG.js",
+      "size": 99,
+      "sizeKB": 0.0966796875,
+      "sizeMB": 0.00009441375732421875
+    },
+    {
+      "name": "apex-DQxThmQz.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "App-DO0mfE6j.js",
+      "size": 85,
+      "sizeKB": 0.0830078125,
+      "sizeMB": 0.00008106231689453125
+    },
+    {
+      "name": "AppShell-EvyvGQbF.js",
+      "size": 67,
+      "sizeKB": 0.0654296875,
+      "sizeMB": 0.00006389617919921875
+    },
+    {
+      "name": "Audio-DO3MRynE.js",
+      "size": 93,
+      "sizeKB": 0.0908203125,
+      "sizeMB": 0.00008869171142578125
+    },
+    {
+      "name": "Avatar-Fe41N39a.js",
+      "size": 105,
+      "sizeKB": 0.1025390625,
+      "sizeMB": 0.00010013580322265625
+    },
+    {
+      "name": "azcli-C8zVoOrv.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "BarCode-B2Au3rBY.js",
+      "size": 90,
+      "sizeKB": 0.087890625,
+      "sizeMB": 0.0000858306884765625
+    },
+    {
+      "name": "BarCode-DR94OBum.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "bat-D3mVRKe3.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "bicep-CED2ye8X.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Breadcrumb-0U9sV2Zg.js",
+      "size": 113,
+      "sizeKB": 0.1103515625,
+      "sizeMB": 0.00010776519775390625
+    },
+    {
+      "name": "ButtonGroup-8w2sQ3p1.js",
+      "size": 151,
+      "sizeKB": 0.1474609375,
+      "sizeMB": 0.00014400482177734375
+    },
+    {
+      "name": "ButtonGroupSelect-U0drutdP.js",
+      "size": 118,
+      "sizeKB": 0.115234375,
+      "sizeMB": 0.0001125335693359375
+    },
+    {
+      "name": "ButtonToolbar-CyyXXJfN.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "Calendar-BNgcaisT.js",
+      "size": 77,
+      "sizeKB": 0.0751953125,
+      "sizeMB": 0.00007343292236328125
+    },
+    {
+      "name": "cameligo-B_mjbUxm.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Card-SruysZl-.js",
+      "size": 118,
+      "sizeKB": 0.115234375,
+      "sizeMB": 0.0001125335693359375
+    },
+    {
+      "name": "Card2-Cczp7mtz.js",
+      "size": 95,
+      "sizeKB": 0.0927734375,
+      "sizeMB": 0.00009059906005859375
+    },
+    {
+      "name": "Cards-BJCtgtaX.js",
+      "size": 95,
+      "sizeKB": 0.0927734375,
+      "sizeMB": 0.00009059906005859375
+    },
+    {
+      "name": "Carousel-CgFrwiW2.js",
+      "size": 99,
+      "sizeKB": 0.0966796875,
+      "sizeMB": 0.00009441375732421875
+    },
+    {
+      "name": "ChainedSelect-D6pvjl8V.js",
+      "size": 110,
+      "sizeKB": 0.107421875,
+      "sizeMB": 0.0001049041748046875
+    },
+    {
+      "name": "Chart-DGGhbQIw.js",
+      "size": 93,
+      "sizeKB": 0.0908203125,
+      "sizeMB": 0.00008869171142578125
+    },
+    {
+      "name": "ChartRadios-DJvsTju1.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "Checkbox-2AgRReFh.js",
+      "size": 115,
+      "sizeKB": 0.1123046875,
+      "sizeMB": 0.00010967254638671875
+    },
+    {
+      "name": "Checkboxes-C0VFytr8.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "CityDB-BG6QeF95.js",
+      "size": 129,
+      "sizeKB": 0.1259765625,
+      "sizeMB": 0.00012302398681640625
+    },
+    {
+      "name": "clojure-BjxEUwzs.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Code-BHlLJWnv.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "coffee-BnRVfMVO.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Collapse-C9Re-0eS.js",
+      "size": 108,
+      "sizeKB": 0.10546875,
+      "sizeMB": 0.000102996826171875
+    },
+    {
+      "name": "CollapseGroup-DZ3b7ixs.js",
+      "size": 115,
+      "sizeKB": 0.1123046875,
+      "sizeMB": 0.00010967254638671875
+    },
+    {
+      "name": "Color-CiU3CGio.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "ColorPicker-BHUWtWyf.js",
+      "size": 95,
+      "sizeKB": 0.0927734375,
+      "sizeMB": 0.00009059906005859375
+    },
+    {
+      "name": "ColumnToggler-B6A5w07u.js",
+      "size": 81,
+      "sizeKB": 0.0791015625,
+      "sizeMB": 0.00007724761962890625
+    },
+    {
+      "name": "Combo-DGFbsCos.js",
+      "size": 165,
+      "sizeKB": 0.1611328125,
+      "sizeMB": 0.00015735626220703125
+    },
+    {
+      "name": "ConditionBuilder-zZ_3zxMf.js",
+      "size": 106,
+      "sizeKB": 0.103515625,
+      "sizeMB": 0.0001010894775390625
+    },
+    {
+      "name": "Container-MTrtrT_g.js",
+      "size": 99,
+      "sizeKB": 0.0966796875,
+      "sizeMB": 0.00009441375732421875
+    },
+    {
+      "name": "Control-CybTtLfT.js",
+      "size": 76,
+      "sizeKB": 0.07421875,
+      "sizeMB": 0.000072479248046875
+    },
+    {
+      "name": "cpp-Bv1OGSaT.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "CRUD-Doof1Xhc.js",
+      "size": 124,
+      "sizeKB": 0.12109375,
+      "sizeMB": 0.000118255615234375
+    },
+    {
+      "name": "CRUD2-obZwkfIN.js",
+      "size": 126,
+      "sizeKB": 0.123046875,
+      "sizeMB": 0.0001201629638671875
+    },
+    {
+      "name": "csharp-Db5g0IJ1.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "csp-elPGhxuW.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "css-DMPUJ39D.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "cssMode-B8hx_nA5.js",
+      "size": 78,
+      "sizeKB": 0.076171875,
+      "sizeMB": 0.0000743865966796875
+    },
+    {
+      "name": "Custom-IIrbkaX2.js",
+      "size": 95,
+      "sizeKB": 0.0927734375,
+      "sizeMB": 0.00009059906005859375
+    },
+    {
+      "name": "dart-ZDwggVAh.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "dashboard-CGXnzufT.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "data-management-9mo3mHYn.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "Date-U4ofTXpw.js",
+      "size": 199,
+      "sizeKB": 0.1943359375,
+      "sizeMB": 0.00018978118896484375
+    },
+    {
+      "name": "DateRange-xBFqnxfP.js",
+      "size": 111,
+      "sizeKB": 0.1083984375,
+      "sizeMB": 0.00010585784912109375
+    },
+    {
+      "name": "Dialog-CC33tgwa.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "DiffEditor-yzU6aXSB.js",
+      "size": 118,
+      "sizeKB": 0.115234375,
+      "sizeMB": 0.0001125335693359375
+    },
+    {
+      "name": "Divider-D5INx3pV.js",
+      "size": 97,
+      "sizeKB": 0.0947265625,
+      "sizeMB": 0.00009250640869140625
+    },
+    {
+      "name": "doc-DCCdU_uk.js",
+      "size": 42,
+      "sizeKB": 0.041015625,
+      "sizeMB": 0.0000400543212890625
+    },
+    {
+      "name": "dockerfile-BXoHOZkY.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Drawer-B0xnNvZN.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "DropDownButton-BPOk8Izn.js",
+      "size": 104,
+      "sizeKB": 0.1015625,
+      "sizeMB": 0.00009918212890625
+    },
+    {
+      "name": "Each-CEM2PZhJ.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "ecl-C3Q39Dxx.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "editor.main-BdH4yP1J.js",
+      "size": 381,
+      "sizeKB": 0.3720703125,
+      "sizeMB": 0.00036334991455078125
+    },
+    {
+      "name": "elixir-We69y7H9.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "esm-CcAAieYI.js",
+      "size": 142,
+      "sizeKB": 0.138671875,
+      "sizeMB": 0.0001354217529296875
+    },
+    {
+      "name": "FieldSet-C4cToSyY.js",
+      "size": 108,
+      "sizeKB": 0.10546875,
+      "sizeMB": 0.000102996826171875
+    },
+    {
+      "name": "Flex-Cs-nMUlu.js",
+      "size": 146,
+      "sizeKB": 0.142578125,
+      "sizeMB": 0.0001392364501953125
+    },
+    {
+      "name": "flow-editor-65ao0kwL.js",
+      "size": 72,
+      "sizeKB": 0.0703125,
+      "sizeMB": 0.00006866455078125
+    },
+    {
+      "name": "flow9-C_tCIq2c.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "FluxRouteRenderer-kyxGV_MU.js",
+      "size": 1202,
+      "sizeKB": 1.173828125,
+      "sizeMB": 0.0011463165283203125
+    },
+    {
+      "name": "Formula-DmcP6T5k.js",
+      "size": 104,
+      "sizeKB": 0.1015625,
+      "sizeMB": 0.00009918212890625
+    },
+    {
+      "name": "fsharp-BF3DTxb8.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "go-jUenj2NL.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "graphql-mnjwEBc8.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Grid2D-CwWjxys7.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "GridNav-C_M9Odt1.js",
+      "size": 68,
+      "sizeKB": 0.06640625,
+      "sizeMB": 0.000064849853515625
+    },
+    {
+      "name": "Group-Crrss5uZ.js",
+      "size": 81,
+      "sizeKB": 0.0791015625,
+      "sizeMB": 0.00007724761962890625
+    },
+    {
+      "name": "guide-B0rC_cCZ.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "handlebars-DCUbqxKL.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "HBox-BopSSkw6.js",
+      "size": 104,
+      "sizeKB": 0.1015625,
+      "sizeMB": 0.00009918212890625
+    },
+    {
+      "name": "hcl-CXVFo0xC.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "help-DszVBafk.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "Hidden-Bm2MMO8P.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "host-amis-adapter-C7knn3a6.js",
+      "size": 2109272,
+      "sizeKB": 2059.8359375,
+      "sizeMB": 2.0115585327148438
+    },
+    {
+      "name": "host-amis-bootstrap-CbSWrkqW.js",
+      "size": 841,
+      "sizeKB": 0.8212890625,
+      "sizeMB": 0.0008020401000976562
+    },
+    {
+      "name": "host-amis-preview-OzRRen5b.js",
+      "size": 2214,
+      "sizeKB": 2.162109375,
+      "sizeMB": 0.0021114349365234375
+    },
+    {
+      "name": "host-amis-route-runtime-CfsIXe4W.js",
+      "size": 2629020,
+      "sizeKB": 2567.40234375,
+      "sizeMB": 2.5072288513183594
+    },
+    {
+      "name": "host-app-runtime-DUzcwuTr.js",
+      "size": 73677,
+      "sizeKB": 71.9501953125,
+      "sizeMB": 0.07026386260986328
+    },
+    {
+      "name": "host-config-runtime-ChQGGWKu.js",
+      "size": 50962,
+      "sizeKB": 49.767578125,
+      "sizeMB": 0.04860115051269531
+    },
+    {
+      "name": "host-entry-BXsrOat3.js",
+      "size": 10059,
+      "sizeKB": 9.8232421875,
+      "sizeMB": 0.009593009948730469
+    },
+    {
+      "name": "host-shell-runtime-C5RvrkO8.js",
+      "size": 6915,
+      "sizeKB": 6.7529296875,
+      "sizeMB": 0.006594657897949219
+    },
+    {
+      "name": "html-Dwc5S3yD.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "htmlMode-DwHToS_-.js",
+      "size": 101,
+      "sizeKB": 0.0986328125,
+      "sizeMB": 0.00009632110595703125
+    },
+    {
+      "name": "Icon-0j3SEB2C.js",
+      "size": 91,
+      "sizeKB": 0.0888671875,
+      "sizeMB": 0.00008678436279296875
+    },
+    {
+      "name": "IconPicker-CYGTgQn-.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "IconSelect-BoJwH2At.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "IFrame-CwyaLmde.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Image-CI3XbMZ-.js",
+      "size": 185,
+      "sizeKB": 0.1806640625,
+      "sizeMB": 0.00017642974853515625
+    },
+    {
+      "name": "Images-BiR9OMuC.js",
+      "size": 105,
+      "sizeKB": 0.1025390625,
+      "sizeMB": 0.00010013580322265625
+    },
+    {
+      "name": "index-CNpFND3E.js",
+      "size": 731,
+      "sizeKB": 0.7138671875,
+      "sizeMB": 0.0006971359252929688
+    },
+    {
+      "name": "ini-DA8Dkm8k.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "init-CmDBN0cG.js",
+      "size": 147,
+      "sizeKB": 0.1435546875,
+      "sizeMB": 0.00014019012451171875
+    },
+    {
+      "name": "init-D4s9Gudo.js",
+      "size": 85,
+      "sizeKB": 0.0830078125,
+      "sizeMB": 0.00008106231689453125
+    },
+    {
+      "name": "InputArray-DTfYg5fm.js",
+      "size": 102,
+      "sizeKB": 0.099609375,
+      "sizeMB": 0.0000972747802734375
+    },
+    {
+      "name": "InputCity-CROzgJdG.js",
+      "size": 158,
+      "sizeKB": 0.154296875,
+      "sizeMB": 0.0001506805419921875
+    },
+    {
+      "name": "InputColor-C2DmZfo1.js",
+      "size": 127,
+      "sizeKB": 0.1240234375,
+      "sizeMB": 0.00012111663818359375
+    },
+    {
+      "name": "InputDate-jyqUKdbv.js",
+      "size": 274,
+      "sizeKB": 0.267578125,
+      "sizeMB": 0.0002613067626953125
+    },
+    {
+      "name": "InputDateRange-BtWipSG6.js",
+      "size": 186,
+      "sizeKB": 0.181640625,
+      "sizeMB": 0.0001773834228515625
+    },
+    {
+      "name": "InputExcel-B3Y4km0x.js",
+      "size": 102,
+      "sizeKB": 0.099609375,
+      "sizeMB": 0.0000972747802734375
+    },
+    {
+      "name": "InputFile-CjyXHvVz.js",
+      "size": 138,
+      "sizeKB": 0.134765625,
+      "sizeMB": 0.0001316070556640625
+    },
+    {
+      "name": "InputFormula-Bz9NX_Jc.js",
+      "size": 81,
+      "sizeKB": 0.0791015625,
+      "sizeMB": 0.00007724761962890625
+    },
+    {
+      "name": "InputGroup-C9JlzQsM.js",
+      "size": 92,
+      "sizeKB": 0.08984375,
+      "sizeMB": 0.000087738037109375
+    },
+    {
+      "name": "InputImage-DeRJ2Uxq.js",
+      "size": 112,
+      "sizeKB": 0.109375,
+      "sizeMB": 0.0001068115234375
+    },
+    {
+      "name": "InputMonthRange-5w9-yZvR.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "InputNumber-CIwho_3m.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "InputQuarterRange-BzqY74bU.js",
+      "size": 109,
+      "sizeKB": 0.1064453125,
+      "sizeMB": 0.00010395050048828125
+    },
+    {
+      "name": "InputRange-Pt0GYqO9.js",
+      "size": 146,
+      "sizeKB": 0.142578125,
+      "sizeMB": 0.0001392364501953125
+    },
+    {
+      "name": "InputRating-BzvwiVBy.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "InputRepeat-Dea_vI95.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "InputRichText-BlzprIzg.js",
+      "size": 115,
+      "sizeKB": 0.1123046875,
+      "sizeMB": 0.00010967254638671875
+    },
+    {
+      "name": "InputSignature-n-2oFKkn.js",
+      "size": 104,
+      "sizeKB": 0.1015625,
+      "sizeMB": 0.00009918212890625
+    },
+    {
+      "name": "InputSubForm-DLCSsrOs.js",
+      "size": 104,
+      "sizeKB": 0.1015625,
+      "sizeMB": 0.00009918212890625
+    },
+    {
+      "name": "InputTable-f4n5mZ3P.js",
+      "size": 102,
+      "sizeKB": 0.099609375,
+      "sizeMB": 0.0000972747802734375
+    },
+    {
+      "name": "InputTag-CagFnrWi.js",
+      "size": 100,
+      "sizeKB": 0.09765625,
+      "sizeMB": 0.000095367431640625
+    },
+    {
+      "name": "InputText-C_7Nl4we.js",
+      "size": 193,
+      "sizeKB": 0.1884765625,
+      "sizeMB": 0.00018405914306640625
+    },
+    {
+      "name": "InputTree-B1uaD10T.js",
+      "size": 101,
+      "sizeKB": 0.0986328125,
+      "sizeMB": 0.00009632110595703125
+    },
+    {
+      "name": "InputVerificationCode-Cj51MUXP.js",
+      "size": 113,
+      "sizeKB": 0.1103515625,
+      "sizeMB": 0.00010776519775390625
+    },
+    {
+      "name": "InputYearRange-CpPYLnYg.js",
+      "size": 106,
+      "sizeKB": 0.103515625,
+      "sizeMB": 0.0001010894775390625
+    },
+    {
+      "name": "java-v5sblEfj.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "javascript-CHgfpcxJ.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Json-BdXJZuO_.js",
+      "size": 123,
+      "sizeKB": 0.1201171875,
+      "sizeMB": 0.00011730194091796875
+    },
+    {
+      "name": "jsonMode-CB5SP9eP.js",
+      "size": 78,
+      "sizeKB": 0.076171875,
+      "sizeMB": 0.0000743865966796875
+    },
+    {
+      "name": "JSONSchema-VzX4Jglo.js",
+      "size": 100,
+      "sizeKB": 0.09765625,
+      "sizeMB": 0.000095367431640625
+    },
+    {
+      "name": "JSONSchemaEditor-D4cfiby5.js",
+      "size": 106,
+      "sizeKB": 0.103515625,
+      "sizeMB": 0.0001010894775390625
+    },
+    {
+      "name": "julia-CbvCHl4Q.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "kotlin-B5xEHpxQ.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "language-DgXNKDnl.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "layout-B4qaWcsd.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "less-DSww-nm2.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "lexon-BDXF-hLI.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Link-Gb--7_jI.js",
+      "size": 100,
+      "sizeKB": 0.09765625,
+      "sizeMB": 0.000095367431640625
+    },
+    {
+      "name": "liquid-CyXDKvAt.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "List-C9naU3Hw.js",
+      "size": 188,
+      "sizeKB": 0.18359375,
+      "sizeMB": 0.000179290771484375
+    },
+    {
+      "name": "ListSelect-BYiMWlWA.js",
+      "size": 101,
+      "sizeKB": 0.0986328125,
+      "sizeMB": 0.00009632110595703125
+    },
+    {
+      "name": "LocationPicker-ohpPNnkl.js",
+      "size": 106,
+      "sizeKB": 0.103515625,
+      "sizeMB": 0.0001010894775390625
+    },
+    {
+      "name": "Log-CEbqetWv.js",
+      "size": 89,
+      "sizeKB": 0.0869140625,
+      "sizeMB": 0.00008487701416015625
+    },
+    {
+      "name": "lua-Gftp7H7N.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "m3-B_rp2et6.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "main-Bhc7fnLH.js",
+      "size": 76,
+      "sizeKB": 0.07421875,
+      "sizeMB": 0.000072479248046875
+    },
+    {
+      "name": "management-YMQRbHK3.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "Mapping-DZr2aJ42.js",
+      "size": 126,
+      "sizeKB": 0.123046875,
+      "sizeMB": 0.0001201629638671875
+    },
+    {
+      "name": "Markdown-BkfPRY6T.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "markdown-BRsS6HS3.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Markdown-V189GTmE.js",
+      "size": 99,
+      "sizeKB": 0.0966796875,
+      "sizeMB": 0.00009441375732421875
+    },
+    {
+      "name": "master-detail-C4RB0-Zz.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "MatrixCheckboxes-Dx3hySt7.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "mips-BwqP4aww.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "msdax-C84vGR0v.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "MultilineText-DKTWF3PB.js",
+      "size": 119,
+      "sizeKB": 0.1162109375,
+      "sizeMB": 0.00011348724365234375
+    },
+    {
+      "name": "mysql-DV9zXd2h.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Nav-B6WGXZ1q.js",
+      "size": 124,
+      "sizeKB": 0.12109375,
+      "sizeMB": 0.000118255615234375
+    },
+    {
+      "name": "NestedSelect-RvJmpTq8.js",
+      "size": 152,
+      "sizeKB": 0.1484375,
+      "sizeMB": 0.00014495849609375
+    },
+    {
+      "name": "Number-C5nsO1z2.js",
+      "size": 105,
+      "sizeKB": 0.1025390625,
+      "sizeMB": 0.00010013580322265625
+    },
+    {
+      "name": "objective-c-Cc8Kuvpi.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "OfficeViewer--8BDN1t-.js",
+      "size": 102,
+      "sizeKB": 0.099609375,
+      "sizeMB": 0.0000972747802734375
+    },
+    {
+      "name": "Operation-DcrwAN83.js",
+      "size": 111,
+      "sizeKB": 0.1083984375,
+      "sizeMB": 0.00010585784912109375
+    },
+    {
+      "name": "page-ai-workbench-CfIhgIAo.js",
+      "size": 26532,
+      "sizeKB": 25.91015625,
+      "sizeMB": 0.025302886962890625
+    },
+    {
+      "name": "Page-CHHZbVtn.js",
+      "size": 124,
+      "sizeKB": 0.12109375,
+      "sizeMB": 0.000118255615234375
+    },
+    {
+      "name": "page-dashboard-ChaA-GpD.js",
+      "size": 29136,
+      "sizeKB": 28.453125,
+      "sizeMB": 0.0277862548828125
+    },
+    {
+      "name": "page-flow-editor-C6qkvtA7.js",
+      "size": 219111,
+      "sizeKB": 213.9755859375,
+      "sizeMB": 0.20896053314208984
+    },
+    {
+      "name": "page-secondary-D6XOXNSb.js",
+      "size": 72860,
+      "sizeKB": 71.15234375,
+      "sizeMB": 0.06948471069335938
+    },
+    {
+      "name": "Pagination-BYkW-759.js",
+      "size": 100,
+      "sizeKB": 0.09765625,
+      "sizeMB": 0.000095367431640625
+    },
+    {
+      "name": "PaginationWrapper-BA9FB_00.js",
+      "size": 117,
+      "sizeKB": 0.1142578125,
+      "sizeMB": 0.00011157989501953125
+    },
+    {
+      "name": "Panel-DHkBXZq1.js",
+      "size": 95,
+      "sizeKB": 0.0927734375,
+      "sizeMB": 0.00009059906005859375
+    },
+    {
+      "name": "pascal-BJOb5WoR.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "pascaligo-BfVpdQcc.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Password-BLIq9bz9.js",
+      "size": 109,
+      "sizeKB": 0.1064453125,
+      "sizeMB": 0.00010395050048828125
+    },
+    {
+      "name": "PdfViewer-BLf8KWbf.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "PdfViewer-KldkvHFy.js",
+      "size": 120,
+      "sizeKB": 0.1171875,
+      "sizeMB": 0.00011444091796875
+    },
+    {
+      "name": "perl-Dpv4J4pM.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "pgsql-BWAsFZPj.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "php-Bax3nDx_.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Picker-BZmB2HfM.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "pla-Boko1MyV.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Plain-rlQKkEK7.js",
+      "size": 93,
+      "sizeKB": 0.0908203125,
+      "sizeMB": 0.00008869171142578125
+    },
+    {
+      "name": "plugins-C9E1g4xu.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "Portlet-DZUe_7FJ.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "postiats-llx_xldu.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "powerquery-BY_StgwT.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "powershell-NpNDfqsG.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Progress-C5CKQr_o.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "Property-C3_SmEHV.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "protobuf-CAKk3fJz.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "pug-C352NITW.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "python-ENuWF5Xm.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "QRCode-CT2vpyGX.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "qsharp-PNqiPnlB.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "r-GVOVrcyV.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "Radio-tgHtuser.js",
+      "size": 102,
+      "sizeKB": 0.099609375,
+      "sizeMB": 0.0000972747802734375
+    },
+    {
+      "name": "Radios-AXZtqSc3.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "razor-D-6sCMjN.js",
+      "size": 95,
+      "sizeKB": 0.0927734375,
+      "sizeMB": 0.00009059906005859375
+    },
+    {
+      "name": "react-cropper.es-DpVuoxyU.js",
+      "size": 89,
+      "sizeKB": 0.0869140625,
+      "sizeMB": 0.00008487701416015625
+    },
+    {
+      "name": "redis-y72j-36r.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "redshift-eXzxqwY4.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "Remark-BDlmpm5y.js",
+      "size": 133,
+      "sizeKB": 0.1298828125,
+      "sizeMB": 0.00012683868408203125
+    },
+    {
+      "name": "restructuredtext-CqCjBHeg.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "RichText-DjSLEZ-M.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "rolldown-runtime-Bhmf7a9N.js",
+      "size": 1207,
+      "sizeKB": 1.1787109375,
+      "sizeMB": 0.0011510848999023438
+    },
+    {
+      "name": "ruby-C0hXJAWo.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "rust-DhqhgwbH.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "sb-CRrlBD6M.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "scala-BitcmYDq.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "scheme-Czg69Zhs.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "scss-DbAC__90.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "SearchBox-wNF90AVa.js",
+      "size": 77,
+      "sizeKB": 0.0751953125,
+      "sizeMB": 0.00007343292236328125
+    },
+    {
+      "name": "Select-CdDa6Kq1.js",
+      "size": 143,
+      "sizeKB": 0.1396484375,
+      "sizeMB": 0.00013637542724609375
+    },
+    {
+      "name": "Service-Dn4IQG09.js",
+      "size": 118,
+      "sizeKB": 0.115234375,
+      "sizeMB": 0.0001125335693359375
+    },
+    {
+      "name": "settings-_RFQjdCl.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "Shape-ZJ2-IMc_.js",
+      "size": 73,
+      "sizeKB": 0.0712890625,
+      "sizeMB": 0.00006961822509765625
+    },
+    {
+      "name": "shell-a3U9OpDq.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "shell-core-CFTdDcnO.js",
+      "size": 4555,
+      "sizeKB": 4.4482421875,
+      "sizeMB": 0.004343986511230469
+    },
+    {
+      "name": "Slider-DcGx4_GV.js",
+      "size": 74,
+      "sizeKB": 0.072265625,
+      "sizeMB": 0.0000705718994140625
+    },
+    {
+      "name": "solidity-Y7-HeZ1C.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "sophia-BuoJNh9Q.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "SparkLine-CWzMKWmE.js",
+      "size": 77,
+      "sizeKB": 0.0751953125,
+      "sizeMB": 0.00007343292236328125
+    },
+    {
+      "name": "sparql-BjzAWIvn.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "Spinner-Cp4U3JsU.js",
+      "size": 75,
+      "sizeKB": 0.0732421875,
+      "sizeMB": 0.00007152557373046875
+    },
+    {
+      "name": "sql-HMiyRoiB.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "st-BHsUemB6.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "Status-Cqv5ECsK.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "Steps-D-mMN94J.js",
+      "size": 95,
+      "sizeKB": 0.0927734375,
+      "sizeMB": 0.00009059906005859375
+    },
+    {
+      "name": "swift-BSr8AB18.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "Switch-DIQ6RDKA.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "SwitchContainer-4zro6aXO.js",
+      "size": 103,
+      "sizeKB": 0.1005859375,
+      "sizeMB": 0.00009822845458984375
+    },
+    {
+      "name": "systemverilog-DWolMgwK.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "Table-b5JSsbc2.js",
+      "size": 157,
+      "sizeKB": 0.1533203125,
+      "sizeMB": 0.00014972686767578125
+    },
+    {
+      "name": "Table2-Bf3PUq98.js",
+      "size": 93,
+      "sizeKB": 0.0908203125,
+      "sizeMB": 0.00008869171142578125
+    },
+    {
+      "name": "TableView-DuDs4jRJ.js",
+      "size": 97,
+      "sizeKB": 0.0947265625,
+      "sizeMB": 0.00009250640869140625
+    },
+    {
+      "name": "Tabs-7Nnowsn9.js",
+      "size": 92,
+      "sizeKB": 0.08984375,
+      "sizeMB": 0.000087738037109375
+    },
+    {
+      "name": "TabsTransfer-BMULgFiW.js",
+      "size": 119,
+      "sizeKB": 0.1162109375,
+      "sizeMB": 0.00011348724365234375
+    },
+    {
+      "name": "TabsTransferPicker-BuZH7EHR.js",
+      "size": 87,
+      "sizeKB": 0.0849609375,
+      "sizeMB": 0.00008296966552734375
+    },
+    {
+      "name": "Tag-Dw2Ty02X.js",
+      "size": 97,
+      "sizeKB": 0.0947265625,
+      "sizeMB": 0.00009250640869140625
+    },
+    {
+      "name": "Tasks-B4CVN4zs.js",
+      "size": 92,
+      "sizeKB": 0.08984375,
+      "sizeMB": 0.000087738037109375
+    },
+    {
+      "name": "tcl-Dd0y7W1H.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "Textarea-CeCZ8sPt.js",
+      "size": 105,
+      "sizeKB": 0.1025390625,
+      "sizeMB": 0.00010013580322265625
+    },
+    {
+      "name": "theme-BVT-ETa2.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "Timeline-DVvpKdHl.js",
+      "size": 101,
+      "sizeKB": 0.0986328125,
+      "sizeMB": 0.00009632110595703125
+    },
+    {
+      "name": "Tinymce-RY-nuCve.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "TooltipWrapper-C_d8GnJF.js",
+      "size": 102,
+      "sizeKB": 0.099609375,
+      "sizeMB": 0.0000972747802734375
+    },
+    {
+      "name": "Tpl-BFHdqyM6.js",
+      "size": 87,
+      "sizeKB": 0.0849609375,
+      "sizeMB": 0.00008296966552734375
+    },
+    {
+      "name": "Transfer-4gaCdk-a.js",
+      "size": 165,
+      "sizeKB": 0.1611328125,
+      "sizeMB": 0.00015735626220703125
+    },
+    {
+      "name": "TransferPicker-DBysUTs-.js",
+      "size": 83,
+      "sizeKB": 0.0810546875,
+      "sizeMB": 0.00007915496826171875
+    },
+    {
+      "name": "TreeSelect-By8S11bt.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "tsMode-BUoeFBE_.js",
+      "size": 176,
+      "sizeKB": 0.171875,
+      "sizeMB": 0.0001678466796875
+    },
+    {
+      "name": "twig-CgjR0gv5.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "typescript-DBsr5ath.js",
+      "size": 96,
+      "sizeKB": 0.09375,
+      "sizeMB": 0.000091552734375
+    },
+    {
+      "name": "UserSelect-CDgRPNVY.js",
+      "size": 107,
+      "sizeKB": 0.1044921875,
+      "sizeMB": 0.00010204315185546875
+    },
+    {
+      "name": "UUID-BFZ4WNFm.js",
+      "size": 101,
+      "sizeKB": 0.0986328125,
+      "sizeMB": 0.00009632110595703125
+    },
+    {
+      "name": "vb-D-bCUO5k.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "VBox-DiJVN3R7.js",
+      "size": 92,
+      "sizeKB": 0.08984375,
+      "sizeMB": 0.000087738037109375
+    },
+    {
+      "name": "vendor-amis-DBYkn38H.js",
+      "size": 1685383,
+      "sizeKB": 1645.8818359375,
+      "sizeMB": 1.6073064804077148
+    },
+    {
+      "name": "vendor-amis-formula-DID9coTU.js",
+      "size": 42307,
+      "sizeKB": 41.3154296875,
+      "sizeMB": 0.04034709930419922
+    },
+    {
+      "name": "vendor-amis-ui-CvdZ6Y7A.js",
+      "size": 2726418,
+      "sizeKB": 2662.517578125,
+      "sizeMB": 2.6001148223876953
+    },
+    {
+      "name": "vendor-codemirror-oyK2LMeA.js",
+      "size": 233032,
+      "sizeKB": 227.5703125,
+      "sizeMB": 0.22223663330078125
+    },
+    {
+      "name": "vendor-echarts-BgmHc829.js",
+      "size": 2106160,
+      "sizeKB": 2056.796875,
+      "sizeMB": 2.0085906982421875
+    },
+    {
+      "name": "vendor-exceljs-EW1pMHCw.js",
+      "size": 929923,
+      "sizeKB": 908.1279296875,
+      "sizeMB": 0.8868436813354492
+    },
+    {
+      "name": "vendor-hls-js-tdVZpdf6.js",
+      "size": 350722,
+      "sizeKB": 342.501953125,
+      "sizeMB": 0.3344745635986328
+    },
+    {
+      "name": "vendor-misc-BnGnD3FQ.js",
+      "size": 85092,
+      "sizeKB": 83.09765625,
+      "sizeMB": 0.08115005493164062
+    },
+    {
+      "name": "vendor-monaco-editor-BTotV7nQ.js",
+      "size": 2953359,
+      "sizeKB": 2884.1396484375,
+      "sizeMB": 2.816542625427246
+    },
+    {
+      "name": "vendor-mpegts-js-2gQwX8BC.js",
+      "size": 215844,
+      "sizeKB": 210.78515625,
+      "sizeMB": 0.20584487915039062
+    },
+    {
+      "name": "vendor-office-viewer-DMQrsX6S.js",
+      "size": 1159801,
+      "sizeKB": 1132.6181640625,
+      "sizeMB": 1.1060724258422852
+    },
+    {
+      "name": "vendor-react-cropper-s4BCnTBX.js",
+      "size": 40566,
+      "sizeKB": 39.615234375,
+      "sizeMB": 0.03868675231933594
+    },
+    {
+      "name": "vendor-react-json-view-G2std9bN.js",
+      "size": 115736,
+      "sizeKB": 113.0234375,
+      "sizeMB": 0.11037445068359375
+    },
+    {
+      "name": "vendor-xlsx-RA2NObJ_.js",
+      "size": 424908,
+      "sizeKB": 414.94921875,
+      "sizeMB": 0.4052238464355469
+    },
+    {
+      "name": "Video-ClHOAELh.js",
+      "size": 137,
+      "sizeKB": 0.1337890625,
+      "sizeMB": 0.00013065338134765625
+    },
+    {
+      "name": "WebComponent-C9-vvLCa.js",
+      "size": 100,
+      "sizeKB": 0.09765625,
+      "sizeMB": 0.000095367431640625
+    },
+    {
+      "name": "Wizard-CTnWpGv6.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "Words-DEgOXIKc.js",
+      "size": 121,
+      "sizeKB": 0.1181640625,
+      "sizeMB": 0.00011539459228515625
+    },
+    {
+      "name": "Wrapper-BEvo5VZV.js",
+      "size": 90,
+      "sizeKB": 0.087890625,
+      "sizeMB": 0.0000858306884765625
+    },
+    {
+      "name": "xml-BNVX5Jqy.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "yaml-DrCaEfvB.js",
+      "size": 94,
+      "sizeKB": 0.091796875,
+      "sizeMB": 0.0000896453857421875
+    },
+    {
+      "name": "_id_-BMoSj6PQ.js",
+      "size": 72,
+      "sizeKB": 0.0703125,
+      "sizeMB": 0.00006866455078125
+    },
+    {
+      "name": "_id_-CRajQlcg.js",
+      "size": 70,
+      "sizeKB": 0.068359375,
+      "sizeMB": 0.0000667572021484375
+    },
+    {
+      "name": "__vite-browser-external-CxDUUfjI.js",
+      "size": 164,
+      "sizeKB": 0.16015625,
+      "sizeMB": 0.000156402587890625
+    }
+  ],
+  "categories": {
+    "amis": {
+      "count": 7,
+      "size": 9195455
+    },
+    "flux": {
+      "count": 0,
+      "size": 0
+    },
+    "vendor": {
+      "count": 14,
+      "size": 13069251
+    },
+    "host": {
+      "count": 8,
+      "size": 4882960
+    },
+    "page": {
+      "count": 4,
+      "size": 347639
+    },
+    "core": {
+      "count": 8,
+      "size": 348203
+    }
+  }
+}
