@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Copy, Plus, Power, Search, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -39,6 +39,12 @@ export default function FlowEditorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const flowQuery = useQuery({ queryKey: ['flows'], queryFn: fetchFlowList });
+  const actionMutation = useMutation({
+    mutationFn: async (fn: () => Promise<void>) => fn(),
+    onSuccess: () => {
+      void flowQuery.refetch();
+    },
+  });
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<'all' | FlowDocument['status']>('all');
   const [page, setPage] = useState(1);
@@ -58,36 +64,38 @@ export default function FlowEditorPage() {
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
   const pageRows = filtered.slice((page - 1) * pageSize, page * pageSize);
 
-  const duplicateFlow = async (flow: FlowDocument) => {
-    await saveFlowDetail({
-      ...flow,
-      id: `flow-${Date.now()}`,
-      name: `${flow.name} ${t('common.copy')}`,
-      status: 'draft',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+  const duplicateFlow = (flow: FlowDocument) => {
+    actionMutation.mutate(async () => {
+      await saveFlowDetail({
+        ...flow,
+        id: `flow-${Date.now()}`,
+        name: `${flow.name} ${t('common.copy')}`,
+        status: 'draft',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+      toast.success(t('flowEditor.duplicateSuccess'));
     });
-    await flowQuery.refetch();
-    toast.success(t('flowEditor.duplicateSuccess'));
   };
 
-  const toggleFlowStatus = async (flow: FlowDocument) => {
-    await saveFlowDetail({
-      ...flow,
-      status: flow.status === 'enabled' ? 'disabled' : 'enabled',
+  const toggleFlowStatus = (flow: FlowDocument) => {
+    actionMutation.mutate(async () => {
+      await saveFlowDetail({
+        ...flow,
+        status: flow.status === 'enabled' ? 'disabled' : 'enabled',
+      });
+      toast.success(t('flowEditor.statusUpdated'));
     });
-    await flowQuery.refetch();
-    toast.success(t('flowEditor.statusUpdated'));
   };
 
-  const removeFlow = async (flowId: string) => {
+  const removeFlow = (flowId: string) => {
     if (!window.confirm(t('flowEditor.deleteConfirm'))) {
       return;
     }
-
-    await deleteFlow(flowId);
-    await flowQuery.refetch();
-    toast.success(t('flowEditor.deleteSuccess'));
+    actionMutation.mutate(async () => {
+      await deleteFlow(flowId);
+      toast.success(t('flowEditor.deleteSuccess'));
+    });
   };
 
   return (
@@ -202,21 +210,24 @@ export default function FlowEditorPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => void duplicateFlow(flow)}
+                          onClick={() => duplicateFlow(flow)}
+                          disabled={actionMutation.isPending}
                         >
                           <Copy className="size-4" />
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => void toggleFlowStatus(flow)}
+                          onClick={() => toggleFlowStatus(flow)}
+                          disabled={actionMutation.isPending}
                         >
                           <Power className="size-4" />
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => void removeFlow(flow.id)}
+                          onClick={() => removeFlow(flow.id)}
+                          disabled={actionMutation.isPending}
                         >
                           <Trash2 className="size-4" />
                         </Button>

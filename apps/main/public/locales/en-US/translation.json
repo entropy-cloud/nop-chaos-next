@@ -1,6 +1,7 @@
 {
   "common": {
     "loading": "Loading...",
+    "saving": "Saving...",
     "backHome": "Back to dashboard",
     "moreActions": "More actions",
     "preferences": "Preferences",

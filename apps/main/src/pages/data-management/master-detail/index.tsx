@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   ArrowDownUp,
   Download,
@@ -50,6 +50,16 @@ export default function MasterDetailPage() {
   const navigate = useNavigate();
   const openTab = useTabStore((state) => state.openTab);
   const orderQuery = useQuery({ queryKey: ['orders'], queryFn: fetchOrderList });
+  const deleteMutation = useMutation({
+    mutationFn: async (ids: string[]) => {
+      await deleteOrders(ids);
+    },
+    onSuccess: () => {
+      setSelectedIds([]);
+      void orderQuery.refetch();
+      toast.success(t('masterDetail.batchDeleteSuccess'));
+    },
+  });
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [keyword, setKeyword] = useState('');
   const [status, setStatus] = useState<StatusFilter>('all');
@@ -107,17 +117,14 @@ export default function MasterDetailPage() {
     );
   };
 
-  const handleBatchDelete = async () => {
+  const handleBatchDelete = () => {
     if (selectedIds.length === 0) {
       return;
     }
     if (!window.confirm(t('masterDetail.batchDeleteConfirm', { count: selectedIds.length }))) {
       return;
     }
-    await deleteOrders(selectedIds);
-    setSelectedIds([]);
-    await orderQuery.refetch();
-    toast.success(t('masterDetail.batchDeleteSuccess'));
+    deleteMutation.mutate(selectedIds);
   };
 
   const handleExport = () => {
@@ -143,14 +150,15 @@ export default function MasterDetailPage() {
     setSortOrder((current) => (sortKey === key ? (current === 'asc' ? 'desc' : 'asc') : 'desc'));
   };
 
-  const handleDeleteRow = async (row: OrderRecord) => {
+  const handleDeleteRow = (row: OrderRecord) => {
     if (!window.confirm(t('masterDetail.rowDeleteConfirm', { orderNo: row.orderNo }))) {
       return;
     }
-
-    await deleteOrders([row.id]);
-    await orderQuery.refetch();
-    toast.success(t('masterDetail.rowDeleteSuccess'));
+    deleteMutation.mutate([row.id], {
+      onSuccess: () => {
+        toast.success(t('masterDetail.rowDeleteSuccess'));
+      },
+    });
   };
 
   const resetFilters = () => {
@@ -190,7 +198,7 @@ export default function MasterDetailPage() {
               <Download className="size-4" />
               {t('masterDetail.batchExport')}
             </Button>
-            <Button variant="destructive" onClick={() => void handleBatchDelete()}>
+            <Button variant="destructive" onClick={handleBatchDelete} disabled={deleteMutation.isPending}>
               <Trash2 className="size-4" />
               {t('masterDetail.batchDelete')}
             </Button>
@@ -389,7 +397,7 @@ export default function MasterDetailPage() {
                             <DropdownMenuItem onSelect={() => openDetail(row)}>
                               {t('common.edit')}
                             </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => void handleDeleteRow(row)}>
+                            <DropdownMenuItem onSelect={() => handleDeleteRow(row)} disabled={deleteMutation.isPending}>
                               {t('common.delete')}
                             </DropdownMenuItem>
                           </DropdownMenuContent>

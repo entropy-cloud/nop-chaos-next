@@ -148,7 +148,7 @@ export default function MasterDetailDetailPage() {
     return nextErrors;
   };
 
-  const handleSaveAll = async () => {
+  const handleSaveAll = () => {
     const nextErrors = validate();
     if (Object.keys(nextErrors).length > 0) {
       const firstKey = Object.keys(nextErrors)[0];
@@ -160,7 +160,7 @@ export default function MasterDetailDetailPage() {
       toast.error(t('masterDetail.detail.checkSectionError', { section }));
       return;
     }
-    await saveMutation.mutateAsync(draft);
+    saveMutation.mutate(draft);
   };
 
   const cancelAll = () => {
@@ -302,9 +302,9 @@ export default function MasterDetailDetailPage() {
               <RotateCcw className="size-4" />
               {t('masterDetail.detail.discardAll')}
             </Button>
-            <Button onClick={() => void handleSaveAll()}>
+            <Button onClick={handleSaveAll} disabled={saveMutation.isPending}>
               <Save className="size-4" />
-              {t('masterDetail.detail.saveAll')}
+              {saveMutation.isPending ? t('common.saving') : t('masterDetail.detail.saveAll')}
             </Button>
           </div>
         }

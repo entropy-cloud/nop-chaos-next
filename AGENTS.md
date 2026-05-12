@@ -8,6 +8,14 @@
 - Remote demo plugin: `examples/plugin-demo`.
 - Shared packages: `packages/shared`, `packages/ui`, `packages/core`, `packages/plugin-bridge`.
 
+### Extension Project Boundary
+
+`extension` 是独立项目，仅在当前仓库中进行联调。修改 extension 代码时，必须遵守以下规则：
+
+- Extension 项目的 `docs/`、`logs/`、`bugs/`、`plans/`、`design/` 等文档和日志必须记录在 extension 自己的项目中，不得记录在当前主项目（nop-chaos-next）的 `docs/` 下。
+- 仅当变更同时涉及主项目代码（如 bridge 类型、host 集成逻辑）时，才在当前主项目的 `docs/` 中记录主项目侧的变更。
+- 当前主项目的 `docs/bugs/`、`docs/plans/`、`docs/design/` 等指南文件中的流程和格式要求适用于主项目自身，不适用于 extension 项目。
+
 ## Workspace Layout
 
 - `apps/main`: host React shell, routes, stores, pages, theme, i18n.

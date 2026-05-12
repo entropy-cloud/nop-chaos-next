@@ -1,6 +1,7 @@
 {
   "common": {
     "loading": "加载中...",
+    "saving": "保存中...",
     "backHome": "返回仪表盘",
     "moreActions": "更多操作",
     "preferences": "偏好设置",
