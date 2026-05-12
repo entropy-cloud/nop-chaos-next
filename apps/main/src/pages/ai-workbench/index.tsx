@@ -286,7 +286,11 @@ export default function AIWorkbenchPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Select
               value={assistantId}
-              onValueChange={(value) => handleSwitchAssistant(value as AssistantOption['id'])}
+              onValueChange={(value) => {
+                if (value) {
+                  handleSwitchAssistant(value as AssistantOption['id']);
+                }
+              }}
             >
               <SelectTrigger className="min-w-[13rem] bg-white/50 backdrop-blur-xl dark:bg-slate-900/35">
                 <SelectValue />
@@ -301,7 +305,11 @@ export default function AIWorkbenchPage() {
             </Select>
             <Select
               value={switchMode}
-              onValueChange={(value) => setSwitchMode(value as 'current' | 'new')}
+              onValueChange={(value) => {
+                if (value) {
+                  setSwitchMode(value as 'current' | 'new');
+                }
+              }}
             >
               <SelectTrigger className="min-w-[10rem] bg-white/50 backdrop-blur-xl dark:bg-slate-900/35">
                 <SelectValue />

@@ -84,8 +84,7 @@ export function AddressesSection({
               <div className="flex items-center gap-2">
                 <Switch
                   checked={address.isDefault}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
+                  onCheckedChange={(checked) => {
                     setDraft((state) =>
                       state
                         ? {

@@ -113,7 +113,14 @@ export default function DashboardPage() {
         badge={t('dashboard.liveBadge')}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <Select value={range} onValueChange={(value) => setRange(value as DashboardRange)}>
+            <Select
+              value={range}
+              onValueChange={(value) => {
+                if (value) {
+                  setRange(value as DashboardRange);
+                }
+              }}
+            >
               <SelectTrigger className="min-w-[9.5rem] bg-white/50 backdrop-blur-xl dark:bg-slate-900/40">
                 <SelectValue />
               </SelectTrigger>

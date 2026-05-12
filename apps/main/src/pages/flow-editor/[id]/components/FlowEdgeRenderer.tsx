@@ -98,10 +98,10 @@ export function FlowEdgeRenderer(props: EdgeProps<FlowEdge>) {
                   size="icon-sm"
                   variant="ghost"
                   onMouseDown={stopToolbarEvent}
-                  onClick={(event) => {
-                    stopToolbarEvent(event);
-                    actions.openEdgeEditor(id);
-                  }}
+                    onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
+                      stopToolbarEvent(event);
+                      actions.openEdgeEditor(id);
+                    }}
                 >
                   <Pencil className="size-4" />
                 </Button>
@@ -109,10 +109,10 @@ export function FlowEdgeRenderer(props: EdgeProps<FlowEdge>) {
                   size="icon-sm"
                   variant="ghost"
                   onMouseDown={stopToolbarEvent}
-                  onClick={(event) => {
-                    stopToolbarEvent(event);
-                    actions.requestDelete({ type: 'edge', id });
-                  }}
+                    onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
+                      stopToolbarEvent(event);
+                      actions.requestDelete({ type: 'edge', id });
+                    }}
                 >
                   <Trash2 className="size-4" />
                 </Button>

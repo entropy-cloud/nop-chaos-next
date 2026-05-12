@@ -377,7 +377,9 @@ export default function MasterDetailDetailPage() {
       <div className="flex justify-end">
         <Button
           variant="outline"
-          onClick={(event) => navigateWithDirtyGuard(event, '/data-management/master-detail')}
+          onClick={(event: ReactMouseEvent<HTMLButtonElement>) =>
+            navigateWithDirtyGuard(event, '/data-management/master-detail')
+          }
         >
           {t('masterDetail.detail.backToList')}
         </Button>

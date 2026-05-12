@@ -26,25 +26,36 @@ function normalizeId(id: string) {
 
 function getNodeModulePackageName(id: string) {
   const normalized = normalizeId(id);
-  const marker = '/node_modules/';
-  const index = normalized.lastIndexOf(marker);
+  const matches = [...normalized.matchAll(/\/node_modules\/(?:\.pnpm\/[^/]+\/node_modules\/)?((?:@[^/]+\/)?[^/]+)/g)];
+  const packageName = matches.at(-1)?.[1];
 
-  if (index < 0) {
-    return undefined;
+  return packageName || undefined;
+}
+
+function getWorkspacePackageChunkByPath(id: string) {
+  const normalized = normalizeId(id);
+
+  if (includesAny(normalized, ['/flux-lib/ui/', '/node_modules/@nop-chaos/ui/'])) {
+    return 'pkg-ui';
   }
 
-  const remainder = normalized.slice(index + marker.length);
-  const [first, second] = remainder.split('/');
-
-  if (!first) {
-    return undefined;
+  if (includesAny(normalized, ['/packages/shared/', '/node_modules/@nop-chaos/shared/'])) {
+    return 'pkg-shared';
   }
 
-  if (first.startsWith('@') && second) {
-    return `${first}/${second}`;
+  if (includesAny(normalized, ['/packages/core/', '/node_modules/@nop-chaos/core/'])) {
+    return 'pkg-core';
   }
 
-  return first;
+  if (includesAny(normalized, ['/packages/plugin-bridge/', '/node_modules/@nop-chaos/plugin-bridge/'])) {
+    return 'pkg-plugin-bridge';
+  }
+
+  if (includesAny(normalized, ['/packages/amis-core/', '/packages/amis-react/'])) {
+    return 'vendor-amis-bridge';
+  }
+
+  return undefined;
 }
 
 function getHostRuntimeChunkName(id: string) {
@@ -100,6 +111,96 @@ function getHostRuntimeChunkName(id: string) {
   }
 
   return 'host-runtime-misc';
+}
+
+function getChunkGroupName(id: string) {
+  const normalized = normalizeId(id);
+
+  if (normalized.includes('/src/router/AppShell')) {
+    return 'shell-core';
+  }
+
+  if (
+    includesAny(normalized, [
+      '/src/pages/help/',
+      '/src/pages/settings/',
+      '/src/pages/plugins/',
+      '/src/pages/data-management/',
+    ])
+  ) {
+    return 'page-secondary';
+  }
+
+  if (
+    includesAny(normalized, [
+      '/src/pages/dashboard/',
+      '/src/components/common/MetricCard',
+    ])
+  ) {
+    return 'page-dashboard';
+  }
+
+  if (includesAny(normalized, ['/src/pages/flow-editor/'])) {
+    return 'page-flow-editor';
+  }
+
+  if (includesAny(normalized, ['/src/pages/ai-workbench/'])) {
+    return 'page-ai-workbench';
+  }
+
+  const workspacePackageChunk = getWorkspacePackageChunkByPath(normalized);
+
+  if (workspacePackageChunk) {
+    return workspacePackageChunk;
+  }
+
+  const linkedNodeModulePackageName = getNodeModulePackageName(normalized);
+
+  if (linkedNodeModulePackageName?.startsWith('@nop-chaos/')) {
+    return getPackageChunkName(linkedNodeModulePackageName);
+  }
+
+  const packageEntry = mainPackageContext.resolvePackageEntryByFile(id);
+
+  if (packageEntry && packageEntry.name !== '@nop-chaos/main') {
+    return getPackageChunkName(packageEntry.name);
+  }
+
+  if (
+    includesAny(normalized, [
+      '/src/main.tsx',
+      '/src/App.tsx',
+      '/src/amis/',
+      '/src/components/common/',
+      '/src/components/plugin/',
+      '/src/components/layout/',
+      '/src/components/auth/',
+      '/src/config/',
+      '/src/extensions/',
+      '/src/hooks/',
+      '/src/lib/',
+      '/src/plugins/',
+      '/src/router/AppRoutes',
+      '/src/router/RouteRenderer',
+      '/src/router/pageRegistry',
+      '/src/services/',
+      '/src/store/',
+    ])
+  ) {
+    return getHostRuntimeChunkName(normalized);
+  }
+
+  if (!normalized.includes('node_modules')) {
+    return undefined;
+  }
+
+  const nodeModulePackageName = getNodeModulePackageName(normalized);
+
+  if (!nodeModulePackageName) {
+    return 'vendor-misc';
+  }
+
+  return getPackageChunkName(nodeModulePackageName);
 }
 
 export default defineConfig(({ mode }) => {
@@ -176,84 +277,19 @@ export default defineConfig(({ mode }) => {
     build: {
       sourcemap: false,
       cssMinify: 'esbuild',
-      rollupOptions: {
+      rolldownOptions: {
+        preserveEntrySignatures: 'allow-extension',
         output: {
-          manualChunks(id) {
-            const normalized = normalizeId(id);
-
-            if (normalized.includes('/src/router/AppShell')) {
-              return 'shell-core';
-            }
-
-            if (
-              includesAny(normalized, [
-                '/src/pages/help/',
-                '/src/pages/settings/',
-                '/src/pages/plugins/',
-                '/src/pages/data-management/',
-              ])
-            ) {
-              return 'page-secondary';
-            }
-
-            if (
-              includesAny(normalized, [
-                '/src/pages/dashboard/',
-                '/src/components/common/MetricCard',
-              ])
-            ) {
-              return 'page-dashboard';
-            }
-
-            if (includesAny(normalized, ['/src/pages/flow-editor/'])) {
-              return 'page-flow-editor';
-            }
-
-            if (includesAny(normalized, ['/src/pages/ai-workbench/'])) {
-              return 'page-ai-workbench';
-            }
-
-            const packageEntry = mainPackageContext.resolvePackageEntryByFile(id);
-
-            if (packageEntry && packageEntry.name !== '@nop-chaos/main') {
-              return getPackageChunkName(packageEntry.name);
-            }
-
-            if (
-              includesAny(normalized, [
-                '/src/main.tsx',
-                '/src/App.tsx',
-                '/src/amis/',
-                '/src/components/common/',
-                '/src/components/plugin/',
-                '/src/components/layout/',
-                '/src/components/auth/',
-                '/src/config/',
-                '/src/extensions/',
-                '/src/hooks/',
-                '/src/lib/',
-                '/src/plugins/',
-                '/src/router/AppRoutes',
-                '/src/router/RouteRenderer',
-                '/src/router/pageRegistry',
-                '/src/services/',
-                '/src/store/',
-              ])
-            ) {
-              return getHostRuntimeChunkName(normalized);
-            }
-
-            if (!id.includes('node_modules')) {
-              return undefined;
-            }
-
-            const nodeModulePackageName = getNodeModulePackageName(id);
-
-            if (!nodeModulePackageName) {
-              return 'vendor-misc';
-            }
-
-            return getPackageChunkName(nodeModulePackageName);
+          strictExecutionOrder: true,
+          codeSplitting: {
+            includeDependenciesRecursively: false,
+            groups: [
+              {
+                name(id) {
+                  return getChunkGroupName(id) ?? null;
+                },
+              },
+            ],
           },
         },
       },

@@ -134,6 +134,10 @@ export default function FlowEditorPage() {
               <Select
                 value={status}
                 onValueChange={(value) => {
+                  if (!value) {
+                    return;
+                  }
+
                   setStatus(value as 'all' | FlowDocument['status']);
                   setPage(1);
                 }}

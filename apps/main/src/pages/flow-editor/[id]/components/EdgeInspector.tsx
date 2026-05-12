@@ -47,7 +47,11 @@ export function EdgeInspector({ selectedEdge, updateEdgeData }: EdgeInspectorPro
         <Label>{t('flowEditor.editor.edgeFields.style')}</Label>
         <Select
           value={selectedEdge.data?.lineStyle ?? 'solid'}
-          onValueChange={(value) =>
+          onValueChange={(value) => {
+            if (!value) {
+              return;
+            }
+
             updateEdgeData(selectedEdge.id, (edge) => ({
               ...edge,
               data: {
@@ -55,8 +59,8 @@ export function EdgeInspector({ selectedEdge, updateEdgeData }: EdgeInspectorPro
                 lineStyle: value as FlowEdgeData['lineStyle'],
               },
               style: getEdgeStyle(value as FlowEdgeData['lineStyle']),
-            }))
-          }
+            }));
+          }}
         >
           <SelectTrigger>
             <SelectValue />

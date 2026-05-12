@@ -67,7 +67,7 @@ export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
             size="icon-sm"
             variant="ghost"
             onMouseDown={stopToolbarEvent}
-            onClick={(event) => {
+            onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
               stopToolbarEvent(event);
               actions.openNodeEditor(id);
             }}
@@ -78,7 +78,7 @@ export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
             size="icon-sm"
             variant="ghost"
             onMouseDown={stopToolbarEvent}
-            onClick={(event) => {
+            onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
               stopToolbarEvent(event);
               actions.duplicateNode(id);
             }}
@@ -89,7 +89,7 @@ export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
             size="icon-sm"
             variant="ghost"
             onMouseDown={stopToolbarEvent}
-            onClick={(event) => {
+            onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
               stopToolbarEvent(event);
               actions.requestDelete({ type: 'node', id });
             }}

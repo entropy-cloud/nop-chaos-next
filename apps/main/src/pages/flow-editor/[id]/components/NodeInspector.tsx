@@ -54,6 +54,10 @@ export function NodeInspector({ selectedNode, nodes, updateNodeData }: NodeInspe
         <Select
           value={selectedNode.data.kind}
           onValueChange={(value) => {
+            if (!value) {
+              return;
+            }
+
             if (value === 'start') {
               const startNodes = nodes.filter(
                 (node) => node.data.kind === 'start' && node.id !== selectedNode.id,

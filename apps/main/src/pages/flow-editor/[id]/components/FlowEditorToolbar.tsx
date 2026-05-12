@@ -66,7 +66,7 @@ export function FlowEditorToolbar({
       </div>
       <div className="meta-text flex items-center gap-2 rounded-full border border-[hsl(var(--border))] px-3 py-1.5">
         <span>{t('flowEditor.editor.grid')}</span>
-        <Switch checked={gridEnabled} onChange={(e) => setGridEnabled(e.target.checked)} />
+        <Switch checked={gridEnabled} onCheckedChange={setGridEnabled} />
       </div>
       <Button variant="outline" disabled={!canUndo} onClick={onUndo}>
         <RotateCcw className="size-4" />

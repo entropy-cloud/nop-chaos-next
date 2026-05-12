@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   ArrowDownUp,
@@ -222,7 +223,14 @@ export default function MasterDetailPage() {
               }}
             />
           </div>
-          <Select value={status} onValueChange={(value) => setStatus(value as StatusFilter)}>
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              if (value) {
+                setStatus(value as StatusFilter);
+              }
+            }}
+          >
             <SelectTrigger className="h-9 w-[9rem] bg-white/55 dark:bg-slate-900/35">
               <SelectValue />
             </SelectTrigger>
@@ -304,7 +312,7 @@ export default function MasterDetailPage() {
                         pagedRows.length > 0 &&
                         pagedRows.every((row) => selectedIds.includes(row.id))
                       }
-                      onCheckedChange={(checked) =>
+                      onCheckedChange={(checked: boolean) =>
                         setSelectedIds(checked ? pagedRows.map((row) => row.id) : [])
                       }
                     />
@@ -392,7 +400,7 @@ export default function MasterDetailPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="end"
-                            onClick={(event) => event.stopPropagation()}
+                            onClick={(event: ReactMouseEvent<HTMLDivElement>) => event.stopPropagation()}
                           >
                             <DropdownMenuItem onSelect={() => openDetail(row)}>
                               {t('common.edit')}
@@ -416,6 +424,10 @@ export default function MasterDetailPage() {
               <Select
                 value={String(pageSize)}
                 onValueChange={(value) => {
+                  if (!value) {
+                    return;
+                  }
+
                   setPageSize(Number(value));
                   setPage(1);
                 }}

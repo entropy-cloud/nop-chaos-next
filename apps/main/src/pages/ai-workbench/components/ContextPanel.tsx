@@ -24,7 +24,7 @@ export function ContextPanel({
             <span>{t('aiWorkbench.contextAttachment')}</span>
             <Switch
               checked={contextEnabled}
-              onChange={(e) => setContextEnabled(e.target.checked)}
+              onCheckedChange={setContextEnabled}
             />
           </CardTitle>
         </CardHeader>

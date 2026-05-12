@@ -79,8 +79,7 @@ export default function PluginsManagementPage() {
                   </Badge>
                   <Switch
                     checked={plugin.enabled}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
+                    onCheckedChange={(checked) => {
                       const actionKey = checked ? 'common.enable' : 'common.disable';
                       if (
                         !window.confirm(
@@ -111,7 +110,7 @@ export default function PluginsManagementPage() {
         })}
       </div>
 
-      <Dialog open={Boolean(detailPlugin)} onOpenChange={(open) => !open && setDetailId(null)}>
+      <Dialog open={Boolean(detailPlugin)} onOpenChange={(open: boolean) => !open && setDetailId(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{detailPlugin?.name}</DialogTitle>
@@ -142,7 +141,7 @@ export default function PluginsManagementPage() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={Boolean(configPlugin)} onOpenChange={(open) => !open && setConfigId(null)}>
+      <Dialog open={Boolean(configPlugin)} onOpenChange={(open: boolean) => !open && setConfigId(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>

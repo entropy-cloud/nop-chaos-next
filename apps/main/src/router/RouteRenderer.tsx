@@ -9,16 +9,20 @@ import { usePluginStore } from '../store/pluginStore';
 import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry';
 
 const AmisRouteRenderer = lazy(async () => {
-  const { ensureAmisRuntime } = await import('../amis/init');
-  ensureAmisRuntime();
-  const module = await import('../amis/AmisRouteRenderer');
+  const [{ ensureAmisRuntime }, module] = await Promise.all([
+    import('../amis/init'),
+    import('../amis/AmisRouteRenderer'),
+  ]);
+  await ensureAmisRuntime();
   return { default: module.AmisRouteRenderer };
 });
 
 const FluxRouteRenderer = lazy(async () => {
-  const { ensureFluxRuntime } = await import('../flux/init');
+  const [{ ensureFluxRuntime }, module] = await Promise.all([
+    import('../flux/init'),
+    import('../flux/FluxRouteRenderer'),
+  ]);
   ensureFluxRuntime();
-  const module = await import('../flux/FluxRouteRenderer');
   return { default: module.FluxRouteRenderer };
 });
 

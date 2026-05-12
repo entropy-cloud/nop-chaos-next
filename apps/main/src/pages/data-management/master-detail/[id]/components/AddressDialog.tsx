@@ -97,8 +97,8 @@ export function AddressDialog({
               </span>
               <Switch
                 checked={editingAddress.isDefault}
-                onChange={(e) =>
-                  setEditingAddress({ ...editingAddress, isDefault: e.target.checked })
+                onCheckedChange={(checked) =>
+                  setEditingAddress({ ...editingAddress, isDefault: checked })
                 }
               />
             </div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -297,9 +298,9 @@ export function TabsBar({
             <Button
               variant="ghost"
               size="icon"
-              onClick={(event) => {
-                const rect = event.currentTarget.getBoundingClientRect();
-                setMenuState({
+               onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
+                 const rect = event.currentTarget.getBoundingClientRect();
+                 setMenuState({
                   path: activePath,
                   x: rect.right,
                   y: rect.bottom + 8,
