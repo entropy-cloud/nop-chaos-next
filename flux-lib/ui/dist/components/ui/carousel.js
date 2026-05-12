@@ -1,8 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { cn } from '../../lib/utils';
-import { Button } from './button';
+import { t } from '../../lib/i18n.js';
+import { cn } from '../../lib/utils.js';
+import { Button } from './button.js';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 const CarouselContext = React.createContext(null);
 function useCarousel() {
@@ -12,7 +13,7 @@ function useCarousel() {
     }
     return context;
 }
-function Carousel({ orientation = 'horizontal', opts, setApi, plugins, className, children, ...props }) {
+function Carousel({ orientation = 'horizontal', opts, setApi, plugins, label, className, children, ...props }) {
     const [carouselRef, api] = useEmblaCarousel({
         ...opts,
         axis: orientation === 'horizontal' ? 'x' : 'y',
@@ -56,16 +57,17 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, className
             api?.off('select', onSelect);
         };
     }, [api, onSelect]);
-    return (_jsx(CarouselContext.Provider, { value: {
-            carouselRef,
-            api: api,
-            opts,
-            orientation: orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
-            scrollPrev,
-            scrollNext,
-            canScrollPrev,
-            canScrollNext,
-        }, children: _jsx("div", { onKeyDownCapture: handleKeyDown, className: cn('relative', className), role: "region", "aria-roledescription": "carousel", "data-slot": "carousel", ...props, children: children }) }));
+    const contextValue = React.useMemo(() => ({
+        carouselRef,
+        api,
+        opts,
+        orientation: orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
+        scrollPrev,
+        scrollNext,
+        canScrollPrev,
+        canScrollNext,
+    }), [carouselRef, api, opts, orientation, scrollPrev, scrollNext, canScrollPrev, canScrollNext]);
+    return (_jsx(CarouselContext.Provider, { value: contextValue, children: _jsx("div", { onKeyDownCapture: handleKeyDown, className: cn('relative', className), role: "region", "aria-roledescription": "carousel", "aria-label": label ?? t('flux.carousel.label'), "data-slot": "carousel", ...props, children: children }) }));
 }
 function CarouselContent({ className, ...props }) {
     const { carouselRef, orientation } = useCarousel();
@@ -79,12 +81,12 @@ function CarouselPrevious({ className, variant = 'outline', size = 'icon-sm', ..
     const { orientation, scrollPrev, canScrollPrev } = useCarousel();
     return (_jsxs(Button, { "data-slot": "carousel-previous", variant: variant, size: size, className: cn('absolute touch-manipulation rounded-full', orientation === 'horizontal'
             ? 'top-1/2 -left-12 -translate-y-1/2'
-            : '-top-12 left-1/2 -translate-x-1/2 rotate-90', className), disabled: !canScrollPrev, onClick: scrollPrev, ...props, children: [_jsx(ChevronLeftIcon, {}), _jsx("span", { className: "sr-only", children: "Previous slide" })] }));
+            : '-top-12 left-1/2 -translate-x-1/2 rotate-90', className), disabled: !canScrollPrev, onClick: scrollPrev, ...props, children: [_jsx(ChevronLeftIcon, {}), _jsx("span", { className: "sr-only", children: t('flux.carousel.previous') })] }));
 }
 function CarouselNext({ className, variant = 'outline', size = 'icon-sm', ...props }) {
     const { orientation, scrollNext, canScrollNext } = useCarousel();
     return (_jsxs(Button, { "data-slot": "carousel-next", variant: variant, size: size, className: cn('absolute touch-manipulation rounded-full', orientation === 'horizontal'
             ? 'top-1/2 -right-12 -translate-y-1/2'
-            : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90', className), disabled: !canScrollNext, onClick: scrollNext, ...props, children: [_jsx(ChevronRightIcon, {}), _jsx("span", { className: "sr-only", children: "Next slide" })] }));
+            : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90', className), disabled: !canScrollNext, onClick: scrollNext, ...props, children: [_jsx(ChevronRightIcon, {}), _jsx("span", { className: "sr-only", children: t('flux.carousel.next') })] }));
 }
 export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, useCarousel, };

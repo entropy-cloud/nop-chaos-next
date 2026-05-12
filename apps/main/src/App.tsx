@@ -7,7 +7,6 @@ import { getDefaultThemeId } from './config/themeRegistry';
 import i18n from './config/i18n';
 import { useAuthBootstrap } from './hooks/useAuth';
 import { useMenuConfigQuery } from './hooks/useMenuConfig';
-import { useRuntimeCapabilities } from './hooks/useRuntimeCapabilities';
 import { registerBaseSharedModules } from './plugins/sharedModules';
 import { usePluginStore } from './store/pluginStore';
 import { useAuthStore } from './store/authStore';
@@ -24,8 +23,7 @@ export default function App() {
   const location = useLocation();
   const { isAuthenticated, bootstrapStatus } = useAuthBootstrap();
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending';
-  const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending);
-  const capabilities = useRuntimeCapabilities(menuQuery.data?.items ?? []);
+  useMenuConfigQuery(isAuthenticated && !bootstrapPending);
 
   useEffect(() => {
     applyThemeToDocument(themeConfig);
@@ -39,12 +37,6 @@ export default function App() {
     registerBaseSharedModules();
     didRegisterSharedModules = true;
   }, []);
-
-  useEffect(() => {
-    if (capabilities.needsAmis && didRegisterSharedModules) {
-      import('./amis/init').catch(() => {});
-    }
-  }, [capabilities.needsAmis]);
 
   const pluginThemeConfig = useMemo(
     () => ({

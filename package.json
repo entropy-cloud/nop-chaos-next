@@ -11,6 +11,8 @@
     "dev:mock": "pnpm --filter @nop-chaos/main dev:mock",
     "generate:extension": "node ./scripts/generate-extension.mjs",
     "build:analyze": "pnpm --filter @nop-chaos/main build:analyze",
+    "analyze:main:imports": "node scripts/analyze-main-package-graph.mjs --check",
+    "analyze:main:chunks": "node scripts/analyze-main-chunk-graph.mjs --check",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",

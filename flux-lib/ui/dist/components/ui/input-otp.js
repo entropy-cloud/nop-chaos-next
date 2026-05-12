@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import { OTPInput, OTPInputContext } from 'input-otp';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { MinusIcon } from 'lucide-react';
 function InputOTP({ className, containerClassName, ...props }) {
     return (_jsx(OTPInput, { "data-slot": "input-otp", containerClassName: cn('cn-input-otp flex items-center has-disabled:opacity-50', containerClassName), spellCheck: false, className: cn('disabled:cursor-not-allowed', className), ...props }));

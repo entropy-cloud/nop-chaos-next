@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 function AspectRatio({ ratio, className, ...props }) {
     return (_jsx("div", { "data-slot": "aspect-ratio", style: {
             '--ratio': ratio,

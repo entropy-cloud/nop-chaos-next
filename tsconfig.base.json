@@ -19,6 +19,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
+      "amis": ["../amis-react19/packages/amis/lib/index.d.ts"],
       "@nop-chaos/shared": ["packages/shared/src/index.ts"],
       "@nop-chaos/shared/*": ["packages/shared/src/*"],
       "@nop-chaos/amis-core": ["packages/amis-core/src/index.ts"],

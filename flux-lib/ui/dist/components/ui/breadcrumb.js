@@ -1,7 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
-import { cn } from '../../lib/utils';
+import { t } from '../../lib/i18n.js';
+import { cn } from '../../lib/utils.js';
 import { ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react';
 function Breadcrumb({ className, ...props }) {
     return (_jsx("nav", { "aria-label": "breadcrumb", "data-slot": "breadcrumb", className: cn(className), ...props }));
@@ -31,6 +32,6 @@ function BreadcrumbSeparator({ children, className, ...props }) {
     return (_jsx("li", { "data-slot": "breadcrumb-separator", role: "presentation", "aria-hidden": "true", className: cn('[&>svg]:size-3.5', className), ...props, children: children ?? _jsx(ChevronRightIcon, {}) }));
 }
 function BreadcrumbEllipsis({ className, ...props }) {
-    return (_jsxs("span", { "data-slot": "breadcrumb-ellipsis", role: "presentation", "aria-hidden": "true", className: cn('flex size-5 items-center justify-center [&>svg]:size-4', className), ...props, children: [_jsx(MoreHorizontalIcon, {}), _jsx("span", { className: "sr-only", children: "More" })] }));
+    return (_jsxs("span", { "data-slot": "breadcrumb-ellipsis", role: "presentation", "aria-hidden": "true", className: cn('flex size-5 items-center justify-center [&>svg]:size-4', className), ...props, children: [_jsx(MoreHorizontalIcon, {}), _jsx("span", { className: "sr-only", children: t('flux.breadcrumb.more') })] }));
 }
 export { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis, };

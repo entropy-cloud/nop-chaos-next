@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react/alert-dialog';
-import { cn } from '../../lib/utils';
-import { Button } from './button';
+import { cn } from '../../lib/utils.js';
+import { Button } from './button.js';
 function AlertDialog({ ...props }) {
     return _jsx(AlertDialogPrimitive.Root, { "data-slot": "alert-dialog", ...props });
 }

@@ -1,7 +1,6 @@
-'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { getTableRowClassName } from './table-row-class-name';
+import { cn } from '../../lib/utils.js';
+import { getTableRowClassName } from './table-row-class-name.js';
 function Table({ className, ...props }) {
     return (_jsx("div", { "data-slot": "table-container", className: "relative w-full overflow-x-auto", children: _jsx("table", { "data-slot": "table", className: cn('w-full caption-bottom text-sm', className), ...props }) }));
 }
@@ -14,16 +13,16 @@ function TableBody({ className, ...props }) {
 function TableFooter({ className, ...props }) {
     return (_jsx("tfoot", { "data-slot": "table-footer", className: cn('border-t bg-muted/50 font-medium [&>tr]:last:border-b-0', className), ...props }));
 }
-function TableRow({ className, ...props }) {
-    return _jsx("tr", { "data-slot": "table-row", className: cn(getTableRowClassName(), className), ...props });
+function TableRow({ className, variant = 'default', ...props }) {
+    return (_jsx("tr", { "data-slot": "table-row", className: cn(getTableRowClassName(variant), className), ...props }));
 }
 function TableHead({ className, ...props }) {
-    return (_jsx("th", { "data-slot": "table-head", className: cn('h-10 px-3 text-left align-middle text-xs font-semibold uppercase tracking-[0.08em] whitespace-nowrap text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]', className), ...props }));
+    return (_jsx("th", { "data-slot": "table-head", className: cn('h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0', className), ...props }));
 }
 function TableCell({ className, ...props }) {
-    return (_jsx("td", { "data-slot": "table-cell", className: cn('px-3 py-2.5 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]', className), ...props }));
+    return (_jsx("td", { "data-slot": "table-cell", className: cn('p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0', className), ...props }));
 }
 function TableCaption({ className, ...props }) {
     return (_jsx("caption", { "data-slot": "table-caption", className: cn('mt-4 text-sm text-muted-foreground', className), ...props }));
 }
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption, getTableRowClassName, };

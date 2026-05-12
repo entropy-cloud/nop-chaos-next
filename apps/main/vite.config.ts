@@ -5,9 +5,16 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
-import compressPlugin from 'vite-plugin-compression';
+import {
+  createMainPackageContext,
+  getMainExternalPackageAliases,
+  getPackageChunkName,
+} from '../../scripts/main-bundle-utils.mjs';
 
 const appRoot = dirname(fileURLToPath(import.meta.url));
+const repoRoot = resolve(appRoot, '../..');
+const mainPackageContext = createMainPackageContext(repoRoot);
+const mainExternalPackageAliases = getMainExternalPackageAliases(repoRoot);
 
 function includesAny(id: string, segments: string[]) {
   return segments.some((segment) => id.includes(segment));
@@ -38,41 +45,6 @@ function getNodeModulePackageName(id: string) {
   }
 
   return first;
-}
-
-function getWorkspacePackageName(id: string) {
-  const normalized = normalizeId(id);
-  const match = normalized.match(/\/packages\/([^/]+)\//);
-
-  if (!match) {
-    return undefined;
-  }
-
-  return `@nop-chaos/${match[1]}`;
-}
-
-function toChunkName(prefix: string, packageName: string) {
-  return `${prefix}-${packageName.replace(/^@/, '').replace(/\//g, '-').replace(/\./g, '-')}`;
-}
-
-function getWorkspaceChunkName(packageName: string) {
-  if (packageName === '@nop-chaos/ui') {
-    return 'pkg-ui';
-  }
-
-  if (packageName === '@nop-chaos/core') {
-    return 'pkg-core';
-  }
-
-  if (packageName === '@nop-chaos/shared') {
-    return 'pkg-shared';
-  }
-
-  if (packageName === '@nop-chaos/plugin-bridge') {
-    return 'pkg-plugin-bridge';
-  }
-
-  return toChunkName('pkg', packageName);
 }
 
 function getHostRuntimeChunkName(id: string) {
@@ -120,155 +92,14 @@ function getHostRuntimeChunkName(id: string) {
       '/src/store/',
       '/src/hooks/',
       '/src/components/auth/',
+      '/src/components/plugin/',
+      '/src/lib/',
     ])
   ) {
     return 'host-app-runtime';
   }
 
   return 'host-runtime-misc';
-}
-
-function getVendorChunkName(packageName: string) {
-  if (packageName === 'amis') {
-    return 'vendor-amis';
-  }
-
-  if (packageName === 'office-viewer') {
-    return 'vendor-office-viewer';
-  }
-
-  if (packageName === 'amis-ui') {
-    return 'vendor-amis-ui';
-  }
-
-  if (packageName === 'amis-formula') {
-    return 'vendor-amis-formula';
-  }
-
-  if (packageName === 'monaco-editor' || packageName.startsWith('@codingame/')) {
-    return 'vendor-monaco-editor';
-  }
-
-  if (
-    packageName === 'codemirror' ||
-    packageName.startsWith('@codemirror/') ||
-    packageName.startsWith('@lezer/')
-  ) {
-    return 'vendor-codemirror';
-  }
-
-  if (
-    packageName === 'echarts' ||
-    packageName === 'zrender' ||
-    packageName === 'echarts-wordcloud'
-  ) {
-    return 'vendor-echarts';
-  }
-
-  if (packageName === 'react' || packageName === 'react-dom' || packageName === 'scheduler') {
-    return 'vendor-react';
-  }
-
-  if (
-    packageName === 'react-router' ||
-    packageName === 'react-router-dom' ||
-    packageName === 'history'
-  ) {
-    return 'vendor-react-router';
-  }
-
-  if (packageName.startsWith('@tanstack/')) {
-    return 'vendor-tanstack-react-query';
-  }
-
-  if (
-    packageName === 'i18next' ||
-    packageName === 'react-i18next' ||
-    packageName === 'i18next-browser-languagedetector' ||
-    packageName === 'i18next-http-backend'
-  ) {
-    return 'vendor-i18next';
-  }
-
-  if (packageName === 'systemjs') {
-    return 'vendor-systemjs';
-  }
-
-  if (packageName === 'recharts') {
-    return 'vendor-recharts';
-  }
-
-  if (packageName === '@xyflow/react') {
-    return 'vendor-xyflow-react';
-  }
-
-  if (
-    packageName === 'markdown-it' ||
-    packageName === 'markdown-it-html5-media' ||
-    packageName === 'linkify-it' ||
-    packageName === 'mdurl' ||
-    packageName === 'uc.micro' ||
-    packageName === 'punycode'
-  ) {
-    return 'vendor-markdown-it';
-  }
-
-  if (packageName === 'jsbarcode') {
-    return 'vendor-jsbarcode';
-  }
-
-  if (
-    packageName === 'react-color' ||
-    packageName === 'reactcss' ||
-    packageName === 'tinycolor2' ||
-    packageName === 'material-colors'
-  ) {
-    return 'vendor-react-color';
-  }
-
-  if (packageName === 'tinymce') {
-    return 'vendor-tinymce';
-  }
-
-  if (packageName === 'froala-editor') {
-    return 'vendor-froala-editor';
-  }
-
-  if (
-    packageName === 'react-pdf' ||
-    packageName === 'make-cancellable-promise' ||
-    packageName === 'make-event-props'
-  ) {
-    return 'vendor-react-pdf';
-  }
-
-  if (packageName === 'react-cropper' || packageName === 'cropperjs') {
-    return 'vendor-react-cropper';
-  }
-
-  if (packageName === 'react-json-view') {
-    return 'vendor-react-json-view';
-  }
-
-  if (packageName === 'lodash' || packageName === 'lodash-es') {
-    return 'vendor-lodash';
-  }
-
-  if (
-    packageName === 'exceljs' ||
-    packageName === 'xlsx' ||
-    packageName === 'pdfjs-dist' ||
-    packageName === 'hls.js' ||
-    packageName === 'mpegts.js' ||
-    packageName === 'sonner' ||
-    packageName === 'lucide-react' ||
-    packageName === 'zustand' ||
-    packageName === '@fortawesome/fontawesome-free'
-  ) {
-    return toChunkName('vendor', packageName);
-  }
-
-  return 'vendor-misc';
 }
 
 export default defineConfig(({ mode }) => {
@@ -282,27 +113,22 @@ export default defineConfig(({ mode }) => {
   return {
     resolve: {
       tsconfigPaths: true,
-      alias: aliasedExtensionPath
-        ? [
-            {
-              find: '@demo-extension',
-              replacement: aliasedExtensionPath,
-            },
-          ]
-        : undefined,
+      alias: [
+        ...mainExternalPackageAliases,
+        ...(aliasedExtensionPath
+          ? [
+              {
+                find: '@demo-extension',
+                replacement: aliasedExtensionPath,
+              },
+            ]
+          : []),
+      ],
     },
     plugins: [
       tailwindcss(),
       react(),
       babel({ presets: [reactCompilerPreset({ target: '19' })] }),
-      compressPlugin({
-        ext: '.gz',
-        threshold: 1024 * 100,
-        filter(file) {
-          const normalized = normalizeId(file);
-          return normalized.endsWith('.js') && normalized.includes('/assets/');
-        },
-      }),
       analyze
         ? visualizer({
             filename: 'dist/stats.html',
@@ -348,7 +174,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
     },
     build: {
-      sourcemap: true,
+      sourcemap: false,
       cssMinify: 'esbuild',
       rollupOptions: {
         output: {
@@ -387,8 +213,10 @@ export default defineConfig(({ mode }) => {
               return 'page-ai-workbench';
             }
 
-            if (includesAny(normalized, ['/src/components/plugin/'])) {
-              return 'page-secondary';
+            const packageEntry = mainPackageContext.resolvePackageEntryByFile(id);
+
+            if (packageEntry && packageEntry.name !== '@nop-chaos/main') {
+              return getPackageChunkName(packageEntry.name);
             }
 
             if (
@@ -396,11 +224,14 @@ export default defineConfig(({ mode }) => {
                 '/src/main.tsx',
                 '/src/App.tsx',
                 '/src/amis/',
+                '/src/components/common/',
+                '/src/components/plugin/',
                 '/src/components/layout/',
                 '/src/components/auth/',
                 '/src/config/',
                 '/src/extensions/',
                 '/src/hooks/',
+                '/src/lib/',
                 '/src/plugins/',
                 '/src/router/AppRoutes',
                 '/src/router/RouteRenderer',
@@ -410,19 +241,6 @@ export default defineConfig(({ mode }) => {
               ])
             ) {
               return getHostRuntimeChunkName(normalized);
-            }
-
-            const workspacePackageName = getWorkspacePackageName(id);
-
-            if (workspacePackageName) {
-              if (
-                workspacePackageName === '@nop-chaos/amis-react' ||
-                workspacePackageName === '@nop-chaos/amis-core'
-              ) {
-                return 'vendor-amis-bridge';
-              }
-
-              return getWorkspaceChunkName(workspacePackageName);
             }
 
             if (!id.includes('node_modules')) {
@@ -435,7 +253,7 @@ export default defineConfig(({ mode }) => {
               return 'vendor-misc';
             }
 
-            return getVendorChunkName(nodeModulePackageName);
+            return getPackageChunkName(nodeModulePackageName);
           },
         },
       },

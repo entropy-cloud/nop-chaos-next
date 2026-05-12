@@ -1,12 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Progress as ProgressPrimitive } from '@base-ui/react/progress';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 function Progress({ className, children, value, ...props }) {
-    return (_jsxs(ProgressPrimitive.Root, { value: value, "data-slot": "progress", className: cn('relative h-2 w-full overflow-hidden rounded-full bg-primary/20', className), ...props, children: [children, _jsx(ProgressTrack, { children: _jsx(ProgressIndicator, {}) })] }));
+    return (_jsxs(ProgressPrimitive.Root, { value: value, "data-slot": "progress", className: cn('flex flex-wrap gap-3', className), ...props, children: [children, _jsx(ProgressTrack, { children: _jsx(ProgressIndicator, {}) })] }));
 }
 function ProgressTrack({ className, ...props }) {
-    return (_jsx(ProgressPrimitive.Track, { className: cn('relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-primary/20', className), "data-slot": "progress-track", ...props }));
+    return (_jsx(ProgressPrimitive.Track, { className: cn('relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-muted', className), "data-slot": "progress-track", ...props }));
 }
 function ProgressIndicator({ className, ...props }) {
     return (_jsx(ProgressPrimitive.Indicator, { "data-slot": "progress-indicator", className: cn('h-full bg-primary transition-all', className), ...props }));

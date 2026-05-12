@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../lib/utils';
-import { Button } from './button';
+import { t } from '../../lib/i18n.js';
+import { cn } from '../../lib/utils.js';
+import { Button } from './button.js';
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react';
 function Pagination({ className, ...props }) {
     return (_jsx("nav", { role: "navigation", "aria-label": "pagination", "data-slot": "pagination", className: cn('mx-auto flex w-full justify-center', className), ...props }));
@@ -21,6 +22,6 @@ function PaginationNext({ className, text = 'Next', ...props }) {
     return (_jsxs(PaginationLink, { "aria-label": "Go to next page", size: "default", className: cn('pr-1.5!', className), ...props, children: [_jsx("span", { className: "hidden sm:block", children: text }), _jsx(ChevronRightIcon, { "data-icon": "inline-end" })] }));
 }
 function PaginationEllipsis({ className, ...props }) {
-    return (_jsxs("span", { "aria-hidden": true, "data-slot": "pagination-ellipsis", className: cn("flex size-8 items-center justify-center [&_svg:not([class*='size-'])]:size-4", className), ...props, children: [_jsx(MoreHorizontalIcon, {}), _jsx("span", { className: "sr-only", children: "More pages" })] }));
+    return (_jsxs("span", { "aria-hidden": true, "data-slot": "pagination-ellipsis", className: cn("flex size-8 items-center justify-center [&_svg:not([class*='size-'])]:size-4", className), ...props, children: [_jsx(MoreHorizontalIcon, {}), _jsx("span", { className: "sr-only", children: t('flux.pagination.morePages') })] }));
 }
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, };

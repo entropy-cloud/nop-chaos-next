@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { ChevronRightIcon, CheckIcon } from 'lucide-react';
 function ContextMenu({ ...props }) {
     return _jsx(ContextMenuPrimitive.Root, { "data-slot": "context-menu", ...props });

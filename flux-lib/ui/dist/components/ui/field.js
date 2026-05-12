@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useMemo } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { Label } from './label';
-import { Separator } from './separator';
+import { cn } from '../../lib/utils.js';
+import { Label } from './label.js';
+import { Separator } from './separator.js';
 function FieldSet({ className, ...props }) {
     return (_jsx("fieldset", { "data-slot": "field-set", className: cn('flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3', className), ...props }));
 }
@@ -56,7 +56,10 @@ function FieldError({ className, children, errors, ...props }) {
         if (uniqueErrors?.length == 1) {
             return uniqueErrors[0]?.message;
         }
-        return (_jsx("ul", { className: "ml-4 flex list-disc flex-col gap-1", children: uniqueErrors.map((error, index) => error?.message && _jsx("li", { children: error.message }, index)) }));
+        return (_jsx("ul", { className: "ml-4 flex list-disc flex-col gap-1", children: uniqueErrors.map((error, index) => {
+                const errorKey = error?.message ?? `error-${index}`;
+                return error?.message ? _jsx("li", { children: error.message }, errorKey) : null;
+            }) }));
     }, [children, errors]);
     if (!content) {
         return null;

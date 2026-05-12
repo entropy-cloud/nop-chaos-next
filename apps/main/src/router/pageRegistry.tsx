@@ -8,7 +8,7 @@ import ServerErrorPage from '../pages/errors/500';
 
 type BuiltinPage = ExtensionBuiltinPageComponent;
 
-const AIWorkbenchPage = lazy(() => import('../pages/aiWorkbench'));
+const AIWorkbenchPage = lazy(() => import('../pages/ai-workbench'));
 const DashboardPage = lazy(() => import('../pages/dashboard'));
 const DataManagementPage = lazy(() => import('../pages/data-management'));
 const FlowEditorPage = lazy(() => import('../pages/flow-editor'));

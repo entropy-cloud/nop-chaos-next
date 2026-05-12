@@ -17,6 +17,8 @@ Feature and page design documents.
 | [extension-system.md](./design/extension-system.md)                         | Extension system             |
 | [backend-integration.md](./design/backend-integration.md)                   | Backend integration guide    |
 | [amis-theme-bridge.md](./design/amis-theme-bridge.md)                       | AMIS theme bridge            |
+| [amis-flux-rendering-engine-integration.md](./design/amis-flux-rendering-engine-integration.md) | AMIS/Flux rendering engine integration |
+| [main-bundle-dependency-strategy.md](./design/main-bundle-dependency-strategy.md) | Main bundle dependency strategy |
 | [styling-system-specification.md](./design/styling-system-specification.md) | Styling system specification |
 
 ## References (`references/`)
@@ -49,6 +51,7 @@ Bug fix records for non-trivial issues.
 | [00-bug-fix-note-writing-guide.md](./bugs/00-bug-fix-note-writing-guide.md) | Bug fix note writing guide |
 | [12-amis-helper-css-conflict.md](./bugs/12-amis-helper-css-conflict.md)     | AMIS CSS conflict handling |
 | [23-doc-code-consistency-audit.md](./bugs/23-doc-code-consistency-audit.md) | Doc-code consistency audit |
+| [24-main-bundle-chunk-boundary-regression.md](./bugs/24-main-bundle-chunk-boundary-regression.md) | Main bundle chunk boundary regression |
 
 ## Logs (`logs/`)
 
@@ -74,6 +77,7 @@ External reference material and design inputs.
 
 - **Pages and features**: Start with `design/` documents (01-06 range)
 - **Plugin development**: `examples/plugin-dev-guide.md` with `design/plugin-system.md` as reference
+- **Rendering engines**: `design/amis-flux-rendering-engine-integration.md`, `design/amis-theme-bridge.md`
 - **Backend integration**: `design/backend-integration.md`
 - **Extension system**: `design/extension-system.md`, `examples/extension-generator.md`
 - **Styling**: `references/style-interaction-guidelines.md`, `design/styling-system-specification.md`

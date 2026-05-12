@@ -2,8 +2,8 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { Separator } from './separator';
+import { cn } from '../../lib/utils.js';
+import { Separator } from './separator.js';
 function ItemGroup({ className, ...props }) {
     return (_jsx("div", { role: "list", "data-slot": "item-group", className: cn('group/item-group flex w-full flex-col gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2', className), ...props }));
 }

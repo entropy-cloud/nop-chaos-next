@@ -2,8 +2,8 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { Separator } from './separator';
+import { cn } from '../../lib/utils.js';
+import { Separator } from './separator.js';
 const buttonGroupVariants = cva("flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-lg [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1", {
     variants: {
         orientation: {
