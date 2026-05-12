@@ -1,30 +1,30 @@
-import { access, mkdir, readFile, writeFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const scriptDir = dirname(fileURLToPath(import.meta.url))
-const repoRoot = resolve(scriptDir, '..')
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const repoRoot = resolve(scriptDir, '..');
 
 function fail(message) {
-  throw new Error(message)
+  throw new Error(message);
 }
 
 function parsePort(value) {
-  const port = Number(value)
+  const port = Number(value);
 
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
-    fail(`Invalid port '${value}'. Expected an integer between 1 and 65535.`)
+    fail(`Invalid port '${value}'. Expected an integer between 1 and 65535.`);
   }
 
-  return port
+  return port;
 }
 
 async function pathExists(filePath) {
   try {
-    await access(filePath)
-    return true
+    await access(filePath);
+    return true;
   } catch {
-    return false
+    return false;
   }
 }
 
@@ -33,74 +33,78 @@ function toSlug(value) {
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+    .replace(/^-+|-+$/g, '');
 
   if (!slug) {
-    fail('Extension name must contain at least one letter or number')
+    fail('Extension name must contain at least one letter or number');
   }
 
-  return slug
+  return slug;
 }
 
 function toWords(slug) {
-  return slug.split('-').filter(Boolean)
+  return slug.split('-').filter(Boolean);
 }
 
 function capitalize(value) {
-  return value.charAt(0).toUpperCase() + value.slice(1)
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 function toPascalCase(slug) {
-  return toWords(slug).map(capitalize).join('')
+  return toWords(slug).map(capitalize).join('');
 }
 
 function toTitle(slug) {
-  return toWords(slug).map(capitalize).join(' ')
+  return toWords(slug).map(capitalize).join(' ');
 }
 
 function json(value) {
   return `${JSON.stringify(value, null, 2)}
-`
+`;
 }
 
 function lines(parts) {
   return `${parts.join('\n')}
-`
+`;
 }
 
 async function readJson(filePath) {
-  return JSON.parse(await readFile(filePath, 'utf8'))
+  return JSON.parse(await readFile(filePath, 'utf8'));
 }
 
 async function writeJson(filePath, value) {
-  await writeFile(filePath, json(value))
+  await writeFile(filePath, json(value));
 }
 
 function setScriptIfMissing(scripts, key, value) {
   if (!(key in scripts)) {
-    scripts[key] = value
+    scripts[key] = value;
   }
 }
 
 async function updateMainAppIntegration({ devPort, packageName, slug }) {
-  const rootPackagePath = resolve(repoRoot, 'package.json')
-  const mainEnvPath = resolve(repoRoot, `apps/main/.env.${slug}`)
+  const rootPackagePath = resolve(repoRoot, 'package.json');
+  const mainEnvPath = resolve(repoRoot, `apps/main/.env.${slug}`);
 
-  const rootPackage = await readJson(rootPackagePath)
+  const rootPackage = await readJson(rootPackagePath);
 
-  rootPackage.scripts ??= {}
+  rootPackage.scripts ??= {};
 
-  setScriptIfMissing(rootPackage.scripts, `dev:${slug}`, `pnpm --filter ${packageName} dev`)
-  setScriptIfMissing(rootPackage.scripts, `dev:main:${slug}`, `pnpm --filter @nop-chaos/main exec vite --mode ${slug}`)
+  setScriptIfMissing(rootPackage.scripts, `dev:${slug}`, `pnpm --filter ${packageName} dev`);
+  setScriptIfMissing(
+    rootPackage.scripts,
+    `dev:main:${slug}`,
+    `pnpm --filter @nop-chaos/main exec vite --mode ${slug}`,
+  );
 
-  await writeJson(rootPackagePath, rootPackage)
+  await writeJson(rootPackagePath, rootPackage);
   await writeFile(
     mainEnvPath,
     lines([
       'VITE_ENABLE_MOCK=true',
-      `VITE_DEMO_EXTENSION_ALIAS_PATH=../../examples/${slug}/src/index.ts`
-    ])
-  )
+      `VITE_DEMO_EXTENSION_ALIAS_PATH=../../examples/${slug}/src/index.ts`,
+    ]),
+  );
 }
 
 function createPackageJson(packageName) {
@@ -115,7 +119,7 @@ function createPackageJson(packageName) {
       preview: 'vite preview',
       typecheck: 'tsc -p tsconfig.json --noEmit',
       lint: 'eslint "src/**/*.{ts,tsx}"',
-      test: 'vitest run --passWithNoTests'
+      test: 'vitest run --passWithNoTests',
     },
     devDependencies: {
       '@nop-chaos/plugin-bridge': 'workspace:*',
@@ -128,15 +132,15 @@ function createPackageJson(packageName) {
       'react-dom': '^18.3.1',
       tailwindcss: '^4.2.1',
       typescript: '^5.9.3',
-      vite: '^8.0.0'
+      vite: '^8.0.0',
     },
     peerDependencies: {
       '@nop-chaos/plugin-bridge': 'workspace:*',
       '@nop-chaos/shared': 'workspace:*',
       '@nop-chaos/ui': 'workspace:*',
-      react: '^18.3.1'
-    }
-  })
+      react: '^18.3.1',
+    },
+  });
 }
 
 function createTsconfig() {
@@ -147,8 +151,8 @@ function createTsconfig() {
     '    "types": ["vite/client"]',
     '  },',
     '  "include": ["src", "vite.config.ts", "tailwind.config.ts"]',
-    '}'
-  ])
+    '}',
+  ]);
 }
 
 function createTailwindConfig() {
@@ -161,8 +165,8 @@ function createTailwindConfig() {
     "  content: ['./src/**/*.{ts,tsx}']",
     '}',
     '',
-    'export default config'
-  ])
+    'export default config',
+  ]);
 }
 
 function createIndexHtml(title) {
@@ -178,11 +182,20 @@ function createIndexHtml(title) {
     "    <div id='root'></div>",
     "    <script type='module' src='/src/standalone/main.tsx'></script>",
     '  </body>',
-    '</html>'
-  ])
+    '</html>',
+  ]);
 }
 
-function createIndexTs({ extensionId, componentId, menuId, menuPath, themeId, title, pageFileName, styleIdPrefix }) {
+function createIndexTs({
+  extensionId,
+  componentId,
+  menuId,
+  menuPath,
+  themeId,
+  title,
+  pageFileName,
+  styleIdPrefix,
+}) {
   return lines([
     "import type { ShellExtension } from '@nop-chaos/shared'",
     `import { ${pageFileName} } from './pages/${pageFileName}'`,
@@ -292,8 +305,8 @@ function createIndexTs({ extensionId, componentId, menuId, menuPath, themeId, ti
     '  ]',
     '}',
     '',
-    'export default extension'
-  ])
+    'export default extension',
+  ]);
 }
 
 function createStandaloneMain(pageFileName, title) {
@@ -326,8 +339,8 @@ function createStandaloneMain(pageFileName, title) {
     '  )',
     '}',
     '',
-    "ReactDOM.createRoot(document.getElementById('root')!).render(<StandaloneApp />)"
-  ])
+    "ReactDOM.createRoot(document.getElementById('root')!).render(<StandaloneApp />)",
+  ]);
 }
 
 function createPageComponent(pageFileName, title, componentId, menuPath) {
@@ -407,8 +420,8 @@ function createPageComponent(pageFileName, title, componentId, menuPath) {
     '      </div>',
     '    </div>',
     '  )',
-    '}'
-  ])
+    '}',
+  ]);
 }
 
 function createViteConfig(devPort) {
@@ -431,8 +444,8 @@ function createViteConfig(devPort) {
     `    port: ${devPort},`,
     '    strictPort: false',
     '  }',
-    '})'
-  ])
+    '})',
+  ]);
 }
 
 function createReadme({ packageName, rootScriptName, title }) {
@@ -466,8 +479,8 @@ function createReadme({ packageName, rootScriptName, title }) {
     '- extension metadata in `src/index.ts`',
     '- builtin pages in `src/pages/*`',
     '- standalone preview in `src/standalone/main.tsx`',
-    '- styles in `src/theme.css`, `src/shell.css`, and `src/component-page.css`'
-  ])
+    '- styles in `src/theme.css`, `src/shell.css`, and `src/component-page.css`',
+  ]);
 }
 
 function createThemeCss(themeId) {
@@ -478,8 +491,8 @@ function createThemeCss(themeId) {
     '',
     'body {',
     `  background-image: radial-gradient(circle at top right, hsl(var(--${themeId}-accent) / 0.18), transparent 40%);`,
-    '}'
-  ])
+    '}',
+  ]);
 }
 
 function createShellCss() {
@@ -488,8 +501,8 @@ function createShellCss() {
     '  background:',
     '    linear-gradient(135deg, hsl(var(--background) / 0.94), hsl(var(--background) / 0.72)),',
     '    radial-gradient(circle at top right, hsl(var(--primary) / 0.18), transparent 38%);',
-    '}'
-  ])
+    '}',
+  ]);
 }
 
 function createComponentPageCss() {
@@ -500,8 +513,8 @@ function createComponentPageCss() {
     '  background: hsl(var(--background) / 0.72);',
     '  padding: 1.25rem;',
     '  backdrop-filter: blur(18px);',
-    '}'
-  ])
+    '}',
+  ]);
 }
 
 function createFiles(config) {
@@ -513,43 +526,46 @@ function createFiles(config) {
     ['README.md', createReadme(config)],
     ['index.html', createIndexHtml(config.title)],
     ['src/index.ts', createIndexTs(config)],
-    [`src/pages/${config.pageFileName}.tsx`, createPageComponent(config.pageFileName, config.title, config.componentId, config.menuPath)],
+    [
+      `src/pages/${config.pageFileName}.tsx`,
+      createPageComponent(config.pageFileName, config.title, config.componentId, config.menuPath),
+    ],
     ['src/standalone/main.tsx', createStandaloneMain(config.pageFileName, config.title)],
     ['src/theme.css', createThemeCss(config.themeId)],
     ['src/shell.css', createShellCss()],
-    ['src/component-page.css', createComponentPageCss()]
-  ]
+    ['src/component-page.css', createComponentPageCss()],
+  ];
 }
 
 async function main() {
-  const rawName = process.argv[2]
-  const rawPort = process.argv[3]
+  const rawName = process.argv[2];
+  const rawPort = process.argv[3];
 
   if (!rawName) {
-    fail('Usage: pnpm generate:extension <name> [port]')
+    fail('Usage: pnpm generate:extension <name> [port]');
   }
 
-  const slug = toSlug(rawName)
-  const devPort = rawPort ? parsePort(rawPort) : 4180
-  const title = toTitle(slug)
-  const pascalName = toPascalCase(slug)
-  const pageFileName = `${pascalName}Page`
-  const extensionId = `example-${slug}`
-  const packageName = `@nop-chaos/example-${slug}`
-  const componentId = `${slug}-page`
-  const menuId = `${slug}-menu`
-  const menuPath = `/examples/${slug}`
-  const themeId = slug
-  const styleIdPrefix = `${slug}-extension`
-  const rootScriptName = slug
-  const targetDir = resolve(repoRoot, 'examples', slug)
+  const slug = toSlug(rawName);
+  const devPort = rawPort ? parsePort(rawPort) : 4180;
+  const title = toTitle(slug);
+  const pascalName = toPascalCase(slug);
+  const pageFileName = `${pascalName}Page`;
+  const extensionId = `example-${slug}`;
+  const packageName = `@nop-chaos/example-${slug}`;
+  const componentId = `${slug}-page`;
+  const menuId = `${slug}-menu`;
+  const menuPath = `/examples/${slug}`;
+  const themeId = slug;
+  const styleIdPrefix = `${slug}-extension`;
+  const rootScriptName = slug;
+  const targetDir = resolve(repoRoot, 'examples', slug);
 
   if (await pathExists(targetDir)) {
-    fail(`Extension target already exists: examples/${slug}`)
+    fail(`Extension target already exists: examples/${slug}`);
   }
 
   if (await pathExists(resolve(repoRoot, `apps/main/.env.${slug}`))) {
-    fail(`Main app env file already exists: apps/main/.env.${slug}`)
+    fail(`Main app env file already exists: apps/main/.env.${slug}`);
   }
 
   const files = createFiles({
@@ -563,28 +579,28 @@ async function main() {
     rootScriptName,
     styleIdPrefix,
     themeId,
-    title
-  })
+    title,
+  });
 
-  await mkdir(targetDir)
+  await mkdir(targetDir);
 
   for (const [relativePath, content] of files) {
-    const filePath = resolve(targetDir, relativePath)
-    await mkdir(dirname(filePath), { recursive: true })
-    await writeFile(filePath, content)
+    const filePath = resolve(targetDir, relativePath);
+    await mkdir(dirname(filePath), { recursive: true });
+    await writeFile(filePath, content);
   }
 
-  await updateMainAppIntegration({ devPort, packageName, slug })
+  await updateMainAppIntegration({ devPort, packageName, slug });
 
-  console.log(`Created extension package at examples/${slug}`)
-  console.log(`Package name: ${packageName}`)
-  console.log(`Dev port: ${devPort}`)
-  console.log(`Standalone dev: pnpm dev:${slug}`)
-  console.log(`Main app dev: pnpm dev:main:${slug}`)
+  console.log(`Created extension package at examples/${slug}`);
+  console.log(`Package name: ${packageName}`);
+  console.log(`Dev port: ${devPort}`);
+  console.log(`Standalone dev: pnpm dev:${slug}`);
+  console.log(`Main app dev: pnpm dev:main:${slug}`);
 }
 
 main().catch((error) => {
-  const message = error instanceof Error ? error.message : 'Unknown generator error'
-  console.error(message)
-  process.exitCode = 1
-})
+  const message = error instanceof Error ? error.message : 'Unknown generator error';
+  console.error(message);
+  process.exitCode = 1;
+});

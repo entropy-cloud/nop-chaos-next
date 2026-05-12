@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui'
-import { useTranslation } from 'react-i18next'
-import { PageHeader } from '../../components/common/PageHeader'
-import { PluginMountPanel } from '../../components/plugin/PluginMountPanel'
+import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
+import { useTranslation } from 'react-i18next';
+import { PageHeader } from '../../components/common/page-header';
+import { PluginMountPanel } from '../../components/plugin/plugin-mount-panel';
 
 export default function PluginsHomePage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">
@@ -24,5 +24,5 @@ export default function PluginsHomePage() {
         <PluginMountPanel />
       </div>
     </div>
-  )
+  );
 }

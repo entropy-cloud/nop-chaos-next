@@ -1,2 +1,2 @@
-export * from './config'
-export * from './tokenManager'
+export * from './config';
+export * from './token-manager';

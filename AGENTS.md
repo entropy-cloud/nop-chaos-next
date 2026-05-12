@@ -51,20 +51,24 @@
 ## Single-Test Commands
 
 ### Vitest: one file
+
 - `pnpm --filter @nop-chaos/main exec vitest run src/pages/ai-workbench/index.test.ts`
 - `pnpm --filter @nop-chaos/main exec vitest run src/pages/flow-editor/[id]/index.test.ts`
 - `pnpm --filter @nop-chaos/plugin-bridge exec vitest run src/index.test.ts`
 
 ### Vitest: one test name
+
 - `pnpm --filter @nop-chaos/main exec vitest run -t "parses unordered lists, ordered lists, and code blocks"`
 - `pnpm --filter @nop-chaos/plugin-bridge exec vitest run -t "stores and returns the active bridge"`
 
 ### Playwright: one spec
+
 - `pnpm test:e2e -- tests/e2e/login.spec.ts`
 - `pnpm test:e2e -- tests/e2e/flow-editor.spec.ts`
 - `pnpm test:e2e:headed -- tests/e2e/plugin-demo.spec.ts`
 
 ### Playwright: one test name
+
 - `pnpm test:e2e -- --grep "can start from login and enter dashboard"`
 - `pnpm test:e2e -- --grep "flow editor supports grouped palette, canvas editing, and minimap"`
 
@@ -79,19 +83,43 @@
 
 ## Tooling
 
-- ESLint flat config: `eslint.config.js`.
-- TypeScript base config: `tsconfig.base.json`.
-- Tailwind base config: `tailwind.config.ts`.
-- App scanning config: `apps/main/tailwind.config.ts`.
-- There is no repo Prettier config file.
-- Do not assume import sorting is enforced automatically.
+- Turborepo: `turbo.json`（构建缓存与依赖拓扑编排）。
+- ESLint flat config: `eslint.config.js`。
+- Prettier config: `.prettierrc`。
+- EditorConfig: `.editorconfig`。
+- TypeScript base config: `tsconfig.base.json`。
+- Tailwind base config: `tailwind.config.ts`。
+- App scanning config: `apps/main/tailwind.config.ts`。
+- Dead code detection: `knip.json`。
+- Duplicate code detection: `.jscpd.json`。
+- Vitest workspace: `vitest.workspace.ts` + `vitest.shared.ts`。
+
+## Commands
+
+```bash
+pnpm install                # install deps
+pnpm dev                    # starts dev server (turbo)
+pnpm dev:main               # starts main app only
+pnpm dev:plugin             # starts plugin demo only
+pnpm build                  # turbo run build (all packages)
+pnpm typecheck              # turbo run typecheck (all packages)
+pnpm test                   # turbo run test (all packages)
+pnpm lint                   # turbo run lint + src-artifacts check
+pnpm format                 # prettier --write .
+pnpm format:check           # prettier --check .
+pnpm audit:knip             # dead code analysis
+pnpm check:duplicates       # duplicate code analysis
+pnpm test:e2e               # playwright test
+pnpm test:e2e:headed        # playwright test --headed
+```
+
+Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run tests when relevant.
 
 ## Formatting
 
-- Follow the existing handwritten style.
-- Use 2-space indentation, single quotes, and no semicolons.
+- Prettier handles formatting automatically via `.prettierrc` and pre-commit hook.
+- Config: 2-space indentation, single quotes, trailing commas, print width 100, semicolons, LF line endings.
 - Keep JSX compact and readable.
-- Avoid broad formatting churn.
 - Preserve generator-style formatting in `packages/ui` unless the touched code truly needs changes.
 
 ## Imports
@@ -144,7 +172,7 @@
 ## Routing, Permissions, Plugins
 
 - Current menu model supports `pageType: 'builtin' | 'plugin'`.
-- Builtin pages resolve through `apps/main/src/router/pageRegistry.tsx`.
+- Builtin pages resolve through `apps/main/src/router/page-registry.tsx`.
 - Plugin pages resolve through `PluginSlot` and runtime remote loading.
 - Permission checks happen both in menu filtering and route rendering; preserve both layers.
 - Avoid bundling duplicate React/runtime dependencies into remote plugins.
@@ -157,6 +185,26 @@
 - Reuse primitives from `@nop-chaos/ui` before adding local one-off components.
 - Use `cn()` for class composition.
 - Preserve the repo's glass/theme-driven visual language instead of flattening it into generic defaults.
+
+## Docs Maintenance
+
+**Docs live in `docs/`** and are the primary source of project knowledge. Always consult `docs/index.md` first for navigation. See `docs/logs/index.md` for log writing conventions and `docs/index.md` for directory roles.
+
+### Mandatory Updates
+
+After completing any significant **CODE CHANGE**, you MUST:
+
+1. **Update the daily dev log** at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/index.md` for format).
+2. **Update relevant design docs** when changing:
+   - Package boundaries or ownership → `docs/design/`
+   - Plugin system or bridge logic → `docs/design/plugin-system.md`
+   - Routing, permissions, or shell behavior → relevant doc under `docs/design/`
+
+### Plan Authoring And Execution
+
+When creating, revising, executing, or auditing a file under `docs/plans/`, you MUST read `docs/plans/00-plan-authoring-and-execution-guide.md` first. Plans are execution docs with explicit status, scope, exit criteria, and validation checklists. Re-audit the live repo before claiming completion.
+
+---
 
 ## Testing Expectations
 
@@ -172,3 +220,25 @@
 - Avoid broad refactors unless requested.
 - Check whether new logic belongs in `shared`, `core`, `ui`, or an app before adding files.
 - When adding runtime capabilities, think about host app, plugin demo, and bridge compatibility together.
+
+## Verification Checklist
+
+Before finishing any task:
+
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm build` passes
+- [ ] `pnpm lint` passes (if applicable)
+- [ ] `pnpm test` passes (if applicable)
+- [ ] Formatting handled by Husky pre-commit hook (no manual `format:check` needed)
+- [ ] `docs/logs/` updated (for significant changes)
+- [ ] Relevant architecture docs updated (if design changed)
+
+## Bug Fix Test Coverage Rule
+
+After fixing any non-trivial bug, you MUST:
+
+1. **Evaluate whether regression tests are needed.** If the bug had a non-obvious root cause, could be reintroduced by refactoring, or crossed package boundaries, add a test.
+2. **Add tests that verify the correct result**, not just the absence of an error.
+3. **Prefer adding new regression tests instead of rewriting or weakening existing ones.** Preserve prior coverage whenever possible.
+4. **Record complex bugs** in `docs/bugs/` following `docs/bugs/00-bug-fix-note-writing-guide.md`.
+5. **Re-run the full test suite** after adding new tests to confirm nothing is broken.

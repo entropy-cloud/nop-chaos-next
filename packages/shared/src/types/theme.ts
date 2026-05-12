@@ -1,15 +1,15 @@
-export type DisplayMode = 'light' | 'dark' | 'system'
-export type ThemeId = 'classic' | 'glass' | (string & {})
+export type DisplayMode = 'light' | 'dark' | 'system';
+export type ThemeId = 'classic' | 'glass' | (string & {});
 
 export function normalizeThemeId(themeId?: string): ThemeId {
   if (!themeId || themeId === 'modern') {
-    return 'classic'
+    return 'classic';
   }
 
-  return themeId as ThemeId
+  return themeId as ThemeId;
 }
 
 export interface ThemeConfig {
-  themeId: ThemeId
-  displayMode: DisplayMode
+  themeId: ThemeId;
+  displayMode: DisplayMode;
 }

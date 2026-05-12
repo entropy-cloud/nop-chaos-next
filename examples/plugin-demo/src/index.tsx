@@ -1,21 +1,26 @@
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
-import { Bell, Blocks, Compass, Orbit, UserRound } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@nop-chaos/ui'
-import { usePluginManifest, usePluginNotifications, usePluginThemeConfig, usePluginUser } from '@nop-chaos/plugin-bridge'
-import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { Bell, Blocks, Compass, Orbit, UserRound } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, Button } from '@nop-chaos/ui';
+import {
+  usePluginManifest,
+  usePluginNotifications,
+  usePluginThemeConfig,
+  usePluginUser,
+} from '@nop-chaos/plugin-bridge';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function PluginDemo() {
-  const { t, i18n } = useTranslation()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const notifications = usePluginNotifications()
-  const user = usePluginUser()
-  const theme = usePluginThemeConfig()
-  const manifest = usePluginManifest('plugins-demo')
-  const currentPath = location.pathname
-  const title = String(manifest?.settings?.reportTitle ?? t('plugins.defaultReportTitle'))
-  const threshold = Number(manifest?.settings?.highlightThreshold ?? 85)
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const notifications = usePluginNotifications();
+  const user = usePluginUser();
+  const theme = usePluginThemeConfig();
+  const manifest = usePluginManifest('plugins-demo');
+  const currentPath = location.pathname;
+  const title = String(manifest?.settings?.reportTitle ?? t('plugins.defaultReportTitle'));
+  const threshold = Number(manifest?.settings?.highlightThreshold ?? 85);
   const reportData = [
     { label: t('plugins.weekdays.mon'), reports: 16 },
     { label: t('plugins.weekdays.tue'), reports: 21 },
@@ -23,14 +28,30 @@ export default function PluginDemo() {
     { label: t('plugins.weekdays.thu'), reports: 25 },
     { label: t('plugins.weekdays.fri'), reports: 28 },
     { label: t('plugins.weekdays.sat'), reports: 24 },
-    { label: t('plugins.weekdays.sun'), reports: 30 }
-  ]
+    { label: t('plugins.weekdays.sun'), reports: 30 },
+  ];
   const kpiCards = [
-    { label: t('plugins.title'), value: `${theme.themeId} / ${theme.displayMode}`, icon: <Orbit className="size-4" /> },
-    { label: t('plugins.currentUser'), value: user?.nickname ?? user?.username ?? t('common.guest'), icon: <UserRound className="size-4" /> },
-    { label: t('plugins.currentLanguage'), value: i18n.language, icon: <Blocks className="size-4" /> },
-    { label: t('plugins.highlightThreshold'), value: `${threshold}%`, icon: <Blocks className="size-4" /> }
-  ]
+    {
+      label: t('plugins.title'),
+      value: `${theme.themeId} / ${theme.displayMode}`,
+      icon: <Orbit className="size-4" />,
+    },
+    {
+      label: t('plugins.currentUser'),
+      value: user?.nickname ?? user?.username ?? t('common.guest'),
+      icon: <UserRound className="size-4" />,
+    },
+    {
+      label: t('plugins.currentLanguage'),
+      value: i18n.language,
+      icon: <Blocks className="size-4" />,
+    },
+    {
+      label: t('plugins.highlightThreshold'),
+      value: `${threshold}%`,
+      icon: <Blocks className="size-4" />,
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -39,14 +60,18 @@ export default function PluginDemo() {
           <div>
             <div className="eyebrow-text tracking-[0.22em]">{t('plugins.remotePluginEyebrow')}</div>
             <CardTitle className="mt-3">{title}</CardTitle>
-            <div className="mt-2 text-sm text-muted-foreground">
-              {t('plugins.placeholder')}
-            </div>
+            <div className="mt-2 text-sm text-muted-foreground">{t('plugins.placeholder')}</div>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button
               variant="secondary"
-              onClick={() => notifications.success(t('plugins.hostNotification', { user: user?.nickname ?? user?.username ?? t('common.guest') }))}
+              onClick={() =>
+                notifications.success(
+                  t('plugins.hostNotification', {
+                    user: user?.nickname ?? user?.username ?? t('common.guest'),
+                  }),
+                )
+              }
             >
               <Bell className="size-4" />
               {t('plugins.notifyHost')}
@@ -59,7 +84,10 @@ export default function PluginDemo() {
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-3">
           {kpiCards.map((item) => (
-            <div key={item.label} className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-5 text-sm backdrop-blur-xl dark:bg-slate-900/35">
+            <div
+              key={item.label}
+              className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-5 text-sm backdrop-blur-xl dark:bg-slate-900/35"
+            >
               <div className="flex items-center justify-between gap-3 text-muted-foreground">
                 <span>{item.label}</span>
                 {item.icon}
@@ -93,10 +121,16 @@ export default function PluginDemo() {
                   contentStyle={{
                     borderRadius: 18,
                     border: '1px solid hsl(var(--border))',
-                    background: 'var(--card-surface)'
+                    background: 'var(--card-surface)',
                   }}
                 />
-                <Area type="monotone" dataKey="reports" stroke="hsl(var(--primary))" fill="url(#pluginReports)" strokeWidth={3} />
+                <Area
+                  type="monotone"
+                  dataKey="reports"
+                  stroke="hsl(var(--primary))"
+                  fill="url(#pluginReports)"
+                  strokeWidth={3}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -104,9 +138,12 @@ export default function PluginDemo() {
             {[
               { label: t('plugins.weekdays.mon'), value: t('plugins.reportCount', { count: 16 }) },
               { label: t('plugins.weekdays.thu'), value: t('plugins.reportCount', { count: 25 }) },
-              { label: t('plugins.weekdays.sun'), value: t('plugins.reportCount', { count: 30 }) }
+              { label: t('plugins.weekdays.sun'), value: t('plugins.reportCount', { count: 30 }) },
             ].map((item) => (
-              <div key={item.label} className="rounded-md border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/35">
+              <div
+                key={item.label}
+                className="rounded-md border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/35"
+              >
                 <div className="eyebrow-text text-muted-foreground">{item.label}</div>
                 <div className="mt-2 text-lg font-semibold text-foreground">{item.value}</div>
               </div>
@@ -129,11 +166,13 @@ export default function PluginDemo() {
               user: user?.username ?? t('common.guestLowercase'),
               language: i18n.language,
               path: currentPath,
-              status: manifest?.enabled ? t('common.enabledLowercase') : t('common.disabledLowercase')
+              status: manifest?.enabled
+                ? t('common.enabledLowercase')
+                : t('common.disabledLowercase'),
             })}
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

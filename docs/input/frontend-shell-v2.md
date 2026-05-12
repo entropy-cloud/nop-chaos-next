@@ -69,24 +69,24 @@
 
 #### 1.2.1 文件命名规范（遵循 React 社区主流规范）
 
-| 文件类型 | 命名规范 | 示例 |
-|---------|---------|------|
-| **React 组件** | PascalCase | `Dashboard.tsx`, `UserProfile.tsx`, `MainLayout.tsx` |
-| **Hooks** | camelCase，以 `use` 开头 | `useAuth.ts`, `useTheme.ts`, `useTabManagement.ts` |
-| **Store 文件（Zustand）** | camelCase，以 `Store` 结尾 | `authStore.ts`, `themeStore.ts`, `tabStore.ts` |
-| **工具函数** | camelCase | `formatDate.ts`, `apiClient.ts`, `themeCss.ts` |
-| **类型定义** | camelCase | `user.ts`, `menu.ts`, `theme.ts` |
-| **常量/配置** | camelCase 或 UPPER_SNAKE_CASE | `apiConfig.ts`, `routes.ts`, `API_ENDPOINTS.ts` |
-| **样式文件** | 与组件同名 | `Button.css`, `Sidebar.module.css` |
-| **测试文件** | 组件名 + `.test` 或 `.spec` | `Button.test.tsx`, `utils.spec.ts` |
+| 文件类型                  | 命名规范                      | 示例                                                 |
+| ------------------------- | ----------------------------- | ---------------------------------------------------- |
+| **React 组件**            | PascalCase                    | `Dashboard.tsx`, `UserProfile.tsx`, `MainLayout.tsx` |
+| **Hooks**                 | camelCase，以 `use` 开头      | `useAuth.ts`, `useTheme.ts`, `useTabManagement.ts`   |
+| **Store 文件（Zustand）** | camelCase，以 `Store` 结尾    | `authStore.ts`, `themeStore.ts`, `tabStore.ts`       |
+| **工具函数**              | camelCase                     | `formatDate.ts`, `apiClient.ts`, `themeCss.ts`       |
+| **类型定义**              | camelCase                     | `user.ts`, `menu.ts`, `theme.ts`                     |
+| **常量/配置**             | camelCase 或 UPPER_SNAKE_CASE | `apiConfig.ts`, `routes.ts`, `API_ENDPOINTS.ts`      |
+| **样式文件**              | 与组件同名                    | `Button.css`, `Sidebar.module.css`                   |
+| **测试文件**              | 组件名 + `.test` 或 `.spec`   | `Button.test.tsx`, `utils.spec.ts`                   |
 
 #### 1.2.2 目录命名规范
 
-| 目录类型 | 命名规范 | 示例 |
-|---------|---------|------|
-| **功能模块目录** | kebab-case | `dashboard/`, `user-profile/`, `flow-editor/` |
-| **组件目录** | PascalCase | `Button/`, `Sidebar/`, `TabsBar/` |
-| **工具目录** | camelCase 或 kebab-case | `utils/`, `helpers/`, `api-clients/` |
+| 目录类型         | 命名规范                | 示例                                          |
+| ---------------- | ----------------------- | --------------------------------------------- |
+| **功能模块目录** | kebab-case              | `dashboard/`, `user-profile/`, `flow-editor/` |
+| **组件目录**     | PascalCase              | `Button/`, `Sidebar/`, `TabsBar/`             |
+| **工具目录**     | camelCase 或 kebab-case | `utils/`, `helpers/`, `api-clients/`          |
 
 #### 1.2.3 页面与目录映射规则
 
@@ -204,7 +204,7 @@ export const menuConfig: MenuItem[] = [
     path: '/dashboard',
     icon: 'LayoutDashboard',
     pageType: 'builtin',
-    componentId: 'dashboard',  // 映射到 pages/dashboard/index.tsx
+    componentId: 'dashboard', // 映射到 pages/dashboard/index.tsx
   },
   {
     id: 'ai-workbench',
@@ -212,7 +212,7 @@ export const menuConfig: MenuItem[] = [
     path: '/ai-workbench',
     icon: 'Bot',
     pageType: 'builtin',
-    componentId: 'ai-workbench',  // 映射到 pages/ai-workbench/index.tsx
+    componentId: 'ai-workbench', // 映射到 pages/ai-workbench/index.tsx
   },
   {
     id: 'flow-editor',
@@ -220,7 +220,7 @@ export const menuConfig: MenuItem[] = [
     path: '/flow-editor',
     icon: 'GitBranch',
     pageType: 'builtin',
-    componentId: 'flow-editor',  // 映射到 pages/flow-editor/index.tsx
+    componentId: 'flow-editor', // 映射到 pages/flow-editor/index.tsx
     children: [
       {
         id: 'flow-editor-list',
@@ -228,16 +228,16 @@ export const menuConfig: MenuItem[] = [
         path: '/flow-editor',
         icon: 'List',
         pageType: 'builtin',
-        componentId: 'flow-editor',  // 映射到 pages/flow-editor/index.tsx
+        componentId: 'flow-editor', // 映射到 pages/flow-editor/index.tsx
       },
       {
         id: 'flow-editor-edit',
         titleKey: 'menu.flowEditorEdit',
-        path: '/flow-editor/:id',  // 动态路由
+        path: '/flow-editor/:id', // 动态路由
         icon: 'Edit',
         pageType: 'builtin',
-        componentId: 'flow-editor-edit',  // 映射到 pages/flow-editor/[id]/index.tsx
-        hideInMenu: true,  // 不在菜单中显示
+        componentId: 'flow-editor-edit', // 映射到 pages/flow-editor/[id]/index.tsx
+        hideInMenu: true, // 不在菜单中显示
       },
     ],
   },
@@ -255,14 +255,14 @@ export const menuConfig: MenuItem[] = [
         path: '/data-management/master-detail',
         icon: 'Table',
         pageType: 'builtin',
-        componentId: 'master-detail',  // 映射到 pages/data-management/master-detail/index.tsx
+        componentId: 'master-detail', // 映射到 pages/data-management/master-detail/index.tsx
       },
       {
         id: 'master-detail-id',
         titleKey: 'menu.masterDetailDetail',
         path: '/data-management/master-detail/:id',
         pageType: 'builtin',
-        componentId: 'master-detail-detail',  // 映射到 pages/data-management/master-detail/[id]/index.tsx
+        componentId: 'master-detail-detail', // 映射到 pages/data-management/master-detail/[id]/index.tsx
         hideInMenu: true,
       },
     ],
@@ -279,7 +279,7 @@ export const menuConfig: MenuItem[] = [
 // 方式1：直接在 index.tsx 中定义并导出
 export function Dashboard() {
   const { t } = useTranslation();
-  
+
   return (
     <div className="p-6">
       <h1>{t('dashboard.title')}</h1>
@@ -308,6 +308,7 @@ export { TrendChart } from './TrendChart';
 ```
 
 **推荐做法**：
+
 - 简单页面：直接在 `index.tsx` 中定义组件
 - 复杂页面：在 `index.tsx` 中导入并导出主组件，将复杂逻辑拆分到子组件中
 
@@ -320,20 +321,20 @@ export { TrendChart } from './TrendChart';
 - React Query: `"@tanstack/react-query": "^5.90.21"`
 - React Router DOM: `"react-router-dom": "^7.13.1"`
 - i18n:
-    - `"i18next": "^25.8.14"`
-    - `"react-i18next": "^16.5.6"`
-    - `"i18next-browser-languagedetector": "^8.2.1"`
-    - `"i18next-http-backend": "^3.0.2"`
+  - `"i18next": "^25.8.14"`
+  - `"react-i18next": "^16.5.6"`
+  - `"i18next-browser-languagedetector": "^8.2.1"`
+  - `"i18next-http-backend": "^3.0.2"`
 - UI & 动画:
-    - Radix UI 系列（dialog, dropdown-menu, select, tabs, tooltip, slot, checkbox, label, scroll-area, separator, collapsible 等）
-    - `"lucide-react": "^0.577.0"`
-    - `"class-variance-authority": "^0.7.1"`
-    - `"tailwind-merge": "^3.5.0"`
-    - `"tailwindcss": "^3.4.19"`
-    - `"tailwindcss-animate": "^1.0.7"`
+  - Radix UI 系列（dialog, dropdown-menu, select, tabs, tooltip, slot, checkbox, label, scroll-area, separator, collapsible 等）
+  - `"lucide-react": "^0.577.0"`
+  - `"class-variance-authority": "^0.7.1"`
+  - `"tailwind-merge": "^3.5.0"`
+  - `"tailwindcss": "^3.4.19"`
+  - `"tailwindcss-animate": "^1.0.7"`
 - 可视化与流程:
-    - `"@xyflow/react": "^12.10.1"` (流程图/节点编辑)
-    - `"recharts": "^2.12.0"` (图表)
+  - `"@xyflow/react": "^12.10.1"` (流程图/节点编辑)
+  - `"recharts": "^2.12.0"` (图表)
 - 通知: `"sonner": "^2.0.7"`
 - AI 相关: `"ai": "^4.0.0"`, `"@ai-sdk/openai": "^1.0.0"` (只要求接口占位)
 - **插件动态加载**: `"systemjs": "^6.15.1"` (用于插件系统)
@@ -461,59 +462,191 @@ packages/ui/
 // packages/ui/src/index.ts
 
 // 表单输入组件
-export { Button, buttonVariants } from "./components/ui/button"
-export { Input } from "./components/ui/input"
-export { Textarea } from "./components/ui/textarea"
-export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select"
-export { Checkbox } from "./components/ui/checkbox"
-export { Label } from "./components/ui/label"
-export { Switch } from "./components/ui/switch"
-export { Slider } from "./components/ui/slider"
-export { Calendar } from "./components/ui/calendar"
-export { Popover, PopoverContent, PopoverTrigger } from "./components/ui/popover"
+export { Button, buttonVariants } from './components/ui/button';
+export { Input } from './components/ui/input';
+export { Textarea } from './components/ui/textarea';
+export {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './components/ui/select';
+export { Checkbox } from './components/ui/checkbox';
+export { Label } from './components/ui/label';
+export { Switch } from './components/ui/switch';
+export { Slider } from './components/ui/slider';
+export { Calendar } from './components/ui/calendar';
+export { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover';
 
 // 布局组件
-export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/ui/card"
-export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./components/ui/accordion"
-export { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./components/ui/collapsible"
-export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs"
-export { ScrollArea, ScrollBar } from "./components/ui/scroll-area"
-export { Separator } from "./components/ui/separator"
-export { AspectRatio } from "./components/ui/aspect-ratio"
-export { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarProvider } from "./components/ui/sidebar"
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './components/ui/card';
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from './components/ui/accordion';
+export { Collapsible, CollapsibleContent, CollapsibleTrigger } from './components/ui/collapsible';
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
+export { ScrollArea, ScrollBar } from './components/ui/scroll-area';
+export { Separator } from './components/ui/separator';
+export { AspectRatio } from './components/ui/aspect-ratio';
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarProvider,
+} from './components/ui/sidebar';
 
 // 反馈组件
-export { Alert, AlertDescription, AlertTitle } from "./components/ui/alert"
-export { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/dialog"
-export { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./components/ui/sheet"
-export { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "./components/ui/drawer"
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./components/ui/tooltip"
-export { toast, Toaster } from "./components/ui/sonner"
-export { Skeleton } from "./components/ui/skeleton"
-export { Progress } from "./components/ui/progress"
-export { Spinner } from "./components/ui/spinner"
+export { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
+export {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './components/ui/dialog';
+export {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from './components/ui/sheet';
+export {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from './components/ui/drawer';
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './components/ui/tooltip';
+export { toast, Toaster } from './components/ui/sonner';
+export { Skeleton } from './components/ui/skeleton';
+export { Progress } from './components/ui/progress';
+export { Spinner } from './components/ui/spinner';
 
 // 导航组件
-export { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "./components/ui/breadcrumb"
-export { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "./components/ui/navigation-menu"
-export { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from "./components/ui/menubar"
-export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./components/ui/pagination"
-export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "./components/ui/command"
+export {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from './components/ui/breadcrumb';
+export {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from './components/ui/navigation-menu';
+export {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from './components/ui/menubar';
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from './components/ui/pagination';
+export {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from './components/ui/command';
 
 // 数据展示组件
-export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./components/ui/table"
-export { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar"
-export { Badge } from "./components/ui/badge"
-export { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./components/ui/carousel"
+export {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './components/ui/table';
+export { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
+export { Badge } from './components/ui/badge';
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from './components/ui/carousel';
 
 // 覆盖层组件
-export { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./components/ui/alert-dialog"
-export { HoverCard, HoverCardContent, HoverCardTrigger } from "./components/ui/hover-card"
-export { ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuItemSelect, ContextMenuSeparator, ContextMenuShortcut, ContextMenuTrigger } from "./components/ui/context-menu"
-export { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "./components/ui/dropdown-menu"
+export {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './components/ui/alert-dialog';
+export { HoverCard, HoverCardContent, HoverCardTrigger } from './components/ui/hover-card';
+export {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuItemSelect,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuTrigger,
+} from './components/ui/context-menu';
+export {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from './components/ui/dropdown-menu';
 
 // 工具函数
-export { cn } from "./lib/utils"
+export { cn } from './lib/utils';
 ```
 
 #### AI 生成规范
@@ -523,13 +656,14 @@ export { cn } from "./lib/utils"
 1. **禁止生成已安装组件的源码**：Button、Dialog、Select 等组件已通过 CLI 安装到 `@nop-chaos/ui`
 
 2. **集中导入（推荐）**：从 `@nop-chaos/ui` 统一导入
+
    ```tsx
    // ✅ 推荐：集中导入（简洁，符合社区习惯）
-   import { Button, Card, CardContent, Dialog, DialogContent, Input } from "@nop-chaos/ui"
-   
+   import { Button, Card, CardContent, Dialog, DialogContent, Input } from '@nop-chaos/ui';
+
    // ❌ 不推荐：子路径导入（冗长，不必要）
-   import { Button } from "@nop-chaos/ui/components/button"
-   import { Card, CardContent } from "@nop-chaos/ui/components/card"
+   import { Button } from '@nop-chaos/ui/components/button';
+   import { Card, CardContent } from '@nop-chaos/ui/components/card';
    ```
 
 3. **安装新组件后更新导出**：使用 `shadcn add xxx` 安装新组件后，需要在 `packages/ui/src/index.ts` 中添加对应的导出
@@ -548,14 +682,14 @@ export { cn } from "./lib/utils"
 
 #### 常用组件列表（CLI 安装后可用）
 
-| 类别 | 组件 |
-|------|------|
+| 类别         | 组件                                                                                                     |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
 | **表单输入** | Button, Input, Textarea, Select, Checkbox, Radio Group, Switch, Slider, Calendar, Date Picker, Input OTP |
-| **布局** | Card, Accordion, Collapsible, Tabs, Scroll Area, Separator, Aspect Ratio, Sidebar |
-| **反馈** | Alert, Dialog, Sheet, Drawer, Popover, Tooltip, Toast, Sonner, Spinner, Skeleton, Progress |
-| **导航** | Breadcrumb, Navigation Menu, Menubar, Pagination, Command, Combobox |
-| **数据展示** | Table, Data Table, Avatar, Badge, Carousel, Chart, Empty |
-| **覆盖层** | Alert Dialog, Hover Card, Context Menu, Dropdown Menu |
+| **布局**     | Card, Accordion, Collapsible, Tabs, Scroll Area, Separator, Aspect Ratio, Sidebar                        |
+| **反馈**     | Alert, Dialog, Sheet, Drawer, Popover, Tooltip, Toast, Sonner, Spinner, Skeleton, Progress               |
+| **导航**     | Breadcrumb, Navigation Menu, Menubar, Pagination, Command, Combobox                                      |
+| **数据展示** | Table, Data Table, Avatar, Badge, Carousel, Chart, Empty                                                 |
+| **覆盖层**   | Alert Dialog, Hover Card, Context Menu, Dropdown Menu                                                    |
 
 开发依赖（简要）:
 
@@ -591,6 +725,7 @@ export { cn } from "./lib/utils"
 - 运行时：主应用在入口处通过 SystemJS 将自身已加载的库实例注册到全局模块注册表，插件通过 SystemJS 加载时自动使用主应用的实例。
 
 **正确注册方法**（主应用初始化时执行）：
+
 ```ts
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -599,14 +734,14 @@ import * as Zustand from 'zustand';
 // ... 导入其他共享库
 
 // 1. 定义一个虚拟的基础路径（如 "/nop/"），用于存放共享模块
-const SHARED_MODULE_BASE = './nop/';  // 相对路径，也可以是绝对路径
+const SHARED_MODULE_BASE = './nop/'; // 相对路径，也可以是绝对路径
 
 // 2. 为每个共享库创建一个虚拟的 URL 并注册实例
 const sharedModules = {
-  'react': React,
+  react: React,
   'react-dom': ReactDOM,
   'react-router-dom': ReactRouterDOM,
-  'zustand': Zustand,
+  zustand: Zustand,
   // ... 其他库
 };
 
@@ -651,16 +786,18 @@ for (const [name, lib] of Object.entries(sharedModules)) {
    - Sonner 通知需要跟随主题
 
 4. **主题数据结构**（根据原型页面填充具体值）：
+
    ```typescript
    export type DisplayMode = 'light' | 'dark' | 'system';
-   
+
    export interface ThemeConfig {
-     themeId: string;         // 当前主题 ID
+     themeId: string; // 当前主题 ID
      displayMode: DisplayMode; // 显示模式
    }
    ```
 
 **具体主题配色方案应根据原型页面的视觉设计确定，包括：**
+
 - 主色调（Primary）
 - 次要色（Secondary）
 - 背景色（Background）
@@ -674,6 +811,7 @@ for (const [name, lib] of Object.entries(sharedModules)) {
 为保障框架的可复用性，以下数据结构在整个产品系列中必须保持一致。所有类型定义应放在 `packages/shared/src/types/` 下。
 
 #### 1.6.1 用户对象（User）
+
 ```typescript
 // packages/shared/src/types/user.ts
 export interface User {
@@ -682,11 +820,12 @@ export interface User {
   nickname?: string;
   avatar?: string;
   email?: string;
-  roles: string[];           // 用户拥有的角色列表
+  roles: string[]; // 用户拥有的角色列表
 }
 ```
 
 #### 1.6.2 认证状态（AuthState）
+
 ```typescript
 export interface AuthState {
   user: User | null;
@@ -696,30 +835,32 @@ export interface AuthState {
 ```
 
 #### 1.6.3 菜单项（MenuItem）
+
 ```typescript
 // packages/shared/src/types/menu.ts
 export interface MenuItem {
-  id: string;                // 唯一标识
-  title?: string;            // 直接文本（后备，当 titleKey 不存在时使用）
-  titleKey?: string;         // i18n 键（优先使用，通过 t(titleKey) 获取显示文本）
-  path: string;              // 路由路径，如 '/dashboard'
-  icon?: string;             // 图标名称（Lucide React 图标名）
-  children?: MenuItem[];     // 子菜单
-  badge?: string;            // 徽标（如 'new'）
-  pageType: 'builtin' | 'plugin';  // 页面类型
-  componentId?: string;      // 当 pageType='builtin' 时，对应内置组件标识
-  pluginUrl?: string;        // 当 pageType='plugin' 时，插件模块 URL
-  roles?: string[];          // 允许访问的角色列表（若未提供或空数组，表示登录即可见）
-  sort?: number;             // 排序权重
-  hideInMenu?: boolean;      // 是否在侧边栏菜单中隐藏（但仍可被路由匹配）
+  id: string; // 唯一标识
+  title?: string; // 直接文本（后备，当 titleKey 不存在时使用）
+  titleKey?: string; // i18n 键（优先使用，通过 t(titleKey) 获取显示文本）
+  path: string; // 路由路径，如 '/dashboard'
+  icon?: string; // 图标名称（Lucide React 图标名）
+  children?: MenuItem[]; // 子菜单
+  badge?: string; // 徽标（如 'new'）
+  pageType: 'builtin' | 'plugin'; // 页面类型
+  componentId?: string; // 当 pageType='builtin' 时，对应内置组件标识
+  pluginUrl?: string; // 当 pageType='plugin' 时，插件模块 URL
+  roles?: string[]; // 允许访问的角色列表（若未提供或空数组，表示登录即可见）
+  sort?: number; // 排序权重
+  hideInMenu?: boolean; // 是否在侧边栏菜单中隐藏（但仍可被路由匹配）
 }
 ```
 
 #### 1.6.4 菜单配置响应格式
+
 ```typescript
 export interface MenuResponse {
   items: MenuItem[];
-  home?: string;             // 首页路径，默认为 '/dashboard'
+  home?: string; // 首页路径，默认为 '/dashboard'
 }
 ```
 
@@ -734,6 +875,7 @@ export interface MenuResponse {
 - **主题切换抽象**：提供 `ThemeProvider` 的包装。
 
 **边界明确**：
+
 - `core` 包**不引用** `apps/main` 或任何业务模块中的任何内容。
 - 所有业务数据通过依赖注入（props 或 context）传入。
 - `core` 包依赖于 `packages/shared` 中定义的标准类型。
@@ -965,15 +1107,11 @@ export interface MenuResponse {
 // 仪表盘占位组件
 export function DashboardPlaceholder() {
   const { t } = useTranslation();
-  
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">
-        {t('dashboard.title')}
-      </h1>
-      <div className="text-muted-foreground">
-        {t('dashboard.placeholder')}
-      </div>
+      <h1 className="text-2xl font-bold mb-4">{t('dashboard.title')}</h1>
+      <div className="text-muted-foreground">{t('dashboard.placeholder')}</div>
       {/* 可以放置一些基本的示例内容 */}
     </div>
   );
@@ -985,6 +1123,7 @@ export function DashboardPlaceholder() {
 在实现框架时，应按以下优先级实现组件：
 
 **P0（必须实现）**：
+
 - MainLayout
 - Sidebar（含菜单）
 - TopBar
@@ -996,12 +1135,14 @@ export function DashboardPlaceholder() {
 - 动态路由系统
 
 **P1（重要但可简化）**：
+
 - 用户菜单
 - 通知组件
 - 确认对话框
 - **UI 组件库**：通过 `shadcn add --all` 安装到 `@nop-chaos/ui`，AI 禁止手写这些组件
 
 **P2（占位即可）**：
+
 - 仪表盘页面
 - AI 工作台页面
 - 流程编辑页面
@@ -1021,6 +1162,7 @@ export function DashboardPlaceholder() {
 4. **插件列表**（基础结构）
 
 Mock 数据需要：
+
 - 足够丰富以展示各种场景
 - 支持通过环境变量控制是否启用
 - 生产构建默认不启用

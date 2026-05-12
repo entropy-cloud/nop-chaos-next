@@ -1,21 +1,21 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import * as React from "react";
-import useEmblaCarousel from "embla-carousel-react";
+import * as React from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '../../lib/utils';
 import { Button } from './button';
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 const CarouselContext = React.createContext(null);
 function useCarousel() {
     const context = React.useContext(CarouselContext);
     if (!context) {
-        throw new Error("useCarousel must be used within a <Carousel />");
+        throw new Error('useCarousel must be used within a <Carousel />');
     }
     return context;
 }
-function Carousel({ orientation = "horizontal", opts, setApi, plugins, className, children, ...props }) {
+function Carousel({ orientation = 'horizontal', opts, setApi, plugins, className, children, ...props }) {
     const [carouselRef, api] = useEmblaCarousel({
         ...opts,
-        axis: orientation === "horizontal" ? "x" : "y",
+        axis: orientation === 'horizontal' ? 'x' : 'y',
     }, plugins);
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
@@ -32,11 +32,11 @@ function Carousel({ orientation = "horizontal", opts, setApi, plugins, className
         api?.scrollNext();
     }, [api]);
     const handleKeyDown = React.useCallback((event) => {
-        if (event.key === "ArrowLeft") {
+        if (event.key === 'ArrowLeft') {
             event.preventDefault();
             scrollPrev();
         }
-        else if (event.key === "ArrowRight") {
+        else if (event.key === 'ArrowRight') {
             event.preventDefault();
             scrollNext();
         }
@@ -50,41 +50,41 @@ function Carousel({ orientation = "horizontal", opts, setApi, plugins, className
         if (!api)
             return;
         onSelect(api);
-        api.on("reInit", onSelect);
-        api.on("select", onSelect);
+        api.on('reInit', onSelect);
+        api.on('select', onSelect);
         return () => {
-            api?.off("select", onSelect);
+            api?.off('select', onSelect);
         };
     }, [api, onSelect]);
     return (_jsx(CarouselContext.Provider, { value: {
             carouselRef,
             api: api,
             opts,
-            orientation: orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+            orientation: orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
             scrollPrev,
             scrollNext,
             canScrollPrev,
             canScrollNext,
-        }, children: _jsx("div", { onKeyDownCapture: handleKeyDown, className: cn("relative", className), role: "region", "aria-roledescription": "carousel", "data-slot": "carousel", ...props, children: children }) }));
+        }, children: _jsx("div", { onKeyDownCapture: handleKeyDown, className: cn('relative', className), role: "region", "aria-roledescription": "carousel", "data-slot": "carousel", ...props, children: children }) }));
 }
 function CarouselContent({ className, ...props }) {
     const { carouselRef, orientation } = useCarousel();
-    return (_jsx("div", { ref: carouselRef, className: "overflow-hidden", "data-slot": "carousel-content", children: _jsx("div", { className: cn("flex", orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col", className), ...props }) }));
+    return (_jsx("div", { ref: carouselRef, className: "overflow-hidden", "data-slot": "carousel-content", children: _jsx("div", { className: cn('flex', orientation === 'horizontal' ? '-ml-4' : '-mt-4 flex-col', className), ...props }) }));
 }
 function CarouselItem({ className, ...props }) {
     const { orientation } = useCarousel();
-    return (_jsx("div", { role: "group", "aria-roledescription": "slide", "data-slot": "carousel-item", className: cn("min-w-0 shrink-0 grow-0 basis-full", orientation === "horizontal" ? "pl-4" : "pt-4", className), ...props }));
+    return (_jsx("div", { role: "group", "aria-roledescription": "slide", "data-slot": "carousel-item", className: cn('min-w-0 shrink-0 grow-0 basis-full', orientation === 'horizontal' ? 'pl-4' : 'pt-4', className), ...props }));
 }
-function CarouselPrevious({ className, variant = "outline", size = "icon-sm", ...props }) {
+function CarouselPrevious({ className, variant = 'outline', size = 'icon-sm', ...props }) {
     const { orientation, scrollPrev, canScrollPrev } = useCarousel();
-    return (_jsxs(Button, { "data-slot": "carousel-previous", variant: variant, size: size, className: cn("absolute touch-manipulation rounded-full", orientation === "horizontal"
-            ? "top-1/2 -left-12 -translate-y-1/2"
-            : "-top-12 left-1/2 -translate-x-1/2 rotate-90", className), disabled: !canScrollPrev, onClick: scrollPrev, ...props, children: [_jsx(ChevronLeftIcon, {}), _jsx("span", { className: "sr-only", children: "Previous slide" })] }));
+    return (_jsxs(Button, { "data-slot": "carousel-previous", variant: variant, size: size, className: cn('absolute touch-manipulation rounded-full', orientation === 'horizontal'
+            ? 'top-1/2 -left-12 -translate-y-1/2'
+            : '-top-12 left-1/2 -translate-x-1/2 rotate-90', className), disabled: !canScrollPrev, onClick: scrollPrev, ...props, children: [_jsx(ChevronLeftIcon, {}), _jsx("span", { className: "sr-only", children: "Previous slide" })] }));
 }
-function CarouselNext({ className, variant = "outline", size = "icon-sm", ...props }) {
+function CarouselNext({ className, variant = 'outline', size = 'icon-sm', ...props }) {
     const { orientation, scrollNext, canScrollNext } = useCarousel();
-    return (_jsxs(Button, { "data-slot": "carousel-next", variant: variant, size: size, className: cn("absolute touch-manipulation rounded-full", orientation === "horizontal"
-            ? "top-1/2 -right-12 -translate-y-1/2"
-            : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90", className), disabled: !canScrollNext, onClick: scrollNext, ...props, children: [_jsx(ChevronRightIcon, {}), _jsx("span", { className: "sr-only", children: "Next slide" })] }));
+    return (_jsxs(Button, { "data-slot": "carousel-next", variant: variant, size: size, className: cn('absolute touch-manipulation rounded-full', orientation === 'horizontal'
+            ? 'top-1/2 -right-12 -translate-y-1/2'
+            : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90', className), disabled: !canScrollNext, onClick: scrollNext, ...props, children: [_jsx(ChevronRightIcon, {}), _jsx("span", { className: "sr-only", children: "Next slide" })] }));
 }
 export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, useCarousel, };

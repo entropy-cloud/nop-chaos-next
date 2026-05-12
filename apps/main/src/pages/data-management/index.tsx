@@ -1,9 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui'
-import { useTranslation } from 'react-i18next'
-import { PageHeader } from '../../components/common/PageHeader'
+import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
+import { useTranslation } from 'react-i18next';
+import { PageHeader } from '../../components/common/page-header';
 
 export default function DataManagementPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">
@@ -18,5 +18,5 @@ export default function DataManagementPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

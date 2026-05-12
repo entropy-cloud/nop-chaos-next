@@ -1,225 +1,283 @@
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { defineConfig, loadEnv } from 'vite'
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
-import babel from '@rolldown/plugin-babel'
-import tailwindcss from '@tailwindcss/vite'
-import { visualizer } from 'rollup-plugin-visualizer'
-import compressPlugin from 'vite-plugin-compression'
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig, loadEnv } from 'vite';
+import react, { reactCompilerPreset } from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
+import tailwindcss from '@tailwindcss/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
+import compressPlugin from 'vite-plugin-compression';
 
-const appRoot = dirname(fileURLToPath(import.meta.url))
+const appRoot = dirname(fileURLToPath(import.meta.url));
 
 function includesAny(id: string, segments: string[]) {
-  return segments.some((segment) => id.includes(segment))
+  return segments.some((segment) => id.includes(segment));
 }
 
 function normalizeId(id: string) {
-  return id.replace(/\\/g, '/')
+  return id.replace(/\\/g, '/');
 }
 
 function getNodeModulePackageName(id: string) {
-  const normalized = normalizeId(id)
-  const marker = '/node_modules/'
-  const index = normalized.lastIndexOf(marker)
+  const normalized = normalizeId(id);
+  const marker = '/node_modules/';
+  const index = normalized.lastIndexOf(marker);
 
   if (index < 0) {
-    return undefined
+    return undefined;
   }
 
-  const remainder = normalized.slice(index + marker.length)
-  const [first, second] = remainder.split('/')
+  const remainder = normalized.slice(index + marker.length);
+  const [first, second] = remainder.split('/');
 
   if (!first) {
-    return undefined
+    return undefined;
   }
 
   if (first.startsWith('@') && second) {
-    return `${first}/${second}`
+    return `${first}/${second}`;
   }
 
-  return first
+  return first;
 }
 
 function getWorkspacePackageName(id: string) {
-  const normalized = normalizeId(id)
-  const match = normalized.match(/\/packages\/([^/]+)\//)
+  const normalized = normalizeId(id);
+  const match = normalized.match(/\/packages\/([^/]+)\//);
 
   if (!match) {
-    return undefined
+    return undefined;
   }
 
-  return `@nop-chaos/${match[1]}`
+  return `@nop-chaos/${match[1]}`;
 }
 
 function toChunkName(prefix: string, packageName: string) {
-  return `${prefix}-${packageName.replace(/^@/, '').replace(/\//g, '-').replace(/\./g, '-')}`
+  return `${prefix}-${packageName.replace(/^@/, '').replace(/\//g, '-').replace(/\./g, '-')}`;
 }
 
 function getWorkspaceChunkName(packageName: string) {
   if (packageName === '@nop-chaos/ui') {
-    return 'pkg-ui'
+    return 'pkg-ui';
   }
 
   if (packageName === '@nop-chaos/core') {
-    return 'pkg-core'
+    return 'pkg-core';
   }
 
   if (packageName === '@nop-chaos/shared') {
-    return 'pkg-shared'
+    return 'pkg-shared';
   }
 
   if (packageName === '@nop-chaos/plugin-bridge') {
-    return 'pkg-plugin-bridge'
+    return 'pkg-plugin-bridge';
   }
 
-  return toChunkName('pkg', packageName)
+  return toChunkName('pkg', packageName);
 }
 
 function getHostRuntimeChunkName(id: string) {
-  const normalized = normalizeId(id)
+  const normalized = normalizeId(id);
 
   if (includesAny(normalized, ['/src/main.tsx', '/src/App.tsx'])) {
-    return 'host-entry'
+    return 'host-entry';
   }
 
   if (includesAny(normalized, ['/src/amis/init.ts', '/src/amis/xuiComponents.ts'])) {
-    return 'host-amis-bootstrap'
+    return 'host-amis-bootstrap';
   }
 
   if (includesAny(normalized, ['/src/amis/adapter.ts', '/src/amis/providers.ts'])) {
-    return 'host-amis-adapter'
+    return 'host-amis-adapter';
   }
 
   if (includesAny(normalized, ['/src/amis/testSchema.ts'])) {
-    return 'host-amis-preview'
+    return 'host-amis-preview';
   }
 
   if (includesAny(normalized, ['/src/amis/AmisRouteRenderer'])) {
-    return 'host-amis-route-runtime'
+    return 'host-amis-route-runtime';
   }
 
-  if (includesAny(normalized, ['/src/router/AppRoutes', '/src/router/RouteRenderer', '/src/router/pageRegistry', '/src/plugins/', '/src/components/layout/'])) {
-    return 'host-shell-runtime'
+  if (
+    includesAny(normalized, [
+      '/src/router/AppRoutes',
+      '/src/router/RouteRenderer',
+      '/src/router/pageRegistry',
+      '/src/plugins/',
+      '/src/components/layout/',
+    ])
+  ) {
+    return 'host-shell-runtime';
   }
 
   if (includesAny(normalized, ['/src/config/', '/src/extensions/'])) {
-    return 'host-config-runtime'
+    return 'host-config-runtime';
   }
 
-  if (includesAny(normalized, ['/src/services/', '/src/store/', '/src/hooks/', '/src/components/auth/'])) {
-    return 'host-app-runtime'
+  if (
+    includesAny(normalized, [
+      '/src/services/',
+      '/src/store/',
+      '/src/hooks/',
+      '/src/components/auth/',
+    ])
+  ) {
+    return 'host-app-runtime';
   }
 
-  return 'host-runtime-misc'
+  return 'host-runtime-misc';
 }
 
 function getVendorChunkName(packageName: string) {
   if (packageName === 'amis') {
-    return 'vendor-amis'
+    return 'vendor-amis';
   }
 
   if (packageName === 'office-viewer') {
-    return 'vendor-office-viewer'
+    return 'vendor-office-viewer';
   }
 
   if (packageName === 'amis-ui') {
-    return 'vendor-amis-ui'
+    return 'vendor-amis-ui';
   }
 
   if (packageName === 'amis-formula') {
-    return 'vendor-amis-formula'
+    return 'vendor-amis-formula';
   }
 
   if (packageName === 'monaco-editor' || packageName.startsWith('@codingame/')) {
-    return 'vendor-monaco-editor'
+    return 'vendor-monaco-editor';
   }
 
-  if (packageName === 'codemirror' || packageName.startsWith('@codemirror/') || packageName.startsWith('@lezer/')) {
-    return 'vendor-codemirror'
+  if (
+    packageName === 'codemirror' ||
+    packageName.startsWith('@codemirror/') ||
+    packageName.startsWith('@lezer/')
+  ) {
+    return 'vendor-codemirror';
   }
 
-  if (packageName === 'echarts' || packageName === 'zrender' || packageName === 'echarts-wordcloud') {
-    return 'vendor-echarts'
+  if (
+    packageName === 'echarts' ||
+    packageName === 'zrender' ||
+    packageName === 'echarts-wordcloud'
+  ) {
+    return 'vendor-echarts';
   }
 
   if (packageName === 'react' || packageName === 'react-dom' || packageName === 'scheduler') {
-    return 'vendor-react'
+    return 'vendor-react';
   }
 
-  if (packageName === 'react-router' || packageName === 'react-router-dom' || packageName === 'history') {
-    return 'vendor-react-router'
+  if (
+    packageName === 'react-router' ||
+    packageName === 'react-router-dom' ||
+    packageName === 'history'
+  ) {
+    return 'vendor-react-router';
   }
 
   if (packageName.startsWith('@tanstack/')) {
-    return 'vendor-tanstack-react-query'
+    return 'vendor-tanstack-react-query';
   }
 
-  if (packageName === 'i18next' || packageName === 'react-i18next' || packageName === 'i18next-browser-languagedetector' || packageName === 'i18next-http-backend') {
-    return 'vendor-i18next'
+  if (
+    packageName === 'i18next' ||
+    packageName === 'react-i18next' ||
+    packageName === 'i18next-browser-languagedetector' ||
+    packageName === 'i18next-http-backend'
+  ) {
+    return 'vendor-i18next';
   }
 
   if (packageName === 'systemjs') {
-    return 'vendor-systemjs'
+    return 'vendor-systemjs';
   }
 
   if (packageName === 'recharts') {
-    return 'vendor-recharts'
+    return 'vendor-recharts';
   }
 
   if (packageName === '@xyflow/react') {
-    return 'vendor-xyflow-react'
+    return 'vendor-xyflow-react';
   }
 
-  if (packageName === 'markdown-it' || packageName === 'markdown-it-html5-media' || packageName === 'linkify-it' || packageName === 'mdurl' || packageName === 'uc.micro' || packageName === 'punycode') {
-    return 'vendor-markdown-it'
+  if (
+    packageName === 'markdown-it' ||
+    packageName === 'markdown-it-html5-media' ||
+    packageName === 'linkify-it' ||
+    packageName === 'mdurl' ||
+    packageName === 'uc.micro' ||
+    packageName === 'punycode'
+  ) {
+    return 'vendor-markdown-it';
   }
 
   if (packageName === 'jsbarcode') {
-    return 'vendor-jsbarcode'
+    return 'vendor-jsbarcode';
   }
 
-  if (packageName === 'react-color' || packageName === 'reactcss' || packageName === 'tinycolor2' || packageName === 'material-colors') {
-    return 'vendor-react-color'
+  if (
+    packageName === 'react-color' ||
+    packageName === 'reactcss' ||
+    packageName === 'tinycolor2' ||
+    packageName === 'material-colors'
+  ) {
+    return 'vendor-react-color';
   }
 
   if (packageName === 'tinymce') {
-    return 'vendor-tinymce'
+    return 'vendor-tinymce';
   }
 
   if (packageName === 'froala-editor') {
-    return 'vendor-froala-editor'
+    return 'vendor-froala-editor';
   }
 
-  if (packageName === 'react-pdf' || packageName === 'make-cancellable-promise' || packageName === 'make-event-props') {
-    return 'vendor-react-pdf'
+  if (
+    packageName === 'react-pdf' ||
+    packageName === 'make-cancellable-promise' ||
+    packageName === 'make-event-props'
+  ) {
+    return 'vendor-react-pdf';
   }
 
   if (packageName === 'react-cropper' || packageName === 'cropperjs') {
-    return 'vendor-react-cropper'
+    return 'vendor-react-cropper';
   }
 
   if (packageName === 'react-json-view') {
-    return 'vendor-react-json-view'
+    return 'vendor-react-json-view';
   }
 
   if (packageName === 'lodash' || packageName === 'lodash-es') {
-    return 'vendor-lodash'
+    return 'vendor-lodash';
   }
 
-  if (packageName === 'exceljs' || packageName === 'xlsx' || packageName === 'pdfjs-dist' || packageName === 'hls.js' || packageName === 'mpegts.js' || packageName === 'sonner' || packageName === 'lucide-react' || packageName === 'zustand' || packageName === '@fortawesome/fontawesome-free') {
-    return toChunkName('vendor', packageName)
+  if (
+    packageName === 'exceljs' ||
+    packageName === 'xlsx' ||
+    packageName === 'pdfjs-dist' ||
+    packageName === 'hls.js' ||
+    packageName === 'mpegts.js' ||
+    packageName === 'sonner' ||
+    packageName === 'lucide-react' ||
+    packageName === 'zustand' ||
+    packageName === '@fortawesome/fontawesome-free'
+  ) {
+    return toChunkName('vendor', packageName);
   }
 
-  return 'vendor-misc'
+  return 'vendor-misc';
 }
 
 export default defineConfig(({ mode }) => {
-  const analyze = mode === 'analyze'
-  const env = loadEnv(mode, appRoot, '')
-  const extensionAliasPath = env.VITE_DEMO_EXTENSION_ALIAS_PATH
+  const analyze = mode === 'analyze';
+  const env = loadEnv(mode, appRoot, '');
+  const extensionAliasPath = env.VITE_DEMO_EXTENSION_ALIAS_PATH;
   const aliasedExtensionPath = extensionAliasPath
     ? resolve(appRoot, extensionAliasPath)
-    : undefined
+    : undefined;
 
   return {
     resolve: {
@@ -228,10 +286,10 @@ export default defineConfig(({ mode }) => {
         ? [
             {
               find: '@demo-extension',
-              replacement: aliasedExtensionPath
-            }
+              replacement: aliasedExtensionPath,
+            },
           ]
-        : undefined
+        : undefined,
     },
     plugins: [
       tailwindcss(),
@@ -241,8 +299,8 @@ export default defineConfig(({ mode }) => {
         ext: '.gz',
         threshold: 1024 * 100,
         filter(file) {
-          const normalized = normalizeId(file)
-          return normalized.endsWith('.js') && normalized.includes('/assets/')
+          const normalized = normalizeId(file);
+          return normalized.endsWith('.js') && normalized.includes('/assets/');
         },
       }),
       analyze
@@ -250,44 +308,44 @@ export default defineConfig(({ mode }) => {
             filename: 'dist/stats.html',
             gzipSize: true,
             brotliSize: true,
-            template: 'treemap'
+            template: 'treemap',
           })
-        : null
+        : null,
     ].filter(Boolean),
     server: {
       port: 4173,
       strictPort: false,
       fs: aliasedExtensionPath
         ? {
-            allow: [appRoot, dirname(aliasedExtensionPath)]
+            allow: [appRoot, dirname(aliasedExtensionPath)],
           }
         : undefined,
       proxy: {
         '/r': {
           target: 'http://localhost:8080',
-          changeOrigin: true
+          changeOrigin: true,
         },
         '/graphql': {
           target: 'http://localhost:8080',
-          changeOrigin: true
+          changeOrigin: true,
         },
         '^/p/': {
           target: 'http://localhost:8080',
-          changeOrigin: true
+          changeOrigin: true,
         },
         '^/f/': {
           target: 'http://localhost:8080',
-          changeOrigin: true
+          changeOrigin: true,
         },
         '^/q/': {
           target: 'http://localhost:8080',
-          changeOrigin: true
-        }
-      }
+          changeOrigin: true,
+        },
+      },
     },
     preview: {
       port: 4173,
-      strictPort: true
+      strictPort: true,
     },
     build: {
       sourcemap: true,
@@ -295,30 +353,42 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            const normalized = normalizeId(id)
+            const normalized = normalizeId(id);
 
             if (normalized.includes('/src/router/AppShell')) {
-              return 'shell-core'
+              return 'shell-core';
             }
 
-            if (includesAny(normalized, ['/src/pages/help/', '/src/pages/settings/', '/src/pages/plugins/', '/src/pages/data-management/'])) {
-              return 'page-secondary'
+            if (
+              includesAny(normalized, [
+                '/src/pages/help/',
+                '/src/pages/settings/',
+                '/src/pages/plugins/',
+                '/src/pages/data-management/',
+              ])
+            ) {
+              return 'page-secondary';
             }
 
-            if (includesAny(normalized, ['/src/pages/dashboard/', '/src/components/common/MetricCard'])) {
-              return 'page-dashboard'
+            if (
+              includesAny(normalized, [
+                '/src/pages/dashboard/',
+                '/src/components/common/MetricCard',
+              ])
+            ) {
+              return 'page-dashboard';
             }
 
             if (includesAny(normalized, ['/src/pages/flow-editor/'])) {
-              return 'page-flow-editor'
+              return 'page-flow-editor';
             }
 
             if (includesAny(normalized, ['/src/pages/ai-workbench/'])) {
-              return 'page-ai-workbench'
+              return 'page-ai-workbench';
             }
 
             if (includesAny(normalized, ['/src/components/plugin/'])) {
-              return 'page-secondary'
+              return 'page-secondary';
             }
 
             if (
@@ -336,36 +406,39 @@ export default defineConfig(({ mode }) => {
                 '/src/router/RouteRenderer',
                 '/src/router/pageRegistry',
                 '/src/services/',
-                '/src/store/'
+                '/src/store/',
               ])
             ) {
-              return getHostRuntimeChunkName(normalized)
+              return getHostRuntimeChunkName(normalized);
             }
 
-            const workspacePackageName = getWorkspacePackageName(id)
+            const workspacePackageName = getWorkspacePackageName(id);
 
             if (workspacePackageName) {
-              if (workspacePackageName === '@nop-chaos/amis-react' || workspacePackageName === '@nop-chaos/amis-core') {
-                return 'vendor-amis-bridge'
+              if (
+                workspacePackageName === '@nop-chaos/amis-react' ||
+                workspacePackageName === '@nop-chaos/amis-core'
+              ) {
+                return 'vendor-amis-bridge';
               }
 
-              return getWorkspaceChunkName(workspacePackageName)
+              return getWorkspaceChunkName(workspacePackageName);
             }
 
             if (!id.includes('node_modules')) {
-              return undefined
+              return undefined;
             }
 
-            const nodeModulePackageName = getNodeModulePackageName(id)
+            const nodeModulePackageName = getNodeModulePackageName(id);
 
             if (!nodeModulePackageName) {
-              return 'vendor-misc'
+              return 'vendor-misc';
             }
 
-            return getVendorChunkName(nodeModulePackageName)
-          }
-        }
-      }
-    }
-  }
-})
+            return getVendorChunkName(nodeModulePackageName);
+          },
+        },
+      },
+    },
+  };
+});

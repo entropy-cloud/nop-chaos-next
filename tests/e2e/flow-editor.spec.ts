@@ -1,6 +1,6 @@
-import type { Page } from '@playwright/test'
-import { expect, test } from '@playwright/test'
-import { login } from './support/auth'
+import type { Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { login } from './support/auth';
 
 const demoRoutesMenuResponse = {
   status: 0,
@@ -19,16 +19,16 @@ const demoRoutesMenuResponse = {
             displayName: 'Flow Editor',
             routePath: '/flow-editor',
             component: 'flow-editor',
-            hidden: false
+            hidden: false,
           },
           {
             id: 'flow-editor-edit',
             displayName: 'Flow Editor Edit',
             routePath: '/flow-editor/:id',
             component: 'flow-editor/:id',
-            hidden: true
-          }
-        ]
+            hidden: true,
+          },
+        ],
       },
       {
         id: 'plugins',
@@ -43,7 +43,7 @@ const demoRoutesMenuResponse = {
             displayName: 'Plugin management',
             routePath: '/plugins/management',
             component: 'plugins/management',
-            hidden: false
+            hidden: false,
           },
           {
             id: 'plugins-demo',
@@ -51,54 +51,65 @@ const demoRoutesMenuResponse = {
             routePath: '/plugins/demo',
             component: 'plugin',
             hidden: false,
-            url: '/plugins/plugin-demo.system.js'
-          }
-        ]
-      }
-    ]
-  }
-}
+            url: '/plugins/plugin-demo.system.js',
+          },
+        ],
+      },
+    ],
+  },
+};
 
 async function useSeededDemoMenu(page: Page) {
   await page.route('**/r/SiteMapApi__getSiteMap', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(demoRoutesMenuResponse)
-    })
-  })
+      body: JSON.stringify(demoRoutesMenuResponse),
+    });
+  });
 }
 
-test('flow editor supports grouped palette, canvas editing, and minimap with seeded demo routes', async ({ page }) => {
+test('flow editor supports grouped palette, canvas editing, and minimap with seeded demo routes', async ({
+  page,
+}) => {
   await login(page, {
-    setup: () => useSeededDemoMenu(page)
-  })
-  await page.goto('/#/flow-editor/flow-101')
-  await expect(page).toHaveURL(/\/flow-editor\/flow-101$/)
+    setup: () => useSeededDemoMenu(page),
+  });
+  await page.goto('/#/flow-editor/flow-101');
+  await expect(page).toHaveURL(/\/flow-editor\/flow-101$/);
 
-  await expect(page.locator('[data-testid="palette-item-task"]')).toBeVisible()
-  await expect(page.locator('.react-flow__minimap')).toBeVisible()
+  await expect(page.locator('[data-testid="palette-item-task"]')).toBeVisible();
+  await expect(page.locator('.react-flow__minimap')).toBeVisible();
 
-  const dropzone = page.locator('[data-testid="flow-canvas-dropzone"]')
-  const taskPaletteItem = page.locator('[data-testid="palette-item-task"]')
+  const dropzone = page.locator('[data-testid="flow-canvas-dropzone"]');
+  const taskPaletteItem = page.locator('[data-testid="palette-item-task"]');
 
   await taskPaletteItem.dragTo(dropzone, {
-    targetPosition: { x: 280, y: 220 }
-  })
+    targetPosition: { x: 280, y: 220 },
+  });
 
-  await expect(page.locator('[data-testid^="flow-node-task-"]')).toHaveCount(2)
+  await expect(page.locator('[data-testid^="flow-node-task-"]')).toHaveCount(2);
 
-  const firstNode = page.locator('[data-testid^="flow-node-task-"]').first()
-  await firstNode.dblclick()
-  await expect(page.getByText('发送欢迎邮件').first()).toBeVisible()
-  await page.locator('label', { hasText: /name/i }).locator('..').getByRole('textbox').fill('Automation approval task')
-  await expect(page.locator('[data-testid^="flow-node-task-"]').first()).toContainText('Automation approval task')
+  const firstNode = page.locator('[data-testid^="flow-node-task-"]').first();
+  await firstNode.dblclick();
+  await expect(page.getByText('发送欢迎邮件').first()).toBeVisible();
+  await page
+    .locator('label', { hasText: /name/i })
+    .locator('..')
+    .getByRole('textbox')
+    .fill('Automation approval task');
+  await expect(page.locator('[data-testid^="flow-node-task-"]').first()).toContainText(
+    'Automation approval task',
+  );
 
-  const firstEdgeHitbox = page.locator('[data-testid^="edge-hitbox-"]').first()
-  const firstEdgeLabel = page.locator('[data-testid^="edge-label-"]').first()
-  await firstEdgeHitbox.dispatchEvent('dblclick')
-  const edgeConditionField = page.locator('label', { hasText: /condition/i }).locator('..').getByRole('textbox')
-  await expect(edgeConditionField).toBeVisible()
-  await edgeConditionField.fill('score > 80')
-  await expect(firstEdgeLabel).toContainText('score > 80')
-})
+  const firstEdgeHitbox = page.locator('[data-testid^="edge-hitbox-"]').first();
+  const firstEdgeLabel = page.locator('[data-testid^="edge-label-"]').first();
+  await firstEdgeHitbox.dispatchEvent('dblclick');
+  const edgeConditionField = page
+    .locator('label', { hasText: /condition/i })
+    .locator('..')
+    .getByRole('textbox');
+  await expect(edgeConditionField).toBeVisible();
+  await edgeConditionField.fill('score > 80');
+  await expect(firstEdgeLabel).toContainText('score > 80');
+});

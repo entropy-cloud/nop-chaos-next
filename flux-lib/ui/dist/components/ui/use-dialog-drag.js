@@ -1,6 +1,6 @@
 import * as React from 'react';
 export function useDialogDrag(options = {}, forwardedRef) {
-    const { enabled = false, offsetRef: externalOffsetRef, baseTransform = 'translate(-50%, -50%)' } = options;
+    const { enabled = false, offsetRef: externalOffsetRef, baseTransform = 'translate(-50%, -50%)', } = options;
     const internalOffsetRef = React.useRef({ x: 0, y: 0 });
     const offsetRef = externalOffsetRef ?? internalOffsetRef;
     const internalRef = React.useRef(null);
@@ -21,7 +21,7 @@ export function useDialogDrag(options = {}, forwardedRef) {
         }
         const rawOffset = {
             x: dragState.initialOffset.x + (e.clientX - dragState.startX),
-            y: dragState.initialOffset.y + (e.clientY - dragState.startY)
+            y: dragState.initialOffset.y + (e.clientY - dragState.startY),
         };
         el.style.transform = `${baseTransform} translate(${rawOffset.x}px, ${rawOffset.y}px)`;
         const rect = el.getBoundingClientRect();
@@ -93,7 +93,7 @@ export function useDialogDrag(options = {}, forwardedRef) {
         dragStateRef.current = {
             startX: e.clientX,
             startY: e.clientY,
-            initialOffset: { ...offsetRef.current }
+            initialOffset: { ...offsetRef.current },
         };
         el.addEventListener('pointermove', handlePointerMove);
         el.addEventListener('pointerup', stopDrag);

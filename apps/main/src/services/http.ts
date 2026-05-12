@@ -1,46 +1,68 @@
-import { normalizeGraphQLResponse, transformGraphQLRequest } from '@nop-chaos/amis-core'
-import type { AmisRequestOptions } from '@nop-chaos/amis-core'
-import { clearTokens as clearManagedTokens, createHttpClient, getValidToken, setRefreshTokenFetcher, setTokens as setManagedTokens, unwrapApiPayload } from '@nop-chaos/shared'
-import i18n from '../config/i18n'
-import { normalizeLanguageCode } from '../config/i18n/languages'
-import { refreshAccessToken as requestRefreshAccessToken } from './authApi'
-import { useAuthStore } from '../store/authStore'
+import { normalizeGraphQLResponse, transformGraphQLRequest } from '@nop-chaos/amis-core';
+import type { AmisRequestOptions } from '@nop-chaos/amis-core';
+import {
+  clearTokens as clearManagedTokens,
+  createHttpClient,
+  getValidToken,
+  setRefreshTokenFetcher,
+  setTokens as setManagedTokens,
+  unwrapApiPayload,
+} from '@nop-chaos/shared';
+import i18n from '../config/i18n';
+import { normalizeLanguageCode } from '../config/i18n/languages';
+import { refreshAccessToken as requestRefreshAccessToken } from './auth-api';
+import { useAuthStore } from '../store/auth-store';
 
 interface AjaxRequestOptions {
-  method?: string
-  headers?: Record<string, string>
-  withAuth?: boolean
-  data?: unknown
-  query?: Record<string, unknown>
-  responseType?: 'json' | 'blob' | 'text'
-  signal?: AbortSignal
-  silent?: boolean
+  method?: string;
+  headers?: Record<string, string>;
+  withAuth?: boolean;
+  data?: unknown;
+  query?: Record<string, unknown>;
+  responseType?: 'json' | 'blob' | 'text';
+  signal?: AbortSignal;
+  silent?: boolean;
 }
 
 function getApiBaseUrl() {
   if (import.meta.env.VITE_USE_API_PROXY === 'true') {
-    return ''
+    return '';
   }
 
-  return import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? ''
+  return import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? '';
 }
 
 function getLocaleHeader() {
-  return normalizeLanguageCode(i18n.language)
+  return normalizeLanguageCode(i18n.language);
 }
 
-function syncStoreTokens(accessToken: string, refreshToken?: string, expiresIn?: number, refreshExpiresIn?: number) {
-  useAuthStore.getState().setTokens(accessToken, refreshToken, expiresIn, refreshExpiresIn)
+function syncStoreTokens(
+  accessToken: string,
+  refreshToken?: string,
+  expiresIn?: number,
+  refreshExpiresIn?: number,
+) {
+  useAuthStore.getState().setTokens(accessToken, refreshToken, expiresIn, refreshExpiresIn);
 }
 
 async function refreshWithStore(refreshToken: string) {
-  const refreshed = await requestRefreshAccessToken(refreshToken)
-  syncStoreTokens(refreshed.accessToken, refreshed.refreshToken ?? refreshToken, refreshed.expiresIn, refreshed.refreshExpiresIn)
-  setManagedTokens(refreshed.accessToken, refreshed.refreshToken ?? refreshToken, refreshed.expiresIn, refreshed.refreshExpiresIn)
-  return refreshed
+  const refreshed = await requestRefreshAccessToken(refreshToken);
+  syncStoreTokens(
+    refreshed.accessToken,
+    refreshed.refreshToken ?? refreshToken,
+    refreshed.expiresIn,
+    refreshed.refreshExpiresIn,
+  );
+  setManagedTokens(
+    refreshed.accessToken,
+    refreshed.refreshToken ?? refreshToken,
+    refreshed.expiresIn,
+    refreshed.refreshExpiresIn,
+  );
+  return refreshed;
 }
 
-setRefreshTokenFetcher(refreshWithStore)
+setRefreshTokenFetcher(refreshWithStore);
 
 export const mainHttpClient = createHttpClient({
   getBaseUrl: getApiBaseUrl,
@@ -49,41 +71,44 @@ export const mainHttpClient = createHttpClient({
   getRefreshToken: () => useAuthStore.getState().tokens?.refreshToken,
   getValidToken,
   refreshAccessToken: async () => {
-    const refreshToken = useAuthStore.getState().tokens?.refreshToken
+    const refreshToken = useAuthStore.getState().tokens?.refreshToken;
 
     if (!refreshToken) {
-      throw new Error('No refresh token available')
+      throw new Error('No refresh token available');
     }
 
-    const refreshed = await refreshWithStore(refreshToken)
-    return refreshed.accessToken
+    const refreshed = await refreshWithStore(refreshToken);
+    return refreshed.accessToken;
   },
   setAuthToken: (token) => {
     if (token) {
-      useAuthStore.getState().setToken(token)
+      useAuthStore.getState().setToken(token);
     }
   },
   clearTokens: () => {
-    clearManagedTokens()
-    useAuthStore.getState().clearTokens()
+    clearManagedTokens();
+    useAuthStore.getState().clearTokens();
   },
   onUnauthorized: () => {
-    clearManagedTokens()
-    useAuthStore.getState().logout()
-  }
-})
+    clearManagedTokens();
+    useAuthStore.getState().logout();
+  },
+});
 
-function buildRequestOptions(path: string, options: AjaxRequestOptions): { request: AjaxRequestOptions & { url: string }; operationName?: string } {
-  const { data, headers, query, ...requestOptions } = options
+function buildRequestOptions(
+  path: string,
+  options: AjaxRequestOptions,
+): { request: AjaxRequestOptions & { url: string }; operationName?: string } {
+  const { data, headers, query, ...requestOptions } = options;
   const amisRequest: AmisRequestOptions = {
     method: requestOptions.method,
     url: path,
     headers,
     data,
-    query
-  }
-  const transformed = transformGraphQLRequest(amisRequest)
-  const request = transformed?.request ?? amisRequest
+    query,
+  };
+  const transformed = transformGraphQLRequest(amisRequest);
+  const request = transformed?.request ?? amisRequest;
 
   return {
     operationName: transformed?.operationName,
@@ -93,36 +118,45 @@ function buildRequestOptions(path: string, options: AjaxRequestOptions): { reque
       method: request.method ?? requestOptions.method ?? 'GET',
       headers: request.headers,
       query: request.query,
-      data: request.data
-    }
-  }
+      data: request.data,
+    },
+  };
 }
 
 export async function ajaxFetch<T>(path: string, options: AjaxRequestOptions = {}): Promise<T> {
-  const request = buildRequestOptions(path, options)
-  const response = await mainHttpClient.request(request.request)
-  const normalizedData = request.operationName ? normalizeGraphQLResponse(response.data, request.operationName) : response.data
+  const request = buildRequestOptions(path, options);
+  const response = await mainHttpClient.request(request.request);
+  const normalizedData = request.operationName
+    ? normalizeGraphQLResponse(response.data, request.operationName)
+    : response.data;
 
   if (response.status < 200 || response.status >= 300) {
     const message =
-      typeof normalizedData === 'object' && normalizedData !== null && 'message' in normalizedData && typeof normalizedData.message === 'string'
+      typeof normalizedData === 'object' &&
+      normalizedData !== null &&
+      'message' in normalizedData &&
+      typeof normalizedData.message === 'string'
         ? normalizedData.message
         : typeof normalizedData === 'string' && normalizedData
           ? normalizedData
-          : `Request failed: ${response.status}`
+          : `Request failed: ${response.status}`;
 
-    const error = new Error(message) as Error & { status?: number }
-    error.status = response.status
-    throw error
+    const error = new Error(message) as Error & { status?: number };
+    error.status = response.status;
+    throw error;
   }
 
-  return unwrapApiPayload<T>(normalizedData)
+  return unwrapApiPayload<T>(normalizedData);
 }
 
-export async function ajaxQuery<T>(path: string, data?: Record<string, unknown>, options: Omit<AjaxRequestOptions, 'data'> = {}): Promise<T> {
+export async function ajaxQuery<T>(
+  path: string,
+  data?: Record<string, unknown>,
+  options: Omit<AjaxRequestOptions, 'data'> = {},
+): Promise<T> {
   return ajaxFetch<T>(path, {
     ...options,
     method: options.method ?? 'POST',
-    data
-  })
+    data,
+  });
 }

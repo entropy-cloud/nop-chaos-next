@@ -1,11 +1,11 @@
-export { LowCodeIcon } from './components/LowCodeIcon'
-export { MainLayout } from './components/MainLayout'
-export { PluginSlot } from './components/PluginSlot'
-export { Sidebar } from './components/Sidebar'
-export { TabsBar } from './components/TabsBar'
-export { TopBar } from './components/TopBar'
-export { usePermissionGuard } from './hooks/usePermissionGuard'
-export { getIconByName, iconRegistry, renderIcon, resolveIcon } from './utils/iconMap'
-export { loadRemoteComponent, registerSharedModules } from './utils/systemjs'
-export type { BreadcrumbItem } from './components/TopBar'
-export type { LowCodeIconProps } from './components/LowCodeIcon'
+export { LowCodeIcon } from './components/low-code-icon';
+export { MainLayout } from './components/main-layout';
+export { PluginSlot } from './components/plugin-slot';
+export { Sidebar } from './components/sidebar';
+export { TabsBar } from './components/tabs-bar';
+export { TopBar } from './components/top-bar';
+export { usePermissionGuard } from './hooks/use-permission-guard';
+export { getIconByName, iconRegistry, renderIcon, resolveIcon } from './utils/icon-map';
+export { loadRemoteComponent, registerSharedModules } from './utils/systemjs';
+export type { BreadcrumbItem } from './components/top-bar';
+export type { LowCodeIconProps } from './components/low-code-icon';

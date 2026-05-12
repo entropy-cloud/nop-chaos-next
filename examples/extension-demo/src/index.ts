@@ -1,19 +1,19 @@
-import type { ShellExtension } from '@nop-chaos/shared'
-import { ExtensionBuiltinPage } from './pages/ExtensionBuiltinPage'
-import { ExtensionLoginPage } from './pages/ExtensionLoginPage'
-import { ExtensionNotFoundPage } from './pages/ExtensionNotFoundPage'
+import type { ShellExtension } from '@nop-chaos/shared';
+import { ExtensionBuiltinPage } from './pages/extension-builtin-page';
+import { ExtensionLoginPage } from './pages/extension-login-page';
+import { ExtensionNotFoundPage } from './pages/extension-not-found-page';
 
-const harborMarkHref = new URL('./harbor-mark.svg', import.meta.url).href
-const harborThemeHref = new URL('./harbor.css', import.meta.url).href
-const harborShellHref = new URL('./shell.css', import.meta.url).href
-const harborPageHref = new URL('./component-page.css', import.meta.url).href
-const i18nBaseUrl = new URL('../locales', import.meta.url).href
+const harborMarkHref = new URL('./harbor-mark.svg', import.meta.url).href;
+const harborThemeHref = new URL('./harbor.css', import.meta.url).href;
+const harborShellHref = new URL('./shell.css', import.meta.url).href;
+const harborPageHref = new URL('./component-page.css', import.meta.url).href;
+const i18nBaseUrl = new URL('../locales', import.meta.url).href;
 
 const extension: ShellExtension = {
   id: 'example-extension-demo',
   order: 50,
   app: {
-    defaultLanguage: 'en-US'
+    defaultLanguage: 'en-US',
   },
   branding: {
     name: 'Harbor Operations Suite',
@@ -21,7 +21,7 @@ const extension: ShellExtension = {
     logoUrl: harborMarkHref,
     markUrl: harborMarkHref,
     documentTitle: 'Harbor Operations Suite',
-    faviconUrl: '/favicon.ico'
+    faviconUrl: '/favicon.ico',
   },
   loginUi: {
     heroTitleKey: 'extensionDemo.login.heroTitle',
@@ -31,64 +31,64 @@ const extension: ShellExtension = {
     features: [
       {
         titleKey: 'extensionDemo.login.feature.coordination.title',
-        descriptionKey: 'extensionDemo.login.feature.coordination.description'
+        descriptionKey: 'extensionDemo.login.feature.coordination.description',
       },
       {
         titleKey: 'extensionDemo.login.feature.themes.title',
-        descriptionKey: 'extensionDemo.login.feature.themes.description'
+        descriptionKey: 'extensionDemo.login.feature.themes.description',
       },
       {
         titleKey: 'extensionDemo.login.feature.bridge.title',
-        descriptionKey: 'extensionDemo.login.feature.bridge.description'
-      }
+        descriptionKey: 'extensionDemo.login.feature.bridge.description',
+      },
     ],
-    showDemoHint: true
+    showDemoHint: true,
   },
   shell: {
-    defaultHomePath: '/examples/extension-harbor'
+    defaultHomePath: '/examples/extension-harbor',
   },
   systemPages: {
     login: 'extension-harbor-login',
     notFound: 'extension-harbor-not-found',
-    dashboard: 'extension-harbor-page'
+    dashboard: 'extension-harbor-page',
   },
   supportedLanguages: [
     { code: 'en-US', labelKey: 'settings.languageOptions.en' },
-    { code: 'fr-FR', labelKey: 'settings.languageOptions.frFR' }
+    { code: 'fr-FR', labelKey: 'settings.languageOptions.frFR' },
   ],
   themes: [
     {
       id: 'harbor',
       labelKey: 'settings.themeOptions.harbor.label',
       descriptionKey: 'settings.themeOptions.harbor.description',
-      cssHref: harborThemeHref
-    }
+      cssHref: harborThemeHref,
+    },
   ],
   styles: [
     {
       id: 'example-extension-demo-shell',
       href: harborShellHref,
-      scope: 'shell'
+      scope: 'shell',
     },
     {
       id: 'example-extension-demo-component-page',
       href: harborPageHref,
-      scope: 'shell'
-    }
+      scope: 'shell',
+    },
   ],
   builtinPages: [
     {
       componentId: 'extension-harbor-page',
-      component: ExtensionBuiltinPage
+      component: ExtensionBuiltinPage,
     },
     {
       componentId: 'extension-harbor-login',
-      component: ExtensionLoginPage
+      component: ExtensionLoginPage,
     },
     {
       componentId: 'extension-harbor-not-found',
-      component: ExtensionNotFoundPage
-    }
+      component: ExtensionNotFoundPage,
+    },
   ],
   menus: [
     {
@@ -98,13 +98,13 @@ const extension: ShellExtension = {
       icon: 'palette',
       pageType: 'builtin',
       componentId: 'extension-harbor-page',
-      sort: 980
-    }
+      sort: 980,
+    },
   ],
   i18n: {
     baseUrl: i18nBaseUrl,
-    languages: ['en-US', 'fr-FR']
-  }
-}
+    languages: ['en-US', 'fr-FR'],
+  },
+};
 
-export default extension
+export default extension;

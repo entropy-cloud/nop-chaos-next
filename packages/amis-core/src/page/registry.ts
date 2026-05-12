@@ -1,27 +1,29 @@
-import type { AmisSchemaRecord } from '../types'
+import type { AmisSchemaRecord } from '../types';
 
-export type XuiComponentTransform = (schema: AmisSchemaRecord) => AmisSchemaRecord | Promise<AmisSchemaRecord>
+export type XuiComponentTransform = (
+  schema: AmisSchemaRecord,
+) => AmisSchemaRecord | Promise<AmisSchemaRecord>;
 
-const componentRegistry = new Map<string, XuiComponentTransform>()
+const componentRegistry = new Map<string, XuiComponentTransform>();
 
 export function registerXuiComponent(type: string, transform: XuiComponentTransform) {
-  componentRegistry.set(type, transform)
+  componentRegistry.set(type, transform);
 }
 
 export function unregisterXuiComponent(type: string) {
-  componentRegistry.delete(type)
+  componentRegistry.delete(type);
 }
 
 export function clearXuiComponentRegistry() {
-  componentRegistry.clear()
+  componentRegistry.clear();
 }
 
 export async function resolveXuiComponent(type: string, schema: AmisSchemaRecord) {
-  const transform = componentRegistry.get(type)
+  const transform = componentRegistry.get(type);
 
   if (!transform) {
-    throw new Error(`Unknown xui component: ${type}`)
+    throw new Error(`Unknown xui component: ${type}`);
   }
 
-  return transform(schema)
+  return transform(schema);
 }

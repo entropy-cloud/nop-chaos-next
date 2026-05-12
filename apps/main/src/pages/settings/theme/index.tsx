@@ -1,17 +1,21 @@
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui'
-import { useTranslation } from 'react-i18next'
-import { PageHeader } from '../../../components/common/PageHeader'
-import { getThemeRegistry } from '../../../config/themeRegistry'
-import { useTheme } from '../../../hooks/useTheme'
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
+import { useTranslation } from 'react-i18next';
+import { PageHeader } from '../../../components/common/page-header';
+import { getThemeRegistry } from '../../../config/theme-registry';
+import { useTheme } from '../../../hooks/use-theme';
 
 export default function SettingsThemePage() {
-  const { t } = useTranslation()
-  const { themeConfig, setDisplayMode, setThemeId } = useTheme()
-  const themes = getThemeRegistry()
+  const { t } = useTranslation();
+  const { themeConfig, setDisplayMode, setThemeId } = useTheme();
+  const themes = getThemeRegistry();
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow={t('common.preferences')} title={t('settings.themeTitle')} description={t('settings.themeDescription')} />
+      <PageHeader
+        eyebrow={t('common.preferences')}
+        title={t('settings.themeTitle')}
+        description={t('settings.themeDescription')}
+      />
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="theme-card">
           <CardHeader>
@@ -19,7 +23,7 @@ export default function SettingsThemePage() {
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-2">
             {themes.map((theme) => {
-              const active = themeConfig.themeId === theme.id
+              const active = themeConfig.themeId === theme.id;
 
               return (
                 <button
@@ -29,9 +33,11 @@ export default function SettingsThemePage() {
                   type="button"
                 >
                   <div className="font-medium">{t(theme.labelKey)}</div>
-                  {theme.descriptionKey ? <div className="meta-text mt-2">{t(theme.descriptionKey)}</div> : null}
+                  {theme.descriptionKey ? (
+                    <div className="meta-text mt-2">{t(theme.descriptionKey)}</div>
+                  ) : null}
                 </button>
-              )
+              );
             })}
           </CardContent>
         </Card>
@@ -41,7 +47,11 @@ export default function SettingsThemePage() {
           </CardHeader>
           <CardContent className="flex gap-3">
             {(['light', 'dark', 'system'] as const).map((mode) => (
-              <Button key={mode} variant={themeConfig.displayMode === mode ? 'default' : 'secondary'} onClick={() => setDisplayMode(mode)}>
+              <Button
+                key={mode}
+                variant={themeConfig.displayMode === mode ? 'default' : 'secondary'}
+                onClick={() => setDisplayMode(mode)}
+              >
                 {t(`common.displayModes.${mode}`)}
               </Button>
             ))}
@@ -49,5 +59,5 @@ export default function SettingsThemePage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

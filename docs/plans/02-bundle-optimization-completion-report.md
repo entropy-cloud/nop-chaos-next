@@ -11,29 +11,31 @@
 **文件**: `apps/main/src/App.tsx`
 
 **之前**:
+
 ```tsx
-import { ensureAmisRuntime } from './amis/init'
+import { ensureAmisRuntime } from './amis/init';
 
 useEffect(() => {
   if (didRegisterSharedModules) {
-    return
+    return;
   }
-  registerBaseSharedModules()
-  ensureAmisRuntime()  // 同步加载 AMIS
-  didRegisterSharedModules = true
-}, [])
+  registerBaseSharedModules();
+  ensureAmisRuntime(); // 同步加载 AMIS
+  didRegisterSharedModules = true;
+}, []);
 ```
 
 **之后**:
+
 ```tsx
 useEffect(() => {
   if (didRegisterSharedModules) {
-    return
+    return;
   }
-  registerBaseSharedModules()
+  registerBaseSharedModules();
   // AMIS 初始化移到 RouteRenderer 中按需加载
-  didRegisterSharedModules = true
-}, [])
+  didRegisterSharedModules = true;
+}, []);
 ```
 
 ### 2. 动态加载 AMIS
@@ -42,11 +44,11 @@ useEffect(() => {
 
 ```tsx
 const AmisRouteRenderer = lazy(async () => {
-  const { ensureAmisRuntime } = await import('../amis/init')
-  ensureAmisRuntime()
-  const module = await import('../amis/AmisRouteRenderer')
-  return { default: module.AmisRouteRenderer }
-})
+  const { ensureAmisRuntime } = await import('../amis/init');
+  ensureAmisRuntime();
+  const module = await import('../amis/AmisRouteRenderer');
+  return { default: module.AmisRouteRenderer };
+});
 ```
 
 ### 3. 添加 Flux 支持
@@ -55,11 +57,11 @@ const AmisRouteRenderer = lazy(async () => {
 
 ```tsx
 const FluxRouteRenderer = lazy(async () => {
-  const { ensureFluxRuntime } = await import('../flux/init')
-  ensureFluxRuntime()
-  const module = await import('../flux/FluxRouteRenderer')
-  return { default: module.FluxRouteRenderer }
-})
+  const { ensureFluxRuntime } = await import('../flux/init');
+  ensureFluxRuntime();
+  const module = await import('../flux/FluxRouteRenderer');
+  return { default: module.FluxRouteRenderer };
+});
 ```
 
 **文件**: `packages/shared/src/types/menu.ts`
@@ -67,7 +69,7 @@ const FluxRouteRenderer = lazy(async () => {
 ```tsx
 export interface MenuItem {
   // ...
-  pageType: 'builtin' | 'plugin' | 'amis' | 'flux' | 'iframe' | 'external'
+  pageType: 'builtin' | 'plugin' | 'amis' | 'flux' | 'iframe' | 'external';
   // ...
 }
 ```
@@ -79,13 +81,13 @@ export interface MenuItem {
 ```tsx
 export function useRuntimeCapabilities(menus: MenuItem[]): RuntimeCapabilities {
   return useMemo(() => {
-    const flattened = flattenMenus(menus)
+    const flattened = flattenMenus(menus);
 
     return {
       needsAmis: flattened.some((item) => item.pageType === 'amis'),
       needsFlux: flattened.some((item) => item.pageType === 'flux'),
-    }
-  }, [menus])
+    };
+  }, [menus]);
 }
 ```
 
@@ -96,22 +98,21 @@ export function useRuntimeCapabilities(menus: MenuItem[]): RuntimeCapabilities {
 ```tsx
 useEffect(() => {
   if (capabilities.needsAmis && didRegisterSharedModules) {
-    import('./amis/init').catch(() => {
-    })
+    import('./amis/init').catch(() => {});
   }
-}, [capabilities.needsAmis])
+}, [capabilities.needsAmis]);
 ```
 
 ## 构建结果分析
 
 ### 关键指标
 
-| 指标 | 值 | 说明 |
-|------|-----|------|
-| 主入口 chunk (`host-entry`) | 10.05 kB | 非常小，符合预期 |
-| AMIS vendor chunks | 1,685.38 kB + 2,726.41 kB | 按需加载 |
-| AMIS host chunks | 2,109.27 kB + 2,629.02 kB | 按需加载 |
-| Flux renderer chunk | 1.20 kB | 占位符，很小 |
+| 指标                        | 值                        | 说明             |
+| --------------------------- | ------------------------- | ---------------- |
+| 主入口 chunk (`host-entry`) | 10.05 kB                  | 非常小，符合预期 |
+| AMIS vendor chunks          | 1,685.38 kB + 2,726.41 kB | 按需加载         |
+| AMIS host chunks            | 2,109.27 kB + 2,629.02 kB | 按需加载         |
+| Flux renderer chunk         | 1.20 kB                   | 占位符，很小     |
 
 ### Chunk 分割效果
 
@@ -123,11 +124,13 @@ useEffect(() => {
 ### 对比优化前
 
 **优化前**:
+
 - AMIS 在应用启动时同步初始化
 - 所有 AMIS 相关的 chunks 都会被加载到主包中
 - 初始包体积很大，首屏加载慢
 
 **优化后**:
+
 - AMIS 只在访问相关页面时才加载
 - 初始包只包含必要的代码
 - 首屏加载时间大幅减少
@@ -156,6 +159,7 @@ pnpm test:e2e
 测试文件: `tests/e2e/lazy-loading.spec.ts`
 
 包含以下测试:
+
 - 初始加载时不应该加载 AMIS chunks
 - 访问 AMIS 页面时才加载 AMIS chunks
 - 验证主入口 chunk 大小
@@ -188,10 +192,12 @@ python scripts/analyze-main-chunks.py --focus host-entry
 假设一个不使用 AMIS 的应用:
 
 **优化前**:
+
 - 初始加载: ~8 MB (包含所有 AMIS chunks)
 - 首屏时间: ~3-5s (取决于网络)
 
 **优化后**:
+
 - 初始加载: ~2 MB (不包含 AMIS chunks)
 - 首屏时间: ~1-2s
 - 节省带宽: ~6 MB
@@ -268,6 +274,7 @@ python scripts/analyze-main-chunks.py --focus host-entry
 本次优化成功实现了 AMIS/Flux 的按需加载，大幅减少了初始包体积和首屏加载时间，同时保持了 100% 的功能兼容性。为未来的 Flux 迁移打下了坚实的基础。
 
 优化效果:
+
 - ✅ 主入口 chunk 只有 10.05 kB
 - ✅ AMIS chunks 完全按需加载
 - ✅ 初始包体积减少约 75%

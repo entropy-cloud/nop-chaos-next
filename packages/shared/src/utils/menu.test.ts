@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
-import type { MenuItem } from '../types/menu'
-import { filterMenusByRoles } from './menu'
+import { describe, expect, it } from 'vitest';
+import type { MenuItem } from '../types/menu';
+import { filterMenusByRoles } from './menu';
 
 describe('filterMenusByRoles', () => {
   it('keeps parent when a child is visible by role', () => {
@@ -19,19 +19,19 @@ describe('filterMenusByRoles', () => {
             path: '/admin/report',
             pageType: 'builtin',
             componentId: 'report-view',
-            roles: ['report-viewer']
-          }
-        ]
-      }
-    ]
+            roles: ['report-viewer'],
+          },
+        ],
+      },
+    ];
 
-    const filtered = filterMenusByRoles(items, ['report-viewer'])
+    const filtered = filterMenusByRoles(items, ['report-viewer']);
 
-    expect(filtered).toHaveLength(1)
-    expect(filtered[0]?.id).toBe('admin-root')
-    expect(filtered[0]?.children).toHaveLength(1)
-    expect(filtered[0]?.children?.[0]?.id).toBe('report-view')
-  })
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0]?.id).toBe('admin-root');
+    expect(filtered[0]?.children).toHaveLength(1);
+    expect(filtered[0]?.children?.[0]?.id).toBe('report-view');
+  });
 
   it('removes parent when neither parent nor children are allowed', () => {
     const items: MenuItem[] = [
@@ -49,14 +49,14 @@ describe('filterMenusByRoles', () => {
             path: '/admin/secret',
             pageType: 'builtin',
             componentId: 'secret',
-            roles: ['super-admin']
-          }
-        ]
-      }
-    ]
+            roles: ['super-admin'],
+          },
+        ],
+      },
+    ];
 
-    const filtered = filterMenusByRoles(items, ['analyst'])
+    const filtered = filterMenusByRoles(items, ['analyst']);
 
-    expect(filtered).toHaveLength(0)
-  })
-})
+    expect(filtered).toHaveLength(0);
+  });
+});

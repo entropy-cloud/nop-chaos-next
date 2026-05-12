@@ -33,21 +33,30 @@
 function UserProfile({ user, theme }) {
   const Avatar = () => (
     <img src={user.avatarUrl} className={theme === 'dark' ? 'avatar-dark' : 'avatar-light'} />
-  )
-  return <div><Avatar /></div>
+  );
+  return (
+    <div>
+      <Avatar />
+    </div>
+  );
 }
 
 // ✅ 正确：提取到外部，通过 props 传递
 function Avatar({ src, theme }: { src: string; theme: string }) {
-  return <img src={src} className={theme === 'dark' ? 'avatar-dark' : 'avatar-light'} />
+  return <img src={src} className={theme === 'dark' ? 'avatar-dark' : 'avatar-light'} />;
 }
 
 function UserProfile({ user, theme }) {
-  return <div><Avatar src={user.avatarUrl} theme={theme} /></div>
+  return (
+    <div>
+      <Avatar src={user.avatarUrl} theme={theme} />
+    </div>
+  );
 }
 ```
 
 **症状**：
+
 - 输入框每次按键都失去焦点
 - 动画意外重启
 - useEffect 的 cleanup/setup 在每次父组件渲染时运行
@@ -63,14 +72,14 @@ function UserProfile({ user, theme }) {
 // ❌ 错误：onClick 每次渲染都是新值
 const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: () => void }) {
   // ...
-})
+});
 
 // ✅ 正确：使用稳定的常量作为默认值
 const NOOP = () => {};
 
 const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () => void }) {
   // ...
-})
+});
 ```
 
 ### 1.3 在渲染时计算派生状态
@@ -82,24 +91,24 @@ const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () =
 ```tsx
 // ❌ 错误：冗余的 state 和 effect
 function Form() {
-  const [firstName, setFirstName] = useState('First')
-  const [lastName, setLastName] = useState('Last')
-  const [fullName, setFullName] = useState('')
+  const [firstName, setFirstName] = useState('First');
+  const [lastName, setLastName] = useState('Last');
+  const [fullName, setFullName] = useState('');
 
   useEffect(() => {
-    setFullName(firstName + ' ' + lastName)
-  }, [firstName, lastName])
+    setFullName(firstName + ' ' + lastName);
+  }, [firstName, lastName]);
 
-  return <p>{fullName}</p>
+  return <p>{fullName}</p>;
 }
 
 // ✅ 正确：在渲染时派生
 function Form() {
-  const [firstName, setFirstName] = useState('First')
-  const [lastName, setLastName] = useState('Last')
-  const fullName = firstName + ' ' + lastName
+  const [firstName, setFirstName] = useState('First');
+  const [lastName, setLastName] = useState('Last');
+  const fullName = firstName + ' ' + lastName;
 
-  return <p>{fullName}</p>
+  return <p>{fullName}</p>;
 }
 ```
 
@@ -114,24 +123,27 @@ function Form() {
 ```tsx
 // ❌ 错误：需要 state 作为依赖
 function TodoList() {
-  const [items, setItems] = useState(initialItems)
-  
-  const addItems = useCallback((newItems: Item[]) => {
-    setItems([...items, ...newItems])
-  }, [items])  // items 变化导致回调重建
-  
-  return <ItemsEditor items={items} onAdd={addItems} />
+  const [items, setItems] = useState(initialItems);
+
+  const addItems = useCallback(
+    (newItems: Item[]) => {
+      setItems([...items, ...newItems]);
+    },
+    [items],
+  ); // items 变化导致回调重建
+
+  return <ItemsEditor items={items} onAdd={addItems} />;
 }
 
 // ✅ 正确：稳定的回调，无闭包陷阱
 function TodoList() {
-  const [items, setItems] = useState(initialItems)
-  
+  const [items, setItems] = useState(initialItems);
+
   const addItems = useCallback((newItems: Item[]) => {
-    setItems(curr => [...curr, ...newItems])
-  }, [])  // 无依赖
-  
-  return <ItemsEditor items={items} onAdd={addItems} />
+    setItems((curr) => [...curr, ...newItems]);
+  }, []); // 无依赖
+
+  return <ItemsEditor items={items} onAdd={addItems} />;
 }
 ```
 
@@ -142,19 +154,17 @@ function TodoList() {
 ```tsx
 // ❌ 错误：每次渲染都执行 JSON.parse
 function UserProfile() {
-  const [settings, setSettings] = useState(
-    JSON.parse(localStorage.getItem('settings') || '{}')
-  )
-  return <SettingsForm settings={settings} onChange={setSettings} />
+  const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings') || '{}'));
+  return <SettingsForm settings={settings} onChange={setSettings} />;
 }
 
 // ✅ 正确：只在初始渲染时执行
 function UserProfile() {
   const [settings, setSettings] = useState(() => {
-    const stored = localStorage.getItem('settings')
-    return stored ? JSON.parse(stored) : {}
-  })
-  return <SettingsForm settings={settings} onChange={setSettings} />
+    const stored = localStorage.getItem('settings');
+    return stored ? JSON.parse(stored) : {};
+  });
+  return <SettingsForm settings={settings} onChange={setSettings} />;
 }
 ```
 
@@ -167,25 +177,25 @@ function UserProfile() {
 ```tsx
 // ❌ 错误：每次鼠标移动都触发重渲染
 function Tracker() {
-  const [lastX, setLastX] = useState(0)
+  const [lastX, setLastX] = useState(0);
   useEffect(() => {
-    const onMove = (e: MouseEvent) => setLastX(e.clientX)
-    window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
-  }, [])
+    const onMove = (e: MouseEvent) => setLastX(e.clientX);
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
   // ...
 }
 
 // ✅ 正确：无重渲染
 function Tracker() {
-  const lastXRef = useRef(0)
+  const lastXRef = useRef(0);
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
-      lastXRef.current = e.clientX
-    }
-    window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
-  }, [])
+      lastXRef.current = e.clientX;
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
   // ...
 }
 ```
@@ -195,28 +205,28 @@ function Tracker() {
 **影响：MEDIUM** - 保持 UI 响应性
 
 ```tsx
-import { startTransition } from 'react'
+import { startTransition } from 'react';
 
 // ❌ 错误：每次滚动都阻塞 UI
 function ScrollTracker() {
-  const [scrollY, setScrollY] = useState(0)
+  const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
-    const handler = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', handler, { passive: true })
-    return () => window.removeEventListener('scroll', handler)
-  }, [])
+    const handler = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
 }
 
 // ✅ 正确：非阻塞更新
 function ScrollTracker() {
-  const [scrollY, setScrollY] = useState(0)
+  const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
     const handler = () => {
-      startTransition(() => setScrollY(window.scrollY))
-    }
-    window.addEventListener('scroll', handler, { passive: true })
-    return () => window.removeEventListener('scroll', handler)
-  }, [])
+      startTransition(() => setScrollY(window.scrollY));
+    };
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
 }
 ```
 
@@ -233,22 +243,22 @@ function ScrollTracker() {
 ```tsx
 // ❌ 错误：每个实例都发请求，无去重
 function UserList() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
   useEffect(() => {
     fetch('/api/users')
-      .then(r => r.json())
-      .then(setUsers)
-  }, [])
+      .then((r) => r.json())
+      .then(setUsers);
+  }, []);
 }
 
 // ✅ 正确：多个实例共享一个请求
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query';
 
 function UserList() {
   const { data: users } = useQuery({
     queryKey: ['users'],
-    queryFn: () => fetch('/api/users').then(r => r.json())
-  })
+    queryFn: () => fetch('/api/users').then((r) => r.json()),
+  });
 }
 ```
 
@@ -258,16 +268,12 @@ function UserList() {
 
 ```tsx
 // ❌ 错误：顺序执行，3 次往返
-const user = await fetchUser()
-const posts = await fetchPosts()
-const comments = await fetchComments()
+const user = await fetchUser();
+const posts = await fetchPosts();
+const comments = await fetchComments();
 
 // ✅ 正确：并行执行，1 次往返
-const [user, posts, comments] = await Promise.all([
-  fetchUser(),
-  fetchPosts(),
-  fetchComments()
-])
+const [user, posts, comments] = await Promise.all([fetchUser(), fetchPosts(), fetchComments()]);
 ```
 
 ---
@@ -281,12 +287,12 @@ const [user, posts, comments] = await Promise.all([
 ```tsx
 // ❌ 错误：count=0 时渲染 "0"
 function Badge({ count }: { count: number }) {
-  return <div>{count && <span className="badge">{count}</span>}</div>
+  return <div>{count && <span className="badge">{count}</span>}</div>;
 }
 
 // ✅ 正确：count=0 时什么都不渲染
 function Badge({ count }: { count: number }) {
-  return <div>{count > 0 ? <span className="badge">{count}</span> : null}</div>
+  return <div>{count > 0 ? <span className="badge">{count}</span> : null}</div>;
 }
 ```
 
@@ -307,13 +313,13 @@ function Badge({ count }: { count: number }) {
 function TabsBar({ tabs }: { tabs: Tab[] }) {
   return (
     <div className="overflow-x-auto">
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <div key={tab.id} className="tab-item">
           {tab.title}
         </div>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -324,14 +330,14 @@ function TabsBar({ tabs }: { tabs: Tab[] }) {
 ```tsx
 // ❌ 错误：每次渲染都创建新元素
 function Container() {
-  return <div>{loading && <div className="animate-pulse h-4 bg-gray-200" />}</div>
+  return <div>{loading && <div className="animate-pulse h-4 bg-gray-200" />}</div>;
 }
 
 // ✅ 正确：复用同一元素
-const loadingSkeleton = <div className="animate-pulse h-4 bg-gray-200" />
+const loadingSkeleton = <div className="animate-pulse h-4 bg-gray-200" />;
 
 function Container() {
-  return <div>{loading && loadingSkeleton}</div>
+  return <div>{loading && loadingSkeleton}</div>;
 }
 ```
 
@@ -340,30 +346,30 @@ function Container() {
 **影响：LOW** - 减少重渲染
 
 ```tsx
-import { useTransition, useState } from 'react'
+import { useTransition, useState } from 'react';
 
 // ❌ 错误：手动管理 loading 状态
 function SearchResults() {
-  const [isLoading, setIsLoading] = useState(false)
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSearch = async (value: string) => {
-    setIsLoading(true)
-    const data = await fetchResults(value)
-    setResults(data)
-    setIsLoading(false)
-  }
+    setIsLoading(true);
+    const data = await fetchResults(value);
+    setResults(data);
+    setIsLoading(false);
+  };
 }
 
 // ✅ 正确：使用 useTransition
 function SearchResults() {
-  const [isPending, startTransition] = useTransition()
-  
+  const [isPending, startTransition] = useTransition();
+
   const handleSearch = (value: string) => {
     startTransition(async () => {
-      const data = await fetchResults(value)
-      setResults(data)
-    })
-  }
+      const data = await fetchResults(value);
+      setResults(data);
+    });
+  };
   // isPending 自动提供 pending 状态
 }
 ```
@@ -380,14 +386,14 @@ function SearchResults() {
 
 ```tsx
 // ❌ 错误：无版本、无错误处理
-localStorage.setItem('theme', JSON.stringify(fullThemeObject))
+localStorage.setItem('theme', JSON.stringify(fullThemeObject));
 
 // ✅ 正确：版本化 + 最小化 + 错误处理
-const STORAGE_VERSION = 'v1'
+const STORAGE_VERSION = 'v1';
 
 function saveTheme(theme: { mode: 'light' | 'dark' }) {
   try {
-    localStorage.setItem(`theme:${STORAGE_VERSION}`, JSON.stringify(theme))
+    localStorage.setItem(`theme:${STORAGE_VERSION}`, JSON.stringify(theme));
   } catch {
     // 无痕模式、配额超限或被禁用时会抛出异常
   }
@@ -395,21 +401,21 @@ function saveTheme(theme: { mode: 'light' | 'dark' }) {
 
 function loadTheme() {
   try {
-    const data = localStorage.getItem(`theme:${STORAGE_VERSION}`)
-    return data ? JSON.parse(data) : null
+    const data = localStorage.getItem(`theme:${STORAGE_VERSION}`);
+    return data ? JSON.parse(data) : null;
   } catch {
-    return null
+    return null;
   }
 }
 
 // 迁移示例
 function migrateTheme() {
   try {
-    const old = localStorage.getItem('theme:v0')
+    const old = localStorage.getItem('theme:v0');
     if (old) {
-      const oldData = JSON.parse(old)
-      saveTheme({ mode: oldData.darkMode ? 'dark' : 'light' })
-      localStorage.removeItem('theme:v0')
+      const oldData = JSON.parse(old);
+      saveTheme({ mode: oldData.darkMode ? 'dark' : 'light' });
+      localStorage.removeItem('theme:v0');
     }
   } catch {}
 }
@@ -421,24 +427,24 @@ function migrateTheme() {
 
 ```tsx
 // 缓存 localStorage 读取
-const storageCache = new Map<string, string | null>()
+const storageCache = new Map<string, string | null>();
 
 function getLocalStorage(key: string) {
   if (!storageCache.has(key)) {
-    storageCache.set(key, localStorage.getItem(key))
+    storageCache.set(key, localStorage.getItem(key));
   }
-  return storageCache.get(key)
+  return storageCache.get(key);
 }
 
 function setLocalStorage(key: string, value: string) {
-  localStorage.setItem(key, value)
-  storageCache.set(key, value)  // 保持缓存同步
+  localStorage.setItem(key, value);
+  storageCache.set(key, value); // 保持缓存同步
 }
 
 // 监听外部变化（其他标签页）
 window.addEventListener('storage', (e) => {
-  if (e.key) storageCache.delete(e.key)
-})
+  if (e.key) storageCache.delete(e.key);
+});
 ```
 
 ---
@@ -452,17 +458,17 @@ window.addEventListener('storage', (e) => {
 ```tsx
 // ❌ 错误：阻塞滚动
 useEffect(() => {
-  const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
-  document.addEventListener('wheel', handleWheel)
-  return () => document.removeEventListener('wheel', handleWheel)
-}, [])
+  const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
+  document.addEventListener('wheel', handleWheel);
+  return () => document.removeEventListener('wheel', handleWheel);
+}, []);
 
 // ✅ 正确：立即滚动
 useEffect(() => {
-  const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
-  document.addEventListener('wheel', handleWheel, { passive: true })
-  return () => document.removeEventListener('wheel', handleWheel)
-}, [])
+  const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
+  document.addEventListener('wheel', handleWheel, { passive: true });
+  return () => document.removeEventListener('wheel', handleWheel);
+}, []);
 ```
 
 ### 6.2 将交互逻辑放在事件处理器中
@@ -472,26 +478,26 @@ useEffect(() => {
 ```tsx
 // ❌ 错误：事件建模为 state + effect
 function Form() {
-  const [submitted, setSubmitted] = useState(false)
-  
+  const [submitted, setSubmitted] = useState(false);
+
   useEffect(() => {
     if (submitted) {
-      post('/api/register')
-      showToast('Registered')
+      post('/api/register');
+      showToast('Registered');
     }
-  }, [submitted])
-  
-  return <button onClick={() => setSubmitted(true)}>Submit</button>
+  }, [submitted]);
+
+  return <button onClick={() => setSubmitted(true)}>Submit</button>;
 }
 
 // ✅ 正确：直接在处理器中执行
 function Form() {
   function handleSubmit() {
-    post('/api/register')
-    showToast('Registered')
+    post('/api/register');
+    showToast('Registered');
   }
-  
-  return <button onClick={handleSubmit}>Submit</button>
+
+  return <button onClick={handleSubmit}>Submit</button>;
 }
 ```
 
@@ -502,13 +508,13 @@ function Form() {
 ```tsx
 // ❌ 错误：任何 user 字段变化都会重新运行
 useEffect(() => {
-  console.log(user.id)
-}, [user])
+  console.log(user.id);
+}, [user]);
 
 // ✅ 正确：只在 id 变化时重新运行
 useEffect(() => {
-  console.log(user.id)
-}, [user.id])
+  console.log(user.id);
+}, [user.id]);
 ```
 
 ---
@@ -523,12 +529,12 @@ useEffect(() => {
 
 ```tsx
 // ❌ 错误：可能加载整个图标库（取决于打包配置）
-import { Check, X, Menu, LayoutDashboard, Bot } from 'lucide-react'
+import { Check, X, Menu, LayoutDashboard, Bot } from 'lucide-react';
 
 // ✅ 正确：直接导入（如果打包工具未优化）
-import Check from 'lucide-react/dist/esm/icons/check'
-import X from 'lucide-react/dist/esm/icons/x'
-import Menu from 'lucide-react/dist/esm/icons/menu'
+import Check from 'lucide-react/dist/esm/icons/check';
+import X from 'lucide-react/dist/esm/icons/x';
+import Menu from 'lucide-react/dist/esm/icons/menu';
 ```
 
 **Vite 优化配置**：
@@ -541,14 +547,14 @@ export default defineConfig({
       output: {
         manualChunks: {
           // 将 lucide-react 单独打包
-          'lucide': ['lucide-react'],
+          lucide: ['lucide-react'],
           // 将 recharts 单独打包
-          'recharts': ['recharts'],
-        }
-      }
-    }
-  }
-})
+          recharts: ['recharts'],
+        },
+      },
+    },
+  },
+});
 ```
 
 ### 7.2 动态导入重型组件
@@ -558,15 +564,17 @@ export default defineConfig({
 对于 **Vite + React** 项目，使用 `React.lazy()` + `Suspense` 进行代码分割：
 
 ```tsx
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react';
 
 // 用于 @xyflow/react 流程编辑器等重型组件
-const FlowEditor = lazy(() => import('./FlowEditor').then(m => ({ 
-  default: m.FlowEditor 
-})))
+const FlowEditor = lazy(() =>
+  import('./FlowEditor').then((m) => ({
+    default: m.FlowEditor,
+  })),
+);
 
 // 用于 Recharts 图表
-const DashboardChart = lazy(() => import('./DashboardChart'))
+const DashboardChart = lazy(() => import('./DashboardChart'));
 
 // 使用时配合 Suspense
 function FlowEditorPage() {
@@ -574,7 +582,7 @@ function FlowEditorPage() {
     <Suspense fallback={<Skeleton className="h-96" />}>
       <FlowEditor />
     </Suspense>
-  )
+  );
 }
 ```
 
@@ -588,19 +596,15 @@ function FlowEditorPage() {
 function EditorButton({ onClick }: { onClick: () => void }) {
   const preload = () => {
     if (typeof window !== 'undefined') {
-      void import('./FlowEditor')
+      void import('./FlowEditor');
     }
-  }
+  };
 
   return (
-    <button
-      onMouseEnter={preload}
-      onFocus={preload}
-      onClick={onClick}
-    >
+    <button onMouseEnter={preload} onFocus={preload} onClick={onClick}>
       打开流程编辑器
     </button>
-  )
+  );
 }
 ```
 
@@ -614,17 +618,17 @@ function EditorButton({ onClick }: { onClick: () => void }) {
 
 ```tsx
 // 用于菜单权限检查
-const allowedRoles = new Set(['admin', 'editor'])
+const allowedRoles = new Set(['admin', 'editor']);
 
 function canAccess(userRoles: string[]) {
-  return userRoles.some(role => allowedRoles.has(role))
+  return userRoles.some((role) => allowedRoles.has(role));
 }
 
 // 用于菜单项查找
 function buildMenuMap(menus: MenuItem[]) {
-  const menuById = new Map(menus.map(m => [m.id, m]))
-  const menuByPath = new Map(menus.map(m => [m.path, m]))
-  return { menuById, menuByPath }
+  const menuById = new Map(menus.map((m) => [m.id, m]));
+  const menuByPath = new Map(menus.map((m) => [m.path, m]));
+  return { menuById, menuByPath };
 }
 ```
 
@@ -635,22 +639,15 @@ function buildMenuMap(menus: MenuItem[]) {
 ```tsx
 // ❌ 错误：变异原数组
 function UserList({ users }: { users: User[] }) {
-  const sorted = useMemo(
-    () => users.sort((a, b) => a.name.localeCompare(b.name)),
-    [users]
-  )
-  return <div>{sorted.map(renderUser)}</div>
+  const sorted = useMemo(() => users.sort((a, b) => a.name.localeCompare(b.name)), [users]);
+  return <div>{sorted.map(renderUser)}</div>;
 }
 
 // ✅ 正确：创建新数组
 function UserList({ users }: { users: User[] }) {
-  const sorted = useMemo(
-    () => users.toSorted((a, b) => a.name.localeCompare(b.name)),
-    [users]
-  )
-  return <div>{sorted.map(renderUser)}</div>
+  const sorted = useMemo(() => users.toSorted((a, b) => a.name.localeCompare(b.name)), [users]);
+  return <div>{sorted.map(renderUser)}</div>;
 }
-
 ```
 
 ### 8.3 合并多个数组迭代
@@ -659,19 +656,19 @@ function UserList({ users }: { users: User[] }) {
 
 ```tsx
 // ❌ 错误：3 次迭代
-const admins = users.filter(u => u.isAdmin)
-const testers = users.filter(u => u.isTester)
-const inactive = users.filter(u => !u.isActive)
+const admins = users.filter((u) => u.isAdmin);
+const testers = users.filter((u) => u.isTester);
+const inactive = users.filter((u) => !u.isActive);
 
 // ✅ 正确：1 次迭代
-const admins: User[] = []
-const testers: User[] = []
-const inactive: User[] = []
+const admins: User[] = [];
+const testers: User[] = [];
+const inactive: User[] = [];
 
 for (const user of users) {
-  if (user.isAdmin) admins.push(user)
-  if (user.isTester) testers.push(user)
-  if (!user.isActive) inactive.push(user)
+  if (user.isAdmin) admins.push(user);
+  if (user.isTester) testers.push(user);
+  if (!user.isActive) inactive.push(user);
 }
 ```
 
@@ -689,31 +686,32 @@ for (const user of users) {
 // ❌ 错误：开发模式运行两次，重新挂载时会重新运行
 function App() {
   useEffect(() => {
-    loadFromStorage()
-    checkAuthToken()
-    initTheme()
-  }, [])
-  
+    loadFromStorage();
+    checkAuthToken();
+    initTheme();
+  }, []);
+
   // ...
 }
 
 // ✅ 正确：每次应用加载只执行一次
-let didInit = false
+let didInit = false;
 
 function App() {
   useEffect(() => {
-    if (didInit) return
-    didInit = true
-    loadFromStorage()
-    checkAuthToken()
-    initTheme()
-  }, [])
-  
+    if (didInit) return;
+    didInit = true;
+    loadFromStorage();
+    checkAuthToken();
+    initTheme();
+  }, []);
+
   // ...
 }
 ```
 
 **为什么重要**：
+
 - React 18 StrictMode 会在开发模式下挂载组件两次
 - 路由切换可能导致组件重新挂载
 - 避免重复的事件监听器注册

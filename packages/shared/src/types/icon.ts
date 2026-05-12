@@ -17,10 +17,10 @@ export const appIconNames = [
   'puzzle',
   'settings-2',
   'table',
-  'workflow'
-] as const
+  'workflow',
+] as const;
 
-export type AppIconName = (typeof appIconNames)[number]
+export type AppIconName = (typeof appIconNames)[number];
 
 const appIconAliasMap: Record<string, AppIconName> = {
   'badge-help': 'badge-help',
@@ -46,8 +46,8 @@ const appIconAliasMap: Record<string, AppIconName> = {
   gear: 'settings-2',
   cog: 'settings-2',
   table: 'table',
-  workflow: 'workflow'
-}
+  workflow: 'workflow',
+};
 
 function toIconLookupKey(value: string) {
   return value
@@ -56,21 +56,21 @@ function toIconLookupKey(value: string) {
     .replace(/^fa-(solid|regular|light|thin|duotone|brands)\s+/i, '')
     .replace(/\s+/g, '-')
     .replace(/_/g, '-')
-    .toLowerCase()
+    .toLowerCase();
 }
 
 export function isAppIconName(value: string): value is AppIconName {
-  return (appIconNames as readonly string[]).includes(value)
+  return (appIconNames as readonly string[]).includes(value);
 }
 
 export function normalizeAppIconName(value?: string): AppIconName | undefined {
   if (!value) {
-    return undefined
+    return undefined;
   }
 
   if (isAppIconName(value)) {
-    return value
+    return value;
   }
 
-  return appIconAliasMap[toIconLookupKey(value)]
+  return appIconAliasMap[toIconLookupKey(value)];
 }

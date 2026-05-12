@@ -1,98 +1,109 @@
-import type { MenuItem } from '../types/menu'
+import type { MenuItem } from '../types/menu';
 
 function pathToSegments(path: string): string[] {
-  return path.replace(/(^\/+|\/+?$)/g, '').split('/').filter(Boolean)
+  return path
+    .replace(/(^\/+|\/+?$)/g, '')
+    .split('/')
+    .filter(Boolean);
 }
 
 export function matchMenuPath(routePath: string, currentPath: string): boolean {
   if (routePath === currentPath) {
-    return true
+    return true;
   }
 
-  const routeSegments = pathToSegments(routePath)
-  const currentSegments = pathToSegments(currentPath)
+  const routeSegments = pathToSegments(routePath);
+  const currentSegments = pathToSegments(currentPath);
 
   if (routeSegments.length !== currentSegments.length) {
-    return false
+    return false;
   }
 
-  return routeSegments.every((segment, index) => segment.startsWith(':') || segment === currentSegments[index])
+  return routeSegments.every(
+    (segment, index) => segment.startsWith(':') || segment === currentSegments[index],
+  );
 }
 
 export function flattenMenus(items: MenuItem[]): MenuItem[] {
-  const result: MenuItem[] = []
+  const result: MenuItem[] = [];
 
   for (const item of items) {
-    result.push(item)
+    result.push(item);
     if (item.children?.length) {
-      result.push(...flattenMenus(item.children))
+      result.push(...flattenMenus(item.children));
     }
   }
 
-  return result
+  return result;
 }
 
 export function findMenuItemByPath(items: MenuItem[], currentPath: string): MenuItem | undefined {
   for (const item of items) {
     if (matchMenuPath(item.path, currentPath)) {
-      return item
+      return item;
     }
 
     if (item.children?.length) {
-      const nested = findMenuItemByPath(item.children, currentPath)
+      const nested = findMenuItemByPath(item.children, currentPath);
       if (nested) {
-        return nested
+        return nested;
       }
     }
   }
 
-  return undefined
+  return undefined;
 }
 
-export function collectBreadcrumbTrail(items: MenuItem[], currentPath: string, trail: MenuItem[] = []): MenuItem[] {
+export function collectBreadcrumbTrail(
+  items: MenuItem[],
+  currentPath: string,
+  trail: MenuItem[] = [],
+): MenuItem[] {
   for (const item of items) {
-    const nextTrail = [...trail, item]
+    const nextTrail = [...trail, item];
 
     if (matchMenuPath(item.path, currentPath)) {
-      return nextTrail
+      return nextTrail;
     }
 
     if (item.children?.length) {
-      const nested = collectBreadcrumbTrail(item.children, currentPath, nextTrail)
+      const nested = collectBreadcrumbTrail(item.children, currentPath, nextTrail);
       if (nested.length > 0) {
-        return nested
+        return nested;
       }
     }
   }
 
-  return []
+  return [];
 }
 
 export function filterMenusByRoles(items: MenuItem[], userRoles: string[]): MenuItem[] {
   return items.reduce<MenuItem[]>((result, item) => {
-    const filteredChildren = item.children ? filterMenusByRoles(item.children, userRoles) : undefined
-    const hasVisibleChildren = Boolean(filteredChildren && filteredChildren.length > 0)
+    const filteredChildren = item.children
+      ? filterMenusByRoles(item.children, userRoles)
+      : undefined;
+    const hasVisibleChildren = Boolean(filteredChildren && filteredChildren.length > 0);
 
     if (!item.roles || item.roles.length === 0) {
       result.push({
         ...item,
-        children: filteredChildren
-      })
-      return result
+        children: filteredChildren,
+      });
+      return result;
     }
 
-    const allowed = new Set(item.roles)
-    const selfAllowed = userRoles.some((role) => allowed.has(role))
+    const allowed = new Set(item.roles);
+    const selfAllowed = userRoles.some((role) => allowed.has(role));
 
     if (selfAllowed || hasVisibleChildren) {
       result.push({
         ...item,
-        children: filteredChildren
-      })
+        children: filteredChildren,
+      });
     }
 
-    return result
-  }, [])
+    return result;
+  }, []);
 }
 
 export function sortMenus(items: MenuItem[]): MenuItem[] {
@@ -100,6 +111,6 @@ export function sortMenus(items: MenuItem[]): MenuItem[] {
     .sort((left: MenuItem, right: MenuItem) => (left.sort ?? 0) - (right.sort ?? 0))
     .map((item) => ({
       ...item,
-      children: item.children ? sortMenus(item.children) : undefined
-    }))
+      children: item.children ? sortMenus(item.children) : undefined,
+    }));
 }

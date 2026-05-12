@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { LowCodeIcon } from '@nop-chaos/core'
-import {
-  Settings2,
-} from 'lucide-react'
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { LowCodeIcon } from '@nop-chaos/core';
+import { Settings2 } from 'lucide-react';
 import {
   Badge,
   Button,
@@ -20,35 +18,39 @@ import {
   Input,
   Label,
   Switch,
-  toast
-} from '@nop-chaos/ui'
-import { useTranslation } from 'react-i18next'
-import { PageHeader } from '../../../components/common/PageHeader'
-import { fetchPluginList } from '../../../services/mockApi'
-import { usePluginStore } from '../../../store/pluginStore'
+  toast,
+} from '@nop-chaos/ui';
+import { useTranslation } from 'react-i18next';
+import { PageHeader } from '../../../components/common/page-header';
+import { fetchPluginList } from '../../../services/mock-api';
+import { usePluginStore } from '../../../store/plugin-store';
 
 export default function PluginsManagementPage() {
-  const { t } = useTranslation()
-  const pluginQuery = useQuery({ queryKey: ['plugins'], queryFn: fetchPluginList })
-  const plugins = usePluginStore((state) => state.plugins)
-  const setPlugins = usePluginStore((state) => state.setPlugins)
-  const updatePlugin = usePluginStore((state) => state.updatePlugin)
-  const [detailId, setDetailId] = useState<string | null>(null)
-  const [configId, setConfigId] = useState<string | null>(null)
+  const { t } = useTranslation();
+  const pluginQuery = useQuery({ queryKey: ['plugins'], queryFn: fetchPluginList });
+  const plugins = usePluginStore((state) => state.plugins);
+  const setPlugins = usePluginStore((state) => state.setPlugins);
+  const updatePlugin = usePluginStore((state) => state.updatePlugin);
+  const [detailId, setDetailId] = useState<string | null>(null);
+  const [configId, setConfigId] = useState<string | null>(null);
 
   useEffect(() => {
     if (pluginQuery.data && plugins.length === 0) {
-      setPlugins(pluginQuery.data)
+      setPlugins(pluginQuery.data);
     }
-  }, [pluginQuery.data, plugins.length, setPlugins])
+  }, [pluginQuery.data, plugins.length, setPlugins]);
 
-  const items = plugins.length > 0 ? plugins : pluginQuery.data ?? []
-  const detailPlugin = items.find((plugin) => plugin.id === detailId) ?? null
-  const configPlugin = items.find((plugin) => plugin.id === configId) ?? null
+  const items = plugins.length > 0 ? plugins : (pluginQuery.data ?? []);
+  const detailPlugin = items.find((plugin) => plugin.id === detailId) ?? null;
+  const configPlugin = items.find((plugin) => plugin.id === configId) ?? null;
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow={t('plugins.extensionHostEyebrow')} title={t('plugins.managementTitle')} description={t('plugins.managementPageDescription')} />
+      <PageHeader
+        eyebrow={t('plugins.extensionHostEyebrow')}
+        title={t('plugins.managementTitle')}
+        description={t('plugins.managementPageDescription')}
+      />
       <div className="grid gap-4">
         {items.map((plugin) => {
           return (
@@ -60,7 +62,9 @@ export default function PluginsManagementPage() {
                   </div>
                   <div className="min-w-0">
                     <CardTitle className="truncate text-base">{plugin.name}</CardTitle>
-                    <div className="mt-1 line-clamp-2 text-sm text-muted-foreground">{plugin.description}</div>
+                    <div className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                      {plugin.description}
+                    </div>
                     <div className="meta-text mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
                       <span>{t('common.versionValue', { value: plugin.version })}</span>
                       <span>{plugin.author}</span>
@@ -70,17 +74,23 @@ export default function PluginsManagementPage() {
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
-                  <Badge variant={plugin.enabled ? 'success' : 'warning'}>{plugin.enabled ? t('common.enabled') : t('common.disabled')}</Badge>
+                  <Badge variant={plugin.enabled ? 'success' : 'warning'}>
+                    {plugin.enabled ? t('common.enabled') : t('common.disabled')}
+                  </Badge>
                   <Switch
                     checked={plugin.enabled}
                     onChange={(e) => {
-                      const checked = e.target.checked
-                      const actionKey = checked ? 'common.enable' : 'common.disable'
-                      if (!window.confirm(t('plugins.confirmToggle', { action: t(actionKey), name: plugin.name }))) {
-                        return
+                      const checked = e.target.checked;
+                      const actionKey = checked ? 'common.enable' : 'common.disable';
+                      if (
+                        !window.confirm(
+                          t('plugins.confirmToggle', { action: t(actionKey), name: plugin.name }),
+                        )
+                      ) {
+                        return;
                       }
-                      updatePlugin(plugin.id, (current) => ({ ...current, enabled: checked }))
-                      toast.success(t('plugins.toggleSuccess', { action: t(actionKey) }))
+                      updatePlugin(plugin.id, (current) => ({ ...current, enabled: checked }));
+                      toast.success(t('plugins.toggleSuccess', { action: t(actionKey) }));
                     }}
                   />
                 </div>
@@ -97,7 +107,7 @@ export default function PluginsManagementPage() {
                 </div>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
 
@@ -108,11 +118,26 @@ export default function PluginsManagementPage() {
             <DialogDescription>{t('plugins.detailOverview')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-muted-foreground">
-            <div>{t('common.versionLabel')}{detailPlugin?.version}</div>
-            <div>{t('common.authorLabel')}{detailPlugin?.author}</div>
-            <div>{t('common.sourceLabel')}{detailPlugin?.source}</div>
-            <div>{t('common.urlLabel')}{detailPlugin?.url}</div>
-            <div>{t('common.descriptionLabel')}{detailPlugin?.description}</div>
+            <div>
+              {t('common.versionLabel')}
+              {detailPlugin?.version}
+            </div>
+            <div>
+              {t('common.authorLabel')}
+              {detailPlugin?.author}
+            </div>
+            <div>
+              {t('common.sourceLabel')}
+              {detailPlugin?.source}
+            </div>
+            <div>
+              {t('common.urlLabel')}
+              {detailPlugin?.url}
+            </div>
+            <div>
+              {t('common.descriptionLabel')}
+              {detailPlugin?.description}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -120,7 +145,9 @@ export default function PluginsManagementPage() {
       <Dialog open={Boolean(configPlugin)} onOpenChange={(open) => !open && setConfigId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('plugins.configureTitle', { name: configPlugin?.name ?? '' })}</DialogTitle>
+            <DialogTitle>
+              {t('plugins.configureTitle', { name: configPlugin?.name ?? '' })}
+            </DialogTitle>
             <DialogDescription>{t('plugins.configureDescription')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -135,15 +162,18 @@ export default function PluginsManagementPage() {
                       ...current,
                       settings: {
                         ...current.settings,
-                        [field.key]: field.type === 'number' ? Number(event.target.value) : event.target.value
-                      }
+                        [field.key]:
+                          field.type === 'number' ? Number(event.target.value) : event.target.value,
+                      },
                     }))
                   }
                 />
                 {field.type === 'select' && field.options?.length ? (
                   <div className="meta-text flex flex-wrap gap-2">
                     {field.options.map((option) => {
-                      const active = String(configPlugin.settings?.[field.key] ?? field.defaultValue ?? '') === option
+                      const active =
+                        String(configPlugin.settings?.[field.key] ?? field.defaultValue ?? '') ===
+                        option;
                       return (
                         <button
                           key={option}
@@ -153,15 +183,15 @@ export default function PluginsManagementPage() {
                               ...current,
                               settings: {
                                 ...current.settings,
-                                [field.key]: option
-                              }
+                                [field.key]: option,
+                              },
                             }))
                           }
                           type="button"
                         >
                           {option}
                         </button>
-                      )
+                      );
                     })}
                   </div>
                 ) : null}
@@ -174,5 +204,5 @@ export default function PluginsManagementPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

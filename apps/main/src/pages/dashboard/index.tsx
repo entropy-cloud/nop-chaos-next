@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   Activity,
   CalendarRange,
@@ -8,8 +8,8 @@ import {
   Gauge,
   RefreshCw,
   ShieldCheck,
-  Users
-} from 'lucide-react'
+  Users,
+} from 'lucide-react';
 import {
   Area,
   AreaChart,
@@ -29,8 +29,8 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
-} from 'recharts'
+  YAxis,
+} from 'recharts';
 import {
   Badge,
   Button,
@@ -46,16 +46,22 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@nop-chaos/ui'
-import { useTranslation } from 'react-i18next'
-import { MetricCard } from '../../components/common/MetricCard'
-import { PageHeader } from '../../components/common/PageHeader'
-import { PluginMountPanel } from '../../components/plugin/PluginMountPanel'
-import { fetchDashboardData, type DashboardRange } from '../../services/mockApi'
+  SelectValue,
+} from '@nop-chaos/ui';
+import { useTranslation } from 'react-i18next';
+import { MetricCard } from '../../components/common/metric-card';
+import { PageHeader } from '../../components/common/page-header';
+import { PluginMountPanel } from '../../components/plugin/plugin-mount-panel';
+import { fetchDashboardData, type DashboardRange } from '../../services/mock-api';
 
-const metricIcons = [Activity, ShieldCheck, Clock3, Users]
-const pieColors = ['hsl(var(--primary))', 'hsl(var(--success))', 'hsl(var(--warning))', 'hsl(var(--danger))', 'hsl(var(--secondary))']
+const metricIcons = [Activity, ShieldCheck, Clock3, Users];
+const pieColors = [
+  'hsl(var(--primary))',
+  'hsl(var(--success))',
+  'hsl(var(--warning))',
+  'hsl(var(--danger))',
+  'hsl(var(--secondary))',
+];
 
 function chartTooltipStyle() {
   return {
@@ -63,17 +69,26 @@ function chartTooltipStyle() {
     border: '1px solid hsl(var(--border))',
     background: 'var(--card-surface)',
     boxShadow: 'var(--shadow-md)',
-    backdropFilter: 'blur(20px)'
-  }
+    backdropFilter: 'blur(20px)',
+  };
 }
 
 export default function DashboardPage() {
-  const { t } = useTranslation()
-  const [range, setRange] = useState<DashboardRange>('7d')
-  const [customStart, setCustomStart] = useState<Date | undefined>()
-  const [customEnd, setCustomEnd] = useState<Date | undefined>()
-  const [visibleSeries, setVisibleSeries] = useState({ requests: true, success: true, errors: true })
-  const [visibleChannels, setVisibleChannels] = useState({ apiGateway: true, scheduler: true, portal: true, plugin: true })
+  const { t } = useTranslation();
+  const [range, setRange] = useState<DashboardRange>('7d');
+  const [customStart, setCustomStart] = useState<Date | undefined>();
+  const [customEnd, setCustomEnd] = useState<Date | undefined>();
+  const [visibleSeries, setVisibleSeries] = useState({
+    requests: true,
+    success: true,
+    errors: true,
+  });
+  const [visibleChannels, setVisibleChannels] = useState({
+    apiGateway: true,
+    scheduler: true,
+    portal: true,
+    plugin: true,
+  });
 
   const dashboardQuery = useQuery({
     queryKey: ['dashboard', range, customStart?.toISOString(), customEnd?.toISOString()],
@@ -81,13 +96,13 @@ export default function DashboardPage() {
       fetchDashboardData(
         range,
         customStart ? customStart.toISOString().slice(0, 10) : undefined,
-        customEnd ? customEnd.toISOString().slice(0, 10) : undefined
-      )
-  })
+        customEnd ? customEnd.toISOString().slice(0, 10) : undefined,
+      ),
+  });
 
-  const data = dashboardQuery.data
+  const data = dashboardQuery.data;
 
-  const filteredTrend = useMemo(() => data?.trend ?? [], [data])
+  const filteredTrend = useMemo(() => data?.trend ?? [], [data]);
 
   return (
     <div className="space-y-6">
@@ -111,8 +126,8 @@ export default function DashboardPage() {
             </Select>
             <Popover>
               <PopoverTrigger render={<Button size="sm" variant="outline" />}>
-                  <CalendarRange className="size-4" />
-                  {range === 'custom' ? t('common.selectRange') : t('common.quickDates')}
+                <CalendarRange className="size-4" />
+                {range === 'custom' ? t('common.selectRange') : t('common.quickDates')}
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
                 <div className="grid gap-3 p-3 text-sm">
@@ -128,10 +143,28 @@ export default function DashboardPage() {
                     </Button>
                   </div>
                   <div className="grid gap-2">
-                    <div className="text-sm font-medium text-muted-foreground">{t('common.startDate')}</div>
-                    <Calendar mode="single" selected={customStart} onSelect={(value: Date | undefined) => { setRange('custom'); setCustomStart(value) }} />
-                    <div className="text-sm font-medium text-muted-foreground">{t('common.endDate')}</div>
-                    <Calendar mode="single" selected={customEnd} onSelect={(value: Date | undefined) => { setRange('custom'); setCustomEnd(value) }} />
+                    <div className="text-sm font-medium text-muted-foreground">
+                      {t('common.startDate')}
+                    </div>
+                    <Calendar
+                      mode="single"
+                      selected={customStart}
+                      onSelect={(value: Date | undefined) => {
+                        setRange('custom');
+                        setCustomStart(value);
+                      }}
+                    />
+                    <div className="text-sm font-medium text-muted-foreground">
+                      {t('common.endDate')}
+                    </div>
+                    <Calendar
+                      mode="single"
+                      selected={customEnd}
+                      onSelect={(value: Date | undefined) => {
+                        setRange('custom');
+                        setCustomEnd(value);
+                      }}
+                    />
                   </div>
                 </div>
               </PopoverContent>
@@ -146,7 +179,7 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {(data?.metrics ?? []).map((metric, index) => {
-          const Icon = metricIcons[index] ?? Gauge
+          const Icon = metricIcons[index] ?? Gauge;
           return (
             <MetricCard
               key={metric.id}
@@ -157,7 +190,7 @@ export default function DashboardPage() {
               positive={metric.positive}
               icon={<Icon className="size-5" />}
             />
-          )
+          );
         })}
       </div>
 
@@ -172,12 +205,17 @@ export default function DashboardPage() {
               {[
                 ['requests', t('dashboard.series.requests')],
                 ['success', t('dashboard.series.success')],
-                ['errors', t('dashboard.series.errors')]
+                ['errors', t('dashboard.series.errors')],
               ].map(([key, label]) => (
                 <button
                   key={key}
                   className={`rounded-full border px-3 py-1.5 text-sm ${visibleSeries[key as keyof typeof visibleSeries] ? 'border-transparent bg-[hsl(var(--primary))] text-white' : 'border-[hsl(var(--border))] text-muted-foreground'}`}
-                  onClick={() => setVisibleSeries((state) => ({ ...state, [key]: !state[key as keyof typeof state] }))}
+                  onClick={() =>
+                    setVisibleSeries((state) => ({
+                      ...state,
+                      [key]: !state[key as keyof typeof state],
+                    }))
+                  }
                   type="button"
                 >
                   {label}
@@ -199,9 +237,36 @@ export default function DashboardPage() {
                 <YAxis tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={chartTooltipStyle()} />
                 <Legend />
-                {visibleSeries.requests ? <Area type="monotone" dataKey="requests" name={t('dashboard.series.requests')} stroke="hsl(var(--primary))" fill="url(#requestsFill)" strokeWidth={3} /> : null}
-                {visibleSeries.success ? <Area type="monotone" dataKey="success" name={t('dashboard.series.success')} stroke="hsl(var(--success))" fill="transparent" strokeWidth={2} /> : null}
-                {visibleSeries.errors ? <Area type="monotone" dataKey="errors" name={t('dashboard.series.errors')} stroke="hsl(var(--danger))" fill="transparent" strokeWidth={2} /> : null}
+                {visibleSeries.requests ? (
+                  <Area
+                    type="monotone"
+                    dataKey="requests"
+                    name={t('dashboard.series.requests')}
+                    stroke="hsl(var(--primary))"
+                    fill="url(#requestsFill)"
+                    strokeWidth={3}
+                  />
+                ) : null}
+                {visibleSeries.success ? (
+                  <Area
+                    type="monotone"
+                    dataKey="success"
+                    name={t('dashboard.series.success')}
+                    stroke="hsl(var(--success))"
+                    fill="transparent"
+                    strokeWidth={2}
+                  />
+                ) : null}
+                {visibleSeries.errors ? (
+                  <Area
+                    type="monotone"
+                    dataKey="errors"
+                    name={t('dashboard.series.errors')}
+                    stroke="hsl(var(--danger))"
+                    fill="transparent"
+                    strokeWidth={2}
+                  />
+                ) : null}
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -221,7 +286,17 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="text-sm text-muted-foreground">{item.timestamp}</div>
-                  <Badge variant={item.type === 'error' ? 'destructive' : item.type === 'success' ? 'success' : 'warning'}>{item.type}</Badge>
+                  <Badge
+                    variant={
+                      item.type === 'error'
+                        ? 'destructive'
+                        : item.type === 'success'
+                          ? 'success'
+                          : 'warning'
+                    }
+                  >
+                    {item.type}
+                  </Badge>
                 </div>
                 <div className="mt-3 text-sm font-medium text-foreground">{item.description}</div>
                 <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
@@ -238,7 +313,9 @@ export default function DashboardPage() {
         <Card className="theme-card overflow-hidden xl:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
-              <div className="eyebrow-text tracking-[0.22em]">{t('dashboard.advancedChartsEyebrow')}</div>
+              <div className="eyebrow-text tracking-[0.22em]">
+                {t('dashboard.advancedChartsEyebrow')}
+              </div>
               <CardTitle className="mt-3">{t('dashboard.composedChartTitle')}</CardTitle>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -252,23 +329,35 @@ export default function DashboardPage() {
                 <CartesianGrid stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="label" tickLine={false} axisLine={false} />
                 <YAxis yAxisId="left" tickLine={false} axisLine={false} />
-                <YAxis yAxisId="right" orientation="right" domain={[90, 100]} tickLine={false} axisLine={false} />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  domain={[90, 100]}
+                  tickLine={false}
+                  axisLine={false}
+                />
                 <Tooltip
                   contentStyle={chartTooltipStyle()}
                   formatter={(value, name, item) => {
                     if (name === t('dashboard.successRate')) {
-                      return [`${value}%`, name]
+                      return [`${value}%`, name];
                     }
 
                     if (item.payload.requests) {
-                      return [value, name]
+                      return [value, name];
                     }
 
-                    return [value, name]
+                    return [value, name];
                   }}
                 />
                 <Legend />
-                <Bar yAxisId="left" dataKey="requests" name={t('dashboard.series.requests')} fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
+                <Bar
+                  yAxisId="left"
+                  dataKey="requests"
+                  name={t('dashboard.series.requests')}
+                  fill="hsl(var(--primary))"
+                  radius={[8, 8, 0, 0]}
+                />
                 <Line
                   yAxisId="right"
                   type="monotone"
@@ -292,7 +381,14 @@ export default function DashboardPage() {
           <CardContent className="h-[22rem]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={data?.categories ?? []} dataKey="value" nameKey="name" innerRadius={56} outerRadius={86} paddingAngle={3}>
+                <Pie
+                  data={data?.categories ?? []}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={56}
+                  outerRadius={86}
+                  paddingAngle={3}
+                >
                   {(data?.categories ?? []).map((entry, index) => (
                     <Cell key={entry.name} fill={pieColors[index % pieColors.length]} />
                   ))}
@@ -309,15 +405,27 @@ export default function DashboardPage() {
         <Card className="theme-card overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
-              <div className="eyebrow-text tracking-[0.22em]">{t('dashboard.advancedChartsEyebrow')}</div>
+              <div className="eyebrow-text tracking-[0.22em]">
+                {t('dashboard.advancedChartsEyebrow')}
+              </div>
               <CardTitle className="mt-3">{t('dashboard.channelChartTitle')}</CardTitle>
             </div>
             <div className="flex flex-wrap gap-2">
-              {Object.entries({ apiGateway: t('dashboard.channels.apiGateway'), scheduler: t('dashboard.channels.scheduler'), portal: t('dashboard.channels.portal'), plugin: t('dashboard.channels.plugin') }).map(([key, label]) => (
+              {Object.entries({
+                apiGateway: t('dashboard.channels.apiGateway'),
+                scheduler: t('dashboard.channels.scheduler'),
+                portal: t('dashboard.channels.portal'),
+                plugin: t('dashboard.channels.plugin'),
+              }).map(([key, label]) => (
                 <button
                   key={key}
                   className={`rounded-full border px-3 py-1.5 text-sm ${visibleChannels[key as keyof typeof visibleChannels] ? 'border-transparent bg-[hsl(var(--primary))] text-white' : 'border-[hsl(var(--border))] text-muted-foreground'}`}
-                  onClick={() => setVisibleChannels((state) => ({ ...state, [key]: !state[key as keyof typeof state] }))}
+                  onClick={() =>
+                    setVisibleChannels((state) => ({
+                      ...state,
+                      [key]: !state[key as keyof typeof state],
+                    }))
+                  }
                   type="button"
                 >
                   {label}
@@ -333,10 +441,38 @@ export default function DashboardPage() {
                 <YAxis tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={chartTooltipStyle()} />
                 <Legend />
-                {visibleChannels.apiGateway ? <Bar dataKey="apiGateway" stackId="stack" name={t('dashboard.channels.apiGateway')} fill="hsl(var(--primary))" /> : null}
-                {visibleChannels.scheduler ? <Bar dataKey="scheduler" stackId="stack" name={t('dashboard.channels.scheduler')} fill="hsl(var(--success))" /> : null}
-                {visibleChannels.portal ? <Bar dataKey="portal" stackId="stack" name={t('dashboard.channels.portal')} fill="hsl(var(--warning))" /> : null}
-                {visibleChannels.plugin ? <Bar dataKey="plugin" stackId="stack" name={t('dashboard.channels.plugin')} fill="hsl(var(--secondary))" /> : null}
+                {visibleChannels.apiGateway ? (
+                  <Bar
+                    dataKey="apiGateway"
+                    stackId="stack"
+                    name={t('dashboard.channels.apiGateway')}
+                    fill="hsl(var(--primary))"
+                  />
+                ) : null}
+                {visibleChannels.scheduler ? (
+                  <Bar
+                    dataKey="scheduler"
+                    stackId="stack"
+                    name={t('dashboard.channels.scheduler')}
+                    fill="hsl(var(--success))"
+                  />
+                ) : null}
+                {visibleChannels.portal ? (
+                  <Bar
+                    dataKey="portal"
+                    stackId="stack"
+                    name={t('dashboard.channels.portal')}
+                    fill="hsl(var(--warning))"
+                  />
+                ) : null}
+                {visibleChannels.plugin ? (
+                  <Bar
+                    dataKey="plugin"
+                    stackId="stack"
+                    name={t('dashboard.channels.plugin')}
+                    fill="hsl(var(--secondary))"
+                  />
+                ) : null}
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -344,7 +480,9 @@ export default function DashboardPage() {
 
         <Card className="theme-card overflow-hidden">
           <CardHeader>
-            <div className="eyebrow-text tracking-[0.22em]">{t('dashboard.advancedChartsEyebrow')}</div>
+            <div className="eyebrow-text tracking-[0.22em]">
+              {t('dashboard.advancedChartsEyebrow')}
+            </div>
             <CardTitle className="mt-3">{t('dashboard.radarTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="h-[21rem]">
@@ -354,8 +492,20 @@ export default function DashboardPage() {
                 <PolarAngleAxis dataKey="metric" />
                 <Tooltip contentStyle={chartTooltipStyle()} />
                 <Legend />
-                <Radar name={t('dashboard.currentPerformance')} dataKey="current" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.28} />
-                <Radar name={t('dashboard.benchmark')} dataKey="benchmark" stroke="hsl(var(--success))" fill="hsl(var(--success))" fillOpacity={0.14} />
+                <Radar
+                  name={t('dashboard.currentPerformance')}
+                  dataKey="current"
+                  stroke="hsl(var(--primary))"
+                  fill="hsl(var(--primary))"
+                  fillOpacity={0.28}
+                />
+                <Radar
+                  name={t('dashboard.benchmark')}
+                  dataKey="benchmark"
+                  stroke="hsl(var(--success))"
+                  fill="hsl(var(--success))"
+                  fillOpacity={0.14}
+                />
               </RadarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -364,5 +514,5 @@ export default function DashboardPage() {
 
       <PluginMountPanel />
     </div>
-  )
+  );
 }

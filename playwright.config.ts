@@ -1,61 +1,61 @@
-import { defineConfig, devices } from '@playwright/test'
-import { readFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { defineConfig, devices } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4175'
-const useExternalServer = Boolean(process.env.PLAYWRIGHT_BASE_URL)
-const appMode = process.env.PLAYWRIGHT_APP_MODE ?? 'extension-demo'
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4175';
+const useExternalServer = Boolean(process.env.PLAYWRIGHT_BASE_URL);
+const appMode = process.env.PLAYWRIGHT_APP_MODE ?? 'extension-demo';
 
-const rootDir = dirname(fileURLToPath(import.meta.url))
+const rootDir = dirname(fileURLToPath(import.meta.url));
 
 function loadMockEnv() {
   if (useExternalServer) {
-    return {}
+    return {};
   }
 
-  const envPath = resolve(rootDir, `apps/main/.env.${appMode}`)
-  let fileContent = ''
+  const envPath = resolve(rootDir, `apps/main/.env.${appMode}`);
+  let fileContent = '';
 
   try {
-    fileContent = readFileSync(envPath, 'utf8')
+    fileContent = readFileSync(envPath, 'utf8');
   } catch {
-    return {}
+    return {};
   }
 
-  const env: Record<string, string> = {}
+  const env: Record<string, string> = {};
 
   for (const line of fileContent.split(/\r?\n/)) {
-    const trimmed = line.trim()
+    const trimmed = line.trim();
 
     if (!trimmed || trimmed.startsWith('#')) {
-      continue
+      continue;
     }
 
-    const index = trimmed.indexOf('=')
+    const index = trimmed.indexOf('=');
 
     if (index <= 0) {
-      continue
+      continue;
     }
 
-    const key = trimmed.slice(0, index).trim()
-    const value = trimmed.slice(index + 1).trim()
+    const key = trimmed.slice(0, index).trim();
+    const value = trimmed.slice(index + 1).trim();
 
     if (key) {
-      env[key] = value
+      env[key] = value;
     }
   }
 
-  return env
+  return env;
 }
 
-const webServerEnv = loadMockEnv()
+const webServerEnv = loadMockEnv();
 
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 30_000,
   expect: {
-    timeout: 10_000
+    timeout: 10_000,
   },
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
@@ -65,15 +65,15 @@ export default defineConfig({
     baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
+    video: 'retain-on-failure',
   },
   projects: [
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome']
-      }
-    }
+        ...devices['Desktop Chrome'],
+      },
+    },
   ],
   webServer: useExternalServer
     ? undefined
@@ -82,6 +82,6 @@ export default defineConfig({
         url: 'http://127.0.0.1:4175',
         env: webServerEnv,
         reuseExistingServer: false,
-        timeout: 180_000
-      }
-})
+        timeout: 180_000,
+      },
+});

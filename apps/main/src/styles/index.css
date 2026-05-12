@@ -10,7 +10,10 @@
     border: 1px solid var(--border-surface);
     box-shadow: var(--shadow-sm);
     backdrop-filter: var(--glass-blur, none);
-    transition: transform var(--transition-base, 0.2s ease), box-shadow var(--transition-base, 0.2s ease), border-color var(--transition-base, 0.2s ease);
+    transition:
+      transform var(--transition-base, 0.2s ease),
+      box-shadow var(--transition-base, 0.2s ease),
+      border-color var(--transition-base, 0.2s ease);
     will-change: transform;
   }
 
@@ -63,7 +66,9 @@ body,
 body {
   margin: 0;
   background: inherit;
-  transition: background var(--transition-slow), color var(--transition-base);
+  transition:
+    background var(--transition-slow),
+    color var(--transition-base);
 }
 
 .theme-blob {

@@ -1,69 +1,68 @@
-import { useEffect, useMemo } from 'react'
-import { toast } from '@nop-chaos/ui'
-import { setPluginBridge } from '@nop-chaos/plugin-bridge'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { AppRoutes } from './router/AppRoutes'
-import { getDefaultThemeId } from './config/themeRegistry'
-import i18n from './config/i18n'
-import { useAuthBootstrap } from './hooks/useAuth'
-import { useMenuConfigQuery } from './hooks/useMenuConfig'
-import { useRuntimeCapabilities } from './hooks/useRuntimeCapabilities'
-import { registerBaseSharedModules } from './plugins/sharedModules'
-import { usePluginStore } from './store/pluginStore'
-import { useAuthStore } from './store/authStore'
-import { useThemeStore } from './store/themeStore'
-import { applyThemeToDocument } from './utils/themeCss'
+import { useEffect, useMemo } from 'react';
+import { toast } from '@nop-chaos/ui';
+import { setPluginBridge } from '@nop-chaos/plugin-bridge';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AppRoutes } from './router/app-routes';
+import { getDefaultThemeId } from './config/theme-registry';
+import i18n from './config/i18n';
+import { useAuthBootstrap } from './hooks/use-auth';
+import { useMenuConfigQuery } from './hooks/use-menu-config';
+import { useRuntimeCapabilities } from './hooks/use-runtime-capabilities';
+import { registerBaseSharedModules } from './plugins/shared-modules';
+import { usePluginStore } from './store/plugin-store';
+import { useAuthStore } from './store/auth-store';
+import { useThemeStore } from './store/theme-store';
+import { applyThemeToDocument } from './utils/theme-css';
 
-let didRegisterSharedModules = false
+let didRegisterSharedModules = false;
 
 export default function App() {
-  const themeConfig = useThemeStore((state) => state.themeConfig)
-  const plugins = usePluginStore((state) => state.plugins)
-  const user = useAuthStore((state) => state.user)
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { isAuthenticated, bootstrapStatus } = useAuthBootstrap()
-  const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending'
-  const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending)
-  const capabilities = useRuntimeCapabilities(menuQuery.data?.items ?? [])
+  const themeConfig = useThemeStore((state) => state.themeConfig);
+  const plugins = usePluginStore((state) => state.plugins);
+  const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, bootstrapStatus } = useAuthBootstrap();
+  const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending';
+  const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending);
+  const capabilities = useRuntimeCapabilities(menuQuery.data?.items ?? []);
 
   useEffect(() => {
-    applyThemeToDocument(themeConfig)
-  }, [themeConfig])
+    applyThemeToDocument(themeConfig);
+  }, [themeConfig]);
 
   useEffect(() => {
     if (didRegisterSharedModules) {
-      return
+      return;
     }
 
-    registerBaseSharedModules()
-    didRegisterSharedModules = true
-  }, [])
+    registerBaseSharedModules();
+    didRegisterSharedModules = true;
+  }, []);
 
   useEffect(() => {
     if (capabilities.needsAmis && didRegisterSharedModules) {
-      import('./amis/init').catch(() => {
-      })
+      import('./amis/init').catch(() => {});
     }
-  }, [capabilities.needsAmis])
+  }, [capabilities.needsAmis]);
 
   const pluginThemeConfig = useMemo(
     () => ({
       ...themeConfig,
-      themeId: themeConfig.themeId || getDefaultThemeId()
+      themeId: themeConfig.themeId || getDefaultThemeId(),
     }),
-    [themeConfig]
-  )
+    [themeConfig],
+  );
 
   const bridgeSnapshot = useMemo(
     () => ({
       i18n,
       themeConfig: pluginThemeConfig,
       user,
-      plugins
+      plugins,
     }),
-    [pluginThemeConfig, plugins, user]
-  )
+    [pluginThemeConfig, plugins, user],
+  );
 
   const pluginBridge = useMemo(
     () => ({
@@ -71,43 +70,42 @@ export default function App() {
       notifications: {
         success: (message: string) => toast.success(message),
         error: (message: string) => toast.error(message),
-        info: (message: string) => toast(message)
+        info: (message: string) => toast(message),
       },
-      navigate: (to: string, options?: { replace?: boolean; state?: unknown }) => navigate(to, options),
-      /* eslint-disable react-compiler/react-compiler -- zustand stores are callable objects (both hooks and plain store references); intentionally passed as store instances for plugin bridge */
+      navigate: (to: string, options?: { replace?: boolean; state?: unknown }) =>
+        navigate(to, options),
       stores: {
         authStore: useAuthStore,
         themeStore: useThemeStore,
-        pluginStore: usePluginStore
+        pluginStore: usePluginStore,
       },
-      /* eslint-enable react-compiler/react-compiler */
       getCurrentUser: () => user,
       getCurrentPath: () => location.pathname,
       getThemeConfig: () => pluginThemeConfig,
       getPluginManifest: (pluginId: string) => plugins.find((plugin) => plugin.id === pluginId),
       subscribe: (listener: () => void) => {
-        const handleLanguageChange = () => listener()
-        i18n.on('languageChanged', handleLanguageChange)
+        const handleLanguageChange = () => listener();
+        i18n.on('languageChanged', handleLanguageChange);
 
-        const unsubscribeTheme = useThemeStore.subscribe(listener)
-        const unsubscribeAuth = useAuthStore.subscribe(listener)
-        const unsubscribePlugins = usePluginStore.subscribe(listener)
+        const unsubscribeTheme = useThemeStore.subscribe(listener);
+        const unsubscribeAuth = useAuthStore.subscribe(listener);
+        const unsubscribePlugins = usePluginStore.subscribe(listener);
 
         return () => {
-          i18n.off('languageChanged', handleLanguageChange)
-          unsubscribeTheme()
-          unsubscribeAuth()
-          unsubscribePlugins()
-        }
+          i18n.off('languageChanged', handleLanguageChange);
+          unsubscribeTheme();
+          unsubscribeAuth();
+          unsubscribePlugins();
+        };
       },
-      getSnapshot: () => bridgeSnapshot
+      getSnapshot: () => bridgeSnapshot,
     }),
-    [bridgeSnapshot, location.pathname, navigate, pluginThemeConfig, plugins, user]
-  )
+    [bridgeSnapshot, location.pathname, navigate, pluginThemeConfig, plugins, user],
+  );
 
   useEffect(() => {
-    setPluginBridge(pluginBridge)
-  }, [pluginBridge])
+    setPluginBridge(pluginBridge);
+  }, [pluginBridge]);
 
-  return <AppRoutes />
+  return <AppRoutes />;
 }

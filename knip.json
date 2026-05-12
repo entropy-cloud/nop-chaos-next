@@ -1,0 +1,22 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "ignore": ["docs/**", ".opencode/**", "dist/**", "coverage/**", "test-results/**"],
+  "workspaces": {
+    "apps/main": {
+      "entry": ["package.json", "src/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "examples/*": {
+      "entry": ["package.json", "src/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/*": {
+      "entry": ["package.json", "src/index.{ts,tsx}", "src/**/*.{test,spec}.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "flux-lib/*": {
+      "entry": ["package.json", "src/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
+    }
+  }
+}

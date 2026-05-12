@@ -1,18 +1,18 @@
-import 'amis/lib/themes/cxd.css'
-import '../styles/amis-theme-bridge.css'
-import { registerMainXuiComponents } from './xuiComponents'
+import 'amis/lib/themes/cxd.css';
+import '../styles/amis-theme-bridge.css';
+import { registerMainXuiComponents } from './xui-components';
 
-let didInitAmisRuntime = false
+let didInitAmisRuntime = false;
 
 export function ensureAmisRuntime() {
   if (didInitAmisRuntime) {
-    return
+    return;
   }
 
-  didInitAmisRuntime = true
-  registerMainXuiComponents()
+  didInitAmisRuntime = true;
+  registerMainXuiComponents();
 }
 
 export interface AmisInitModule {
-  ensureAmisRuntime: typeof ensureAmisRuntime
+  ensureAmisRuntime: typeof ensureAmisRuntime;
 }

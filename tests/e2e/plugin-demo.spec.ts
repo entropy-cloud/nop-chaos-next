@@ -1,6 +1,6 @@
-import type { Page } from '@playwright/test'
-import { expect, test } from '@playwright/test'
-import { login } from './support/auth'
+import type { Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { login } from './support/auth';
 
 const demoRoutesMenuResponse = {
   status: 0,
@@ -19,16 +19,16 @@ const demoRoutesMenuResponse = {
             displayName: 'Flow Editor',
             routePath: '/flow-editor',
             component: 'flow-editor',
-            hidden: false
+            hidden: false,
           },
           {
             id: 'flow-editor-edit',
             displayName: 'Flow Editor Edit',
             routePath: '/flow-editor/:id',
             component: 'flow-editor/:id',
-            hidden: true
-          }
-        ]
+            hidden: true,
+          },
+        ],
       },
       {
         id: 'plugins',
@@ -43,7 +43,7 @@ const demoRoutesMenuResponse = {
             displayName: 'Plugin management',
             routePath: '/plugins/management',
             component: 'plugins/management',
-            hidden: false
+            hidden: false,
           },
           {
             id: 'plugins-demo',
@@ -51,43 +51,51 @@ const demoRoutesMenuResponse = {
             routePath: '/plugins/demo',
             component: 'plugin',
             hidden: false,
-            url: '/plugins/plugin-demo.system.js'
-          }
-        ]
-      }
-    ]
-  }
-}
+            url: '/plugins/plugin-demo.system.js',
+          },
+        ],
+      },
+    ],
+  },
+};
 
 async function useSeededDemoMenu(page: Page) {
   await page.route('**/r/SiteMapApi__getSiteMap', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(demoRoutesMenuResponse)
-    })
-  })
+      body: JSON.stringify(demoRoutesMenuResponse),
+    });
+  });
 }
 
-test('plugin demo reuses host navigation and shared shell context with seeded demo routes', async ({ page }) => {
+test('plugin demo reuses host navigation and shared shell context with seeded demo routes', async ({
+  page,
+}) => {
   await login(page, {
-    setup: () => useSeededDemoMenu(page)
-  })
+    setup: () => useSeededDemoMenu(page),
+  });
 
-  await page.getByText(/plugin demo/i).first().click()
-  await expect(page).toHaveURL(/\/plugins\/demo$/)
-  await page.waitForLoadState('networkidle')
+  await page
+    .getByText(/plugin demo/i)
+    .first()
+    .click();
+  await expect(page).toHaveURL(/\/plugins\/demo$/);
+  await page.waitForLoadState('networkidle');
 
-  await expect(page.locator('main')).not.toContainText('p[1] is not a function')
-  await expect(page.getByText('Plugin operations lens')).toBeVisible()
-  await expect(page.getByText(/route \/plugins\/demo|路由 \/plugins\/demo/)).toBeVisible()
-  await expect(page.getByText(/Custom analytics|自定义分析/)).toBeVisible()
+  await expect(page.locator('main')).not.toContainText('p[1] is not a function');
+  await expect(page.getByText('Plugin operations lens')).toBeVisible();
+  await expect(page.getByText(/route \/plugins\/demo|路由 \/plugins\/demo/)).toBeVisible();
+  await expect(page.getByText(/Custom analytics|自定义分析/)).toBeVisible();
 
-  const chart = page.locator('[data-testid="plugin-analytics-chart"]')
-  await expect(chart).toBeVisible()
+  const chart = page.locator('[data-testid="plugin-analytics-chart"]');
+  await expect(chart).toBeVisible();
 
-  await page.locator('main').getByRole('button', { name: /插件管理|Plugin management/ }).click()
+  await page
+    .locator('main')
+    .getByRole('button', { name: /插件管理|Plugin management/ })
+    .click();
 
-  await expect(page).toHaveURL(/\/plugins\/management$/)
-  await expect(page.getByRole('heading', { level: 1 })).toContainText(/插件管理|Plugin management/)
-})
+  await expect(page).toHaveURL(/\/plugins\/management$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(/插件管理|Plugin management/);
+});

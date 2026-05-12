@@ -1,11 +1,11 @@
-import { AlertTriangle } from 'lucide-react'
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { AlertTriangle } from 'lucide-react';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export default function ForbiddenPage() {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div className="grid min-h-[70vh] place-items-center">
@@ -23,5 +23,5 @@ export default function ForbiddenPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

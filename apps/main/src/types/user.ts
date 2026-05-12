@@ -1,1 +1,1 @@
-export type { AuthState, User } from '@nop-chaos/shared'
+export type { AuthState, User } from '@nop-chaos/shared';

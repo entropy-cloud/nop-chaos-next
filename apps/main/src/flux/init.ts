@@ -1,11 +1,11 @@
-let didInitFluxRuntime = false
+let didInitFluxRuntime = false;
 
 export function ensureFluxRuntime() {
   if (didInitFluxRuntime) {
-    return
+    return;
   }
 
-  didInitFluxRuntime = true
+  didInitFluxRuntime = true;
 
-  console.log('[Flux] Runtime initialized')
+  console.log('[Flux] Runtime initialized');
 }

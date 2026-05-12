@@ -1,11 +1,11 @@
-import type { TokenStorageType } from '../types/extension'
+import type { TokenStorageType } from '../types/extension';
 
 export interface AuthRuntimeConfig {
-  tokenStorage: TokenStorageType
-  persistRefreshToken: boolean
-  tokenRefreshBeforeExpiry: number
-  enableAutoRefresh: boolean
-  refreshTokenEndpoint: string
+  tokenStorage: TokenStorageType;
+  persistRefreshToken: boolean;
+  tokenRefreshBeforeExpiry: number;
+  enableAutoRefresh: boolean;
+  refreshTokenEndpoint: string;
 }
 
 const defaultConfig: AuthRuntimeConfig = {
@@ -13,19 +13,19 @@ const defaultConfig: AuthRuntimeConfig = {
   persistRefreshToken: false,
   tokenRefreshBeforeExpiry: 60,
   enableAutoRefresh: true,
-  refreshTokenEndpoint: '/r/LoginApi__refreshToken'
-}
+  refreshTokenEndpoint: '/r/LoginApi__refreshToken',
+};
 
-let runtimeConfig: AuthRuntimeConfig = { ...defaultConfig }
+let runtimeConfig: AuthRuntimeConfig = { ...defaultConfig };
 
 export function getAuthConfig(): AuthRuntimeConfig {
-  return runtimeConfig
+  return runtimeConfig;
 }
 
 export function setAuthConfig(config: Partial<AuthRuntimeConfig>): void {
-  runtimeConfig = { ...runtimeConfig, ...config }
+  runtimeConfig = { ...runtimeConfig, ...config };
 }
 
 export function resetAuthConfig(): void {
-  runtimeConfig = { ...defaultConfig }
+  runtimeConfig = { ...defaultConfig };
 }

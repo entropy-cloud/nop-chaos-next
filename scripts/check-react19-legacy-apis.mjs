@@ -15,14 +15,22 @@ const ignoreDirectoryNames = new Set([
   'dist',
   'node_modules',
   'temp',
-  'test-results'
+  'test-results',
 ]);
 
-const legacyReactDomImports = new Set(['findDOMNode', 'hydrate', 'render', 'unmountComponentAtNode']);
+const legacyReactDomImports = new Set([
+  'findDOMNode',
+  'hydrate',
+  'render',
+  'unmountComponentAtNode',
+]);
 const forbiddenModules = new Map([
   ['react-dom/test-utils', 'Use @testing-library/react instead of react-dom/test-utils.'],
   ['react-test-renderer', 'Do not reintroduce react-test-renderer into the React 19 baseline.'],
-  ['react-test-renderer/shallow', 'Shallow rendering is legacy. Use @testing-library/react instead.']
+  [
+    'react-test-renderer/shallow',
+    'Shallow rendering is legacy. Use @testing-library/react instead.',
+  ],
 ]);
 
 function toPosixPath(filePath) {
@@ -40,7 +48,7 @@ async function collectSourceFiles(dir) {
 
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      files.push(...await collectSourceFiles(fullPath));
+      files.push(...(await collectSourceFiles(fullPath)));
       continue;
     }
 
@@ -62,7 +70,7 @@ function createIssue(sourceFile, node, message) {
     filePath: toPosixPath(sourceFile.fileName),
     line: line + 1,
     column: character + 1,
-    message
+    message,
   };
 }
 
@@ -91,23 +99,45 @@ function scanSourceFile(sourceFile) {
       const importClause = node.importClause;
 
       if (forbiddenModules.has(moduleName)) {
-        issues.push(createIssue(sourceFile, node.moduleSpecifier, forbiddenModules.get(moduleName)));
+        issues.push(
+          createIssue(sourceFile, node.moduleSpecifier, forbiddenModules.get(moduleName)),
+        );
       }
 
-      if (moduleName === 'react-dom' && importClause?.namedBindings && ts.isNamedImports(importClause.namedBindings)) {
+      if (
+        moduleName === 'react-dom' &&
+        importClause?.namedBindings &&
+        ts.isNamedImports(importClause.namedBindings)
+      ) {
         for (const element of importClause.namedBindings.elements) {
           const importName = (element.propertyName ?? element.name).text;
           if (legacyReactDomImports.has(importName)) {
-            issues.push(createIssue(sourceFile, element.name, `Legacy react-dom import '${importName}' is not allowed in the React 19 baseline.`));
+            issues.push(
+              createIssue(
+                sourceFile,
+                element.name,
+                `Legacy react-dom import '${importName}' is not allowed in the React 19 baseline.`,
+              ),
+            );
           }
         }
       }
 
-      if (moduleName === 'react' && importClause?.namedBindings && ts.isNamedImports(importClause.namedBindings)) {
+      if (
+        moduleName === 'react' &&
+        importClause?.namedBindings &&
+        ts.isNamedImports(importClause.namedBindings)
+      ) {
         for (const element of importClause.namedBindings.elements) {
           const importName = (element.propertyName ?? element.name).text;
           if (importName === 'createFactory') {
-            issues.push(createIssue(sourceFile, element.name, 'createFactory is legacy and unsupported in the React 19 baseline.'));
+            issues.push(
+              createIssue(
+                sourceFile,
+                element.name,
+                'createFactory is legacy and unsupported in the React 19 baseline.',
+              ),
+            );
           }
         }
       }
@@ -116,32 +146,76 @@ function scanSourceFile(sourceFile) {
     if (ts.isPropertyAccessExpression(node)) {
       if (ts.isIdentifier(node.expression) && node.expression.text === 'ReactDOM') {
         if (legacyReactDomImports.has(node.name.text)) {
-          issues.push(createIssue(sourceFile, node.name, `ReactDOM.${node.name.text} is legacy and unsupported in the React 19 baseline.`));
+          issues.push(
+            createIssue(
+              sourceFile,
+              node.name,
+              `ReactDOM.${node.name.text} is legacy and unsupported in the React 19 baseline.`,
+            ),
+          );
         }
       }
 
-      if (ts.isIdentifier(node.expression) && node.expression.text === 'React' && node.name.text === 'createFactory') {
-        issues.push(createIssue(sourceFile, node.name, 'React.createFactory is legacy and unsupported in the React 19 baseline.'));
+      if (
+        ts.isIdentifier(node.expression) &&
+        node.expression.text === 'React' &&
+        node.name.text === 'createFactory'
+      ) {
+        issues.push(
+          createIssue(
+            sourceFile,
+            node.name,
+            'React.createFactory is legacy and unsupported in the React 19 baseline.',
+          ),
+        );
       }
     }
 
     if (ts.isPropertyDeclaration(node) || ts.isMethodDeclaration(node)) {
       const name = node.name && ts.isIdentifier(node.name) ? node.name.text : null;
       if (name === 'contextTypes' || name === 'childContextTypes' || name === 'getChildContext') {
-        issues.push(createIssue(sourceFile, node.name, `${name} is part of the legacy context API and is not allowed in the React 19 baseline.`));
+        issues.push(
+          createIssue(
+            sourceFile,
+            node.name,
+            `${name} is part of the legacy context API and is not allowed in the React 19 baseline.`,
+          ),
+        );
       }
     }
 
     if (ts.isExpressionStatement(node)) {
       const assignmentTarget = getAssignmentTarget(node);
-      if (assignmentTarget && ts.isPropertyAccessExpression(assignmentTarget) && ts.isIdentifier(assignmentTarget.expression)) {
+      if (
+        assignmentTarget &&
+        ts.isPropertyAccessExpression(assignmentTarget) &&
+        ts.isIdentifier(assignmentTarget.expression)
+      ) {
         const ownerName = assignmentTarget.expression.text;
         const propertyName = assignmentTarget.name.text;
-        if ((propertyName === 'propTypes' || propertyName === 'defaultProps') && isUppercaseComponentName(ownerName)) {
-          issues.push(createIssue(sourceFile, assignmentTarget.name, `${ownerName}.${propertyName} is legacy and should not be added back into the React 19 baseline.`));
+        if (
+          (propertyName === 'propTypes' || propertyName === 'defaultProps') &&
+          isUppercaseComponentName(ownerName)
+        ) {
+          issues.push(
+            createIssue(
+              sourceFile,
+              assignmentTarget.name,
+              `${ownerName}.${propertyName} is legacy and should not be added back into the React 19 baseline.`,
+            ),
+          );
         }
-        if ((propertyName === 'contextTypes' || propertyName === 'childContextTypes') && isUppercaseComponentName(ownerName)) {
-          issues.push(createIssue(sourceFile, assignmentTarget.name, `${ownerName}.${propertyName} is part of the legacy context API and is not allowed.`));
+        if (
+          (propertyName === 'contextTypes' || propertyName === 'childContextTypes') &&
+          isUppercaseComponentName(ownerName)
+        ) {
+          issues.push(
+            createIssue(
+              sourceFile,
+              assignmentTarget.name,
+              `${ownerName}.${propertyName} is part of the legacy context API and is not allowed.`,
+            ),
+          );
         }
       }
     }
@@ -150,7 +224,13 @@ function scanSourceFile(sourceFile) {
       const attributeName = node.name && ts.isIdentifier(node.name) ? node.name.text : null;
       if (attributeName === 'ref') {
         if (node.initializer && ts.isStringLiteral(node.initializer)) {
-          issues.push(createIssue(sourceFile, node.initializer, 'String refs are legacy and unsupported in the React 19 baseline.'));
+          issues.push(
+            createIssue(
+              sourceFile,
+              node.initializer,
+              'String refs are legacy and unsupported in the React 19 baseline.',
+            ),
+          );
         }
       }
     }
@@ -167,7 +247,7 @@ async function main() {
   for (const scanRoot of scanRoots) {
     const fullRoot = path.join(rootDir, scanRoot);
     try {
-      files.push(...await collectSourceFiles(fullRoot));
+      files.push(...(await collectSourceFiles(fullRoot)));
     } catch {
       // scanRoot may not exist in all configurations
     }
@@ -177,7 +257,13 @@ async function main() {
 
   for (const filePath of files) {
     const content = await readFile(filePath, 'utf8');
-    const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    const sourceFile = ts.createSourceFile(
+      filePath,
+      content,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TSX,
+    );
     issues.push(...scanSourceFile(sourceFile));
   }
 
