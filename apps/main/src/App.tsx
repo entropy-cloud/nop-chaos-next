@@ -2,17 +2,17 @@ import { useEffect, useMemo } from 'react';
 import { toast } from '@nop-chaos/ui';
 import { setPluginBridge } from '@nop-chaos/plugin-bridge';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AppRoutes } from './router/app-routes';
-import { getDefaultThemeId } from './config/theme-registry';
+import { AppRoutes } from './router/AppRoutes';
+import { getDefaultThemeId } from './config/themeRegistry';
 import i18n from './config/i18n';
-import { useAuthBootstrap } from './hooks/use-auth';
-import { useMenuConfigQuery } from './hooks/use-menu-config';
-import { useRuntimeCapabilities } from './hooks/use-runtime-capabilities';
-import { registerBaseSharedModules } from './plugins/shared-modules';
-import { usePluginStore } from './store/plugin-store';
-import { useAuthStore } from './store/auth-store';
-import { useThemeStore } from './store/theme-store';
-import { applyThemeToDocument } from './utils/theme-css';
+import { useAuthBootstrap } from './hooks/useAuth';
+import { useMenuConfigQuery } from './hooks/useMenuConfig';
+import { useRuntimeCapabilities } from './hooks/useRuntimeCapabilities';
+import { registerBaseSharedModules } from './plugins/sharedModules';
+import { usePluginStore } from './store/pluginStore';
+import { useAuthStore } from './store/authStore';
+import { useThemeStore } from './store/themeStore';
+import { applyThemeToDocument } from './utils/themeCss';
 
 let didRegisterSharedModules = false;
 

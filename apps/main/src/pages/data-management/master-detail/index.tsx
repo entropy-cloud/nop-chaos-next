@@ -36,11 +36,11 @@ import {
   TableRow,
   toast,
 } from '@nop-chaos/ui';
-import { getTableRowClassName } from '../../../lib/table-row-class-name';
+import { getTableRowClassName } from '../../../lib/tableRowClassName';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../../components/common/page-header';
-import { deleteOrders, fetchOrderList, type OrderRecord } from '../../../services/mock-api';
-import { useTabStore } from '../../../store/tab-store';
+import { PageHeader } from '../../../components/common/PageHeader';
+import { deleteOrders, fetchOrderList, type OrderRecord } from '../../../services/mockApi';
+import { useTabStore } from '../../../store/tabStore';
 
 type SortKey = 'orderNo' | 'customerName' | 'status' | 'createdAt' | 'updatedAt' | 'amount';
 type StatusFilter = 'all' | 'active' | 'review' | 'draft' | 'closed';

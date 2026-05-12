@@ -1,7 +1,7 @@
 import type { ShellExtension } from '@nop-chaos/shared';
-import { ExtensionBuiltinPage } from './pages/extension-builtin-page';
-import { ExtensionLoginPage } from './pages/extension-login-page';
-import { ExtensionNotFoundPage } from './pages/extension-not-found-page';
+import { ExtensionBuiltinPage } from './pages/ExtensionBuiltinPage';
+import { ExtensionLoginPage } from './pages/ExtensionLoginPage';
+import { ExtensionNotFoundPage } from './pages/ExtensionNotFoundPage';
 
 const harborMarkHref = new URL('./harbor-mark.svg', import.meta.url).href;
 const harborThemeHref = new URL('./harbor.css', import.meta.url).href;

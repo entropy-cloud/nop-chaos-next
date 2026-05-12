@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import type { Node, Edge } from '@xyflow/react';
 import type { LucideIcon } from 'lucide-react';
 
-import type { FlowNodeKind } from '../../../services/mock-api';
+import type { FlowNodeKind } from '../../../services/mockApi';
 
 export interface FlowNodeData extends Record<string, unknown> {
   label: string;

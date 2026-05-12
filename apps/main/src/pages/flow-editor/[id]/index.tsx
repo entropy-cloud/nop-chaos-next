@@ -29,17 +29,17 @@ import {
   saveFlowDetail,
   type FlowDocument,
   type FlowNodeKind,
-} from '../../../services/mock-api';
+} from '../../../services/mockApi';
 import { nodeMeta } from './constants';
 import { FlowEditorActionsContext } from './context';
-import { FlowCanvas } from './components/flow-canvas';
-import { FlowDeleteDialog } from './components/flow-delete-dialog';
-import { FlowEditorToolbar } from './components/flow-editor-toolbar';
-import { FlowEdgeRenderer } from './components/flow-edge-renderer';
-import { FlowInspectorPanel } from './components/flow-inspector-panel';
-import { FlowMobilePanels } from './components/flow-mobile-panels';
-import { FlowNodePalette } from './components/flow-node-palette';
-import { FlowNodeCard } from './components/flow-node-card';
+import { FlowCanvas } from './components/FlowCanvas';
+import { FlowDeleteDialog } from './components/FlowDeleteDialog';
+import { FlowEditorToolbar } from './components/FlowEditorToolbar';
+import { FlowEdgeRenderer } from './components/FlowEdgeRenderer';
+import { FlowInspectorPanel } from './components/FlowInspectorPanel';
+import { FlowMobilePanels } from './components/FlowMobilePanels';
+import { FlowNodePalette } from './components/FlowNodePalette';
+import { FlowNodeCard } from './components/FlowNodeCard';
 import {
   cloneEdges,
   cloneNodes,
@@ -57,8 +57,8 @@ import type {
   FlowNodeData,
   FlowSelectionSummary,
 } from './types';
-import { useFlowHistory } from './use-flow-history';
-import { useFlowKeyboardShortcuts } from './use-flow-keyboard-shortcuts';
+import { useFlowHistory } from './useFlowHistory';
+import { useFlowKeyboardShortcuts } from './useFlowKeyboardShortcuts';
 
 function FlowEditorPageInner() {
   const { t } = useTranslation();

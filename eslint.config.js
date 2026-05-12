@@ -140,8 +140,26 @@ export default tseslint.config(
       'unicorn/filename-case': [
         'error',
         {
+          cases: { camelCase: true, pascalCase: true },
+          ignore: [
+            /^[a-z]{2}-[A-Z]{2}(\.\w+)?$/,
+            /^App\.tsx$/,
+            /^\[.*\]\.tsx?$/,
+            /^[0-9]/,
+            /^vite-env\.d\.ts$/,
+            /^demo-extension\.d\.ts$/,
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['flux-lib/**/*.{ts,tsx}'],
+    rules: {
+      'unicorn/filename-case': [
+        'error',
+        {
           case: 'kebabCase',
-          ignore: [/^[a-z]{2}-[A-Z]{2}(\.\w+)?$/, /^App\.tsx$/],
         },
       ],
     },

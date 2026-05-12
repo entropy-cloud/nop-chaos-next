@@ -172,7 +172,7 @@ Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run t
 ## Routing, Permissions, Plugins
 
 - Current menu model supports `pageType: 'builtin' | 'plugin'`.
-- Builtin pages resolve through `apps/main/src/router/page-registry.tsx`.
+- Builtin pages resolve through `apps/main/src/router/pageRegistry.tsx`.
 - Plugin pages resolve through `PluginSlot` and runtime remote loading.
 - Permission checks happen both in menu filtering and route rendering; preserve both layers.
 - Avoid bundling duplicate React/runtime dependencies into remote plugins.

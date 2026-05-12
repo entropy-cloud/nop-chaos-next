@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ExtensionBuiltinPage } from '../pages/extension-builtin-page';
+import { ExtensionBuiltinPage } from '../pages/ExtensionBuiltinPage';
 import '@nop-chaos/theme-tokens/styles.css';
 import '@nop-chaos/ui/base.css';
 import '../harbor.css';

@@ -3,7 +3,7 @@ import type {
   LogisticsRecord,
   OrderItem,
   OrderRecord,
-} from '../../../../services/mock-api';
+} from '../../../../services/mockApi';
 
 export type DirtySectionKey = 'items' | 'addresses' | 'logistics';
 

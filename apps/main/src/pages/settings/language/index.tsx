@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../../components/common/page-header';
+import { PageHeader } from '../../../components/common/PageHeader';
 import { getLanguageOptions } from '../../../config/i18n/languages';
 
 export default function SettingsLanguagePage() {

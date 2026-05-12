@@ -49,10 +49,10 @@ import {
   SelectValue,
 } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { MetricCard } from '../../components/common/metric-card';
-import { PageHeader } from '../../components/common/page-header';
-import { PluginMountPanel } from '../../components/plugin/plugin-mount-panel';
-import { fetchDashboardData, type DashboardRange } from '../../services/mock-api';
+import { MetricCard } from '../../components/common/MetricCard';
+import { PageHeader } from '../../components/common/PageHeader';
+import { PluginMountPanel } from '../../components/plugin/PluginMountPanel';
+import { fetchDashboardData, type DashboardRange } from '../../services/mockApi';
 
 const metricIcons = [Activity, ShieldCheck, Clock3, Users];
 const pieColors = [

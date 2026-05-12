@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../components/common/page-header';
-import { PluginMountPanel } from '../../components/plugin/plugin-mount-panel';
+import { PageHeader } from '../../components/common/PageHeader';
+import { PluginMountPanel } from '../../components/plugin/PluginMountPanel';
 
 export default function PluginsHomePage() {
   const { t } = useTranslation();

@@ -18,13 +18,13 @@ import {
   SelectValue,
   toast,
 } from '@nop-chaos/ui';
-import { AppBrand } from '../../../components/layout/app-brand';
+import { AppBrand } from '../../../components/layout/AppBrand';
 import { isMockEnabled } from '../../../config/env';
 import { getLanguageOptions } from '../../../config/i18n/languages';
-import { useAuth } from '../../../hooks/use-auth';
-import { useMenuConfigQuery } from '../../../hooks/use-menu-config';
-import { useShellConfig } from '../../../hooks/use-shell-config';
-import { loginWithPassword } from '../../../services/auth-api';
+import { useAuth } from '../../../hooks/useAuth';
+import { useMenuConfigQuery } from '../../../hooks/useMenuConfig';
+import { useShellConfig } from '../../../hooks/useShellConfig';
+import { loginWithPassword } from '../../../services/authApi';
 
 export default function LoginPage() {
   const { t, i18n } = useTranslation();

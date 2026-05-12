@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../components/common/page-header';
+import { PageHeader } from '../../components/common/PageHeader';
 
 export default function DataManagementPage() {
   const { t } = useTranslation();

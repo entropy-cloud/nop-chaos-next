@@ -1,5 +1,5 @@
 import { MarkerType, type EdgeChange, type NodeChange, type XYPosition } from '@xyflow/react';
-import type { FlowNodeKind } from '../../../services/mock-api';
+import type { FlowNodeKind } from '../../../services/mockApi';
 import { defaultNodeConfig, nodeMeta } from './constants';
 import type { FlowEdge, FlowEdgeData, FlowNode, FlowStateSnapshot } from './types';
 

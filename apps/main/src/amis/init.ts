@@ -1,6 +1,6 @@
 import 'amis/lib/themes/cxd.css';
 import '../styles/amis-theme-bridge.css';
-import { registerMainXuiComponents } from './xui-components';
+import { registerMainXuiComponents } from './xuiComponents';
 
 let didInitAmisRuntime = false;
 

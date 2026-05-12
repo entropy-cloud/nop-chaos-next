@@ -10,8 +10,8 @@ import {
 } from '@nop-chaos/shared';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
-import { refreshAccessToken as requestRefreshAccessToken } from './auth-api';
-import { useAuthStore } from '../store/auth-store';
+import { refreshAccessToken as requestRefreshAccessToken } from './authApi';
+import { useAuthStore } from '../store/authStore';
 
 interface AjaxRequestOptions {
   method?: string;

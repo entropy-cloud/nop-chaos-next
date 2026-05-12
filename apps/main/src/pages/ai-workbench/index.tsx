@@ -11,7 +11,7 @@ import {
   toast,
 } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../components/common/page-header';
+import { PageHeader } from '../../components/common/PageHeader';
 import {
   assistantCatalog,
   createMockAiReply,
@@ -19,10 +19,10 @@ import {
   type AssistantOption,
   type WorkbenchMessage,
   type WorkbenchSession,
-} from '../../services/mock-api';
-import { ContextPanel } from './components/context-panel';
-import { ConversationPanel } from './components/conversation-panel';
-import { SessionSidebar } from './components/session-sidebar';
+} from '../../services/mockApi';
+import { ContextPanel } from './components/ContextPanel';
+import { ConversationPanel } from './components/ConversationPanel';
+import { SessionSidebar } from './components/SessionSidebar';
 import { buildHistoricalMessages, getAssistantName } from './utils';
 
 export default function AIWorkbenchPage() {

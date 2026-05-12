@@ -6,7 +6,7 @@ import type { MouseEvent as ReactMouseEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, toast } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../../../components/common/page-header';
+import { PageHeader } from '../../../../components/common/PageHeader';
 import {
   fetchOrderDetail,
   saveOrderDetail,
@@ -14,14 +14,14 @@ import {
   type LogisticsRecord,
   type OrderItem,
   type OrderRecord,
-} from '../../../../services/mock-api';
-import { AddressDialog } from './components/address-dialog';
-import { AddressesSection } from './components/addresses-section';
-import { FilterToolbar } from './components/filter-toolbar';
-import { ItemsSection } from './components/items-section';
-import { LogisticsDrawer } from './components/logistics-drawer';
-import { LogisticsSection } from './components/logistics-section';
-import { SummaryCard } from './components/summary-card';
+} from '../../../../services/mockApi';
+import { AddressDialog } from './components/AddressDialog';
+import { AddressesSection } from './components/AddressesSection';
+import { FilterToolbar } from './components/FilterToolbar';
+import { ItemsSection } from './components/ItemsSection';
+import { LogisticsDrawer } from './components/LogisticsDrawer';
+import { LogisticsSection } from './components/LogisticsSection';
+import { SummaryCard } from './components/SummaryCard';
 import type { DirtySectionKey, DirtySections, ValidationErrors } from './types';
 import { buildValidationErrors, containsIgnoreCase, normalizeOrder } from './utils';
 

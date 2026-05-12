@@ -1,5 +1,5 @@
 import { Flag, GitBranch, Play, Repeat, SplitSquareVertical, Workflow } from 'lucide-react';
-import type { FlowNodeKind } from '../../../services/mock-api';
+import type { FlowNodeKind } from '../../../services/mockApi';
 import type { NodeMeta, PaletteGroup } from './types';
 
 export const nodeMeta: Record<FlowNodeKind, NodeMeta> = {

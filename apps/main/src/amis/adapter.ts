@@ -9,8 +9,8 @@ import { toast } from '@nop-chaos/ui';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
 import { mainHttpClient } from '../services/http';
-import { useAuthStore } from '../store/auth-store';
-import { useThemeStore } from '../store/theme-store';
+import { useAuthStore } from '../store/authStore';
+import { useThemeStore } from '../store/themeStore';
 
 interface CreateMainAmisAdapterOptions {
   currentPath: string;

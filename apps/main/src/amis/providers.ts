@@ -1,10 +1,10 @@
 import type { AmisDictProvider, AmisPageProvider } from '@nop-chaos/amis-core';
 import { isMockEnabled } from '../config/env';
-import { fetchDictOptions } from '../services/dict-api';
-import { fetchAmisPage } from '../services/page-api';
+import { fetchDictOptions } from '../services/dictApi';
+import { fetchAmisPage } from '../services/pageApi';
 
 async function getPreviewSchema() {
-  const module = await import('./test-schema');
+  const module = await import('./testSchema');
   return module.testAmisSchema;
 }
 

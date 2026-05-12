@@ -21,9 +21,9 @@ import {
   toast,
 } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../../components/common/page-header';
-import { fetchPluginList } from '../../../services/mock-api';
-import { usePluginStore } from '../../../store/plugin-store';
+import { PageHeader } from '../../../components/common/PageHeader';
+import { fetchPluginList } from '../../../services/mockApi';
+import { usePluginStore } from '../../../store/pluginStore';
 
 export default function PluginsManagementPage() {
   const { t } = useTranslation();

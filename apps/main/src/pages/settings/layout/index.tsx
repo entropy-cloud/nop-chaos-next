@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../../components/common/page-header';
-import { useLayoutStore } from '../../../store/layout-store';
+import { PageHeader } from '../../../components/common/PageHeader';
+import { useLayoutStore } from '../../../store/layoutStore';
 
 export default function SettingsLayoutPage() {
   const { t } = useTranslation();

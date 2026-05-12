@@ -1,4 +1,4 @@
-import type { OrderItem, OrderRecord } from '../../../../services/mock-api';
+import type { OrderItem, OrderRecord } from '../../../../services/mockApi';
 import type { ValidationErrors } from './types';
 
 export function calculateSubtotal(item: OrderItem) {

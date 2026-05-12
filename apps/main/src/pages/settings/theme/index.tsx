@@ -1,8 +1,8 @@
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { PageHeader } from '../../../components/common/page-header';
-import { getThemeRegistry } from '../../../config/theme-registry';
-import { useTheme } from '../../../hooks/use-theme';
+import { PageHeader } from '../../../components/common/PageHeader';
+import { getThemeRegistry } from '../../../config/themeRegistry';
+import { useTheme } from '../../../hooks/useTheme';
 
 export default function SettingsThemePage() {
   const { t } = useTranslation();

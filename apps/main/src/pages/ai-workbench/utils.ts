@@ -3,7 +3,7 @@ import {
   type AssistantOption,
   type WorkbenchMessage,
   type WorkbenchSession,
-} from '../../services/mock-api';
+} from '../../services/mockApi';
 
 export type Translate = (key: string, options?: Record<string, unknown>) => string;
 
