@@ -18,8 +18,8 @@ const MAIN_EXTERNAL_BUILD_REQUIREMENTS = new Map([
 const MAIN_EXTERNAL_RUNTIME_DEPENDENCY_POLICIES = [
   { packageName: 'react', strategy: 'bundler-override' },
   { packageName: 'react-dom', strategy: 'bundler-override' },
-  { packageName: 'i18next', strategy: 'single-instance' },
-  { packageName: 'react-i18next', strategy: 'single-instance' },
+  { packageName: 'i18next', strategy: 'bundler-override' },
+  { packageName: 'react-i18next', strategy: 'bundler-override' },
   { packageName: 'zustand', strategy: 'single-instance' },
   { packageName: 'echarts', strategy: 'bundler-override' },
   { packageName: 'sonner', strategy: 'single-instance' },

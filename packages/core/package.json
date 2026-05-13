@@ -16,7 +16,7 @@
   },
   "peerDependencies": {
     "react-dom": "^19.0.0",
-    "react-i18next": "^17.0.0"
+    "react-i18next": "17.0.4"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
