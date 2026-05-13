@@ -214,9 +214,10 @@ test.describe('Flux lazy loading optimization', () => {
     expect(initialFluxChunks).toHaveLength(0);
 
     await openMenuRoute(page, 'Flux Demo', /\/flux-demo$/);
-    await expect(page.getByRole('main')).toContainText('Flux Demo');
     await expect(page.getByRole('main')).toContainText('Current Flux schemaPath: mock://flux-demo');
-    await expect(page.getByRole('main')).toContainText('Flux mock card');
+    await expect(page.getByRole('main')).toContainText('Flux JSON CRUD Demo');
+    await expect(page.getByRole('main')).toContainText('Query: none');
+    await expect(page.getByRole('main')).toContainText('Alice');
     await expect(page.getByRole('main')).not.toContainText('500');
 
     const newResources = await getAssetResources(page);
