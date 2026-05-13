@@ -183,6 +183,22 @@
 - `apps/main/src/services/http.ts` 通过动态 `import('@nop-chaos/amis-core')` 延迟 GraphQL/AMIS 请求转换逻辑，避免宿主运行时静态拉起 `vendor-amis-bridge-*`
 - `apps/main` 的 `build`、`analyze:imports`、`analyze:chunks` 已在最新产物上同时通过
 
+### 5.3 外部 file 运行时单例门禁
+
+脚本：`scripts/check-main-external-runtime-deps.mjs`
+
+校验项：
+
+- `apps/main` 的外部 `file:` 包是否把受管控的共享运行时解析成多个物理副本
+- 对必须宿主收口的运行时，是否已经存在可用的 bundler override target
+
+当前策略分两类：
+
+- `single-instance`：必须直接解析到同一物理路径
+- `bundler-override`：允许原始 Node 解析分裂，但宿主必须通过 `apps/main/vite.config.ts` 的 alias/dedupe 收口到单一路径
+
+当前已把 `react`、`react-dom`、`echarts` 归入 `bundler-override`；其中 `echarts` 的 override 目标不是仓库根猜测路径，而是从 `apps/main` 或外部 `amis-react19` 依赖链实际可解析到的 canonical 包根中选出的稳定目标，避免 alias 指向不存在的宿主安装目录。
+
 ---
 
 ## 6. build 门禁
@@ -190,13 +206,15 @@
 `apps/main/package.json` 现已把以下命令串进 `build` 与 `build:analyze`：
 
 1. `node ../../scripts/ensure-amis-file-deps-built.mjs`
-2. `vite build`
-3. `pnpm analyze:imports`
-4. `pnpm analyze:chunks`
+2. `node ../../scripts/check-main-external-runtime-deps.mjs --check`
+3. `vite build`
+4. `pnpm analyze:imports`
+5. `pnpm analyze:chunks`
 
 因此 `build` 的含义已经扩展为：
 
 - 依赖前置条件满足
+- 外部 `file:` 运行时单例/override 门禁通过
 - Vite 构建成功
 - 源码依赖图合规
 - chunk 图合规
