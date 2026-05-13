@@ -52,6 +52,7 @@ Bug fix records for non-trivial issues.
 | [12-amis-helper-css-conflict.md](./bugs/12-amis-helper-css-conflict.md)     | AMIS CSS conflict handling |
 | [23-doc-code-consistency-audit.md](./bugs/23-doc-code-consistency-audit.md) | Doc-code consistency audit |
 | [24-main-bundle-chunk-boundary-regression.md](./bugs/24-main-bundle-chunk-boundary-regression.md) | Main bundle chunk boundary regression |
+| [25-amis-file-dependency-runtime-split.md](./bugs/25-amis-file-dependency-runtime-split.md) | AMIS file dependency runtime split |
 
 ## Logs (`logs/`)
 
