@@ -9,7 +9,7 @@ test('master detail list opens detail in tab and warns on unsaved leave', async 
   await expect(page).toHaveURL(/\/data-management\/master-detail\/1001$/);
   await expect(page.getByRole('main')).toBeVisible();
 
-  await page.locator('table').first().locator('input').first().fill('已修改商品');
+  await page.getByRole('row', { name: /AI Copilot Pro/ }).getByRole('textbox').fill('已修改商品');
 
   const dialogPromise = new Promise<string>((resolve) => {
     page.once('dialog', async (dialog) => {
