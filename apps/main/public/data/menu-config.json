@@ -112,13 +112,22 @@
       "sort": 6
     },
     {
+      "id": "flux-demo",
+      "title": "Flux Demo",
+      "path": "/flux-demo",
+      "icon": "sparkles",
+      "pageType": "flux",
+      "schemaPath": "mock://flux-demo",
+      "sort": 7
+    },
+    {
       "id": "settings",
       "titleKey": "menu.settings",
       "path": "/settings",
       "icon": "settings-2",
       "pageType": "builtin",
       "componentId": "settings-home",
-      "sort": 7,
+      "sort": 8,
       "children": [
         {
           "id": "settings-theme",
@@ -153,7 +162,7 @@
       "icon": "badge-help",
       "pageType": "builtin",
       "componentId": "help-home",
-      "sort": 8,
+      "sort": 9,
       "children": [
         {
           "id": "help-guide",

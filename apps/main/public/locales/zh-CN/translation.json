@@ -106,12 +106,19 @@
     "plugins": "插件系统",
     "pluginsManagement": "插件管理",
     "pluginsDemo": "插件示例",
+    "fluxDemo": "Flux 示例",
     "settings": "系统设置",
     "theme": "主题设置",
     "language": "语言设置",
     "layout": "布局设置",
     "help": "帮助与文档",
     "guide": "使用指南"
+  },
+  "flux": {
+    "page": {
+      "title": "Flux 页面"
+    },
+    "schemaPath": "当前 Flux schemaPath: {{path}}"
   },
   "layout": {
     "expandSidebar": "展开侧栏",

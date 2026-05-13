@@ -313,10 +313,10 @@ export function createFluxSchemaRenderer(options: FluxRendererOptions) {
 
 | 文件 | 职责 |
 | --- | --- |
-| `apps/main/src/flux/init.ts` | 初始化 Flux 默认 renderer、CSS、i18n 连接 |
+| `apps/main/src/flux/init.ts` | 初始化 Flux 默认 runtime 钩子，且保持无副作用直到真正访问 Flux 路由 |
 | `apps/main/src/flux/adapter.ts` | 将 host auth、HTTP、navigation、toast、theme 暴露给 Flux runtime |
-| `apps/main/src/flux/providers.ts` | 通过后端或 mock 服务获取 Flux schema |
-| `apps/main/src/flux/FluxRouteRenderer.tsx` | 根据 `schemaPath` 获取 schema 并调用 Flux renderer |
+| `apps/main/src/flux/providers.ts` | 通过后端或 mock 服务获取 Flux schema；当前包含 `mock://flux-demo` 示例 |
+| `apps/main/src/flux/FluxRouteRenderer.tsx` | 根据 `schemaPath` 获取 schema 并渲染独立的 Flux mock 页面 |
 
 主项目不应 import Flux 内部包，例如：
 
@@ -401,6 +401,7 @@ import { createFluxSchemaRenderer, registerFluxRenderers } from '@nop-chaos/flux
 - `pnpm build` 通过
 - `pnpm lint` 通过
 - 配置一个 `pageType: 'flux'` 菜单项后，`RouteRenderer` 能加载真实 Flux 页面
+- mock 模式下应至少存在一个可直接访问的 `Flux Demo` 路由，用于验证 `pageType: 'flux'` 的菜单、schema provider 和懒加载边界
 - AMIS 页面仍可正常渲染，未被 Flux CSS 或运行时影响
 
 ---

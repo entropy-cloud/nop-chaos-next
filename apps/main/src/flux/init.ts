@@ -6,6 +6,4 @@ export function ensureFluxRuntime() {
   }
 
   didInitFluxRuntime = true;
-
-  console.log('[Flux] Runtime initialized');
 }

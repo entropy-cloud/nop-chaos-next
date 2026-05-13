@@ -106,12 +106,19 @@
     "plugins": "Plugins",
     "pluginsManagement": "Plugin Management",
     "pluginsDemo": "Plugin Demo",
+    "fluxDemo": "Flux Demo",
     "settings": "Settings",
     "theme": "Theme",
     "language": "Language",
     "layout": "Layout",
     "help": "Help",
     "guide": "Guide"
+  },
+  "flux": {
+    "page": {
+      "title": "Flux Page"
+    },
+    "schemaPath": "Current Flux schemaPath: {{path}}"
   },
   "layout": {
     "expandSidebar": "Expand sidebar",
