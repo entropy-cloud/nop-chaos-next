@@ -243,11 +243,12 @@ export default defineConfig(({ mode }) => {
     : undefined;
   const rootReactPath = resolve(repoRoot, 'node_modules/react');
   const rootReactDomPath = resolve(repoRoot, 'node_modules/react-dom');
+  const rootEchartsPath = resolve(repoRoot, 'node_modules/echarts');
 
   return {
     resolve: {
       tsconfigPaths: true,
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'echarts'],
       alias: [
         {
           find: 'react',
@@ -256,6 +257,10 @@ export default defineConfig(({ mode }) => {
         {
           find: 'react-dom',
           replacement: rootReactDomPath,
+        },
+        {
+          find: 'echarts',
+          replacement: rootEchartsPath,
         },
         ...mainExternalPackageAliases,
         ...(aliasedExtensionPath

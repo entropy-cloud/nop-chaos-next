@@ -13,6 +13,7 @@
     "build:analyze": "pnpm --filter @nop-chaos/main build:analyze",
     "analyze:main:imports": "node scripts/analyze-main-package-graph.mjs --check",
     "analyze:main:chunks": "node scripts/analyze-main-chunk-graph.mjs --check",
+    "check:main:file-runtime-deps": "node scripts/check-main-external-runtime-deps.mjs --check",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",

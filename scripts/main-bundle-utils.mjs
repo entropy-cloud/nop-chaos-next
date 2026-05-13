@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,6 +15,15 @@ const MAIN_EXTERNAL_BUILD_REQUIREMENTS = new Map([
   ['amis-ui', ['esm/index.js']],
   ['amis-formula', ['esm/index.js']],
 ]);
+const MAIN_EXTERNAL_RUNTIME_DEPENDENCY_POLICIES = [
+  { packageName: 'react', strategy: 'bundler-override' },
+  { packageName: 'react-dom', strategy: 'bundler-override' },
+  { packageName: 'i18next', strategy: 'single-instance' },
+  { packageName: 'react-i18next', strategy: 'single-instance' },
+  { packageName: 'zustand', strategy: 'single-instance' },
+  { packageName: 'echarts', strategy: 'bundler-override' },
+  { packageName: 'sonner', strategy: 'single-instance' },
+];
 
 function exists(filePath) {
   return fs.existsSync(filePath);
@@ -259,6 +269,19 @@ export function getWorkspaceDependencyLayers(context, entryNames = [MAIN_APP_NAM
 
 export function getMainExternalBuildRequirements() {
   return MAIN_EXTERNAL_BUILD_REQUIREMENTS;
+}
+
+export function getMainExternalRuntimeDependencyPolicies() {
+  return MAIN_EXTERNAL_RUNTIME_DEPENDENCY_POLICIES.map((entry) => ({ ...entry }));
+}
+
+export function resolvePackageSpecifierFromManifest(manifestPath, specifier) {
+  try {
+    const require = createRequire(manifestPath);
+    return normalizePath(fs.realpathSync(require.resolve(specifier)));
+  } catch {
+    return null;
+  }
 }
 
 export function getMissingMainExternalBuildOutputs(rootDir = repoRoot) {
