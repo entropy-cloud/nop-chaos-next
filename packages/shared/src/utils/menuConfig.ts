@@ -65,6 +65,7 @@ function assertPageType(value: unknown, fieldPath: string): MenuItem['pageType']
     value === 'builtin' ||
     value === 'plugin' ||
     value === 'amis' ||
+    value === 'flux' ||
     value === 'iframe' ||
     value === 'external'
   ) {
@@ -72,7 +73,7 @@ function assertPageType(value: unknown, fieldPath: string): MenuItem['pageType']
   }
 
   throw new Error(
-    `Invalid menu config: '${fieldPath}' must be 'builtin', 'plugin', 'amis', 'iframe', or 'external'`,
+    `Invalid menu config: '${fieldPath}' must be 'builtin', 'plugin', 'amis', 'flux', 'iframe', or 'external'`,
   );
 }
 
@@ -114,6 +115,10 @@ function validateMenuItem(value: unknown, fieldPath: string): MenuItem {
 
   if (pageType === 'amis' && !schemaPath) {
     throw new Error(`Invalid menu config: '${fieldPath}.schemaPath' is required for amis pages`);
+  }
+
+  if (pageType === 'flux' && !schemaPath) {
+    throw new Error(`Invalid menu config: '${fieldPath}.schemaPath' is required for flux pages`);
   }
 
   if (pageType === 'iframe' && !frameSrc) {

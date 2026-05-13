@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4175';
 const useExternalServer = Boolean(process.env.PLAYWRIGHT_BASE_URL);
-const appMode = process.env.PLAYWRIGHT_APP_MODE ?? 'extension-demo';
+const appMode = process.env.PLAYWRIGHT_APP_MODE ?? 'mock';
 
 const rootDir = dirname(fileURLToPath(import.meta.url));
 

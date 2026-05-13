@@ -1,6 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { login } from './support/auth';
 
+test.skip(
+  process.env.PLAYWRIGHT_APP_MODE !== 'extension-demo',
+  'Extension Harbor assertions only apply in extension-demo mode.',
+);
+
 test('extension demo alias mode loads Harbor login and builtin page', async ({ page }) => {
   const loginVariant = await login(page);
   expect(loginVariant).toBe('harbor');

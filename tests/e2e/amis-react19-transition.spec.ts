@@ -38,8 +38,9 @@ test.describe('amis-ui Transition components – React 19 findDOMNode regression
       timeout: 15_000,
     });
 
-    // Now navigate to the amis preview page.
-    await page.goto('/#/amis/preview');
+    // Navigate using the registered shell menu so the route loads the same way users open it.
+    await page.getByRole('button', { name: 'Amis Preview' }).click();
+    await expect(page).toHaveURL(/\/amis\/preview$/);
 
     // amis renders asynchronously: AmisPageRoute fetches the schema, then
     // AmisSchemaPage transforms it and calls renderAmis().  The button labels

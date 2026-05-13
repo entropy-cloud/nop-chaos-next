@@ -1,68 +1,185 @@
 import { test, expect } from '@playwright/test';
+import { login } from './support/auth';
+
+const fluxEnabledSiteMapResponse = {
+  status: 0,
+  data: {
+    children: [
+      {
+        id: 'dashboard',
+        displayName: 'Dashboard',
+        routePath: '/dashboard',
+        component: 'dashboard',
+        hidden: false,
+        meta: { sort: 1 },
+      },
+      {
+        id: 'amis-preview',
+        displayName: 'Amis Preview',
+        routePath: '/amis/preview',
+        component: 'AMIS',
+        hidden: false,
+        url: 'mock://preview',
+        meta: { sort: 6 },
+      },
+      {
+        id: 'flux-demo',
+        displayName: 'Flux Demo',
+        routePath: '/flux-demo',
+        component: 'flux-demo',
+        hidden: false,
+        meta: {
+          sort: 7,
+          pageType: 'flux',
+          schemaPath: 'mock://flux-demo',
+        },
+      },
+    ],
+  },
+};
+
+const fluxEnabledMenuResponse = {
+  home: '/dashboard',
+  items: [
+    {
+      id: 'dashboard',
+      titleKey: 'menu.dashboard',
+      path: '/dashboard',
+      icon: 'layout-dashboard',
+      pageType: 'builtin',
+      componentId: 'dashboard',
+      sort: 1,
+    },
+    {
+      id: 'amis-preview',
+      title: 'Amis Preview',
+      path: '/amis/preview',
+      icon: 'workflow',
+      pageType: 'amis',
+      schemaPath: 'mock://preview',
+      sort: 6,
+    },
+    {
+      id: 'flux-demo',
+      title: 'Flux Demo',
+      path: '/flux-demo',
+      icon: 'sparkles',
+      pageType: 'flux',
+      schemaPath: 'mock://flux-demo',
+      sort: 7,
+    },
+  ],
+};
+
+async function useFluxEnabledMenu(page: import('@playwright/test').Page) {
+  await page.route('**/r/SiteMapApi__getSiteMap', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(fluxEnabledSiteMapResponse),
+    });
+  });
+
+  await page.route('**/data/menu-config.json', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(fluxEnabledMenuResponse),
+    });
+  });
+}
+
+async function waitForRouteRegistration(page: import('@playwright/test').Page, name: string) {
+  await expect(page.getByRole('button', { name })).toBeVisible({ timeout: 15_000 });
+}
+
+async function openMenuRoute(page: import('@playwright/test').Page, name: string, expectedUrl: RegExp) {
+  await waitForRouteRegistration(page, name);
+  await page.getByRole('button', { name }).click();
+  await expect(page).toHaveURL(expectedUrl);
+}
+
+async function getPreloadLinks(page: import('@playwright/test').Page) {
+  return page.evaluate(() =>
+    Array.from(document.querySelectorAll('link[rel=modulepreload], link[rel=preload]')).map(
+      (link) => link.href,
+    ),
+  );
+}
+
+async function getAssetResources(page: import('@playwright/test').Page) {
+  return page.evaluate(() =>
+    performance.getEntriesByType('resource').map((entry) => ({
+      name: (entry as PerformanceResourceTiming).name,
+      transferSize: (entry as PerformanceResourceTiming).transferSize,
+    })),
+  );
+}
 
 test.describe('AMIS lazy loading optimization', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await login(page);
     await page.waitForLoadState('networkidle');
+    await waitForRouteRegistration(page, 'Amis Preview');
   });
 
-  test('should not load AMIS chunks on initial load', async ({ page }) => {
-    const amisRequests = await page.evaluate(() => {
-      return performance
-        .getEntriesByType('resource')
-        .filter((entry) => (entry as any).name?.includes('amis'));
+  test('AMIS route injects bridge modulepreload links when opened', async ({ page }) => {
+    await openMenuRoute(page, 'Amis Preview', /\/amis\/preview$/);
+    await expect(page.getByRole('button', { name: 'Trigger host toast' })).toBeVisible({
+      timeout: 30_000,
     });
 
-    expect(amisRequests).toHaveLength(0);
+    const amisPreloads = (await getPreloadLinks(page)).filter((href) =>
+      /\/assets\/(?:vendor|host)-amis|\/assets\/AmisRouteRenderer-/i.test(href),
+    );
+
+    expect(amisPreloads.length).toBeGreaterThan(0);
   });
 
-  test('should load AMIS chunks only when visiting AMIS page', async ({ page }) => {
-    const initialResources = await page.evaluate(() =>
-      performance.getEntriesByType('resource').map((entry) => (entry as any).name),
+  test('AMIS route renders after menu registration and loads bridge assets', async ({ page }) => {
+    const initialAmisAssets = (await getAssetResources(page)).filter((resource) =>
+      /\/assets\/(?:vendor|host)-amis|\/assets\/AmisRouteRenderer-/i.test(resource.name),
     );
 
-    const initialAmisChunks = initialResources.filter(
-      (name) => name.includes('vendor-amis') || name.includes('host-amis'),
+    const initialAmisRouteAssets = initialAmisAssets.filter((resource) =>
+      /\/assets\/AmisRouteRenderer-/i.test(resource.name),
     );
 
-    expect(initialAmisChunks).toHaveLength(0);
+    expect(initialAmisAssets.length).toBeGreaterThan(0);
+    expect(initialAmisRouteAssets).toHaveLength(0);
 
-    await page.click('text=AMIS Demo');
-    await page.waitForLoadState('networkidle');
-
-    const newResources = await page.evaluate(() =>
-      performance.getEntriesByType('resource').map((entry) => (entry as any).name),
-    );
-
-    const amisChunks = newResources.filter(
-      (name) => name.includes('vendor-amis') || name.includes('host-amis'),
-    );
-
-    expect(amisChunks.length).toBeGreaterThan(0);
-  });
-
-  test('should only load required AMIS vendor chunks', async ({ page }) => {
-    await page.click('text=AMIS Demo');
-    await page.waitForLoadState('networkidle');
-
-    const amisChunks = await page.evaluate(() => {
-      return performance
-        .getEntriesByType('resource')
-        .filter((entry) => {
-          const name = (entry as any).name;
-          return name.includes('amis') && name.endsWith('.js');
-        })
-        .map((entry) => ({
-          name: (entry as any).name,
-          size: entry.transferSize,
-        }));
+    await openMenuRoute(page, 'Amis Preview', /\/amis\/preview$/);
+    await expect(page.getByRole('button', { name: 'Trigger host toast' })).toBeVisible({
+      timeout: 30_000,
     });
 
-    const vendorChunks = amisChunks.filter((chunk) => chunk.name.includes('vendor-amis'));
+    const loadedAmisAssets = (await getAssetResources(page)).filter((resource) =>
+      /\/assets\/(?:vendor|host)-amis|\/assets\/AmisRouteRenderer-/i.test(resource.name),
+    );
+
+    expect(loadedAmisAssets.length).toBeGreaterThan(0);
+    expect(
+      loadedAmisAssets.some((resource) => /\/assets\/AmisRouteRenderer-/i.test(resource.name)),
+    ).toBe(true);
+  });
+
+  test('AMIS bridge chunk transfer size is measurable', async ({ page }) => {
+    await openMenuRoute(page, 'Amis Preview', /\/amis\/preview$/);
+    await expect(page.getByRole('button', { name: 'Trigger host toast' })).toBeVisible({
+      timeout: 30_000,
+    });
+
+    const amisChunks = (await getAssetResources(page)).filter(
+      (resource) => /amis/i.test(resource.name) && resource.name.endsWith('.js'),
+    );
+
+    const vendorChunks = amisChunks.filter(
+      (chunk) => chunk.name.includes('vendor-amis') || chunk.name.includes('host-amis'),
+    );
 
     expect(vendorChunks.length).toBeGreaterThan(0);
 
-    const totalVendorSize = vendorChunks.reduce((sum, chunk) => sum + chunk.size, 0);
+    const totalVendorSize = vendorChunks.reduce((sum, chunk) => sum + chunk.transferSize, 0);
 
     console.log(`Total AMIS vendor chunks size: ${(totalVendorSize / 1024).toFixed(2)} KB`);
 
@@ -72,45 +189,46 @@ test.describe('AMIS lazy loading optimization', () => {
 
 test.describe('Flux lazy loading optimization', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await login(page, { setup: () => useFluxEnabledMenu(page) });
     await page.waitForLoadState('networkidle');
+    await waitForRouteRegistration(page, 'Flux Demo');
   });
 
-  test('should not load Flux chunks on initial load', async ({ page }) => {
+  test('shell bootstrap does not preload dedicated Flux renderer chunks', async ({ page }) => {
     const fluxRequests = await page.evaluate(() => {
       return performance
         .getEntriesByType('resource')
-        .filter((entry) => (entry as any).name?.includes('flux'));
+        .filter((entry) => /FluxRouteRenderer-/i.test((entry as any).name ?? ''));
     });
 
     expect(fluxRequests).toHaveLength(0);
   });
 
-  test('should load Flux chunks only when visiting Flux page', async ({ page }) => {
-    const initialResources = await page.evaluate(() =>
-      performance.getEntriesByType('resource').map((entry) => (entry as any).name),
-    );
+  test('Flux route loads its renderer chunk and renders seeded schema path', async ({ page }) => {
+    const initialResources = await getAssetResources(page);
 
-    const initialFluxChunks = initialResources.filter((name) => name.includes('flux'));
+    const initialFluxChunks = initialResources.filter((resource) =>
+      /FluxRouteRenderer-/i.test(resource.name),
+    );
 
     expect(initialFluxChunks).toHaveLength(0);
 
-    await page.goto('/flux-demo');
-    await page.waitForLoadState('networkidle');
+    await openMenuRoute(page, 'Flux Demo', /\/flux-demo$/);
+    await expect(page.getByRole('main')).toContainText('Flux Demo');
+    await expect(page.getByRole('main')).toContainText('flux.schemaPath');
+    await expect(page.getByRole('main')).not.toContainText('500');
 
-    const newResources = await page.evaluate(() =>
-      performance.getEntriesByType('resource').map((entry) => (entry as any).name),
-    );
+    const newResources = await getAssetResources(page);
 
-    const fluxChunks = newResources.filter((name) => name.includes('flux'));
+    const fluxChunks = newResources.filter((resource) => /FluxRouteRenderer-/i.test(resource.name));
 
     expect(fluxChunks.length).toBeGreaterThan(0);
   });
 });
 
 test.describe('Bundle size validation', () => {
-  test('should keep main entry chunk small', async ({ page, request }) => {
-    await page.goto('/');
+  test('should keep main entry chunk small', async ({ page }) => {
+    await login(page);
 
     const mainEntryChunk = await page.evaluate(() => {
       return performance
@@ -128,7 +246,8 @@ test.describe('Bundle size validation', () => {
   });
 
   test('should validate chunk splitting strategy', async ({ page }) => {
-    await page.goto('/');
+    await login(page);
+    await page.goto('/#/dashboard');
     await page.waitForLoadState('networkidle');
 
     const allChunks = await page.evaluate(() => {
@@ -146,15 +265,23 @@ test.describe('Bundle size validation', () => {
 
     const vendorChunks = allChunks.filter((chunk) => chunk.name.includes('vendor-'));
     const hostChunks = allChunks.filter((chunk) => chunk.name.includes('host-'));
-    const pageChunks = allChunks.filter((chunk) => chunk.name.includes('page-'));
+    const routeChunks = allChunks.filter(
+      (chunk) =>
+        chunk.name.includes('page-') ||
+        /\/assets\/(dashboard|ai-workbench|flow-editor|settings|help|guide|management|data-management)-/i.test(
+          chunk.name,
+        ) ||
+        /\/assets\/page-secondary-/i.test(chunk.name) ||
+        /\/assets\/(?:AppShell|shell-core)-/i.test(chunk.name),
+    );
 
     console.log(`Vendor chunks: ${vendorChunks.length}`);
     console.log(`Host chunks: ${hostChunks.length}`);
-    console.log(`Page chunks: ${pageChunks.length}`);
+    console.log(`Route chunks: ${routeChunks.length}`);
 
     expect(vendorChunks.length).toBeGreaterThan(0);
     expect(hostChunks.length).toBeGreaterThan(0);
-    expect(pageChunks.length).toBeGreaterThan(0);
+    expect(routeChunks.length).toBeGreaterThan(0);
 
     const largestVendorChunk = vendorChunks.reduce((max, chunk) =>
       chunk.size > max.size ? chunk : max,

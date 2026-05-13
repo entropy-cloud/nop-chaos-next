@@ -69,9 +69,14 @@ function normalizeComponentKey(component?: string) {
 
 function toPageType(resource: LegacySiteMapResource): MenuItem['pageType'] {
   const componentKey = normalizeComponentKey(resource.component);
+  const metaPageType = typeof resource.meta?.pageType === 'string' ? resource.meta.pageType : undefined;
 
   if (componentKey === 'plugin' && resource.url) {
     return 'plugin';
+  }
+
+  if (metaPageType === 'flux') {
+    return 'flux';
   }
 
   if (resource.component === 'AMIS') {
@@ -185,7 +190,14 @@ function mapLegacyResource(resource: LegacySiteMapResource): MenuItem {
     pageType,
     componentId,
     pluginUrl: pageType === 'plugin' ? resource.url : undefined,
-    schemaPath: pageType === 'amis' ? resource.url : undefined,
+    schemaPath:
+      pageType === 'amis'
+        ? resource.url
+        : pageType === 'flux'
+          ? typeof resource.meta?.schemaPath === 'string'
+            ? resource.meta.schemaPath
+            : resource.url
+          : undefined,
     frameSrc: pageType === 'iframe' ? resource.url : undefined,
     externalUrl: pageType === 'external' ? resource.url : undefined,
     sort: typeof resource.meta?.sort === 'number' ? resource.meta.sort : undefined,

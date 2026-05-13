@@ -30,4 +30,25 @@ describe('validateMenuResponse', () => {
     expect(result.items[0]?.icon).toBe('credit-card');
     expect(result.items[0]?.children?.[0]?.icon).toBe('fa-credit-card');
   });
+
+  it('accepts flux menu items with schema paths', () => {
+    const result = validateMenuResponse({
+      home: '/flux-demo',
+      items: [
+        {
+          id: 'flux-demo',
+          title: 'Flux Demo',
+          path: '/flux-demo',
+          pageType: 'flux',
+          schemaPath: 'mock://flux-demo',
+        },
+      ],
+    });
+
+    expect(result.items[0]).toMatchObject({
+      id: 'flux-demo',
+      pageType: 'flux',
+      schemaPath: 'mock://flux-demo',
+    });
+  });
 });

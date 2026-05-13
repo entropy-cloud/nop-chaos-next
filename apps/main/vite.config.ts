@@ -241,11 +241,22 @@ export default defineConfig(({ mode }) => {
   const aliasedExtensionPath = extensionAliasPath
     ? resolve(appRoot, extensionAliasPath)
     : undefined;
+  const rootReactPath = resolve(repoRoot, 'node_modules/react');
+  const rootReactDomPath = resolve(repoRoot, 'node_modules/react-dom');
 
   return {
     resolve: {
       tsconfigPaths: true,
+      dedupe: ['react', 'react-dom'],
       alias: [
+        {
+          find: 'react',
+          replacement: rootReactPath,
+        },
+        {
+          find: 'react-dom',
+          replacement: rootReactDomPath,
+        },
         ...mainExternalPackageAliases,
         ...(aliasedExtensionPath
           ? [

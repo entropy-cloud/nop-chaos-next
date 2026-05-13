@@ -4,11 +4,12 @@ import { login } from './support/auth';
 test('master detail list opens detail in tab and warns on unsaved leave', async ({ page }) => {
   await login(page, { username: 'admin', defaultPassword: '123456' });
 
-  await page.goto('/#/data-management/master-detail/1001');
+  await page.getByRole('button', { name: 'Master Detail' }).click();
+  await page.locator('main tbody tr').first().getByRole('button', { name: 'View' }).click();
   await expect(page).toHaveURL(/\/data-management\/master-detail\/1001$/);
   await expect(page.getByRole('main')).toBeVisible();
 
-  await page.locator('tbody input').first().fill('已修改商品');
+  await page.locator('table').first().locator('input').first().fill('已修改商品');
 
   const dialogPromise = new Promise<string>((resolve) => {
     page.once('dialog', async (dialog) => {

@@ -7,7 +7,7 @@ function sidebarTrigger(page: import('@playwright/test').Page) {
 
 test('sidebar user menu opens, shows user info, and navigates to settings', async ({ page }) => {
   await login(page);
-  await expect(page.locator('aside')).toContainText(/Dashboard/i);
+  await expect(page.locator('aside').getByRole('button', { name: 'Dashboard' })).toBeVisible();
   await sidebarTrigger(page).click();
   const menuContent = page.locator('[data-slot="dropdown-menu-content"]');
   await expect(menuContent).toBeVisible();
@@ -38,7 +38,7 @@ test('sidebar user menu navigates to language settings', async ({ page }) => {
 
 test('sidebar user menu logout clears session and redirects to login', async ({ page }) => {
   await login(page);
-  await expect(page.locator('aside')).toContainText(/Dashboard/i);
+  await expect(page.locator('aside').getByRole('button', { name: 'Dashboard' })).toBeVisible();
   await sidebarTrigger(page).click();
   const menuContent = page.locator('[data-slot="dropdown-menu-content"]');
   await expect(menuContent).toBeVisible();

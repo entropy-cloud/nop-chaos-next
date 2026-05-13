@@ -72,10 +72,9 @@ async function useSeededDemoMenu(page: Page) {
 test('flow editor supports grouped palette, canvas editing, and minimap with seeded demo routes', async ({
   page,
 }) => {
-  await login(page, {
-    setup: () => useSeededDemoMenu(page),
-  });
-  await page.goto('/#/flow-editor/flow-101');
+  await login(page);
+  await page.getByRole('button', { name: 'Flow Library' }).click();
+  await page.locator('main tbody tr').first().getByRole('button', { name: 'Edit' }).click();
   await expect(page).toHaveURL(/\/flow-editor\/flow-101$/);
 
   await expect(page.locator('[data-testid="palette-item-task"]')).toBeVisible();
