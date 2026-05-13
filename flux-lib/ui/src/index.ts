@@ -56,6 +56,7 @@ export * from './components/toolbar/index.js';
 export { Toaster } from './components/ui/sonner.js';
 export { toast } from 'sonner';
 export { cn } from './lib/utils.js';
+export { setI18nGetter } from './lib/i18n.js';
 export { useIsMobile } from './hooks/use-mobile.js';
 export {
   toIconLookupKey,
