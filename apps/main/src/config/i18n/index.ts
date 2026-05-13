@@ -24,7 +24,7 @@ export function initializeI18n(): Promise<typeof i18n> {
         detection: {
           order: ['localStorage', 'navigator'],
           lookupLocalStorage: 'nop-language:v1',
-          convertDetectedLanguage: (language) => normalizeLanguageCode(language),
+          convertDetectedLanguage: (language: string) => normalizeLanguageCode(language),
         },
       })
       .then(() => i18n);

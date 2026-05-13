@@ -80,13 +80,14 @@ export function ExtensionLoginPage() {
   const [username, setUsername] = useState('harbor');
   const [password, setPassword] = useState('123456');
   const [submitting, setSubmitting] = useState(false);
+  const supportedLanguages = i18n.options?.supportedLngs;
+  const canChangeLanguage = typeof i18n.changeLanguage === 'function';
   const languageOptions = useMemo(() => {
-    const supported = i18n.options.supportedLngs;
-    const normalized = Array.isArray(supported) ? supported : [i18n.language];
+    const normalized = Array.isArray(supportedLanguages) ? supportedLanguages : [i18n.language];
     return normalized.filter(
       (item): item is string => typeof item === 'string' && item !== 'cimode',
     );
-  }, [i18n.language, i18n.options.supportedLngs]);
+  }, [i18n.language, supportedLanguages]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -208,14 +209,14 @@ export function ExtensionLoginPage() {
               <div className="rounded-[1.25rem] border border-dashed border-teal-200 bg-teal-50/70 px-4 py-3 text-sm text-slate-600">
                 Demo credentials for the extension override: any username + password `123456`
               </div>
-              {languageOptions.length > 1 ? (
+              {canChangeLanguage && languageOptions.length > 1 ? (
                 <div className="flex flex-wrap gap-2">
                   {languageOptions.map((language: string) => (
                     <Button
                       key={language}
                       type="button"
                       variant={i18n.language === language ? 'default' : 'outline'}
-                      onClick={() => void i18n.changeLanguage(language)}
+                      onClick={() => void i18n.changeLanguage?.(language)}
                     >
                       {language}
                     </Button>

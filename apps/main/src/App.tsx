@@ -88,17 +88,17 @@ export default function App() {
       getCurrentUser: () => user,
       getCurrentPath: () => location.pathname,
       getThemeConfig: () => pluginThemeConfig,
-      getPluginManifest: (pluginId: string) => plugins.find((plugin) => plugin.id === pluginId),
-      subscribe: (listener: () => void) => {
-        const handleLanguageChange = () => listener();
-        i18n.on('languageChanged', handleLanguageChange);
+        getPluginManifest: (pluginId: string) => plugins.find((plugin) => plugin.id === pluginId),
+        subscribe: (listener: () => void) => {
+          const handleLanguageChange = () => listener();
+          i18n.on?.('languageChanged', handleLanguageChange);
 
         const unsubscribeTheme = useThemeStore.subscribe(listener);
         const unsubscribeAuth = useAuthStore.subscribe(listener);
         const unsubscribePlugins = usePluginStore.subscribe(listener);
 
         return () => {
-          i18n.off('languageChanged', handleLanguageChange);
+          i18n.off?.('languageChanged', handleLanguageChange);
           unsubscribeTheme();
           unsubscribeAuth();
           unsubscribePlugins();
