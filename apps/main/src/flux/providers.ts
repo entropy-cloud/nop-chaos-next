@@ -3,7 +3,7 @@ import { loadSchemaAsset } from '../services/schemaAsset';
 
 async function getDemoSchema() {
   const module = await import('./testSchema');
-  return module.testFluxSchema;
+  return module.testFluxSchemaInput;
 }
 
 export async function fetchFluxPage(schemaPath: string) {

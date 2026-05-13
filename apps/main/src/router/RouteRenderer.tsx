@@ -18,11 +18,9 @@ const AmisRouteRenderer = lazy(async () => {
 });
 
 const FluxRouteRenderer = lazy(async () => {
-  const [{ ensureFluxRuntime }, module] = await Promise.all([
-    import('../flux/init'),
-    import('../flux/FluxRouteRenderer'),
-  ]);
-  ensureFluxRuntime();
+  const { ensureFluxRuntime } = await import('../flux/init');
+  await ensureFluxRuntime();
+  const module = await import('../flux/FluxRouteRenderer');
   return { default: module.FluxRouteRenderer };
 });
 

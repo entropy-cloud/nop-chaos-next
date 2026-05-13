@@ -1,94 +1,249 @@
-export interface FluxDemoSchemaSection {
-  id: string;
-  title: string;
-  description: string;
-  bullets: string[];
-}
+import type { FluxSchema } from '@nop-chaos/flux';
 
-export interface FluxDemoSchemaStat {
-  id: string;
-  label: string;
-  value: string;
-  hint: string;
-}
-
-export interface FluxDemoSchemaAction {
-  id: string;
-  label: string;
-  href: string;
-  variant?: 'primary' | 'secondary';
-}
-
-export interface FluxDemoSchema {
-  title: string;
-  eyebrow: string;
-  summary: string;
-  schemaPath: string;
-  stats: FluxDemoSchemaStat[];
-  sections: FluxDemoSchemaSection[];
-  actions: FluxDemoSchemaAction[];
-}
-
-export const testFluxSchema: FluxDemoSchema = {
-  title: 'Flux Demo',
-  eyebrow: 'Mock Runtime',
-  summary:
-    'This page is served by the mock menu + mock schema path flow and verifies that the Flux runtime is only requested when a Flux route is opened.',
-  schemaPath: 'mock://flux-demo',
-  stats: [
+export const testFluxSchema = {
+  type: 'page',
+  body: [
     {
-      id: 'renderer',
-      label: 'Renderer',
-      value: 'Flux mock card',
-      hint: 'Rendered by the dedicated Flux route chunk.',
+      type: 'text',
+      text: 'Flux JSON CRUD Demo',
     },
     {
-      id: 'source',
-      label: 'Source',
-      value: 'apps/main/src/flux/testSchema.ts',
-      hint: 'Loaded from a mock provider instead of the AMIS page provider.',
+      type: 'text',
+      text: 'Current Flux schemaPath: mock://flux-demo',
     },
     {
-      id: 'loading',
-      label: 'Lazy loading',
-      value: 'On demand',
-      hint: 'The shell should not fetch Flux runtime assets before this route is visited.',
-    },
-  ],
-  sections: [
-    {
-      id: 'checklist',
-      title: 'Runtime checklist',
-      description: 'Use this block to validate the route split and mock provider path.',
-      bullets: [
-        'Menu item declares pageType=flux and schemaPath=mock://flux-demo.',
-        'RouteRenderer lazy-loads the Flux runtime only after navigation.',
-        'FluxRouteRenderer fetches the seeded schema from the Flux provider.',
+      type: 'crud',
+      id: 'flux-demo-crud',
+      name: 'fluxDemoCrud',
+      rowKey: 'id',
+      selection: {},
+      autoClearSelectionOnRefresh: true,
+      source: [
+        {
+          id: '1',
+          name: 'Alice',
+          owner: 'Iris Chen',
+          status: 'active',
+          channel: 'portal',
+          summary: 'Customer onboarding workflow',
+        },
+        {
+          id: '2',
+          name: 'Bob',
+          owner: 'Noah Kim',
+          status: 'draft',
+          channel: 'api',
+          summary: 'Contract approval workflow',
+        },
+        {
+          id: '3',
+          name: 'Carol',
+          owner: 'Mila Rao',
+          status: 'review',
+          channel: 'ops',
+          summary: 'Compliance remediation workflow',
+        },
+      ],
+      queryForm: {
+        body: [
+          {
+            type: 'input-text',
+            name: 'keyword',
+            label: 'Keyword',
+          },
+        ],
+      },
+      toolbar: [
+        {
+          type: 'button',
+          label: 'Open create form',
+          onClick: {
+            action: 'openDialog',
+            args: {
+              title: 'Create Flux pipeline',
+              body: [
+                {
+                  type: 'form',
+                  data: {
+                    name: '',
+                    status: 'draft',
+                    channel: 'portal',
+                    featured: false,
+                    notes: '',
+                  },
+                  submitAction: {
+                    action: 'ajax',
+                    args: {
+                      url: '/api/flux-demo',
+                      method: 'post',
+                    },
+                  },
+                  body: [
+                    {
+                      type: 'input-text',
+                      name: 'name',
+                      label: 'Pipeline Name',
+                    },
+                    {
+                      type: 'select',
+                      name: 'status',
+                      label: 'Status',
+                      options: [
+                        { label: 'Draft', value: 'draft' },
+                        { label: 'Review', value: 'review' },
+                        { label: 'Active', value: 'active' },
+                      ],
+                    },
+                    {
+                      type: 'radio-group',
+                      name: 'channel',
+                      label: 'Channel',
+                      options: [
+                        { label: 'Portal', value: 'portal' },
+                        { label: 'API', value: 'api' },
+                        { label: 'Ops', value: 'ops' },
+                      ],
+                    },
+                    {
+                      type: 'switch',
+                      name: 'featured',
+                      label: 'Featured',
+                      option: {
+                        onLabel: 'Enabled',
+                        offLabel: 'Disabled',
+                      },
+                    },
+                    {
+                      type: 'textarea',
+                      name: 'notes',
+                      label: 'Notes',
+                      rows: 4,
+                    },
+                  ],
+                  actions: [
+                    {
+                      type: 'button',
+                      label: 'Submit pipeline',
+                      onClick: {
+                        action: 'submitForm',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ],
+      listActions: [
+        {
+          type: 'text',
+          text: 'Selected rows: ${$crud.selectionCount}',
+        },
+      ],
+      footerToolbar: [
+        {
+          type: 'text',
+          text: 'Query: ${$crud.query.keyword || "none"}',
+        },
+      ],
+      columns: [
+        { name: 'name', label: 'Name' },
+        { name: 'owner', label: 'Owner' },
+        { name: 'status', label: 'Status' },
+        { name: 'channel', label: 'Channel' },
+        {
+          type: 'operation',
+          label: 'Actions',
+          buttons: [
+            {
+              type: 'button',
+              label: 'Inspect',
+              onClick: {
+                action: 'openDialog',
+                args: {
+                  title: 'Record details',
+                  body: [
+                    {
+                      type: 'text',
+                      text: 'User: ${$slot.record.name}',
+                    },
+                    {
+                      type: 'text',
+                      text: 'Owner: ${$slot.record.owner}',
+                    },
+                    {
+                      type: 'text',
+                      text: 'Summary: ${$slot.record.summary}',
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: 'Edit Form',
+              onClick: {
+                action: 'openDialog',
+                args: {
+                  title: 'Edit Flux pipeline',
+                  body: [
+                    {
+                      type: 'form',
+                      data: {
+                        name: '${$slot.record.name}',
+                        status: '${$slot.record.status}',
+                        notes: '${$slot.record.summary}',
+                      },
+                      submitAction: {
+                        action: 'ajax',
+                        args: {
+                          url: '/api/flux-demo/${$slot.record.id}',
+                          method: 'put',
+                        },
+                      },
+                      body: [
+                        {
+                          type: 'input-text',
+                          name: 'name',
+                          label: 'Pipeline Name',
+                        },
+                        {
+                          type: 'select',
+                          name: 'status',
+                          label: 'Status',
+                          options: [
+                            { label: 'Draft', value: 'draft' },
+                            { label: 'Review', value: 'review' },
+                            { label: 'Active', value: 'active' },
+                          ],
+                        },
+                        {
+                          type: 'textarea',
+                          name: 'notes',
+                          label: 'Notes',
+                          rows: 4,
+                        },
+                      ],
+                      actions: [
+                        {
+                          type: 'button',
+                          label: 'Save Changes',
+                          onClick: {
+                            action: 'submitForm',
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
       ],
     },
-    {
-      id: 'boundary',
-      title: 'Bundle boundary',
-      description: 'This sample exists to make the lazy boundary measurable in build output and E2E checks.',
-      bullets: [
-        'No AMIS dependency is required to render this page.',
-        'No Flux route chunk should be downloaded during shell bootstrap.',
-        'The route content should remain available in mock mode without backend schema APIs.',
-      ],
-    },
   ],
-  actions: [
-    {
-      id: 'open-amis',
-      label: 'Open AMIS Preview',
-      href: '/amis/preview',
-      variant: 'primary',
-    },
-    {
-      id: 'open-dashboard',
-      label: 'Back to Dashboard',
-      href: '/dashboard',
-      variant: 'secondary',
-    },
-  ],
-};
+} as const satisfies Record<string, unknown>;
+
+export const testFluxSchemaInput = testFluxSchema as unknown as FluxSchema;
