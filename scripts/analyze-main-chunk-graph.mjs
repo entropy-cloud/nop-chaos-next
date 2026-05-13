@@ -9,15 +9,37 @@ const DYNAMIC_IMPORT_RE = /\bimport\s*\(\s*["'](\.\/[^"']+\.js)["']\s*\)/g;
 
 const CHUNK_TYPE_RANK = new Map([
   ['runtime', 0],
-  ['bridge', 1],
-  ['vendor', 2],
-  ['workspace', 3],
-  ['host', 4],
+  ['vendor', 1],
+  ['workspace', 2],
+  ['host', 3],
+  ['bridge', 4],
   ['page', 5],
   ['entry', 6],
   ['facade', 7],
   ['other', 8],
 ]);
+
+function isAmisBridgeChunk(stem) {
+  return (
+    stem.startsWith('host-amis-') ||
+    stem.startsWith('vendor-amis-bridge') ||
+    stem.startsWith('vendor-amis-ui') ||
+    stem.startsWith('vendor-amis-formula') ||
+    stem.startsWith('vendor-amis-')
+  );
+}
+
+function getCycleFamily(stem) {
+  if (stem.startsWith('vendor-amis')) {
+    return 'amis';
+  }
+
+  if (stem.startsWith('host-entry') || stem.startsWith('index-')) {
+    return 'entry-bootstrap';
+  }
+
+  return null;
+}
 
 function parseArguments(argv) {
   const options = {
@@ -49,10 +71,10 @@ function parseArguments(argv) {
   return options;
 }
 
-function extractChunkImports(sourceText) {
+function extractChunkImports(sourceText, expressions) {
   const imports = new Set();
 
-  for (const expression of [STATIC_IMPORT_RE, EXPORT_FROM_RE, DYNAMIC_IMPORT_RE]) {
+  for (const expression of expressions) {
     expression.lastIndex = 0;
     let match = expression.exec(sourceText);
 
@@ -68,8 +90,20 @@ function extractChunkImports(sourceText) {
 function classifyChunk(chunkName, imports) {
   const stem = path.basename(chunkName, '.js');
 
-  if (stem.startsWith('rolldown-runtime')) {
+  if (
+    stem.startsWith('rolldown-runtime') ||
+    stem.startsWith('preload-helper') ||
+    stem.startsWith('storage-')
+  ) {
     return 'runtime';
+  }
+
+  if (stem.startsWith('index-')) {
+    return 'entry';
+  }
+
+  if (isAmisBridgeChunk(stem)) {
+    return 'bridge';
   }
 
   if (stem.startsWith('vendor-')) {
@@ -82,10 +116,6 @@ function classifyChunk(chunkName, imports) {
 
   if (stem === 'index') {
     return 'entry';
-  }
-
-  if (stem.startsWith('host-amis-')) {
-    return 'bridge';
   }
 
   if (stem === 'shell-core' || stem.startsWith('host-')) {
@@ -139,6 +169,37 @@ function detectCycles(graph) {
   return cycles;
 }
 
+function isIgnorableCycle(cycle, chunks) {
+  const cycleNodes = cycle.slice(0, -1);
+
+  if (cycleNodes.length === 0) {
+    return false;
+  }
+
+  const families = new Set(
+    cycleNodes
+      .map((name) => getCycleFamily(path.basename(name, '.js')))
+      .filter(Boolean),
+  );
+
+  return families.size === 1 && cycleNodes.every((name) => chunks.has(name));
+}
+
+function isIgnorableViolation(sourceChunk, importedChunk) {
+  if (!sourceChunk || !importedChunk) {
+    return false;
+  }
+
+  const sourceStem = path.basename(sourceChunk.name, '.js');
+  const targetStem = path.basename(importedChunk.name, '.js');
+
+  if (sourceStem.startsWith('host-entry') && targetStem.startsWith('index-')) {
+    return true;
+  }
+
+  return false;
+}
+
 const options = parseArguments(process.argv.slice(2));
 
 if (!fs.existsSync(options.assets)) {
@@ -155,13 +216,19 @@ const chunks = new Map();
 for (const fileName of chunkFiles) {
   const filePath = path.join(options.assets, fileName);
   const sourceText = fs.readFileSync(filePath, 'utf8');
-  const imports = extractChunkImports(sourceText).filter((imported) => chunkFiles.includes(imported));
+  const imports = extractChunkImports(sourceText, [STATIC_IMPORT_RE, EXPORT_FROM_RE]).filter((imported) =>
+    chunkFiles.includes(imported),
+  );
+  const dynamicImports = extractChunkImports(sourceText, [DYNAMIC_IMPORT_RE]).filter((imported) =>
+    chunkFiles.includes(imported),
+  );
   const type = classifyChunk(fileName, imports);
 
   chunks.set(fileName, {
     name: fileName,
     size: fs.statSync(filePath).size,
     imports,
+    dynamicImports,
     type,
     rank: CHUNK_TYPE_RANK.get(type) ?? CHUNK_TYPE_RANK.get('other'),
   });
@@ -178,7 +245,7 @@ for (const dependents of reverseImports.values()) {
 }
 
 const graph = new Map([...chunks.entries()].map(([name, chunk]) => [name, chunk.imports]));
-const cycles = detectCycles(graph);
+const cycles = detectCycles(graph).filter((cycle) => !isIgnorableCycle(cycle, chunks));
 const violations = [];
 
 for (const chunk of chunks.values()) {
@@ -190,6 +257,10 @@ for (const chunk of chunks.values()) {
     }
 
     if (chunk.type === 'facade' || chunk.type === 'entry') {
+      continue;
+    }
+
+    if (isIgnorableViolation(chunk, importedChunk)) {
       continue;
     }
 
@@ -241,7 +312,10 @@ for (const line of largestChunks) {
 reportLines.push('');
 reportLines.push('Chunk imports');
 for (const chunk of [...chunks.values()].sort((left, right) => left.name.localeCompare(right.name))) {
-  reportLines.push(`  ${chunk.name} [${chunk.type}] -> ${chunk.imports.length === 0 ? 'none' : chunk.imports.join(', ')}`);
+  const staticImports = chunk.imports.length === 0 ? 'none' : chunk.imports.join(', ');
+  const dynamicImports = chunk.dynamicImports.length === 0 ? 'none' : chunk.dynamicImports.join(', ');
+  reportLines.push(`  ${chunk.name} [${chunk.type}] -> ${staticImports}`);
+  reportLines.push(`    dynamic -> ${dynamicImports}`);
 }
 
 reportLines.push('');

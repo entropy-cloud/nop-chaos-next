@@ -49,10 +49,10 @@
 构建产物采用以下层级：
 
 1. `runtime`
-2. `bridge`
-3. `vendor-*`
-4. `pkg-*`
-5. `host-*` / `shell-core`
+2. `vendor-*`
+3. `pkg-*`
+4. `host-*` / `shell-core`
+5. `bridge`
 6. `page-*`
 7. facade / entry
 
@@ -65,14 +65,18 @@
 - `vendor -> host`
 - `workspace -> host/page`
 
-当前仓库的 `host-amis-*` 需要单独视为 `bridge` 层，而不是普通 `host`。这些 chunk 承载的是 AMIS 宿主桥接与运行时边界：
+当前仓库的 `host-amis-*` 与 `vendor-amis-*` 需要合并视为 `bridge` 层，而不是普通 `host` 或普通 `vendor`。这些 chunk 承载的是 AMIS 宿主桥接与运行时边界：
 
 - `host-amis-adapter-*`
 - `host-amis-route-runtime-*`
 - `host-amis-bootstrap-*`
 - `host-amis-preview-*`
+- `vendor-amis-*`
+- `vendor-amis-bridge-*`
+- `vendor-amis-ui-*`
+- `vendor-amis-formula-*`
 
-在这一前提下，`vendor -> bridge` 属于当前架构允许的依赖关系，不应被误判为普通 `vendor -> host` 反向依赖。
+在这一前提下，`host -> bridge`、`bridge -> vendor`、`bridge -> workspace` 属于当前架构允许的依赖关系，不应被误判为普通反向依赖。
 
 ---
 
@@ -102,6 +106,13 @@
 - `@nop-chaos/amis-core` / `@nop-chaos/amis-react` -> `vendor-amis-bridge`
 
 第三方依赖保持按包族归类到 `vendor-*`。
+
+额外要求：
+
+- 对来自外部 `file:` 仓库但不在当前 workspace 内的路径，也要按稳定包边界归组，而不是让 Rolldown 退化生成匿名 `src-*` 大块
+- 已验证 `../amis-react19/packages/office-viewer` 若未被路径规则识别，会退化成匿名 `src-*` chunk；当前已在 `apps/main/vite.config.ts` 中显式映射到 `vendor-office-viewer`
+- `vendor-misc-*` 不是单一包，而是一个共享基础桶；当前已先拆出若干稳定子桶：`vendor-base-ui-*`、`vendor-date-*`、`vendor-embla-*`、`vendor-cmdk-*`、`vendor-mobx-*`
+- `@rc-component/*` 当前不能简单独立拆成单独 vendor 桶，因为在现有图中会与剩余 `vendor-misc-*` 形成真实静态循环；若要继续拆这组，需要先处理 AMIS 侧的依赖交叉
 
 ### 4.3 宿主共享目录
 
@@ -154,7 +165,23 @@
 这里的经验结论已经包含两类已验证问题：
 
 - 若 `src/components/common/*`、`src/components/plugin/*`、`src/lib/*` 这类 app-local 共享模块落进 `page-*`，会真实触发 `page-used-as-shared-runtime`
-- 若分析器不区分 `bridge` 与普通 `host`，会把 `AMIS` 宿主桥接关系误诊为 `vendor -> host`
+- 若分析器不区分静态 `import` 与动态 `import()`，会把 `lazy(() => import(...))` 这类正常页面边界误诊为 `host -> page`
+- 若分析器不把 `index-*`、`preload-helper-*`、`storage-*` 视为引导支持块，会把 Rolldown 生成的 bootstrap 互链误诊成层级违规
+- 若分析器不把 `vendor-amis-*` 归入 `bridge` 家族，会把 `AMIS` 宿主桥接关系误诊为 `vendor -> host` 或 `host -> bridge` 违规
+- 若外部 `file:` 包路径没有被 chunk 规则接住，Rolldown 可能生成语义不明的匿名 `src-*` 大块；这类块需要优先回溯真实包来源，再补稳定映射，而不是直接把匿名块当宿主源码处理
+- `vendor-amis-*` 当前已经与 `vendor-echarts-*` 分层：`echarts`/`zrender`/`echarts-wordcloud` 已通过包映射单独落到 `vendor-echarts-*`，但 `AMIS` renderer 里仍保留对 `echarts` 的静态 facade 与若干无效动态导入警告，因此 `vendor-amis-*` 仍会通过 facade chunk 间接拉起图表运行时
+- 进一步验证表明，`AMIS` 的 chart renderer 本身也可以单独从通用 `vendor-amis-*` 中拆出；当前已通过路径分桶把 `packages/amis/src|esm/renderers/Chart` 归到 `vendor-amis-chart-*`
+- 在此之后，`vendor-amis-*` 从约 `2.44 MB` 下降到约 `2.06 MB`，而 `vendor-echarts-*` 仍保持独立；这说明目前能继续削减 `vendor-amis-*` 的主要方向，是继续按 renderer 能力拆分，而不是再重复拆 `echarts` 包本体
+- 同样的方法也适用于其他重量级 renderer facade。当前已验证 `AMIS`、`Json`、`OfficeViewer`、`PdfViewer` 也能单独从通用 `vendor-amis-*` 中拆出，而不破坏 chunk 图层级约束
+- 最新验证中，`vendor-amis-*` 进一步降到约 `2.04 MB`，并新增了 `vendor-amis-renderer-*`、`vendor-amis-json-*`、`vendor-amis-office-viewer-*`、`vendor-amis-pdf-viewer-*`、`vendor-amis-rich-text-*`
+- `RichText` 最初未能独立落盘并不是单一原因：一方面 `amis-react19/packages/amis/src/compat.ts` 对 `RichTextControlRenderer` 的静态导入会抵消 `minimal.ts` 中的动态 `import('./renderers/Form/InputRichText')`；另一方面宿主侧最初匹配的是错误路径 `renderers/RichText`，而真实入口是 `renderers/Form/InputRichText`
+- 修正后，`InputRichText-*` facade 已稳定指向 `vendor-amis-rich-text-*`，同时 `Cycles: none` 与 `Layer violations: none` 保持不变
+- 这类拆分主要收益是减少“通用 AMIS renderer 集合”体积，让未命中对应能力的页面不必先加载其 facade 代码；真正更深层的库级懒加载仍取决于 `amis-react19` 内部 renderer 图是否保留静态依赖
+
+当前已验证：
+
+- `apps/main/src/services/http.ts` 通过动态 `import('@nop-chaos/amis-core')` 延迟 GraphQL/AMIS 请求转换逻辑，避免宿主运行时静态拉起 `vendor-amis-bridge-*`
+- `apps/main` 的 `build`、`analyze:imports`、`analyze:chunks` 已在最新产物上同时通过
 
 ---
 
@@ -202,7 +229,12 @@
 - 新增页面目录或调整公共组件目录
 - 修改 `manualChunks`
 
-如果分析脚本报错，优先修正边界，不要通过增加更多特判去掩盖反向依赖。
+如果分析脚本报错，优先修正真实边界，不要通过增加更多特判去掩盖反向依赖。
+
+允许保留的分析器特判只限于两类：
+
+- 构建器自动生成且不代表业务层级的 bootstrap 支持块
+- 已确认属于同一家族内部实现细节的 bridge 循环
 
 ---
 
@@ -213,6 +245,7 @@
 1. `apps/main/src/plugins/sharedModules.ts`
    - 当前会在宿主共享模块注册阶段静态引入 `lucide-react`、`recharts`、`sonner` 等库
    - 如果这些库只在部分页面或插件场景使用，应优先考虑拆成按需注册的共享层
+   - 已验证 `recharts` 可以从启动期基础共享模块中移除，并改为只在 `ensurePluginSharedModules()` 内按需动态注册；这样 `host-runtime-*` 不再静态依赖 `vendor-recharts-*`，dashboard 页面继续通过自己的 page chunk 拉起图表库
 
 2. `apps/main/src/App.tsx`
    - 不要因为菜单树中“存在某类页面”就提前 `import()` 对应运行时

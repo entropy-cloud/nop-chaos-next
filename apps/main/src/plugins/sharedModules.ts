@@ -9,7 +9,6 @@ import * as ZustandLib from 'zustand';
 import * as I18NextLib from 'i18next';
 import * as ReactI18NextLib from 'react-i18next';
 import * as LucideReactLib from 'lucide-react';
-import * as RechartsLib from 'recharts';
 import * as SonnerLib from 'sonner';
 import * as SharedLib from '@nop-chaos/shared';
 import * as PluginBridgeLib from '@nop-chaos/plugin-bridge';
@@ -34,11 +33,12 @@ const baseSharedModules = {
   i18next: I18NextLib,
   'react-i18next': ReactI18NextLib,
   'lucide-react': LucideReactLib,
-  recharts: RechartsLib,
   sonner: SonnerLib,
 };
 
 let didRegisterBaseModules = false;
+let didRegisterPluginExtraModules = false;
+let pluginExtraModulesPromise: Promise<void> | null = null;
 
 export function registerHostSharedModules() {
   globalThis.__NOP_SHARED__ = {
@@ -58,7 +58,28 @@ export function registerBaseSharedModules() {
   didRegisterBaseModules = true;
 }
 
-export function ensurePluginSharedModules(): Promise<void> {
+async function ensurePluginExtraSharedModules() {
+  if (didRegisterPluginExtraModules) {
+    return;
+  }
+
+  pluginExtraModulesPromise ??= import('recharts').then((rechartsModule) => {
+    const pluginExtraSharedModules = {
+      recharts: rechartsModule,
+    };
+
+    globalThis.__NOP_SHARED__ = {
+      ...(globalThis.__NOP_SHARED__ ?? {}),
+      ...pluginExtraSharedModules,
+    };
+    registerSharedModules(pluginExtraSharedModules);
+    didRegisterPluginExtraModules = true;
+  });
+
+  await pluginExtraModulesPromise;
+}
+
+export async function ensurePluginSharedModules(): Promise<void> {
   registerBaseSharedModules();
-  return Promise.resolve();
+  await ensurePluginExtraSharedModules();
 }

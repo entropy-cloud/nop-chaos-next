@@ -350,9 +350,21 @@ import { createFluxSchemaRenderer, registerFluxRenderers } from '@nop-chaos/flux
 
 处理策略：
 
-1. 短期：保留 `flux-lib/ui/`，不要用 `nop-chaos-flux/packages/ui` 直接替换。
+1. 短期：保留 `flux-lib/ui/`，但允许通过当前仓库脚本从同级 `../nop-chaos-flux/packages/ui` 单向同步。
 2. Flux 核心包：不要再同步 `flux-core`、`flux-react`、`flux-renderers-*` 到 `flux-lib/`，由 `@nop-chaos/flux` 替代。
 3. 后续：如果要统一 UI 来源，先对比 `flux-lib/ui/` 与 `nop-chaos-flux/packages/ui/` 差异，再决定是否通过单独 UI 发行包替换。
+
+当前主项目侧已提供同步脚本：`scripts/sync-flux-lib.sh`
+
+约束：
+
+- 三个项目目录保持同级：`../nop-chaos-flux`、`../nop-chaos-next`、`../amis-react19`
+- 默认同步范围是：
+  - `../nop-chaos-flux/packages/ui` -> `flux-lib/ui`
+  - `../nop-chaos-flux/packages/theme-tokens` -> `packages/theme-tokens`
+  - `../nop-chaos-flux/packages/tailwind-preset` -> `packages/tailwind-preset`
+- 同步时会删除上游测试源码（`*.test.ts`、`*.test.tsx`、`__tests__`），保证消费侧只保留运行时代码
+- 同步完成后会自动执行当前仓库的 `pnpm install`，保证 workspace 链接与根工具链恢复，不允许要求用户再手工修补目标包
 
 因为当前 `pnpm-workspace.yaml` 包含 `flux-lib/*`，任何被复制到 `flux-lib/flux-*` 的目录都会自动变成当前项目 workspace package。这会破坏“Flux 独立编译、主项目只消费发行产物”的边界。因此除 `flux-lib/ui/` 外，不应运行会写入 `flux-lib/flux-*` 的同步流程；除非先调整 workspace glob 和依赖策略。
 

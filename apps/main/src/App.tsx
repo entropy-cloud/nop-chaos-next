@@ -46,6 +46,24 @@ export default function App() {
     [themeConfig],
   );
 
+  const bridgeStores = useMemo(
+    () => ({
+      authStore: Object.assign(() => useAuthStore.getState(), {
+        getState: useAuthStore.getState,
+        subscribe: useAuthStore.subscribe,
+      }),
+      themeStore: Object.assign(() => useThemeStore.getState(), {
+        getState: useThemeStore.getState,
+        subscribe: useThemeStore.subscribe,
+      }),
+      pluginStore: Object.assign(() => usePluginStore.getState(), {
+        getState: usePluginStore.getState,
+        subscribe: usePluginStore.subscribe,
+      }),
+    }),
+    [],
+  );
+
   const bridgeSnapshot = useMemo(
     () => ({
       i18n,
@@ -66,11 +84,7 @@ export default function App() {
       },
       navigate: (to: string, options?: { replace?: boolean; state?: unknown }) =>
         navigate(to, options),
-      stores: {
-        authStore: useAuthStore,
-        themeStore: useThemeStore,
-        pluginStore: usePluginStore,
-      },
+      stores: bridgeStores,
       getCurrentUser: () => user,
       getCurrentPath: () => location.pathname,
       getThemeConfig: () => pluginThemeConfig,
@@ -92,7 +106,7 @@ export default function App() {
       },
       getSnapshot: () => bridgeSnapshot,
     }),
-    [bridgeSnapshot, location.pathname, navigate, pluginThemeConfig, plugins, user],
+    [bridgeSnapshot, bridgeStores, location.pathname, navigate, pluginThemeConfig, plugins, user],
   );
 
   useEffect(() => {

@@ -361,6 +361,49 @@ export function getVendorChunkName(packageName) {
     return 'vendor-amis';
   }
 
+  if (
+    packageName === '@base-ui/react' ||
+    packageName === '@base-ui/utils' ||
+    packageName.startsWith('@floating-ui/') ||
+    packageName === 'tabbable'
+  ) {
+    return 'vendor-base-ui';
+  }
+
+  if (
+    packageName === 'react-day-picker' ||
+    packageName === 'date-fns' ||
+    packageName.startsWith('@date-fns/')
+  ) {
+    return 'vendor-date';
+  }
+
+  if (packageName === 'embla-carousel' || packageName.startsWith('embla-carousel-')) {
+    return 'vendor-embla';
+  }
+
+  if (packageName === 'cmdk') {
+    return 'vendor-cmdk';
+  }
+
+  if (
+    packageName === 'mobx' ||
+    packageName === 'mobx-react' ||
+    packageName === 'mobx-react-lite' ||
+    packageName === 'mobx-state-tree'
+  ) {
+    return 'vendor-mobx';
+  }
+
+  if (
+    packageName === 'react-overlays' ||
+    packageName === 'react-transition-group' ||
+    packageName === 'dom-helpers' ||
+    packageName === 'uncontrollable'
+  ) {
+    return 'vendor-react-overlays';
+  }
+
   if (packageName === 'office-viewer') {
     return 'vendor-office-viewer';
   }

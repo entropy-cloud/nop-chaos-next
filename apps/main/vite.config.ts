@@ -55,6 +55,64 @@ function getWorkspacePackageChunkByPath(id: string) {
     return 'vendor-amis-bridge';
   }
 
+  if (
+    includesAny(normalized, [
+      '/packages/amis/esm/renderers/Chart.js',
+      '/packages/amis/src/renderers/Chart.tsx',
+    ])
+  ) {
+    return 'vendor-amis-chart';
+  }
+
+  if (
+    includesAny(normalized, [
+      '/packages/amis/esm/renderers/OfficeViewer.js',
+      '/packages/amis/src/renderers/OfficeViewer.tsx',
+    ])
+  ) {
+    return 'vendor-amis-office-viewer';
+  }
+
+  if (
+    includesAny(normalized, [
+      '/packages/amis/esm/renderers/PdfViewer.js',
+      '/packages/amis/src/renderers/PdfViewer.tsx',
+    ])
+  ) {
+    return 'vendor-amis-pdf-viewer';
+  }
+
+  if (
+    includesAny(normalized, [
+      '/packages/amis/esm/renderers/Form/InputRichText.js',
+      '/packages/amis/src/renderers/Form/InputRichText.tsx',
+    ])
+  ) {
+    return 'vendor-amis-rich-text';
+  }
+
+  if (
+    includesAny(normalized, [
+      '/packages/amis/esm/renderers/Json.js',
+      '/packages/amis/src/renderers/Json.tsx',
+    ])
+  ) {
+    return 'vendor-amis-json';
+  }
+
+  if (
+    includesAny(normalized, [
+      '/packages/amis/esm/renderers/AMIS.js',
+      '/packages/amis/src/renderers/AMIS.tsx',
+    ])
+  ) {
+    return 'vendor-amis-renderer';
+  }
+
+  if (includesAny(normalized, ['/packages/office-viewer/', '/node_modules/office-viewer/'])) {
+    return 'vendor-office-viewer';
+  }
+
   return undefined;
 }
 
@@ -81,36 +139,7 @@ function getHostRuntimeChunkName(id: string) {
     return 'host-amis-route-runtime';
   }
 
-  if (
-    includesAny(normalized, [
-      '/src/router/AppRoutes',
-      '/src/router/RouteRenderer',
-      '/src/router/pageRegistry',
-      '/src/plugins/',
-      '/src/components/layout/',
-    ])
-  ) {
-    return 'host-shell-runtime';
-  }
-
-  if (includesAny(normalized, ['/src/config/', '/src/extensions/'])) {
-    return 'host-config-runtime';
-  }
-
-  if (
-    includesAny(normalized, [
-      '/src/services/',
-      '/src/store/',
-      '/src/hooks/',
-      '/src/components/auth/',
-      '/src/components/plugin/',
-      '/src/lib/',
-    ])
-  ) {
-    return 'host-app-runtime';
-  }
-
-  return 'host-runtime-misc';
+  return 'host-runtime';
 }
 
 function getChunkGroupName(id: string) {
@@ -179,6 +208,8 @@ function getChunkGroupName(id: string) {
       '/src/extensions/',
       '/src/hooks/',
       '/src/lib/',
+      '/src/pages/auth/',
+      '/src/pages/errors/',
       '/src/plugins/',
       '/src/router/AppRoutes',
       '/src/router/RouteRenderer',

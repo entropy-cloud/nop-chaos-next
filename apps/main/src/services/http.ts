@@ -1,4 +1,3 @@
-import { normalizeGraphQLResponse, transformGraphQLRequest } from '@nop-chaos/amis-core';
 import type { AmisRequestOptions } from '@nop-chaos/amis-core';
 import {
   clearTokens as clearManagedTokens,
@@ -95,11 +94,16 @@ export const mainHttpClient = createHttpClient({
   },
 });
 
-function buildRequestOptions(
+async function getAmisRequestTransforms() {
+  return import('@nop-chaos/amis-core');
+}
+
+async function buildRequestOptions(
   path: string,
   options: AjaxRequestOptions,
-): { request: AjaxRequestOptions & { url: string }; operationName?: string } {
+): Promise<{ request: AjaxRequestOptions & { url: string }; operationName?: string }> {
   const { data, headers, query, ...requestOptions } = options;
+  const { transformGraphQLRequest } = await getAmisRequestTransforms();
   const amisRequest: AmisRequestOptions = {
     method: requestOptions.method,
     url: path,
@@ -124,7 +128,8 @@ function buildRequestOptions(
 }
 
 export async function ajaxFetch<T>(path: string, options: AjaxRequestOptions = {}): Promise<T> {
-  const request = buildRequestOptions(path, options);
+  const { normalizeGraphQLResponse } = await getAmisRequestTransforms();
+  const request = await buildRequestOptions(path, options);
   const response = await mainHttpClient.request(request.request);
   const normalizedData = request.operationName
     ? normalizeGraphQLResponse(response.data, request.operationName)
