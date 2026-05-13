@@ -9,12 +9,14 @@ import {
   createMainPackageContext,
   getMainExternalPackageAliases,
   getPackageChunkName,
+  getMainRuntimeOverrideAliases,
 } from '../../scripts/main-bundle-utils.mjs';
 
 const appRoot = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(appRoot, '../..');
 const mainPackageContext = createMainPackageContext(repoRoot);
 const mainExternalPackageAliases = getMainExternalPackageAliases(repoRoot);
+const mainRuntimeOverrideAliases = getMainRuntimeOverrideAliases(repoRoot);
 
 function includesAny(id: string, segments: string[]) {
   return segments.some((segment) => id.includes(segment));
@@ -241,27 +243,13 @@ export default defineConfig(({ mode }) => {
   const aliasedExtensionPath = extensionAliasPath
     ? resolve(appRoot, extensionAliasPath)
     : undefined;
-  const rootReactPath = resolve(repoRoot, 'node_modules/react');
-  const rootReactDomPath = resolve(repoRoot, 'node_modules/react-dom');
-  const rootEchartsPath = resolve(repoRoot, 'node_modules/echarts');
 
   return {
     resolve: {
       tsconfigPaths: true,
       dedupe: ['react', 'react-dom', 'echarts'],
       alias: [
-        {
-          find: 'react',
-          replacement: rootReactPath,
-        },
-        {
-          find: 'react-dom',
-          replacement: rootReactDomPath,
-        },
-        {
-          find: 'echarts',
-          replacement: rootEchartsPath,
-        },
+        ...mainRuntimeOverrideAliases,
         ...mainExternalPackageAliases,
         ...(aliasedExtensionPath
           ? [

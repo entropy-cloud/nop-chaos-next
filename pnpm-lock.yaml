@@ -243,17 +243,17 @@ importers:
         specifier: ^12.10.2
         version: 12.10.2(@types/react@19.2.14)(immer@11.1.4)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       amis:
-        specifier: file:../../../amis-react19/packages/amis
-        version: file:../amis-react19/packages/amis(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-ui@file:../amis-react19/packages/amis-ui(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(office-viewer@0.3.14(echarts@5.5.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:../../../amis-react19/dist-packages/amis-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-ui@file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(office-viewer@file:../amis-react19/dist-packages/office-viewer-0.3.14.tgz(echarts@5.5.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       amis-core:
-        specifier: file:../../../amis-react19/packages/amis-core
-        version: file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:../../../amis-react19/dist-packages/amis-core-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       amis-formula:
-        specifier: file:../../../amis-react19/packages/amis-formula
-        version: file:../amis-react19/packages/amis-formula
+        specifier: file:../../../amis-react19/dist-packages/amis-formula-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz
       amis-ui:
-        specifier: file:../../../amis-react19/packages/amis-ui
-        version: file:../amis-react19/packages/amis-ui(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:../../../amis-react19/dist-packages/amis-ui-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -281,6 +281,9 @@ importers:
       lucide-react:
         specifier: ^1.7.0
         version: 1.8.0(react@19.2.5)
+      office-viewer:
+        specifier: file:../../../amis-react19/dist-packages/office-viewer-0.3.14.tgz
+        version: file:../amis-react19/dist-packages/office-viewer-0.3.14.tgz(echarts@5.5.1)
       react:
         specifier: ^19.0.0
         version: 19.2.5
@@ -478,17 +481,17 @@ importers:
         specifier: workspace:*
         version: link:../../flux-lib/ui
       amis:
-        specifier: file:../../../amis-react19/packages/amis
-        version: file:../amis-react19/packages/amis(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-ui@file:../amis-react19/packages/amis-ui(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(office-viewer@0.3.14(echarts@5.5.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:../../../amis-react19/dist-packages/amis-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-ui@file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(office-viewer@0.3.14(echarts@5.5.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       amis-core:
-        specifier: file:../../../amis-react19/packages/amis-core
-        version: file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:../../../amis-react19/dist-packages/amis-core-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       amis-formula:
-        specifier: file:../../../amis-react19/packages/amis-formula
-        version: file:../amis-react19/packages/amis-formula
+        specifier: file:../../../amis-react19/dist-packages/amis-formula-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz
       amis-ui:
-        specifier: file:../../../amis-react19/packages/amis-ui
-        version: file:../amis-react19/packages/amis-ui(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:../../../amis-react19/dist-packages/amis-ui-6.13.1.tgz
+        version: file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       react:
         specifier: ^19.0.0
         version: 19.2.5
@@ -2168,26 +2171,30 @@ packages:
   ajv@6.14.0:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
 
-  amis-core@file:../amis-react19/packages/amis-core:
-    resolution: {directory: ../amis-react19/packages/amis-core, type: directory}
+  amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz:
+    resolution: {integrity: sha512-i3ADI6cu6L/8lCmOQ0peT753ZE/Sw+IOEIt9wNIUwLL3ufBWrWoYa1sdj85wonDfBy/LwUHNxVaZmW4SXwUT/Q==, tarball: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz}
+    version: 6.13.1
     peerDependencies:
       amis-formula: '*'
       react: '>=16.8.6'
       react-dom: '>=16.8.6'
 
-  amis-formula@file:../amis-react19/packages/amis-formula:
-    resolution: {directory: ../amis-react19/packages/amis-formula, type: directory}
+  amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz:
+    resolution: {integrity: sha512-DxybZ2UmaRcx1e9teOsqLCtNjaRdmkQFYr9kpaCjv56we0MtPqTS5LJC4yUZNDoCjQMSPqQQSMKm1UNp0ioOfw==, tarball: file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz}
+    version: 6.13.1
 
-  amis-ui@file:../amis-react19/packages/amis-ui:
-    resolution: {directory: ../amis-react19/packages/amis-ui, type: directory}
+  amis-ui@file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz:
+    resolution: {integrity: sha512-P7Kfn47jBNRfcI4tmUbDFvY3D0WLsIyktUKnXDzb4cp8d2LLmXydi3TTqqlQPU6y5cXbBzpBn3hPUr9L+MJNFg==, tarball: file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz}
+    version: 6.13.1
     peerDependencies:
       amis-core: '*'
       amis-formula: '*'
       react: '>=16.8.6'
       react-dom: '>=16.8.6'
 
-  amis@file:../amis-react19/packages/amis:
-    resolution: {directory: ../amis-react19/packages/amis, type: directory}
+  amis@file:../amis-react19/dist-packages/amis-6.13.1.tgz:
+    resolution: {integrity: sha512-g8LU5jgUOiys1OCUmspgh3HwKXkjwF3BDtT8QIxhpNamf8LUMC63tMX+BU1FstloYZ8wvzjI3eNPsqD4wTOGhA==, tarball: file:../amis-react19/dist-packages/amis-6.13.1.tgz}
+    version: 6.13.1
     peerDependencies:
       amis-core: '*'
       amis-ui: '*'
@@ -4001,6 +4008,12 @@ packages:
     resolution: {integrity: sha512-nm4b1LXvRbgfTllOGOAGNOrX5tAEqv3jxF0YKe5QbeNQhHagd1WTXknqghSGBURyrGTRXsX9zSgbzpu4/XV8dQ==}
     peerDependencies:
       echarts: ^5.4.0
+
+  office-viewer@file:../amis-react19/dist-packages/office-viewer-0.3.14.tgz:
+    resolution: {integrity: sha512-1Si+dfaGq2WgfL44qqy0pf2F0+51qP/F+roawwAI2dUolI+Zj1yNQSZVyKsDlH8/9h3gzkaNDTLDXBeCna63Zg==, tarball: file:../amis-react19/dist-packages/office-viewer-0.3.14.tgz}
+    version: 0.3.14
+    peerDependencies:
+      echarts: ^5.5.1
 
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
@@ -6764,10 +6777,10 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       '@rc-component/mini-decimal': 1.1.3
-      amis-formula: file:../amis-react19/packages/amis-formula
+      amis-formula: file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz
       classnames: 2.3.2
       cross-env: 7.0.3
       file-saver: 2.0.5
@@ -6794,17 +6807,17 @@ snapshots:
       - encoding
       - react-native
 
-  amis-formula@file:../amis-react19/packages/amis-formula:
+  amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz:
     dependencies:
       lodash: 4.18.1
       moment: 2.30.1
       tslib: 2.8.1
 
-  amis-ui@file:../amis-react19/packages/amis-ui(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  amis-ui@file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       '@rc-component/mini-decimal': 1.1.3
-      amis-core: file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      amis-formula: file:../amis-react19/packages/amis-formula
+      amis-core: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      amis-formula: file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz
       animate.css: 4.1.1
       classnames: 2.3.2
       codemirror: 5.65.21
@@ -6851,10 +6864,10 @@ snapshots:
       - react-native
       - supports-color
 
-  amis@file:../amis-react19/packages/amis(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-ui@file:../amis-react19/packages/amis-ui(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(office-viewer@0.3.14(echarts@5.5.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  amis@file:../amis-react19/dist-packages/amis-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-ui@file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(office-viewer@0.3.14(echarts@5.5.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
-      amis-core: file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      amis-ui: file:../amis-react19/packages/amis-ui(@types/react@19.2.14)(amis-core@file:../amis-react19/packages/amis-core(@types/react@19.2.14)(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/packages/amis-formula)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      amis-core: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      amis-ui: file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       attr-accept: 2.2.2
       blueimp-canvastoblob: 2.1.0
       classnames: 2.3.2
@@ -6881,6 +6894,54 @@ snapshots:
       moment-timezone: 0.5.48
       mpegts.js: 1.7.3
       office-viewer: 0.3.14(echarts@5.5.1)
+      prop-types: 15.8.1
+      qrcode-react-next: 1.0.0(react@19.2.5)
+      react: 19.2.5
+      react-cropper: 2.3.3(react@19.2.5)
+      react-dom: 19.2.5(react@19.2.5)
+      react-dropzone: 11.7.1(react@19.2.5)
+      react-intersection-observer: 9.5.2(react@19.2.5)
+      react-json-view: 1.21.3(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react-transition-group: 4.4.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      sortablejs: 1.15.0
+      tslib: 2.8.1
+      video-react: 0.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      xlsx: 0.18.5
+    transitivePeerDependencies:
+      - '@types/react'
+      - encoding
+      - react-native
+
+  amis@file:../amis-react19/dist-packages/amis-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-ui@file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(office-viewer@file:../amis-react19/dist-packages/office-viewer-0.3.14.tgz(echarts@5.5.1))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      amis-core: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      amis-ui: file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz(@types/react@19.2.14)(amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz(@types/react@19.2.14)(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(amis-formula@file:../amis-react19/dist-packages/amis-formula-6.13.1.tgz)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      attr-accept: 2.2.2
+      blueimp-canvastoblob: 2.1.0
+      classnames: 2.3.2
+      downshift: 6.1.12(react@19.2.5)
+      echarts: 5.5.1
+      echarts-stat: 1.2.0
+      echarts-wordcloud: 2.1.0(echarts@5.5.1)
+      exceljs: 4.4.0
+      file-saver: 2.0.5
+      file64: 1.0.5
+      hls.js: 1.1.3
+      hoist-non-react-statics: 3.3.2
+      hotkeys-js: 3.13.15
+      immutability-helper: 3.1.1
+      jsbarcode: 3.12.3
+      keycode: 2.2.1
+      lodash: 4.18.1
+      match-sorter: 6.3.4
+      mobx: 6.15.0
+      mobx-react: 9.2.1(mobx@6.15.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      mobx-react-lite: 3.4.3(mobx@6.15.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      mobx-state-tree: 5.4.2(mobx@6.15.0)
+      moment: 2.30.1
+      moment-timezone: 0.5.48
+      mpegts.js: 1.7.3
+      office-viewer: file:../amis-react19/dist-packages/office-viewer-0.3.14.tgz(echarts@5.5.1)
       prop-types: 15.8.1
       qrcode-react-next: 1.0.0(react@19.2.5)
       react: 19.2.5
@@ -8880,6 +8941,13 @@ snapshots:
   obug@2.1.1: {}
 
   office-viewer@0.3.14(echarts@5.5.1):
+    dependencies:
+      echarts: 5.5.1
+      numfmt: 2.5.2
+      papaparse: 5.5.3
+      tslib: 2.8.1
+
+  office-viewer@file:../amis-react19/dist-packages/office-viewer-0.3.14.tgz(echarts@5.5.1):
     dependencies:
       echarts: 5.5.1
       numfmt: 2.5.2

@@ -8,10 +8,10 @@
   "dependencies": {
     "@nop-chaos/amis-core": "workspace:*",
     "@nop-chaos/ui": "workspace:*",
-    "amis": "file:../../../amis-react19/packages/amis",
-    "amis-core": "file:../../../amis-react19/packages/amis-core",
-    "amis-formula": "file:../../../amis-react19/packages/amis-formula",
-    "amis-ui": "file:../../../amis-react19/packages/amis-ui"
+    "amis": "file:../../../amis-react19/dist-packages/amis-6.13.1.tgz",
+    "amis-core": "file:../../../amis-react19/dist-packages/amis-core-6.13.1.tgz",
+    "amis-formula": "file:../../../amis-react19/dist-packages/amis-formula-6.13.1.tgz",
+    "amis-ui": "file:../../../amis-react19/dist-packages/amis-ui-6.13.1.tgz"
   },
   "peerDependencies": {
     "react": "^19.0.0",

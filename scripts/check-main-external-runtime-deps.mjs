@@ -4,6 +4,7 @@ import process from 'node:process';
 import {
   createMainPackageContext,
   getMainExternalRuntimeDependencyPolicies,
+  getMainRuntimeOverrideTargets,
   repoRoot,
   resolvePackageSpecifierFromManifest,
 } from './main-bundle-utils.mjs';
@@ -37,6 +38,7 @@ function relativeFromRepo(filePath) {
 
 function collectReport(context, policies) {
   const mainManifestPath = path.join(repoRoot, 'apps', 'main', 'package.json');
+  const runtimeOverrideTargets = getMainRuntimeOverrideTargets(repoRoot);
   const mainAppResolutionByPackage = new Map(
     policies.map(({ packageName }) => [packageName, resolvePackageSpecifierFromManifest(mainManifestPath, packageName)]),
   );
@@ -78,6 +80,7 @@ function collectReport(context, policies) {
         packageName: policy.packageName,
         strategy: policy.strategy,
         status: 'unused',
+        overrideTarget: policy.strategy === 'bundler-override' ? runtimeOverrideTargets.get(policy.packageName) ?? null : null,
         resolutions: [],
       });
       continue;
@@ -88,6 +91,7 @@ function collectReport(context, policies) {
         packageName: policy.packageName,
         strategy: policy.strategy,
         status: 'matched',
+        overrideTarget: null,
         resolutions: [...uniqueResolutions.entries()].map(([resolution, owners]) => ({
           resolution,
           owners: owners.sort((left, right) => left.localeCompare(right)),
@@ -100,6 +104,7 @@ function collectReport(context, policies) {
       packageName: policy.packageName,
       strategy: policy.strategy,
       status: policy.strategy === 'bundler-override' ? 'overridden' : 'violation',
+      overrideTarget: policy.strategy === 'bundler-override' ? runtimeOverrideTargets.get(policy.packageName) ?? null : null,
       resolutions: [...uniqueResolutions.entries()].map(([resolution, owners]) => ({
         resolution,
         owners: owners.sort((left, right) => left.localeCompare(right)),
@@ -151,6 +156,9 @@ if (overrides.length === 0) {
 } else {
   for (const entry of overrides) {
     lines.push(`  ${entry.packageName}`);
+    if (entry.overrideTarget) {
+      lines.push(`    override target -> ${relativeFromRepo(entry.overrideTarget)}`);
+    }
     for (const resolution of entry.resolutions) {
       lines.push(`    ${resolution.owners.join(', ')} -> ${path.relative(repoRoot, resolution.resolution).replace(/\\/g, '/')}`);
     }

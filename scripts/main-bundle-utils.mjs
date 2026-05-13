@@ -101,8 +101,20 @@ function collectMainExternalPackages(rootDir) {
       continue;
     }
 
-    const directory = path.resolve(mainDirectory, dependencyVersion.slice('file:'.length));
-    const dependencyManifestPath = path.join(directory, 'package.json');
+    const resolvedTargetPath = path.resolve(mainDirectory, dependencyVersion.slice('file:'.length));
+
+    if (resolvedTargetPath.endsWith('.tgz')) {
+      entries.push({
+        name: dependencyName,
+        declaredName: dependencyName,
+        directory: resolvedTargetPath,
+        manifest: { name: dependencyName },
+        kind: 'external-tarball',
+      });
+      continue;
+    }
+
+    const dependencyManifestPath = path.join(resolvedTargetPath, 'package.json');
 
     if (!exists(dependencyManifestPath)) {
       continue;
@@ -113,7 +125,7 @@ function collectMainExternalPackages(rootDir) {
     entries.push({
       name: dependencyManifest.name ?? dependencyName,
       declaredName: dependencyName,
-      directory,
+      directory: resolvedTargetPath,
       manifest: dependencyManifest,
       kind: 'external',
     });
@@ -284,6 +296,65 @@ export function resolvePackageSpecifierFromManifest(manifestPath, specifier) {
   }
 }
 
+function getPackageDirectoryFromResolvedFile(resolvedFilePath, packageName) {
+  const normalizedResolvedFilePath = normalizePath(resolvedFilePath);
+  const escapedPackageName = escapeRegex(packageName);
+  const packageRootPattern = new RegExp(`/node_modules/${escapedPackageName}(?=/|$)`, 'g');
+  let packageRootEndIndex = -1;
+  let match;
+
+  while ((match = packageRootPattern.exec(normalizedResolvedFilePath)) !== null) {
+    packageRootEndIndex = match.index + match[0].length;
+  }
+
+  if (packageRootEndIndex === -1) {
+    return null;
+  }
+
+  return normalizedResolvedFilePath.slice(0, packageRootEndIndex);
+}
+
+export function resolveMainRuntimeOverrideTarget(rootDir = repoRoot, packageName) {
+  const mainManifestPath = path.join(rootDir, 'apps', 'main', 'package.json');
+  const mainResolution = resolvePackageSpecifierFromManifest(mainManifestPath, packageName);
+  const mainPackageDirectory = mainResolution
+    ? getPackageDirectoryFromResolvedFile(mainResolution, packageName)
+    : null;
+
+  if (mainPackageDirectory) {
+    return mainPackageDirectory;
+  }
+
+  const context = createMainPackageContext(rootDir);
+  const candidateDirectories = new Set();
+
+  for (const externalPackage of context.externalPackages) {
+    const externalManifestPath = path.join(externalPackage.directory, 'package.json');
+    const externalResolution = resolvePackageSpecifierFromManifest(externalManifestPath, packageName);
+    const externalPackageDirectory = externalResolution
+      ? getPackageDirectoryFromResolvedFile(externalResolution, packageName)
+      : null;
+
+    if (externalPackageDirectory) {
+      candidateDirectories.add(externalPackageDirectory);
+    }
+  }
+
+  return (
+    [...candidateDirectories].sort(
+      (left, right) => left.split('/').length - right.split('/').length || left.localeCompare(right),
+    )[0] ?? null
+  );
+}
+
+export function getMainRuntimeOverrideTargets(rootDir = repoRoot) {
+  return new Map(
+    MAIN_EXTERNAL_RUNTIME_DEPENDENCY_POLICIES.filter((entry) => entry.strategy === 'bundler-override').map(
+      ({ packageName }) => [packageName, resolveMainRuntimeOverrideTarget(rootDir, packageName)],
+    ),
+  );
+}
+
 export function getMissingMainExternalBuildOutputs(rootDir = repoRoot) {
   const context = createMainPackageContext(rootDir);
   const externalByName = new Map(context.externalPackages.map((entry) => [entry.name, entry]));
@@ -293,6 +364,18 @@ export function getMissingMainExternalBuildOutputs(rootDir = repoRoot) {
     const entry = externalByName.get(packageName);
 
     if (!entry) {
+      continue;
+    }
+
+    if (entry.kind === 'external-tarball') {
+      if (!exists(entry.directory)) {
+        missing.push({
+          packageName,
+          directory: entry.directory,
+          relativePath: path.basename(entry.directory),
+          filePath: entry.directory,
+        });
+      }
       continue;
     }
 
@@ -349,7 +432,36 @@ export function getMainExternalPackageAliases(rootDir = repoRoot) {
       continue;
     }
 
+    if (entry.kind === 'external-tarball') {
+      continue;
+    }
+
     aliases.push(...createExternalLibAliases(packageName, entry.directory));
+  }
+
+  return aliases;
+}
+
+export function getMainRuntimeOverrideAliases(rootDir = repoRoot) {
+  const aliases = [];
+
+  for (const [packageName, packageDirectory] of getMainRuntimeOverrideTargets(rootDir).entries()) {
+    if (!packageDirectory) {
+      continue;
+    }
+
+    const escapedPackageName = escapeRegex(packageName);
+
+    aliases.push(
+      {
+        find: new RegExp(`^${escapedPackageName}$`),
+        replacement: packageDirectory,
+      },
+      {
+        find: new RegExp(`^${escapedPackageName}/(.+)$`),
+        replacement: `${packageDirectory}/$1`,
+      },
+    );
   }
 
   return aliases;

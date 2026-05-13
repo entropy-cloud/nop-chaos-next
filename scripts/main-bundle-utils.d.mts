@@ -11,7 +11,12 @@ export declare const repoRoot: string;
 export declare function createMainPackageContext(rootDir?: string): MainPackageContext;
 
 export declare function getMainExternalPackageAliases(rootDir?: string): Array<{
-  find: string;
+  find: string | RegExp;
+  replacement: string;
+}>;
+
+export declare function getMainRuntimeOverrideAliases(rootDir?: string): Array<{
+  find: string | RegExp;
   replacement: string;
 }>;
 

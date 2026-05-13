@@ -7,10 +7,25 @@ import {
   repoRoot,
 } from './main-bundle-utils.mjs';
 
+const nodeCommand = process.execPath;
+const npmCliPath = path.join(path.dirname(nodeCommand), 'node_modules', 'npm', 'bin', 'npm-cli.js');
+
+if (!path.isAbsolute(npmCliPath)) {
+  throw new Error('expected absolute npm cli path');
+}
+
+function getNpmCommandArguments(argumentsList) {
+  return [npmCliPath, ...argumentsList];
+}
+
 function inferExternalRepoRoot(externalPackages) {
   const candidates = externalPackages
     .filter((entry) => ['amis', 'amis-core', 'amis-ui', 'amis-formula'].includes(entry.name))
-    .map((entry) => path.resolve(entry.directory, '..', '..'));
+    .map((entry) =>
+      entry.kind === 'external-tarball'
+        ? path.resolve(entry.directory, '..', '..')
+        : path.resolve(entry.directory, '..', '..'),
+    );
   const [first] = candidates;
 
   if (!first) {
@@ -25,7 +40,6 @@ function formatMissingEntries(entries) {
 }
 
 function runBuild(externalRepoRoot) {
-  const command = process.platform === 'win32' ? 'npm.cmd' : 'npm';
   const buildSteps = [
     ['run', 'build', '--workspace=packages/amis-formula'],
     ['run', 'build', '--workspace=packages/amis-core'],
@@ -34,7 +48,7 @@ function runBuild(externalRepoRoot) {
   ];
 
   for (const argumentsList of buildSteps) {
-    const result = spawnSync(command, argumentsList, {
+    const result = spawnSync(nodeCommand, getNpmCommandArguments(argumentsList), {
       cwd: externalRepoRoot,
       encoding: 'utf8',
       stdio: 'pipe',
@@ -61,6 +75,23 @@ function runBuild(externalRepoRoot) {
   }
 }
 
+function runPack(externalRepoRoot) {
+  const result = spawnSync(nodeCommand, getNpmCommandArguments(['run', 'pack:nop-chaos']), {
+    cwd: externalRepoRoot,
+    encoding: 'utf8',
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      SKIP_SDK_BUILD: '1',
+    },
+  });
+
+  if (result.status !== 0) {
+    console.error('Failed to pack external AMIS tgz dependencies');
+    process.exit(result.status ?? 1);
+  }
+}
+
 const context = createMainPackageContext(repoRoot);
 const externalRepoRoot = inferExternalRepoRoot(context.externalPackages);
 
@@ -78,7 +109,12 @@ if (missingOutputs.length === 0) {
 
 console.log('building missing AMIS file dependencies for apps/main');
 console.log(formatMissingEntries(missingOutputs));
-runBuild(externalRepoRoot);
+
+if (context.externalPackages.some((entry) => entry.kind === 'external-tarball')) {
+  runPack(externalRepoRoot);
+} else {
+  runBuild(externalRepoRoot);
+}
 
 missingOutputs = getMissingMainExternalBuildOutputs(repoRoot);
 

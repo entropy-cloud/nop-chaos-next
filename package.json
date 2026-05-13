@@ -27,9 +27,11 @@
     "check:duplicates": "jscpd packages/ apps/ examples/ --config .jscpd.json",
     "check:oversized-code-files": "node scripts/check-oversized-code-files.mjs",
     "check:src-artifacts": "node scripts/verify-no-src-artifacts.mjs",
+    "clean:dist-packages": "node scripts/clean-dist-packages.mjs",
     "clean:src-artifacts": "node scripts/clean-src-artifacts.mjs",
     "sync:amis": "bash scripts/sync-amis.sh",
     "sync:amis:build": "bash scripts/sync-amis.sh --build",
+    "pack:amis:deps": "node scripts/ensure-amis-file-deps-built.mjs",
     "sync:flux": "bash scripts/sync-flux-lib.sh"
   },
   "devDependencies": {

@@ -20,13 +20,7 @@ const CHUNK_TYPE_RANK = new Map([
 ]);
 
 function isAmisBridgeChunk(stem) {
-  return (
-    stem.startsWith('host-amis-') ||
-    stem.startsWith('vendor-amis-bridge') ||
-    stem.startsWith('vendor-amis-ui') ||
-    stem.startsWith('vendor-amis-formula') ||
-    stem.startsWith('vendor-amis-')
-  );
+  return stem.startsWith('host-amis-') || stem.startsWith('vendor-amis-bridge');
 }
 
 function getCycleFamily(stem) {
@@ -181,6 +175,12 @@ function isIgnorableCycle(cycle, chunks) {
       .map((name) => getCycleFamily(path.basename(name, '.js')))
       .filter(Boolean),
   );
+
+  const chunkTypes = new Set(cycleNodes.map((name) => chunks.get(name)?.type).filter(Boolean));
+
+  if (chunkTypes.size === 1 && chunkTypes.has('vendor')) {
+    return true;
+  }
 
   return families.size === 1 && cycleNodes.every((name) => chunks.has(name));
 }
