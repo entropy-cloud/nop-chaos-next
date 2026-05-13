@@ -1,5 +1,9 @@
 import type { HttpRequestOptions, HttpResponse, ThemeConfig, User } from '@nop-chaos/shared';
-import type { i18n } from 'i18next';
+
+export interface AmisI18nLike {
+  language: string;
+  t: (key: string, options?: Record<string, unknown>) => string;
+}
 
 export type AmisToastType = 'info' | 'success' | 'error' | 'warning';
 export type AmisAction = (...args: unknown[]) => unknown;
@@ -58,7 +62,7 @@ export interface AmisPageObject {
 }
 
 export interface AmisRuntimeAdapter {
-  getI18n: () => i18n;
+  getI18n: () => AmisI18nLike;
   getLocale: () => string;
   getCurrentUser: () => User | null;
   getAuthToken: () => string | undefined;

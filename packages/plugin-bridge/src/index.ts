@@ -1,9 +1,19 @@
 import { useSyncExternalStore } from 'react';
-import type { i18n } from 'i18next';
 import type { PluginManifest, ThemeConfig, User } from '@nop-chaos/shared';
 
+export interface BridgeI18n {
+  language: string;
+  t: (key: string, options?: Record<string, unknown>) => string;
+  changeLanguage?: (language: string) => Promise<unknown> | unknown;
+  options?: {
+    supportedLngs?: false | readonly string[];
+  };
+  on?: (event: string, listener: () => void) => void;
+  off?: (event: string, listener: () => void) => void;
+}
+
 export interface BridgeSnapshot {
-  i18n: i18n;
+  i18n: BridgeI18n;
   themeConfig: ThemeConfig;
   user: User | null;
   plugins: PluginManifest[];
@@ -42,7 +52,7 @@ export interface PluginBridgeNavigateOptions {
 }
 
 export interface PluginBridge {
-  i18n: i18n;
+  i18n: BridgeI18n;
   notifications: PluginBridgeNotifications;
   stores: PluginBridgeStores;
   navigate: (to: string, options?: PluginBridgeNavigateOptions) => void;
@@ -58,10 +68,10 @@ const BRIDGE_KEY = '__NOP_PLUGIN_BRIDGE__';
 const BRIDGE_LISTENERS_KEY = '__NOP_PLUGIN_BRIDGE_LISTENERS__';
 const FALLBACK_THEME_CONFIG: ThemeConfig = { themeId: 'classic', displayMode: 'light' };
 
-const fallbackI18n = {
+const fallbackI18n: BridgeI18n = {
   language: 'en-US',
   t: (key: string) => key,
-} as i18n;
+};
 
 const fallbackSnapshot: BridgeSnapshot = {
   i18n: fallbackI18n,
@@ -141,7 +151,7 @@ export function usePluginManifest(pluginId: string): PluginManifest | undefined 
   return usePluginBridgeSnapshot().plugins.find((plugin) => plugin.id === pluginId);
 }
 
-export function usePluginI18n(): i18n {
+export function usePluginI18n(): BridgeI18n {
   return usePluginBridgeSnapshot().i18n;
 }
 
