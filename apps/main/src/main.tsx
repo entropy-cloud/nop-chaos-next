@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter } from 'react-router-dom';
 import { Toaster } from '@nop-chaos/ui';
+import { I18nextProvider } from 'react-i18next';
 import App from './App';
+import i18n, { initializeI18n } from './config/i18n';
 import { bootstrapExtensions } from './extensions/bootstrap';
 import './config/i18n';
 import './styles/tailwind.css';
@@ -23,15 +25,18 @@ const queryClient = new QueryClient({
 function renderApp() {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
-      <HashRouter>
-        <App />
-        <Toaster richColors position="top-right" />
-      </HashRouter>
+      <I18nextProvider i18n={i18n}>
+        <HashRouter>
+          <App />
+          <Toaster richColors position="top-right" />
+        </HashRouter>
+      </I18nextProvider>
     </QueryClientProvider>,
   );
 }
 
 async function bootstrap() {
+  await initializeI18n();
   await bootstrapExtensions();
   renderApp();
 }
