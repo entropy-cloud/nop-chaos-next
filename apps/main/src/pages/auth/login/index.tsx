@@ -113,7 +113,7 @@ export default function LoginPage() {
                 <div className="relative">
                   <User2 className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    className="pl-10"
+                    className="pr-3 pl-10"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                   />
@@ -124,7 +124,7 @@ export default function LoginPage() {
                 <div className="relative">
                   <LockKeyhole className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    className="pl-10"
+                    className="pr-3 pl-10"
                     type="password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
