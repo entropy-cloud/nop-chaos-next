@@ -228,8 +228,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       '@nop-chaos/flux':
-        specifier: file:../../../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz
-        version: file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(lucide-react@1.8.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5)))
+        specifier: file:..\..\..\nop-chaos-flux\dist-packages\nop-chaos-flux-0.1.0.tgz
+        version: file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(i18next@26.0.5(typescript@6.0.2))(lucide-react@1.8.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2))(react@19.2.5)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(redux@5.0.1))(zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5)))
       '@nop-chaos/plugin-bridge':
         specifier: workspace:*
         version: link:../../packages/plugin-bridge
@@ -270,8 +270,8 @@ importers:
         specifier: ^8.1.5
         version: 8.6.0(react@19.2.5)
       i18next:
-        specifier: ^26.0.5
-        version: 26.1.0(typescript@6.0.2)
+        specifier: 26.0.5
+        version: 26.0.5(typescript@6.0.2)
       i18next-browser-languagedetector:
         specifier: ^8.2.1
         version: 8.2.1
@@ -297,8 +297,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5(react@19.2.5)
       react-i18next:
-        specifier: ^17.0.4
-        version: 17.0.7(i18next@26.1.0(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
+        specifier: 17.0.4
+        version: 17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
       react-json-view-lite:
         specifier: ^2.5.0
         version: 2.5.0(react@19.2.5)
@@ -381,8 +381,8 @@ importers:
         specifier: ^5.96.1
         version: 5.97.0(react@19.2.5)
       i18next:
-        specifier: ^26.0.3
-        version: 26.0.4(typescript@6.0.2)
+        specifier: 26.0.5
+        version: 26.0.5(typescript@6.0.2)
       lucide-react:
         specifier: ^1.7.0
         version: 1.8.0(react@19.2.5)
@@ -393,8 +393,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5(react@19.2.5)
       react-i18next:
-        specifier: ^17.0.2
-        version: 17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
+        specifier: 17.0.4
+        version: 17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
       react-router-dom:
         specifier: ^7.14.0
         version: 7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -513,6 +513,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      i18next:
+        specifier: 26.0.5
+        version: 26.0.5(typescript@6.0.2)
       lucide-react:
         specifier: ^1.7.0
         version: 1.8.0(react@19.2.5)
@@ -523,8 +526,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5(react@19.2.5)
       react-i18next:
-        specifier: ^17.0.0
-        version: 17.0.2(i18next@26.1.0(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
+        specifier: 17.0.4
+        version: 17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
       react-router-dom:
         specifier: ^7.14.0
         version: 7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -538,8 +541,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
       i18next:
-        specifier: ^26.0.3
-        version: 26.0.4(typescript@6.0.2)
+        specifier: 26.0.5
+        version: 26.0.5(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.5
@@ -1064,13 +1067,16 @@ packages:
     engines: {node: '>= 8'}
 
   '@nop-chaos/flux@file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz':
-    resolution: {integrity: sha512-wfZHXgbwt+STEKAloKt4eys+XyvjkNmvvGukIsks4Dfs6Gz+okI/yDRtyIUyX2HrJtAcXmAk8uIf0kZ8TtBQPA==, tarball: file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz}
+    resolution: {integrity: sha512-N30eG/+7//f97ZvO77BMKkLIYrd7rlLc+tUJ6apU1Xe0E0ZR0CmjmVCWdNUn3n1LpZbL5YzTgQtsqKAhUrzHmA==, tarball: file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz}
     version: 0.1.0
     peerDependencies:
       '@nop-chaos/ui': '*'
+      i18next: ^26.0.0
       lucide-react: ^1.7.0
       react: ^19.0.0
       react-dom: ^19.0.0
+      react-i18next: ^17.0.0
+      recharts: ^3.8.0
       zustand: ^5.0.12
 
   '@open-draft/deferred-promise@2.2.0':
@@ -3284,24 +3290,8 @@ packages:
   i18next-http-backend@3.0.4:
     resolution: {integrity: sha512-udwrBIE6cNpqn1gRAqRULq3+7MzIIuaiKRWrz++dVz5SqWW2VwXmPJtAgkI0JtMLFaADC9qNmnZAxWAhsxXx2g==}
 
-  i18next@26.0.4:
-    resolution: {integrity: sha512-gXF7U9bfioXPLv7mw8Qt2nfO7vij5MyINvPgVv99pX3fL1Y01pw2mKBFrlYpRxRCl2wz3ISenj6VsMJT2isfuA==}
-    peerDependencies:
-      typescript: ^5 || ^6
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   i18next@26.0.5:
     resolution: {integrity: sha512-9uHb4T27TdV36phJXcbpnRPt5yzAfqHXVrdASvmHZyPuZJtrLythd+GyXhiaHV5LlpuuskbAqhwPjmfTbKbi8w==}
-    peerDependencies:
-      typescript: ^5 || ^6
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  i18next@26.1.0:
-    resolution: {integrity: sha512-dIU6td04DvQuIqVst5S9g0GviTmhZ0DYD4b9ociVGJmuCa5vZ2de/t+Enf4olvj87mF8Y2lwjNQBwC9QZsvzKQ==}
     peerDependencies:
       typescript: ^5 || ^6
     peerDependenciesMeta:
@@ -4331,42 +4321,10 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
 
-  react-i18next@17.0.2:
-    resolution: {integrity: sha512-shBftH2vaTWK2Bsp7FiL+cevx3xFJlvFxmsDFQSrJc+6twHkP0tv/bGa01VVWzpreUVVwU+3Hev5iFqRg65RwA==}
-    peerDependencies:
-      i18next: '>= 26.0.1'
-      react: '>= 16.8.0'
-      react-dom: '*'
-      react-native: '*'
-      typescript: ^5 || ^6
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-      typescript:
-        optional: true
-
   react-i18next@17.0.4:
     resolution: {integrity: sha512-hQipmK4EF0y6RO6tt6WuqnmWpWYEXmQUUzecmMBuNsIgYd3smXcG4GtYPWhvgxn0pqMOItKlEO8H24HCs5hc3g==}
     peerDependencies:
       i18next: '>= 26.0.1'
-      react: '>= 16.8.0'
-      react-dom: '*'
-      react-native: '*'
-      typescript: ^5 || ^6
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-      typescript:
-        optional: true
-
-  react-i18next@17.0.7:
-    resolution: {integrity: sha512-rwtPXsb/zwzDafN+gytcjF5YnqGQQIRmCQ6DctBC1VSipRB8GD/MWEVrFP42vjMyuYydxWxM8CZRt+yiNuuoHg==}
-    peerDependencies:
-      i18next: '>= 26.0.10'
       react: '>= 16.8.0'
       react-dom: '*'
       react-native: '*'
@@ -5973,12 +5931,15 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@nop-chaos/flux@file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(lucide-react@1.8.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5)))':
+  '@nop-chaos/flux@file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(i18next@26.0.5(typescript@6.0.2))(lucide-react@1.8.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2))(react@19.2.5)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(redux@5.0.1))(zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5)))':
     dependencies:
       '@nop-chaos/ui': link:flux-lib/ui
+      i18next: 26.0.5(typescript@6.0.2)
       lucide-react: 1.8.0(react@19.2.5)
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
+      react-i18next: 17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
+      recharts: 3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(redux@5.0.1)
       zustand: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5))
 
   '@open-draft/deferred-promise@2.2.0': {}
@@ -8309,19 +8270,9 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  i18next@26.0.4(typescript@6.0.2):
-    dependencies:
-      '@babel/runtime': 7.29.2
-    optionalDependencies:
-      typescript: 6.0.2
-
   i18next@26.0.5(typescript@6.0.2):
     dependencies:
       '@babel/runtime': 7.29.2
-    optionalDependencies:
-      typescript: 6.0.2
-
-  i18next@26.1.0(typescript@6.0.2):
     optionalDependencies:
       typescript: 6.0.2
 
@@ -9408,44 +9359,11 @@ snapshots:
     dependencies:
       react: 19.2.5
 
-  react-i18next@17.0.2(i18next@26.0.4(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2):
-    dependencies:
-      '@babel/runtime': 7.29.2
-      html-parse-stringify: 3.0.1
-      i18next: 26.0.4(typescript@6.0.2)
-      react: 19.2.5
-      use-sync-external-store: 1.6.0(react@19.2.5)
-    optionalDependencies:
-      react-dom: 19.2.5(react@19.2.5)
-      typescript: 6.0.2
-
-  react-i18next@17.0.2(i18next@26.1.0(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2):
-    dependencies:
-      '@babel/runtime': 7.29.2
-      html-parse-stringify: 3.0.1
-      i18next: 26.1.0(typescript@6.0.2)
-      react: 19.2.5
-      use-sync-external-store: 1.6.0(react@19.2.5)
-    optionalDependencies:
-      react-dom: 19.2.5(react@19.2.5)
-      typescript: 6.0.2
-
   react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2):
     dependencies:
       '@babel/runtime': 7.29.2
       html-parse-stringify: 3.0.1
       i18next: 26.0.5(typescript@6.0.2)
-      react: 19.2.5
-      use-sync-external-store: 1.6.0(react@19.2.5)
-    optionalDependencies:
-      react-dom: 19.2.5(react@19.2.5)
-      typescript: 6.0.2
-
-  react-i18next@17.0.7(i18next@26.1.0(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2):
-    dependencies:
-      '@babel/runtime': 7.29.2
-      html-parse-stringify: 3.0.1
-      i18next: 26.1.0(typescript@6.0.2)
       react: 19.2.5
       use-sync-external-store: 1.6.0(react@19.2.5)
     optionalDependencies:

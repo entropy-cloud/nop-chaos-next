@@ -26,6 +26,7 @@
     "audit:knip": "knip --config knip.json",
     "check:duplicates": "jscpd packages/ apps/ examples/ --config .jscpd.json",
     "check:oversized-code-files": "node scripts/check-oversized-code-files.mjs",
+    "check:i18n-singleton-boundaries": "node scripts/check-i18n-singleton-boundaries.mjs",
     "check:src-artifacts": "node scripts/verify-no-src-artifacts.mjs",
     "clean:dist-packages": "node scripts/clean-dist-packages.mjs",
     "clean:src-artifacts": "node scripts/clean-src-artifacts.mjs",
