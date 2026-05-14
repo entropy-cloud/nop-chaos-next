@@ -3,14 +3,11 @@
  * 将 amis CSS 变量映射到宿主主题变量，支持主题切换
  */
 
-html {
-  line-height: 1.5 !important;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  line-height: inherit !important;
-}
+/*
+ * Note: html/body baseline rules are now in amis-reset.css (loaded statically).
+ * cxd.css no longer overwrites them at runtime since the reset is already present.
+ * Only AMIS-scope variable overrides remain below.
+ */
 
 .amis,
 .amis-dialog-widget {

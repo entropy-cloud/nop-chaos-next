@@ -1,3 +1,4 @@
+@import './amis-reset.css';
 @import './amis-fix.css';
 
 @layer utilities {
