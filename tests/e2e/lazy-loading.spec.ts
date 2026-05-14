@@ -116,6 +116,18 @@ async function getAssetResources(page: import('@playwright/test').Page) {
   );
 }
 
+async function getDocumentBaselineStyles(page: import('@playwright/test').Page) {
+  return page.evaluate(() => {
+    const htmlStyles = window.getComputedStyle(document.documentElement);
+    const bodyStyles = window.getComputedStyle(document.body);
+
+    return {
+      htmlLineHeight: htmlStyles.lineHeight,
+      bodyLineHeight: bodyStyles.lineHeight,
+    };
+  });
+}
+
 test.describe('AMIS lazy loading optimization', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
@@ -184,6 +196,19 @@ test.describe('AMIS lazy loading optimization', () => {
     console.log(`Total AMIS vendor chunks size: ${(totalVendorSize / 1024).toFixed(2)} KB`);
 
     expect(totalVendorSize).toBeGreaterThan(0);
+  });
+
+  test('opening AMIS route does not change host document baseline styles', async ({ page }) => {
+    const baselineBefore = await getDocumentBaselineStyles(page);
+
+    await openMenuRoute(page, 'Amis Preview', /\/amis\/preview$/);
+    await expect(page.getByRole('button', { name: 'Trigger host toast' })).toBeVisible({
+      timeout: 30_000,
+    });
+
+    const baselineAfter = await getDocumentBaselineStyles(page);
+
+    expect(baselineAfter).toEqual(baselineBefore);
   });
 });
 

@@ -351,8 +351,13 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<Log
   const preferredUsername = username ?? 'nop';
 
   await page.addInitScript(() => {
+    const persistedLanguage = window.localStorage.getItem('nop-language:v1');
     window.localStorage.clear();
     window.sessionStorage.clear();
+
+    if (persistedLanguage) {
+      window.localStorage.setItem('nop-language:v1', persistedLanguage);
+    }
   });
 
   await page.route('**/r/LoginApi__login?*', async (route) => {
