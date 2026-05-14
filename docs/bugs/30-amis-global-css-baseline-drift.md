@@ -44,9 +44,23 @@
 - Appended the typography global rules to `apps/main/src/styles/amis-reset.css` so they take effect at startup instead of on first AMIS visit.
 - Added dedicated e2e test `tests/e2e/amis-css-isolation.spec.ts` that verifies sidebar styles and document-level styles remain stable after AMIS CSS loads (ignoring route-active color changes).
 
+### Phase 4 — Upstream global reset removal + scoped typography
+
+- Modified `amis-react19` upstream to completely remove global reset/normalize/typography from `cxd.css`:
+  - `packages/amis-ui/scss/themes/_common.scss`: commented out `@import '../base/reset'`, `'../base/normalize'`, `'../base/typography'`.
+  - `packages/amis-ui/scss/layout/_layout.scss`: removed `html,body { width/height: 100% }` and `body { overflow-x: hidden }`.
+- Rebuilt amis-ui, re-packed all tarballs (`amis`, `amis-ui`, `amis-core`, `amis-formula`, `office-viewer`), and re-installed in nop-chaos-next.
+- Refactored `amis-reset.css` to only contain rules **not** covered by Tailwind preflight and that don't use AMIS CSS variables:
+  - Removed all standard normalize/reset rules (covered by Tailwind).
+  - Removed typography rules that use AMIS CSS variables (`--fontFamilyBase`, `--body-size`, etc.) — these only get values when cxd.css loads.
+  - Kept only AMIS-specific rules: `svg.icon`, browser compat for disabled inputs, structural classes (`.amis-routes-wrapper`, `.amis-animation-placeholder`).
+- Scoped AMIS typography rules to `.amis` container in `amis-fix.css` — these use AMIS CSS variables that are defined by cxd.css and only apply inside AMIS pages.
+- This ensures: (a) cxd.css lazy-loading never affects host global styles, (b) AMIS components still get their typography baseline inside the AMIS container.
+
 ## Tests
 
-- `tests/e2e/lazy-loading.spec.ts` - verifies opening `Amis Preview` does not change computed `html/body` baseline styles and still preserves existing AMIS lazy-loading behavior.
+- `tests/e2e/amis-css-isolation.spec.ts` — verifies sidebar (215 elements) and document-level (`html`/`body`) computed styles remain identical before and after AMIS CSS lazy-loads. Route-active color changes are ignored.
+- `tests/e2e/lazy-loading.spec.ts` — verifies opening `Amis Preview` does not change computed `html/body` baseline styles and still preserves existing AMIS lazy-loading behavior.
 
 ## Affected Files
 
@@ -59,7 +73,7 @@
 
 ## Notes For Future Refactors
 
-- Treat third-party theme CSS from AMIS as global unless proven otherwise; dynamic import timing alone can create visible host regressions.
-- If AMIS style fixes rely on host overrides, keep import order explicit rather than parallel.
-- The extracted `amis-reset.css` must be kept in sync if the upstream `amis-react19/packages/amis-ui/scss/base/{_reset,_normalize,_typography}.scss` changes.
-- `cxd.css` contains more global rules than just reset/normalize — the typography section sets `body { font-family }`, `html { font-size }`, etc. Always check for ALL global selectors when extracting from a third-party CSS bundle.
+- `cxd.css` no longer contains global `html`/`body` rules — it is now purely component styles + CSS custom property definitions.
+- The global baseline is entirely managed by: (1) Tailwind preflight (reset/normalize), (2) host `index.css` (body/html sizing), (3) `amis-reset.css` (AMIS-specific compat rules).
+- AMIS typography rules (font-family, color, etc.) are scoped to `.amis` in `amis-fix.css` — they only affect AMIS page content.
+- If upstream `amis-react19` is updated, verify that `_common.scss` and `_layout.scss` modifications are preserved, and that the new cxd.css still has no global `html`/`body` rules.

@@ -6,5 +6,6 @@ export async function ensureFluxRuntime() {
   }
 
   await import('@nop-chaos/flux/style.css');
+  await import('../styles/flux-spacing.css');
   didInitFluxRuntime = true;
 }

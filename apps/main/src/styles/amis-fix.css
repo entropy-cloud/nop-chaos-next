@@ -68,10 +68,56 @@ body.is-modalOpened .ant-popover {
   color: hsl(var(--gray-100)) !important;
 }
 
-/* ===== Amis 组件样式修复 ===== */
+/* ===== AMIS scoped typography baseline ===== */
 .amis {
   font-family: inherit;
+  font-size: var(--body-size);
+  font-weight: var(--body-weight);
+  line-height: var(--body-lineHeight);
+  color: var(--body-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+.amis a {
+  color: var(--link-color);
+  font-size: var(--link-fontSize);
+  font-weight: var(--link-fontWeight);
+  text-decoration: var(--link-decoration);
+}
+
+.amis a:hover {
+  color: var(--link-onHover-color);
+  text-decoration: var(--link-onHover-decoration);
+}
+
+.amis label {
+  font-weight: var(--fontWeightNormal);
+}
+
+.amis h1,
+.amis h2,
+.amis h3,
+.amis h4,
+.amis h5,
+.amis h6 {
+  font-weight: var(--fontWeightNormal);
+  color: var(--text--loud-color);
+  line-height: 1.1;
+}
+
+.amis pre,
+.amis code,
+.amis kbd,
+.amis samp {
+  font-family: var(--fontFamilyMonospace);
+}
+
+.amis .is-matched {
+  color: var(--danger);
+}
+
+/* ===== Amis 组件样式修复 ===== */
 
 .amis .cxd-Pagination > li > a,
 .amis .cxd-Pagination > li > span {
