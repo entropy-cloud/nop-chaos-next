@@ -54,6 +54,19 @@ Bug fix records for non-trivial issues.
 | [23-doc-code-consistency-audit.md](./bugs/23-doc-code-consistency-audit.md) | Doc-code consistency audit |
 | [24-main-bundle-chunk-boundary-regression.md](./bugs/24-main-bundle-chunk-boundary-regression.md) | Main bundle chunk boundary regression |
 | [25-amis-file-dependency-runtime-split.md](./bugs/25-amis-file-dependency-runtime-split.md) | AMIS file dependency runtime split |
+| [26-flux-tarball-runtime-require-mismatch.md](./bugs/26-flux-tarball-runtime-require-mismatch.md) | Flux tarball runtime require mismatch |
+| [27-main-i18n-initialization-menu-title-fallback.md](./bugs/27-main-i18n-initialization-menu-title-fallback.md) | Main i18n initialization menu title fallback |
+| [28-core-i18next-singleton-split.md](./bugs/28-core-i18next-singleton-split.md) | Core i18next singleton split |
+| [29-flux-react-i18next-default-instance-pollution.md](./bugs/29-flux-react-i18next-default-instance-pollution.md) | Flux react-i18next default instance pollution |
+
+## Testing (`testing/`)
+
+Manual diagnosis and manual test issue records.
+
+| Document                                                                          | Description                  |
+| --------------------------------------------------------------------------------- | ---------------------------- |
+| [index.md](./testing/index.md)                                                    | Manual test issue index      |
+| [00-testing-issue-writing-guide.md](./testing/00-testing-issue-writing-guide.md) | Manual test issue guide      |
 
 ## Logs (`logs/`)
 
@@ -84,3 +97,4 @@ External reference material and design inputs.
 - **Backend integration**: `design/backend-integration.md`
 - **Extension system**: `design/extension-system.md`, `examples/extension-generator.md`
 - **Styling**: `references/style-interaction-guidelines.md`, `design/styling-system-specification.md`
+- **Manual diagnosis and test issues**: `testing/index.md`
