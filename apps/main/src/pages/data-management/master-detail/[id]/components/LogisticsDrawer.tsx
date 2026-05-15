@@ -31,7 +31,7 @@ export function LogisticsDrawer({
   const { t } = useTranslation();
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange} direction="right">
+    <Drawer open={open} onOpenChange={onOpenChange} direction="right" modal={false}>
       <DrawerContent className="h-screen max-w-[32rem] border-l border-[hsl(var(--border))] bg-background shadow-xl">
         <DrawerHeader>
           <DrawerTitle>{t('masterDetail.detail.logisticsDrawerTitle')}</DrawerTitle>
