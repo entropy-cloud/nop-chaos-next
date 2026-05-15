@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { CopyIcon, ScissorsIcon, ClipboardPasteIcon, Trash2Icon } from 'lucide-react';
+import { t } from '../../lib/i18n.js';
 import { Button } from '../ui/button.js';
 import { cn } from '../../lib/utils.js';
 
@@ -27,14 +28,20 @@ function ClipboardControls({
           variant="ghost"
           size="icon-xs"
           disabled={disabled}
-          aria-label="Copy"
+          aria-label={t('flux.common.copy')}
           onClick={onCopy}
         >
           <CopyIcon />
         </Button>
       )}
       {onCut !== undefined && (
-        <Button variant="ghost" size="icon-xs" disabled={disabled} aria-label="Cut" onClick={onCut}>
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          disabled={disabled}
+          aria-label={t('flux.common.cut')}
+          onClick={onCut}
+        >
           <ScissorsIcon />
         </Button>
       )}
@@ -43,7 +50,7 @@ function ClipboardControls({
           variant="ghost"
           size="icon-xs"
           disabled={disabled}
-          aria-label="Paste"
+          aria-label={t('flux.common.paste')}
           onClick={onPaste}
         >
           <ClipboardPasteIcon />
@@ -54,7 +61,7 @@ function ClipboardControls({
           variant="ghost"
           size="icon-xs"
           disabled={disabled}
-          aria-label="Clear"
+          aria-label={t('flux.common.clear')}
           onClick={onClear}
         >
           <Trash2Icon />
