@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { PluginManifest } from '@nop-chaos/shared';
-import { getPluginSeeds, persistPluginSeeds } from '../services/mockApi';
+import { getPluginSeeds } from '../services/mockApi';
 
 interface PluginStore {
   plugins: PluginManifest[];
@@ -16,7 +16,6 @@ export const usePluginStore = create<PluginStore>()(
     (set) => ({
       plugins: initialPlugins,
       setPlugins: (plugins) => {
-        persistPluginSeeds(plugins);
         set({ plugins });
       },
       updatePlugin: (pluginId, updater) =>
@@ -24,7 +23,6 @@ export const usePluginStore = create<PluginStore>()(
           const nextPlugins = state.plugins.map((plugin) =>
             plugin.id === pluginId ? updater(plugin) : plugin,
           );
-          persistPluginSeeds(nextPlugins);
           return { plugins: nextPlugins };
         }),
     }),

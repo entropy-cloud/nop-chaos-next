@@ -8,6 +8,7 @@ import type {
   AuthTokens,
 } from '@nop-chaos/shared';
 import { getAuthConfig } from '@nop-chaos/shared';
+import { APP_STORAGE_KEYS } from '../constants/storage';
 
 interface AuthStore extends AuthState {
   bootstrapStatus: AuthBootstrapStatus;
@@ -104,7 +105,7 @@ export const useAuthStore = create<AuthStore>()(
       logout: () => set({ ...initialState, bootstrapStatus: 'anonymous' }),
     }),
     {
-      name: 'auth:v2',
+      name: APP_STORAGE_KEYS.auth,
       storage: createJSONStorage(() => {
         const storageType = getStorageType();
         return storageType === 'localStorage' ? localStorage : sessionStorage;

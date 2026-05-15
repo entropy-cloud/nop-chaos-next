@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const initMock = vi.fn();
 const useMock = vi.fn();
+const setI18nGetterMock = vi.fn();
 
 vi.mock('i18next', () => ({
   default: {
@@ -22,11 +23,16 @@ vi.mock('react-i18next', () => ({
   initReactI18next: {},
 }));
 
+vi.mock('@nop-chaos/ui', () => ({
+  setI18nGetter: setI18nGetterMock,
+}));
+
 describe('initializeI18n', () => {
   beforeEach(() => {
     vi.resetModules();
     initMock.mockReset();
     useMock.mockReset();
+    setI18nGetterMock.mockReset();
     useMock.mockReturnThis();
     initMock.mockResolvedValue(undefined);
   });

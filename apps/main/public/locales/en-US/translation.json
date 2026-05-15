@@ -29,10 +29,13 @@
     "user": "User",
     "refresh": "Refresh",
     "reset": "Reset",
+    "noData": "No data available.",
+    "offline": "You are offline. Some data may be stale until the connection recovers.",
     "edit": "Edit",
     "delete": "Delete",
     "cancel": "Cancel",
     "copy": "Copy",
+    "skipToContent": "Skip to main content",
     "selectRange": "Select range",
     "quickDates": "Quick dates",
     "startDate": "Start date",
@@ -72,7 +75,8 @@
     "loginFailed": "Unable to sign in.",
     "logoutConfirm": "Are you sure you want to log out?",
     "logoutFailed": "Remote logout failed. Local sign-out has been completed.",
-    "loggedOut": "You have been logged out."
+    "loggedOut": "You have been logged out.",
+    "bootstrapFailed": "Unable to restore your session."
   },
   "login": {
     "heroTitle": "A polished admin shell for dashboards, CRUD, and extensible workflows.",
@@ -115,8 +119,26 @@
     "guide": "Guide"
   },
   "flux": {
+    "common": {
+      "loading": "Loading",
+      "copy": "Copy",
+      "cut": "Cut",
+      "paste": "Paste",
+      "clear": "Clear",
+      "undo": "Undo",
+      "redo": "Redo"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "goToPrevious": "Go to previous page",
+      "goToNext": "Go to next page",
+      "morePages": "More pages"
+    },
     "page": {
-      "title": "Flux Page"
+      "title": "Flux Page",
+      "loadFailed": "Unable to load Flux schema."
     },
     "schemaPath": "Current Flux schemaPath: {{path}}"
   },
@@ -128,13 +150,22 @@
   },
   "tabsBar": {
     "refresh": "Refresh",
+    "scrollLeft": "Scroll tabs left",
+    "scrollRight": "Scroll tabs right",
     "closeCurrent": "Close current",
     "closeOthers": "Close others",
     "closeAll": "Close all",
+    "closeMenu": "Close tab actions menu",
+    "moreActions": "More tab actions",
     "enterFullscreenWorkspace": "Enter fullscreen workspace",
     "exitFullscreenWorkspace": "Exit fullscreen workspace",
     "enterFullscreen": "Enter fullscreen",
     "exitFullscreen": "Exit fullscreen"
+  },
+  "core": {
+    "layout": {
+      "skipToMainContent": "Skip to main content"
+    }
   },
   "dashboard": {
     "eyebrow": "Overview",
@@ -236,9 +267,11 @@
     },
     "refine": "Refine context",
     "contextTitle": "Context controls",
-    "contextDescription": "Connect language tools, retrieval adapters, and session controls without leaving the shell."
+    "contextDescription": "Connect language tools, retrieval adapters, and session controls without leaving the shell.",
+    "resizeSessionsPanel": "Resize sessions panel"
   },
   "flowEditor": {
+    "loadFailed": "Unable to load flow details.",
     "title": "Flow editor",
     "placeholder": "Compose orchestration pipelines for data movement, approvals, and AI-assisted tasks.",
     "listEyebrow": "Automation",
@@ -265,6 +298,7 @@
       "undo": "Undo",
       "redo": "Redo",
       "restore": "Restore",
+      "exportJson": "Export JSON",
       "properties": "Properties",
       "save": "Save",
       "defaultNodeDescription": "Please edit the node description",
@@ -449,6 +483,7 @@
         "eta": "Estimated delivery",
         "note": "Note"
       },
+      "eta": "ETA {{eta}}",
       "logisticsTimeline": "Logistics timeline",
       "saveLogistics": "Save logistics information",
       "backToList": "Back to list"
@@ -490,6 +525,7 @@
     "detailOverview": "Plugin details and metadata",
     "configureTitle": "Configure {{name}}",
     "configureDescription": "Update runtime settings stored in the local plugin manifest.",
+    "configureSaved": "Plugin settings saved.",
     "defaultReportTitle": "Plugin operations lens",
     "remotePluginEyebrow": "Remote plugin",
     "hostNotification": "Host notification sent by {{user}}.",
@@ -556,6 +592,8 @@
     "guideBody": "Start with the dashboard, then move through CRUD examples, settings, and plugin management to understand how the shell behaves across routes and runtime modules."
   },
   "errors": {
+    "bootstrapFailed": "Bootstrap failed",
+    "bootstrapDescription": "The application could not finish startup.",
     "notFoundTitle": "Page not found",
     "notFoundDescription": "The route is missing or no longer exists in the active menu configuration.",
     "forbiddenTitle": "Access denied",

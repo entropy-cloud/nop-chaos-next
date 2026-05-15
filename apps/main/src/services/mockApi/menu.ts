@@ -1,17 +1,20 @@
 import { validateMenuResponse, type MenuResponse } from '@nop-chaos/shared';
 import { mergeExtensionMenus } from '@nop-chaos/extension-host';
+import { mainHttpClient } from '../http';
 import { wait } from './shared';
 
 export async function fetchMenuConfig(): Promise<MenuResponse> {
-  const response = await fetch('/data/menu-config.json', {
+  const response = await mainHttpClient.request<MenuResponse>({
+    url: '/data/menu-config.json',
+    withAuth: false,
     headers: {
       Accept: 'application/json',
     },
   });
 
-  if (!response.ok) {
+  if (response.status < 200 || response.status >= 300) {
     throw new Error(`Failed to load menu config: ${response.status}`);
   }
 
-  return wait(mergeExtensionMenus(validateMenuResponse(await response.json())), 260);
+  return wait(mergeExtensionMenus(validateMenuResponse(response.data)), 260);
 }

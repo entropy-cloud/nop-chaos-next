@@ -10,6 +10,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
   Input,
   Select,
   SelectContent,
@@ -36,6 +40,8 @@ export default function LoginPage() {
   const [username, setUsername] = useState(mockMode ? 'nop' : '');
   const [password, setPassword] = useState(mockMode ? '123' : '');
   const [submitting, setSubmitting] = useState(false);
+  const usernameInvalid = !username.trim();
+  const passwordInvalid = !password.trim();
   const menuQuery = useMenuConfigQuery(false);
   const loginTitle = loginUi.cardTitleKey ? t(loginUi.cardTitleKey) : t('auth.login');
   const heroTitle = loginUi.heroTitleKey ? t(loginUi.heroTitleKey) : t('login.heroTitle');
@@ -108,29 +114,44 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form className="space-y-5" onSubmit={handleSubmit}>
-              <label className="block space-y-2">
-                <span className="text-sm font-medium text-foreground">{t('auth.username')}</span>
+              <Field>
+                <FieldLabel htmlFor="login-username">{t('auth.username')}</FieldLabel>
+                <FieldContent>
                 <div className="relative">
                   <User2 className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
+                    aria-invalid={usernameInvalid}
                     className="data-[size=default]:pr-3 data-[size=default]:pl-10"
+                    id="login-username"
+                    name="username"
+                    autoComplete="username"
+                    required
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                   />
                 </div>
-              </label>
-              <label className="block space-y-2">
-                <span className="text-sm font-medium text-foreground">{t('auth.password')}</span>
+                  <FieldError>{usernameInvalid ? t('auth.username') : undefined}</FieldError>
+                </FieldContent>
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="login-password">{t('auth.password')}</FieldLabel>
+                <FieldContent>
                 <div className="relative">
                   <LockKeyhole className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
+                    aria-invalid={passwordInvalid}
                     className="data-[size=default]:pr-3 data-[size=default]:pl-10"
+                    id="login-password"
+                    name="password"
+                    autoComplete="current-password"
                     type="password"
+                    required
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                   />
                 </div>
-              </label>
+                </FieldContent>
+              </Field>
               <label className="block space-y-2">
                 <span className="text-sm font-medium text-foreground">{t('auth.language')}</span>
                 <Select

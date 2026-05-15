@@ -1,32 +1,47 @@
+import { DEFAULT_STORAGE_SCOPE } from '../constants/storage';
+
 const storageCache = new Map<string, string | null>();
 
-export function getStorageItem(key: string): string | null {
-  if (storageCache.has(key)) {
-    return storageCache.get(key) ?? null;
+type StorageScope = 'local' | 'session';
+
+function resolveStorage(scope: StorageScope = DEFAULT_STORAGE_SCOPE) {
+  return scope === 'session' ? window.sessionStorage : window.localStorage;
+}
+
+export function getStorageItem(key: string, scope: StorageScope = DEFAULT_STORAGE_SCOPE): string | null {
+  const cacheKey = `${scope}:${key}`;
+  if (storageCache.has(cacheKey)) {
+    return storageCache.get(cacheKey) ?? null;
   }
 
   try {
-    const value = window.localStorage.getItem(key);
-    storageCache.set(key, value);
+    const value = resolveStorage(scope).getItem(key);
+    storageCache.set(cacheKey, value);
     return value;
   } catch {
     return null;
   }
 }
 
-export function setStorageItem(key: string, value: string): void {
+export function setStorageItem(
+  key: string,
+  value: string,
+  scope: StorageScope = DEFAULT_STORAGE_SCOPE,
+): void {
+  const cacheKey = `${scope}:${key}`;
   try {
-    window.localStorage.setItem(key, value);
-    storageCache.set(key, value);
+    resolveStorage(scope).setItem(key, value);
+    storageCache.set(cacheKey, value);
   } catch {
     return;
   }
 }
 
-export function removeStorageItem(key: string): void {
+export function removeStorageItem(key: string, scope: StorageScope = DEFAULT_STORAGE_SCOPE): void {
+  const cacheKey = `${scope}:${key}`;
   try {
-    window.localStorage.removeItem(key);
-    storageCache.delete(key);
+    resolveStorage(scope).removeItem(key);
+    storageCache.delete(cacheKey);
   } catch {
     return;
   }
@@ -35,7 +50,8 @@ export function removeStorageItem(key: string): void {
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (event) => {
     if (event.key) {
-      storageCache.delete(event.key);
+      storageCache.delete(`local:${event.key}`);
+      storageCache.delete(`session:${event.key}`);
     }
   });
 }

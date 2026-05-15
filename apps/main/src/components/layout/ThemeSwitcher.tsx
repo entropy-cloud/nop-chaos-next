@@ -21,6 +21,7 @@ export function ThemeSwitcher() {
       <Button
         variant="ghost"
         size="icon"
+        aria-label={nextTheme ? t(nextTheme.labelKey) : t('settings.visualTheme')}
         onClick={() => setThemeId(nextThemeId)}
         title={nextTheme ? t(nextTheme.labelKey) : t('settings.visualTheme')}
       >
@@ -32,6 +33,8 @@ export function ThemeSwitcher() {
         return (
           <Button
             key={mode.value}
+            aria-label={t(`common.displayModes.${mode.value}`)}
+            aria-pressed={active}
             variant="ghost"
             size="icon"
             className={

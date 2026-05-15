@@ -190,13 +190,21 @@ function saveFlowDocuments(flows: FlowDocument[]) {
   writeStoredJson(flowStorageKey, flows);
 }
 
+function abortIfNeeded(signal?: AbortSignal) {
+  if (signal?.aborted) {
+    throw signal.reason instanceof Error ? signal.reason : new Error('Flow request aborted');
+  }
+}
+
 export async function fetchFlowList(): Promise<FlowDocument[]> {
   return wait(getFlowDocuments(), 220);
 }
 
-export async function fetchFlowDetail(id: string): Promise<FlowDocument> {
+export async function fetchFlowDetail(id: string, signal?: AbortSignal): Promise<FlowDocument> {
+  abortIfNeeded(signal);
+
   if (id === 'new') {
-    return wait(
+    const result = await wait<FlowDocument>(
       {
         id: `flow-${Date.now()}`,
         name: 'Untitled flow',
@@ -232,6 +240,9 @@ export async function fetchFlowDetail(id: string): Promise<FlowDocument> {
       },
       120,
     );
+
+    abortIfNeeded(signal);
+    return result;
   }
 
   const flow = getFlowDocuments().find((item) => item.id === id);
@@ -239,7 +250,9 @@ export async function fetchFlowDetail(id: string): Promise<FlowDocument> {
     throw new Error('Flow not found');
   }
 
-  return wait(flow, 180);
+  const result = await wait(flow, 180);
+  abortIfNeeded(signal);
+  return result;
 }
 
 export async function saveFlowDetail(document: FlowDocument): Promise<FlowDocument> {

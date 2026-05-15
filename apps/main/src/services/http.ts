@@ -66,6 +66,7 @@ setRefreshTokenFetcher(refreshWithStore);
 export const mainHttpClient = createHttpClient({
   getBaseUrl: getApiBaseUrl,
   getLocale: getLocaleHeader,
+  getTimeoutMs: () => 15_000,
   getAuthToken: () => useAuthStore.getState().token,
   getRefreshToken: () => useAuthStore.getState().tokens?.refreshToken,
   getValidToken,

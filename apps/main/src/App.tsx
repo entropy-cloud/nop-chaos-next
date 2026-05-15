@@ -85,13 +85,14 @@ export default function App() {
       navigate: (to: string, options?: { replace?: boolean; state?: unknown }) =>
         navigate(to, options),
       stores: bridgeStores,
-      getCurrentUser: () => user,
+      getCurrentUser: () => useAuthStore.getState().user,
       getCurrentPath: () => location.pathname,
       getThemeConfig: () => pluginThemeConfig,
-        getPluginManifest: (pluginId: string) => plugins.find((plugin) => plugin.id === pluginId),
-        subscribe: (listener: () => void) => {
-          const handleLanguageChange = () => listener();
-          i18n.on?.('languageChanged', handleLanguageChange);
+      getPluginManifest: (pluginId: string) =>
+        usePluginStore.getState().plugins.find((plugin) => plugin.id === pluginId),
+      subscribe: (listener: () => void) => {
+        const handleLanguageChange = () => listener();
+        i18n.on?.('languageChanged', handleLanguageChange);
 
         const unsubscribeTheme = useThemeStore.subscribe(listener);
         const unsubscribeAuth = useAuthStore.subscribe(listener);
@@ -104,14 +105,19 @@ export default function App() {
           unsubscribePlugins();
         };
       },
-      getSnapshot: () => bridgeSnapshot,
+      getSnapshot: () => ({
+        i18n,
+        themeConfig: pluginThemeConfig,
+        user: useAuthStore.getState().user,
+        plugins: usePluginStore.getState().plugins,
+      }),
     }),
-    [bridgeSnapshot, bridgeStores, location.pathname, navigate, pluginThemeConfig, plugins, user],
+    [bridgeStores, location.pathname, navigate, pluginThemeConfig],
   );
 
   useEffect(() => {
     setPluginBridge(pluginBridge);
-  }, [pluginBridge]);
+  }, [pluginBridge, bridgeSnapshot]);
 
   return <AppRoutes />;
 }

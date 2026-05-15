@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createDefaultFluxEnv, createFluxSchemaRenderer } from '@nop-chaos/flux';
+import type { FluxSchema } from '@nop-chaos/flux';
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { createMainFluxEnv } from './adapter';
 import { fetchFluxPage } from './providers';
-import type { FluxSchema } from '@nop-chaos/flux';
+import { shouldResetFluxState } from './state';
 
 interface FluxRouteRendererProps {
   schemaPath: string;
@@ -17,6 +18,7 @@ const FluxSchemaRenderer = createFluxSchemaRenderer();
 export function FluxRouteRenderer({ schemaPath, title }: FluxRouteRendererProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [resolvedSchemaPath, setResolvedSchemaPath] = useState(schemaPath);
   const [schema, setSchema] = useState<FluxSchema | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,44 +39,46 @@ export function FluxRouteRenderer({ schemaPath, title }: FluxRouteRendererProps)
     [navigate],
   );
 
+  const hasStaleState = shouldResetFluxState(resolvedSchemaPath, schemaPath);
+  const visibleSchema = hasStaleState ? null : schema;
+  const visibleError = hasStaleState ? null : error;
+
   useEffect(() => {
-    let active = true;
+    const controller = new AbortController();
 
-    void fetchFluxPage(schemaPath)
+    void fetchFluxPage(schemaPath, controller.signal)
       .then((value) => {
-        if (!active) {
-          return;
-        }
-
+        setResolvedSchemaPath(schemaPath);
         setSchema(value as FluxSchema);
         setError(null);
       })
       .catch((reason: unknown) => {
-        if (!active) {
+        if (controller.signal.aborted) {
           return;
         }
 
+        setResolvedSchemaPath(schemaPath);
         setSchema(null);
-        setError(reason instanceof Error ? reason.message : 'Failed to load flux schema');
+        setError(reason instanceof Error ? reason.message : t('flux.page.loadFailed'));
       });
 
     return () => {
-      active = false;
+      controller.abort(new Error('Flux route renderer unmounted'));
     };
-  }, [schemaPath]);
+  }, [schemaPath, t]);
 
-  if (error) {
+  if (visibleError) {
     return (
       <Card className="theme-card border-destructive/40">
         <CardHeader>
           <CardTitle>{title ?? t('flux.page.title')}</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-destructive">{error}</CardContent>
+        <CardContent className="text-sm text-destructive">{visibleError}</CardContent>
       </Card>
     );
   }
 
-  if (!schema) {
+  if (!visibleSchema) {
     return (
       <Card className="theme-card">
         <CardHeader>
@@ -85,5 +89,5 @@ export function FluxRouteRenderer({ schemaPath, title }: FluxRouteRendererProps)
     );
   }
 
-  return <FluxSchemaRenderer schema={schema} schemaUrl={schemaPath} env={env} />;
+  return <FluxSchemaRenderer schema={visibleSchema} schemaUrl={schemaPath} env={env} />;
 }

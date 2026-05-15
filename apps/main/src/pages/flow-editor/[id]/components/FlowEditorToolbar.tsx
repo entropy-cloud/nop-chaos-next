@@ -50,7 +50,7 @@ export function FlowEditorToolbar({
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[var(--card-surface)] px-3 py-2 shadow-sm backdrop-blur-xl">
       <div className="mr-auto flex min-w-0 items-center gap-2">
-        <Button variant="ghost" size="icon-sm" onClick={onBack}>
+        <Button aria-label={t('common.backHome')} variant="ghost" size="icon-sm" onClick={onBack}>
           <ChevronLeft className="size-4" />
         </Button>
         <div className="min-w-0">
@@ -66,7 +66,7 @@ export function FlowEditorToolbar({
       </div>
       <div className="meta-text flex items-center gap-2 rounded-full border border-[hsl(var(--border))] px-3 py-1.5">
         <span>{t('flowEditor.editor.grid')}</span>
-        <Switch checked={gridEnabled} onCheckedChange={setGridEnabled} />
+        <Switch aria-label={t('flowEditor.editor.grid')} checked={gridEnabled} onCheckedChange={setGridEnabled} />
       </div>
       <Button variant="outline" disabled={!canUndo} onClick={onUndo}>
         <RotateCcw className="size-4" />
@@ -82,7 +82,7 @@ export function FlowEditorToolbar({
       </Button>
       <Button variant="outline" onClick={onExportJson}>
         <FileJson className="size-4" />
-        JSON
+        {t('flowEditor.editor.exportJson')}
       </Button>
       <Button variant="outline" className="xl:hidden" onClick={onOpenProperties}>
         <Settings2 className="size-4" />

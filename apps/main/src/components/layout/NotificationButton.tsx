@@ -8,6 +8,7 @@ export function NotificationButton() {
   return (
     <div className="relative">
       <Button
+        aria-label={t('common.pendingAlerts')}
         variant="ghost"
         size="icon"
         className="rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] backdrop-blur-xl"

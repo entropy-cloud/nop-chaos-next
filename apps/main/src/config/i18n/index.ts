@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpBackend from 'i18next-http-backend';
+import { setI18nGetter } from '@nop-chaos/ui';
 import { initReactI18next } from 'react-i18next';
 import { getDefaultLanguage, getLanguageOptions, normalizeLanguageCode } from './languages';
 
@@ -27,7 +28,16 @@ export function initializeI18n(): Promise<typeof i18n> {
           convertDetectedLanguage: (language: string) => normalizeLanguageCode(language),
         },
       })
-      .then(() => i18n);
+      .then(() => {
+        setI18nGetter((key) => i18n.t(key));
+        return i18n;
+      })
+      .catch((error: unknown) => {
+        initializationPromise = undefined;
+        throw new Error(
+          `Failed to initialize i18n resources: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        );
+      });
   }
 
   return initializationPromise;

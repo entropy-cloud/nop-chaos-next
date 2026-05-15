@@ -51,6 +51,12 @@ export default function PluginsManagementPage() {
         title={t('plugins.managementTitle')}
         description={t('plugins.managementPageDescription')}
       />
+      {pluginQuery.isLoading ? <div className="text-sm text-muted-foreground">{t('common.loading')}</div> : null}
+      {pluginQuery.isError ? (
+        <div className="rounded-xl border border-[hsl(var(--danger))] px-4 py-3 text-sm text-[hsl(var(--danger))]">
+          {pluginQuery.error instanceof Error ? pluginQuery.error.message : t('errors.serverDescription')}
+        </div>
+      ) : null}
       <div className="grid gap-4">
         {items.map((plugin) => {
           return (
@@ -149,7 +155,15 @@ export default function PluginsManagementPage() {
             </DialogTitle>
             <DialogDescription>{t('plugins.configureDescription')}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <form
+            id="plugin-config-form"
+            className="space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              toast.success(t('plugins.configureSaved'));
+              setConfigId(null);
+            }}
+          >
             {configPlugin?.configSchema?.map((field) => (
               <div key={field.key} className="space-y-2">
                 <Label>{field.label}</Label>
@@ -162,7 +176,9 @@ export default function PluginsManagementPage() {
                       settings: {
                         ...current.settings,
                         [field.key]:
-                          field.type === 'number' ? Number(event.target.value) : event.target.value,
+                          field.type === 'number' && event.target.value.trim()
+                            ? Number(event.target.value)
+                            : event.target.value,
                       },
                     }))
                   }
@@ -196,9 +212,11 @@ export default function PluginsManagementPage() {
                 ) : null}
               </div>
             ))}
-          </div>
+          </form>
           <DialogFooter>
-            <Button onClick={() => setConfigId(null)}>{t('common.done')}</Button>
+            <Button form="plugin-config-form" type="submit">
+              {t('common.done')}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,41 +1,45 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const requestMock = vi.fn();
+
+vi.mock('../http', () => ({
+  mainHttpClient: {
+    request: requestMock,
+  },
+}));
 
 describe('fetchMenuConfig', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllEnvs();
+    requestMock.mockReset();
     vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
   });
 
   it('returns overridden extension menus with arbitrary icon strings', async () => {
     vi.stubEnv('VITE_ENABLE_MOCK', 'true');
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(
-        async () =>
-          new Response(
-            JSON.stringify({
-              home: '/dashboard',
-              items: [
-                {
-                  id: 'dashboard',
-                  titleKey: 'menu.dashboard',
-                  path: '/dashboard',
-                  icon: 'layout-dashboard',
-                  pageType: 'builtin',
-                  componentId: 'dashboard',
-                },
-              ],
-            }),
-            {
-              status: 200,
-              headers: {
-                'content-type': 'application/json',
-              },
-            },
-          ),
-      ),
-    );
+    requestMock.mockResolvedValue({
+      status: 200,
+      data: {
+        home: '/dashboard',
+        items: [
+          {
+            id: 'dashboard',
+            titleKey: 'menu.dashboard',
+            path: '/dashboard',
+            icon: 'layout-dashboard',
+            pageType: 'builtin',
+            componentId: 'dashboard',
+          },
+        ],
+      },
+    });
 
     const runtime = await import('@nop-chaos/extension-host');
 
@@ -78,8 +82,5 @@ describe('fetchMenuConfig', () => {
     });
 
     runtime.setLoadedExtensions([]);
-    vi.useRealTimers();
-    vi.unstubAllEnvs();
-    vi.unstubAllGlobals();
   });
 });

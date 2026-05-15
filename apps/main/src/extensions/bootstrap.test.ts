@@ -6,6 +6,8 @@ import { loadExtensionI18nFromBaseUrl } from './bootstrap'
 const mockFetch = vi.fn()
 global.fetch = mockFetch
 
+vi.stubGlobal('location', { origin: 'https://host.example.com' })
+
 vi.mock('../config/i18n', () => ({
   default: {
     addResourceBundle: vi.fn()
@@ -29,14 +31,18 @@ describe('loadExtensionI18nFromBaseUrl', () => {
     const frResource = { greeting: 'Bonjour' }
 
     mockFetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(enResource)
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(frResource)
-      })
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(enResource), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(frResource), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      )
 
     const loaded: LoadedExtension[] = [
       {
@@ -54,8 +60,16 @@ describe('loadExtensionI18nFromBaseUrl', () => {
     await loadExtensionI18nFromBaseUrl(loaded)
 
     expect(mockFetch).toHaveBeenCalledTimes(2)
-    expect(mockFetch).toHaveBeenCalledWith('https://cdn.example.com/locales/en-US/translation.json')
-    expect(mockFetch).toHaveBeenCalledWith('https://cdn.example.com/locales/fr-FR/translation.json')
+    expect(mockFetch).toHaveBeenNthCalledWith(
+      1,
+      'https://cdn.example.com/locales/en-US/translation.json',
+      expect.objectContaining({ method: 'GET' }),
+    )
+    expect(mockFetch).toHaveBeenNthCalledWith(
+      2,
+      'https://cdn.example.com/locales/fr-FR/translation.json',
+      expect.objectContaining({ method: 'GET' }),
+    )
 
     expect(mockAddResourceBundle).toHaveBeenCalledTimes(2)
     expect(mockAddResourceBundle).toHaveBeenCalledWith('en-US', 'translation', enResource, true, true)
@@ -81,10 +95,7 @@ describe('loadExtensionI18nFromBaseUrl', () => {
   it('handles fetch failure gracefully', async () => {
     const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 404
-    })
+    mockFetch.mockResolvedValueOnce(new Response(null, { status: 404 }))
 
     const loaded: LoadedExtension[] = [
       {
@@ -103,7 +114,7 @@ describe('loadExtensionI18nFromBaseUrl', () => {
 
     expect(mockAddResourceBundle).not.toHaveBeenCalled()
     expect(consoleWarn).toHaveBeenCalledWith(
-      expect.stringContaining('Failed to load i18n for test-extension language en-US: 404')
+      expect.stringContaining('Failed to load i18n for test-extension language en-US: 404'),
     )
 
     consoleWarn.mockRestore()
@@ -131,7 +142,9 @@ describe('loadExtensionI18nFromBaseUrl', () => {
 
     expect(mockAddResourceBundle).not.toHaveBeenCalled()
     expect(consoleWarn).toHaveBeenCalledWith(
-      expect.stringContaining('Failed to load i18n for test-extension language en-US: Network error')
+      expect.stringContaining(
+        'Failed to load i18n for test-extension language en-US: Network request failed: Network error',
+      ),
     )
 
     consoleWarn.mockRestore()
@@ -140,10 +153,12 @@ describe('loadExtensionI18nFromBaseUrl', () => {
   it('supports relative baseUrl', async () => {
     const resource = { greeting: 'Hello' }
 
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(resource)
-    })
+    mockFetch.mockResolvedValueOnce(
+      new Response(JSON.stringify(resource), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      }),
+    )
 
     const loaded: LoadedExtension[] = [
       {
@@ -160,7 +175,10 @@ describe('loadExtensionI18nFromBaseUrl', () => {
 
     await loadExtensionI18nFromBaseUrl(loaded)
 
-    expect(mockFetch).toHaveBeenCalledWith('./locales/en-US/translation.json')
+    expect(mockFetch).toHaveBeenCalledWith(
+      '/locales/en-US/translation.json',
+      expect.objectContaining({ method: 'GET' }),
+    )
     expect(mockAddResourceBundle).toHaveBeenCalledWith('en-US', 'translation', resource, true, true)
   })
 })

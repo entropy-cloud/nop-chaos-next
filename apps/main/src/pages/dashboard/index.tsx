@@ -184,6 +184,13 @@ export default function DashboardPage() {
         }
       />
 
+      {dashboardQuery.isLoading ? <div className="text-sm text-muted-foreground">{t('common.loading')}</div> : null}
+      {dashboardQuery.isError ? (
+        <div className="rounded-xl border border-[hsl(var(--danger))] px-4 py-3 text-sm text-[hsl(var(--danger))]">
+          {dashboardQuery.error instanceof Error ? dashboardQuery.error.message : t('errors.serverDescription')}
+        </div>
+      ) : null}
+
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {(data?.metrics ?? []).map((metric, index) => {
           const Icon = metricIcons[index] ?? Gauge;

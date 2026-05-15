@@ -6,6 +6,7 @@ import { registerLanguages, replaceLanguages, setDefaultLanguage } from '../conf
 import { registerThemes } from '../config/themeRegistry'
 import { registerHostSharedModules } from '../plugins/sharedModules'
 import { registerBuiltinPages } from '../router/pageRegistry'
+import { mainHttpClient } from '../services/http'
 import { getExtensionSources } from './config'
 
 const logger: ExtensionLogger = {
@@ -124,15 +125,17 @@ export async function loadExtensionI18nFromBaseUrl(loaded: LoadedExtension[]) {
       languages.map(async (lng) => {
         try {
           const url = `${baseUrl}/${lng}/translation.json`
-          const response = await fetch(url)
+          const response = await mainHttpClient.request<Record<string, unknown>>({
+            url,
+            withAuth: false
+          })
 
-          if (!response.ok) {
+          if (response.status < 200 || response.status >= 300) {
             logger.warn(`Failed to load i18n for ${extension.id} language ${lng}: ${response.status}`)
             return
           }
 
-          const resource = await response.json()
-          i18n.addResourceBundle(lng, 'translation', resource, true, true)
+          i18n.addResourceBundle(lng, 'translation', response.data, true, true)
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Unknown error'
           logger.warn(`Failed to load i18n for ${extension.id} language ${lng}: ${message}`)

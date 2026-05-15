@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
+import { toast } from '@nop-chaos/ui';
+import i18n from '../config/i18n';
 import { fetchCurrentUser } from '../services/authApi';
 import { useAuthStore } from '../store/authStore';
 
-let didBootstrapAuth = false;
+const authBootstrapState = {
+  didBootstrapAuth: false,
+};
 
 export function useAuth() {
   const user = useAuthStore((state) => state.user);
@@ -21,11 +25,11 @@ export function useAuthBootstrap() {
   const bootstrapStatus = useAuthStore((state) => state.bootstrapStatus);
 
   useEffect(() => {
-    if (didBootstrapAuth) {
+    if (authBootstrapState.didBootstrapAuth) {
       return;
     }
 
-    didBootstrapAuth = true;
+    authBootstrapState.didBootstrapAuth = true;
 
     const bootstrap = async () => {
       const state = useAuthStore.getState();
@@ -43,8 +47,14 @@ export function useAuthBootstrap() {
           token: state.token,
           tokens: state.tokens,
         });
-      } catch {
+      } catch (error: unknown) {
         useAuthStore.getState().logout();
+        useAuthStore.getState().setBootstrapStatus('error');
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : i18n.t('auth.bootstrapFailed', 'Unable to restore your session.'),
+        );
       }
     };
 

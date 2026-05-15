@@ -4,9 +4,15 @@ import { filterMenusByRoles, flattenMenus, sortMenus } from '@nop-chaos/shared';
 import { useAuth } from '../hooks/useAuth';
 import { useMenuConfigQuery } from '../hooks/useMenuConfig';
 import { RouteRenderer } from './RouteRenderer';
-import { ForbiddenPage, LoginPage, NotFoundPage, ServerErrorPage } from './pageRegistry';
+import { ForbiddenPage, LoginPage, NotFoundPage, ServerErrorPage, getSystemPage } from './pageRegistry';
 
 const AppShell = lazy(() => import('./AppShell').then((module) => ({ default: module.AppShell })));
+
+const systemPageRoutes = [
+  { path: '403', key: 'forbidden' as const, fallback: ForbiddenPage },
+  { path: '404', key: 'notFound' as const, fallback: NotFoundPage },
+  { path: '500', key: 'serverError' as const, fallback: ServerErrorPage },
+];
 
 function normalizePath(path: string): string {
   return path.replace(/^\//, '');
@@ -78,9 +84,11 @@ export function AppRoutes() {
         }
       >
         <Route index element={<Navigate replace to={homePath} />} />
-        <Route path="403" element={<ForbiddenPage />} />
-        <Route path="404" element={<NotFoundPage />} />
-        <Route path="500" element={<ServerErrorPage />} />
+        {systemPageRoutes.map(({ path, key, fallback: Fallback }) => {
+          const Override = getSystemPage(key);
+          const Component = Override ?? Fallback;
+          return <Route key={path} path={path} element={<Component />} />;
+        })}
         {menuQuery.isSuccess
           ? items.map((item) => (
               <Route

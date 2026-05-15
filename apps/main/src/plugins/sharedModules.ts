@@ -63,18 +63,25 @@ async function ensurePluginExtraSharedModules() {
     return;
   }
 
-  pluginExtraModulesPromise ??= import('recharts').then((rechartsModule) => {
-    const pluginExtraSharedModules = {
-      recharts: rechartsModule,
-    };
+  if (!pluginExtraModulesPromise) {
+    pluginExtraModulesPromise = import('recharts')
+      .then((rechartsModule) => {
+        const pluginExtraSharedModules = {
+          recharts: rechartsModule,
+        };
 
-    globalThis.__NOP_SHARED__ = {
-      ...(globalThis.__NOP_SHARED__ ?? {}),
-      ...pluginExtraSharedModules,
-    };
-    registerSharedModules(pluginExtraSharedModules);
-    didRegisterPluginExtraModules = true;
-  });
+        globalThis.__NOP_SHARED__ = {
+          ...(globalThis.__NOP_SHARED__ ?? {}),
+          ...pluginExtraSharedModules,
+        };
+        registerSharedModules(pluginExtraSharedModules);
+        didRegisterPluginExtraModules = true;
+      })
+      .catch((error: unknown) => {
+        pluginExtraModulesPromise = null;
+        throw error;
+      });
+  }
 
   await pluginExtraModulesPromise;
 }

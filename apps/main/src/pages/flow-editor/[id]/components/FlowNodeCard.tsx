@@ -1,4 +1,4 @@
-import type { MouseEvent as ReactMouseEvent } from 'react';
+import type { KeyboardEvent, MouseEvent as ReactMouseEvent } from 'react';
 import { Copy, Pencil, Trash2 } from 'lucide-react';
 import { Handle, NodeToolbar, Position, type NodeProps } from '@xyflow/react';
 import { Button } from '@nop-chaos/ui';
@@ -27,20 +27,33 @@ export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
     event.stopPropagation();
   };
 
+  const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      event.stopPropagation();
+      actions.selectNode(id);
+    }
+  };
+
   return (
     <div
       data-testid={`flow-node-${id}`}
+      role="button"
+      tabIndex={0}
+      onFocus={show}
+      onBlur={hide}
       className={`relative min-w-[12rem] rounded-xl border bg-[var(--card-surface)] p-3 shadow-lg backdrop-blur-xl transition ${selected ? 'border-[hsl(var(--primary))] ring-2 ring-[color-mix(in_hsl,hsl(var(--primary))_24%,transparent)]' : 'border-white/40'}`}
       onClick={(event) => {
         event.stopPropagation();
         actions.selectNode(id);
       }}
+      onKeyDown={handleCardKeyDown}
       onDoubleClick={(event) => {
         event.stopPropagation();
         actions.openNodeEditor(id);
       }}
-      onMouseEnter={show}
-      onMouseLeave={hide}
+      onPointerEnter={show}
+      onPointerLeave={hide}
     >
       {allowTarget ? (
         <Handle
@@ -60,10 +73,11 @@ export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
         <div
           data-testid={`node-toolbar-${id}`}
           className="pointer-events-auto flex items-center gap-1 rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] p-1 shadow-md backdrop-blur-xl"
-          onMouseEnter={show}
-          onMouseLeave={hide}
+          onPointerEnter={show}
+          onPointerLeave={hide}
         >
           <Button
+            aria-label={t('common.edit')}
             size="icon-sm"
             variant="ghost"
             onMouseDown={stopToolbarEvent}
@@ -75,6 +89,7 @@ export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
             <Pencil className="size-4" />
           </Button>
           <Button
+            aria-label={t('common.copy')}
             size="icon-sm"
             variant="ghost"
             onMouseDown={stopToolbarEvent}
@@ -86,6 +101,7 @@ export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
             <Copy className="size-4" />
           </Button>
           <Button
+            aria-label={t('common.delete')}
             size="icon-sm"
             variant="ghost"
             onMouseDown={stopToolbarEvent}

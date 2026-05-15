@@ -71,24 +71,24 @@ body.is-modalOpened .ant-popover {
 /* ===== AMIS scoped typography baseline ===== */
 .amis {
   font-family: inherit;
-  font-size: var(--body-size);
-  font-weight: var(--body-weight);
-  line-height: var(--body-lineHeight);
-  color: var(--body-color);
+  font-size: var(--body-size, 0.875rem);
+  font-weight: var(--body-weight, 400);
+  line-height: var(--body-lineHeight, 1.5);
+  color: var(--body-color, hsl(var(--foreground)));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .amis a {
-  color: var(--link-color);
-  font-size: var(--link-fontSize);
-  font-weight: var(--link-fontWeight);
-  text-decoration: var(--link-decoration);
+  color: var(--link-color, hsl(var(--primary)));
+  font-size: var(--link-fontSize, 0.875rem);
+  font-weight: var(--link-fontWeight, 500);
+  text-decoration: var(--link-decoration, none);
 }
 
 .amis a:hover {
-  color: var(--link-onHover-color);
-  text-decoration: var(--link-onHover-decoration);
+  color: var(--link-onHover-color, hsl(var(--primary-dark)));
+  text-decoration: var(--link-onHover-decoration, underline);
 }
 
 .amis label {
@@ -165,7 +165,11 @@ body.is-modalOpened .ant-popover {
 
 /* ===== 主题适配增强 ===== */
 .amis .cxd-Button {
-  transition: all var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .amis .cxd-Button--primary {

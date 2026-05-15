@@ -44,6 +44,9 @@ export default function FlowEditorPage() {
     onSuccess: () => {
       void flowQuery.refetch();
     },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : t('flowEditor.actionFailed'));
+    },
   });
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<'all' | FlowDocument['status']>('all');
@@ -117,6 +120,15 @@ export default function FlowEditorPage() {
           <CardTitle>{t('flowEditor.flowListTitle')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {flowQuery.isLoading ? (
+            <div className="text-sm text-muted-foreground">{t('common.loading')}</div>
+          ) : null}
+          {flowQuery.isError ? (
+            <div className="rounded-xl border border-[hsl(var(--danger))] px-4 py-3 text-sm text-[hsl(var(--danger))]">
+              {flowQuery.error instanceof Error ? flowQuery.error.message : t('errors.serverDescription')}
+            </div>
+          ) : null}
+
           <div className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-4 backdrop-blur-xl dark:bg-slate-900/35">
             <div className="flex flex-wrap items-center gap-3 xl:flex-nowrap">
               <div className="flex min-w-[18rem] flex-1 items-center gap-2 rounded-2xl border border-[hsl(var(--border))] bg-white/50 px-3 dark:bg-slate-900/35">
@@ -239,6 +251,13 @@ export default function FlowEditorPage() {
                     </TableCell>
                   </TableRow>
                 ))}
+                {!flowQuery.isLoading && !flowQuery.isError && pageRows.length === 0 ? (
+                  <TableRow>
+                    <TableCell className="text-sm text-muted-foreground" colSpan={6}>
+                      {t('common.noData')}
+                    </TableCell>
+                  </TableRow>
+                ) : null}
               </TableBody>
             </Table>
           </div>

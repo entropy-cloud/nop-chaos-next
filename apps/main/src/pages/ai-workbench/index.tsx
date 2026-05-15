@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect -- assistantId is intentionally derived from activeSession; this sync effect is correct and avoids prop drilling or reducer complexity */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MessageSquarePlus } from 'lucide-react';
 import {
@@ -45,8 +44,10 @@ export default function AIWorkbenchPage() {
   const stopStreamRef = useRef(false);
   const resizingRef = useRef(false);
   const activeSession = sessions.find((session) => session.id === activeSessionId) ?? sessions[0];
+  const selectedAssistantId =
+    switchMode === 'current' ? activeSession?.assistantId ?? assistantId : assistantId;
   const currentAssistant =
-    assistantCatalog.find((item) => item.id === assistantId) ?? assistantCatalog[0];
+    assistantCatalog.find((item) => item.id === selectedAssistantId) ?? assistantCatalog[0];
 
   const contextSummary = useMemo(
     () =>
@@ -70,14 +71,6 @@ export default function AIWorkbenchPage() {
       );
     });
   }, [search, sessions]);
-
-  useEffect(() => {
-    if (!activeSession) {
-      return;
-    }
-
-    setAssistantId(activeSession.assistantId);
-  }, [activeSession]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
@@ -140,20 +133,19 @@ export default function AIWorkbenchPage() {
   };
 
   const createSession = (seed?: Partial<WorkbenchSession>) => {
-    const nextSession: WorkbenchSession = {
-      id: `session-${Date.now()}`,
-      title: seed?.title ?? t('aiWorkbench.newSessionTitle', { index: sessions.length + 1 }),
-      assistantId: seed?.assistantId ?? assistantId,
-      updatedAt: t('aiWorkbench.timestamps.justNow'),
-      messages: seed?.messages ?? [],
-    };
+      const nextSession: WorkbenchSession = {
+        id: `session-${Date.now()}`,
+        title: seed?.title ?? t('aiWorkbench.newSessionTitle', { index: sessions.length + 1 }),
+        assistantId: seed?.assistantId ?? selectedAssistantId,
+        updatedAt: t('aiWorkbench.timestamps.justNow'),
+        messages: seed?.messages ?? [],
+      };
     setSessions((state) => [nextSession, ...state]);
     setActiveSessionId(nextSession.id);
     return nextSession;
   };
 
   const handleSwitchAssistant = (nextAssistantId: AssistantOption['id']) => {
-    setAssistantId(nextAssistantId);
     if (switchMode === 'current' && activeSession) {
       updateSession(activeSession.id, (session) => ({
         ...session,
@@ -163,6 +155,7 @@ export default function AIWorkbenchPage() {
       return;
     }
 
+    setAssistantId(nextAssistantId);
     createSession({
       assistantId: nextAssistantId,
       title: t('aiWorkbench.assistantSessionTitle', {
@@ -184,7 +177,7 @@ export default function AIWorkbenchPage() {
 
   const streamAssistantReply = async (sessionId: string, prompt: string) => {
     stopStreamRef.current = false;
-    const reply = createMockAiReply(prompt, assistantId, contextEnabled, contextSummary);
+    const reply = createMockAiReply(prompt, selectedAssistantId, contextEnabled, contextSummary);
     const assistantMessageId = `assistant-${Date.now()}`;
     updateSession(sessionId, (session) => ({
       ...session,
@@ -285,7 +278,7 @@ export default function AIWorkbenchPage() {
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Select
-              value={assistantId}
+              value={selectedAssistantId}
               onValueChange={(value) => {
                 if (value) {
                   handleSwitchAssistant(value as AssistantOption['id']);
@@ -342,12 +335,26 @@ export default function AIWorkbenchPage() {
         />
 
         <div
-          aria-label="resize sessions panel"
+          aria-label={t('aiWorkbench.resizeSessionsPanel')}
+          aria-orientation="vertical"
+          aria-valuemax={420}
+          aria-valuemin={260}
+          aria-valuenow={sidebarWidth}
           className="relative hidden w-3 cursor-col-resize bg-transparent lg:block"
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowLeft') {
+              setSidebarWidth((value) => Math.max(260, value - 16));
+            }
+
+            if (event.key === 'ArrowRight') {
+              setSidebarWidth((value) => Math.min(420, value + 16));
+            }
+          }}
           onMouseDown={() => {
             resizingRef.current = true;
           }}
           role="separator"
+          tabIndex={0}
         >
           <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-[hsl(var(--border))]" />
           <div className="absolute left-1/2 top-1/2 flex h-10 w-3 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] text-muted-foreground shadow-sm">

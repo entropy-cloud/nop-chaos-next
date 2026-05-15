@@ -111,12 +111,10 @@ function FlowEditorPageInner() {
   );
 
   useEffect(() => {
-    let active = true;
-    void fetchFlowDetail(id).then((payload) => {
-      if (!active) {
-        return;
-      }
+    const controller = new AbortController();
 
+    void fetchFlowDetail(id, controller.signal).then((payload) => {
+      
       const normalizedNodes = payload.nodes.map((node) => ({
         ...node,
         data: node.data as FlowNodeData,
@@ -130,12 +128,18 @@ function FlowEditorPageInner() {
       initializeHistory({ nodes: cloneNodes(normalizedNodes), edges: cloneEdges(normalizedEdges) });
       setSavedSnapshot(snapshot);
       window.setTimeout(() => void fitView({ duration: 250, padding: 0.2 }), 50);
+    }).catch((error: unknown) => {
+      if (controller.signal.aborted) {
+        return;
+      }
+
+      toast.error(error instanceof Error ? error.message : t('flowEditor.loadFailed'));
     });
 
     return () => {
-      active = false;
+      controller.abort(new Error('Flow editor unmounted'));
     };
-  }, [fitView, id, initializeHistory]);
+  }, [fitView, id, initializeHistory, t]);
 
   useEffect(() => {
     if (selectedNodeId && !nodes.some((node) => node.id === selectedNodeId)) {

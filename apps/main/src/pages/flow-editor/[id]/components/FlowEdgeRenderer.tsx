@@ -64,8 +64,8 @@ export function FlowEdgeRenderer(props: EdgeProps<FlowEdge>) {
           actions.selectEdge(id);
         }}
         onDoubleClick={openEditor}
-        onMouseEnter={show}
-        onMouseLeave={hide}
+        onPointerEnter={show}
+        onPointerLeave={hide}
       />
       <EdgeLabelRenderer>
         <div
@@ -81,8 +81,8 @@ export function FlowEdgeRenderer(props: EdgeProps<FlowEdge>) {
                 actions.selectEdge(id);
               }}
               onDoubleClick={openEditor}
-              onMouseEnter={show}
-              onMouseLeave={hide}
+              onPointerEnter={show}
+              onPointerLeave={hide}
               type="button"
             >
               {t(data?.condition ?? label?.toString() ?? 'flowEditor.editor.defaultEdgePath')}
@@ -91,8 +91,8 @@ export function FlowEdgeRenderer(props: EdgeProps<FlowEdge>) {
               <div
                 data-testid={`edge-toolbar-${id}`}
                 className="pointer-events-auto flex items-center gap-1 rounded-full border border-[hsl(var(--border))] bg-[var(--card-surface)] p-1 shadow-md backdrop-blur-xl"
-                onMouseEnter={show}
-                onMouseLeave={hide}
+                onPointerEnter={show}
+                onPointerLeave={hide}
               >
                 <Button
                   size="icon-sm"

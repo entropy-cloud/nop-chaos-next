@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AppBrand } from '../components/layout/AppBrand';
 import { MobileTopBar } from '../components/layout/MobileTopBar';
+import { OfflineBanner } from '../components/layout/OfflineBanner';
 import { SidebarUserMenu } from '../components/layout/SidebarUserMenu';
 import { toRem } from '../config/layout';
 import { useAuth } from '../hooks/useAuth';
@@ -268,19 +269,23 @@ export function AppShell() {
           </div>
         }
         mobileSidebarOpen={mobileSidebarOpen}
+        onCloseMobileSidebar={() => setMobileSidebarOpen(false)}
         workspaceFullscreen={workspaceFullscreen}
         tabsBar={
-          <TabsBar
-            tabs={tabs.tabs}
-            activePath={location.pathname}
-            onSelect={tabs.setActivePath}
-            onClose={tabs.closeTab}
-            onCloseOthers={tabs.closeOtherTabs}
-            onCloseAll={tabs.closeAllTabs}
-            onRefresh={() => window.location.reload()}
-            onToggleFullscreen={() => void handleToggleWorkspaceFullscreen()}
-            isFullscreen={workspaceFullscreen}
-          />
+          <div>
+            <OfflineBanner />
+            <TabsBar
+              tabs={tabs.tabs}
+              activePath={location.pathname}
+              onSelect={tabs.setActivePath}
+              onClose={tabs.closeTab}
+              onCloseOthers={tabs.closeOtherTabs}
+              onCloseAll={tabs.closeAllTabs}
+              onRefresh={() => window.location.reload()}
+              onToggleFullscreen={() => void handleToggleWorkspaceFullscreen()}
+              isFullscreen={workspaceFullscreen}
+            />
+          </div>
         }
       >
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">

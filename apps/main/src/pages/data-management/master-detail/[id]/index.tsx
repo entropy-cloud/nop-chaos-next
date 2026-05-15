@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect -- multiple setState calls are intentional to atomically reset form state when server data loads */
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { RefreshCw, RotateCcw, Save } from 'lucide-react';
@@ -22,6 +21,7 @@ import { ItemsSection } from './components/ItemsSection';
 import { LogisticsDrawer } from './components/LogisticsDrawer';
 import { LogisticsSection } from './components/LogisticsSection';
 import { SummaryCard } from './components/SummaryCard';
+import { shouldRenderDetailError } from '../detailState';
 import type { DirtySectionKey, DirtySections, ValidationErrors } from './types';
 import { buildValidationErrors, containsIgnoreCase, normalizeOrder } from './utils';
 
@@ -54,11 +54,21 @@ export default function MasterDetailDetailPage() {
       return;
     }
     const next = normalizeOrder(detailQuery.data);
-    setDraft(next);
+    setDraft((current) => {
+      if (current && savedState && JSON.stringify(current) !== JSON.stringify(savedState)) {
+        return current;
+      }
+
+      return next;
+    });
     setSavedState(normalizeOrder(detailQuery.data));
-    setDirtySections({ items: false, addresses: false, logistics: false });
-    setErrors({});
-  }, [detailQuery.data]);
+    setDirtySections((current) =>
+      Object.values(current).some(Boolean)
+        ? current
+        : { items: false, addresses: false, logistics: false },
+    );
+    setErrors((current) => (Object.keys(current).length > 0 ? current : {}));
+  }, [detailQuery.data, savedState]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -134,8 +144,16 @@ export default function MasterDetailDetailPage() {
     },
   });
 
+  if (shouldRenderDetailError(draft, detailQuery.isError)) {
+    return (
+      <div className="rounded-xl border border-[hsl(var(--danger))] px-4 py-3 text-sm text-[hsl(var(--danger))]">
+        {detailQuery.error instanceof Error ? detailQuery.error.message : t('errors.serverDescription')}
+      </div>
+    );
+  }
+
   if (!draft) {
-    return null;
+    return <div className="text-sm text-muted-foreground">{t('common.loading')}</div>;
   }
 
   const markDirty = (section: DirtySectionKey) => {
@@ -287,7 +305,13 @@ export default function MasterDetailDetailPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <form
+      className="space-y-6"
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleSaveAll();
+      }}
+    >
       <PageHeader
         eyebrow={t('masterDetail.detail.eyebrow')}
         title={`${t('masterDetail.detailTitle')} #${draft.orderNo}`}
@@ -384,6 +408,6 @@ export default function MasterDetailDetailPage() {
           {t('masterDetail.detail.backToList')}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }

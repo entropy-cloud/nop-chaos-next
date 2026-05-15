@@ -42,6 +42,14 @@ export function ItemsSection({
   removeItem,
 }: ItemsSectionProps) {
   const { t } = useTranslation();
+  const parseNumberInput = (value: string, fallback: number) => {
+    if (!value.trim()) {
+      return fallback;
+    }
+
+    const next = Number(value);
+    return Number.isNaN(next) ? fallback : next;
+  };
 
   return (
     <Card className="theme-card">
@@ -124,7 +132,9 @@ export function ItemsSection({
                         type="number"
                         value={item.quantity}
                         onChange={(event) =>
-                          updateItem(item.id, { quantity: Number(event.target.value) })
+                          updateItem(item.id, {
+                            quantity: parseNumberInput(event.target.value, item.quantity),
+                          })
                         }
                         className={quantityError ? 'border-[hsl(var(--danger))]' : ''}
                       />
@@ -139,7 +149,7 @@ export function ItemsSection({
                         type="number"
                         value={item.price}
                         onChange={(event) =>
-                          updateItem(item.id, { price: Number(event.target.value) })
+                          updateItem(item.id, { price: parseNumberInput(event.target.value, item.price) })
                         }
                         className={priceError ? 'border-[hsl(var(--danger))]' : ''}
                       />

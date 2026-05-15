@@ -60,6 +60,9 @@ export default function MasterDetailPage() {
       void orderQuery.refetch();
       toast.success(t('masterDetail.batchDeleteSuccess'));
     },
+    onError: (error: unknown) => {
+      toast.error(error instanceof Error ? error.message : t('masterDetail.batchDelete'));
+    },
   });
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [keyword, setKeyword] = useState('');
@@ -206,6 +209,13 @@ export default function MasterDetailPage() {
           </div>
         }
       />
+
+      {orderQuery.isLoading ? <div className="text-sm text-muted-foreground">{t('common.loading')}</div> : null}
+      {orderQuery.isError ? (
+        <div className="rounded-xl border border-[hsl(var(--danger))] px-4 py-3 text-sm text-[hsl(var(--danger))]">
+          {orderQuery.error instanceof Error ? orderQuery.error.message : t('errors.serverDescription')}
+        </div>
+      ) : null}
 
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2 xl:flex-nowrap">
@@ -379,33 +389,45 @@ export default function MasterDetailPage() {
                     <TableCell className="py-2">￥{row.amount.toLocaleString()}</TableCell>
                     <TableCell className="py-2">{row.owner}</TableCell>
                     <TableCell className="py-2">
-                      <div
-                        className="flex justify-end gap-2"
-                        onClick={(event) => event.stopPropagation()}
-                      >
+                      <div className="flex justify-end gap-2">
                         <Button
                           size="sm"
                           variant="outline"
                           className="h-8 px-2.5"
-                          onClick={() => openDetail(row)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            openDetail(row);
+                          }}
                         >
                           <Eye className="size-4" />
                           {t('masterDetail.view')}
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger
-                            render={<Button size="icon-sm" variant="outline" className="h-8 w-8" />}
+                            render={
+                              <Button
+                                size="icon-sm"
+                                variant="outline"
+                                className="h-8 w-8"
+                                onClick={(event) => event.stopPropagation()}
+                              />
+                            }
                           >
                             <MoreHorizontal className="size-4" />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="end"
-                            onClick={(event: ReactMouseEvent<HTMLDivElement>) => event.stopPropagation()}
+                            onClick={(event: ReactMouseEvent<HTMLDivElement>) =>
+                              event.stopPropagation()
+                            }
                           >
                             <DropdownMenuItem onSelect={() => openDetail(row)}>
                               {t('common.edit')}
                             </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleDeleteRow(row)} disabled={deleteMutation.isPending}>
+                            <DropdownMenuItem
+                              onSelect={() => handleDeleteRow(row)}
+                              disabled={deleteMutation.isPending}
+                            >
                               {t('common.delete')}
                             </DropdownMenuItem>
                           </DropdownMenuContent>

@@ -12,6 +12,16 @@ export default function SettingsLayoutPage() {
   const setSidebarWidthRem = useLayoutStore((state) => state.setSidebarWidthRem);
   const setSidebarCollapsedWidthRem = useLayoutStore((state) => state.setSidebarCollapsedWidthRem);
   const resetSidebarWidths = useLayoutStore((state) => state.resetSidebarWidths);
+  const applyNumberInput = (value: string, commit: (next: number) => void) => {
+    if (!value.trim()) {
+      return;
+    }
+
+    const next = Number(value);
+    if (!Number.isNaN(next)) {
+      commit(next);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -37,7 +47,7 @@ export default function SettingsLayoutPage() {
                 step={1}
                 type="number"
                 value={sidebarWidthRem}
-                onChange={(event) => setSidebarWidthRem(Number(event.target.value))}
+                onChange={(event) => applyNumberInput(event.target.value, setSidebarWidthRem)}
               />
             </label>
             <label className="space-y-2 text-sm">
@@ -50,7 +60,9 @@ export default function SettingsLayoutPage() {
                 step={0.5}
                 type="number"
                 value={sidebarCollapsedWidthRem}
-                onChange={(event) => setSidebarCollapsedWidthRem(Number(event.target.value))}
+                onChange={(event) =>
+                  applyNumberInput(event.target.value, setSidebarCollapsedWidthRem)
+                }
               />
             </label>
           </div>

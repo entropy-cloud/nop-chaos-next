@@ -49,6 +49,7 @@ export function SidebarUserMenu({
       <DropdownMenuTrigger
         render={
           <button
+            aria-label={`${displayName} ${t('common.moreActions')}`}
             className="flex w-full items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[var(--card-surface)] px-2 py-2 text-left shadow-sm backdrop-blur-xl transition-colors hover:bg-[color-mix(in_hsl,hsl(var(--primary))_6%,var(--card-surface))]"
             data-testid="sidebar-user-menu-trigger"
             title={t('common.moreActions')}

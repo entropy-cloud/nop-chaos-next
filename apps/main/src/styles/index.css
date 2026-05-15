@@ -45,6 +45,7 @@
   --sidebar-accent-foreground: hsl(var(--accent-foreground));
   --sidebar-border: hsl(var(--border));
   --sidebar-ring: hsl(var(--ring));
+  --destructive: var(--danger);
 }
 
 .dark {
@@ -56,6 +57,7 @@
   --sidebar-accent-foreground: hsl(var(--accent-foreground));
   --sidebar-border: hsl(var(--border));
   --sidebar-ring: hsl(var(--ring));
+  --destructive: var(--danger);
 }
 
 html,

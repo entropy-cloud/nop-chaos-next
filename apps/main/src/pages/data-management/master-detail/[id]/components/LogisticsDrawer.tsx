@@ -8,6 +8,11 @@ import {
   DrawerTitle,
   Input,
   Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Textarea,
 } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
@@ -61,15 +66,34 @@ export function LogisticsDrawer({
             </div>
             <div className="grid gap-2">
               <Label>{t('masterDetail.detail.logisticsFields.shippingStatus')}</Label>
-              <Input
+              <Select
                 value={editingLogistics.shippingStatus}
-                onChange={(event) =>
+                onValueChange={(value) => {
+                  if (!value) {
+                    return;
+                  }
+
                   setEditingLogistics({
                     ...editingLogistics,
-                    shippingStatus: event.target.value as LogisticsRecord['shippingStatus'],
-                  })
-                }
-              />
+                    shippingStatus: value as LogisticsRecord['shippingStatus'],
+                  });
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">
+                    {t('masterDetail.detail.shippingStatuses.pending')}
+                  </SelectItem>
+                  <SelectItem value="shipping">
+                    {t('masterDetail.detail.shippingStatuses.shipping')}
+                  </SelectItem>
+                  <SelectItem value="delivered">
+                    {t('masterDetail.detail.shippingStatuses.delivered')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid gap-2">
               <Label>{t('masterDetail.detail.logisticsFields.eta')}</Label>

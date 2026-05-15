@@ -64,7 +64,7 @@ export function FlowNodePalette({ onPaletteDragStart, onAddNode }: FlowNodePalet
                           </span>
                         </button>
                         <Button size="icon-sm" variant="ghost" onClick={() => onAddNode(kind)}>
-                          <Plus className="size-4" />
+                          <Plus aria-hidden="true" className="size-4" />
                         </Button>
                       </div>
                     );

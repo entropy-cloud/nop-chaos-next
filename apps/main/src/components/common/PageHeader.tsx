@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Badge, cn } from '@nop-chaos/ui';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 
 interface PageHeaderProps {
   eyebrow?: string;
@@ -11,6 +12,8 @@ interface PageHeaderProps {
 }
 
 function PageHeader({ eyebrow, title, description, badge, actions, className }: PageHeaderProps) {
+  useDocumentTitle(title);
+
   return (
     <div
       className={cn(
