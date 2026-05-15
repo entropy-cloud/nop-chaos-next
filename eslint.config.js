@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import reactCompiler from 'eslint-plugin-react-compiler';
@@ -62,6 +63,7 @@ export default tseslint.config(
     },
     plugins: {
       react,
+      'jsx-a11y': jsxA11y,
       unicorn,
       ...reactHooksLatest.plugins,
       'react-refresh': reactRefresh,
@@ -89,7 +91,12 @@ export default tseslint.config(
       ...reactHooksLatest.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'react-compiler/react-compiler': 'error',
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'jsx-a11y/alt-text': 'error',
+      'jsx-a11y/aria-role': 'error',
+      'jsx-a11y/control-has-associated-label': 'error',
+      'jsx-a11y/no-static-element-interactions': 'error',
+      'jsx-a11y/role-has-required-aria-props': 'error',
       '@typescript-eslint/ban-ts-comment': [
         'error',
         {
@@ -188,10 +195,21 @@ export default tseslint.config(
   },
   {
     files: [
+      'apps/main/src/pages/ai-workbench/index.tsx',
+      'apps/main/src/pages/data-management/master-detail/**/index.tsx',
+    ],
+    rules: {
+      'react-hooks/set-state-in-effect': 'off',
+    },
+  },
+  {
+    files: [
       'packages/ui/src/**/*.{ts,tsx}',
       'packages/core/src/**/*.{ts,tsx}',
       'packages/shared/src/**/*.{ts,tsx}',
       'apps/main/src/**/*.{ts,tsx}',
+      'examples/plugin-demo/src/**/*.{ts,tsx}',
+      'examples/extension-demo/src/**/*.{ts,tsx}',
     ],
     ignores: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/*.spec.{ts,tsx}'],
     plugins: {

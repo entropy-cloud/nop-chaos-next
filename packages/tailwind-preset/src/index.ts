@@ -71,10 +71,15 @@ export const nopTailwindPreset: Partial<Config> = {
         sans: ['Inter', 'Noto Sans SC', 'sans-serif'],
       },
       animation: {
+        'caret-blink': 'caretBlink 1s steps(2, start) infinite',
         'fade-in-up': 'fadeInUp 0.4s ease forwards',
         float: 'float 22s ease-in-out infinite',
       },
       keyframes: {
+        caretBlink: {
+          '0%, 49%': { opacity: '1' },
+          '50%, 100%': { opacity: '0' },
+        },
         fadeInUp: {
           from: { opacity: '0', transform: 'translateY(10px)' },
           to: { opacity: '1', transform: 'translateY(0)' },

@@ -1,6 +1,7 @@
 import { getAmisRuntimeAdapter } from '../adapter';
 import type { AmisAction, AmisPageObject, AmisSchemaRecord } from '../types';
 import { splitPrefixUrl } from '../core/url';
+import { getBaseOrigin } from '@nop-chaos/shared';
 
 interface ImportedScope {
   standalone: boolean;
@@ -13,10 +14,6 @@ function isRecord(value: unknown): value is AmisSchemaRecord {
 
 function isAbsoluteHttpUrl(url: string) {
   return /^https?:\/\//i.test(url);
-}
-
-function getBaseOrigin() {
-  return typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
 }
 
 function resolveModuleUrl(modulePath: string, schemaPath?: string) {

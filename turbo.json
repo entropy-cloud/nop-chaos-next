@@ -21,6 +21,7 @@
       "outputs": ["coverage/**"]
     },
     "lint": {
+      "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"]
     }
   }
