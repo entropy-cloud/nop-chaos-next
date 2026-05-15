@@ -1,6 +1,6 @@
 import type { MenuItem, MenuResponse } from '@nop-chaos/shared';
 import { validateMenuResponse } from '@nop-chaos/shared';
-import { mergeExtensionMenus } from '../extensions/runtime';
+import { mergeExtensionMenus } from '@nop-chaos/extension-host';
 
 export interface LegacySiteMapResource {
   id: string;

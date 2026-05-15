@@ -37,7 +37,7 @@ describe('fetchMenuConfig', () => {
       ),
     );
 
-    const runtime = await import('../../extensions/runtime');
+    const runtime = await import('@nop-chaos/extension-host');
 
     runtime.setLoadedExtensions([
       {

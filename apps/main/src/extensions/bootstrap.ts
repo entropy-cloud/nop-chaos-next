@@ -1,13 +1,12 @@
 import { resetTokenStorage, setAuthConfig } from '@nop-chaos/shared'
 import type { ExtensionLogger, LoadedExtension } from '@nop-chaos/shared'
+import { loadExtensions, resolveShellRuntimeConfig, setLoadedExtensions, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import i18n, { initializeI18n } from '../config/i18n'
 import { registerLanguages, replaceLanguages, setDefaultLanguage } from '../config/i18n/languages'
 import { registerThemes } from '../config/themeRegistry'
 import { registerHostSharedModules } from '../plugins/sharedModules'
 import { registerBuiltinPages } from '../router/pageRegistry'
 import { getExtensionSources } from './config'
-import { loadExtensions } from './loadExtensions'
-import { resolveShellRuntimeConfig, setLoadedExtensions, setShellRuntimeConfig } from './runtime'
 
 const logger: ExtensionLogger = {
   info: (message) => console.info(message),

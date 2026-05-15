@@ -1,5 +1,5 @@
 import { flattenMenus, type MenuItem, type MenuResponse } from '@nop-chaos/shared';
-import { getExtensionDefaultHomePath, hasMenuOverride } from '../extensions/runtime';
+import { getExtensionDefaultHomePath, hasMenuOverride } from '@nop-chaos/extension-host';
 
 const builtinSystemMenuItems: MenuItem[] = [
   {

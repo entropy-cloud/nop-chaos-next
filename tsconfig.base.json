@@ -35,6 +35,8 @@
       "@nop-chaos/ui/*": ["flux-lib/ui/src/*"],
       "@nop-chaos/core": ["packages/core/src/index.ts"],
       "@nop-chaos/core/*": ["packages/core/src/*"],
+      "@nop-chaos/extension-host": ["packages/extension-host/src/index.ts"],
+      "@nop-chaos/extension-host/*": ["packages/extension-host/src/*"],
       "@demo-extension": ["apps/main/src/extensions/demo/index.ts"]
     }
   }

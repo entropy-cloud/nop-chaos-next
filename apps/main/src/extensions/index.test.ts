@@ -1,12 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { ExtensionSource, LoadedExtension } from '@nop-chaos/shared'
+import { loadExtensions, getShellRuntimeConfig, getSystemPageComponentId, mergeExtensionMenus, resolveShellRuntimeConfig, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import { getLanguageOptions } from '../config/i18n/languages'
 import { mergeBuiltinSystemMenus } from '../config/systemMenus'
 import { getThemeRegistry } from '../config/themeRegistry'
 import { getBuiltinPage, getSystemPage } from '../router/pageRegistry'
 import { getExtensionSources } from './config'
-import { loadExtensions } from './loadExtensions'
-import { getShellRuntimeConfig, getSystemPageComponentId, mergeExtensionMenus, resolveShellRuntimeConfig, setShellRuntimeConfig } from './runtime'
 
 const { addResourceBundle } = vi.hoisted(() => ({
   addResourceBundle: vi.fn()

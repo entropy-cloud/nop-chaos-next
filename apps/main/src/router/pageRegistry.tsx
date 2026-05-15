@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import type { ExtensionBuiltinPageComponent } from '@nop-chaos/shared';
-import { getSystemPageComponentId } from '../extensions/runtime';
+import { getSystemPageComponentId } from '@nop-chaos/extension-host';
 import LoginPage from '../pages/auth/login';
 import ForbiddenPage from '../pages/errors/403';
 import NotFoundPage from '../pages/errors/404';

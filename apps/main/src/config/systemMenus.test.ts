@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { setLoadedExtensions } from '@nop-chaos/extension-host';
 import { mergeBuiltinSystemMenus } from './systemMenus';
-import { setLoadedExtensions } from '../extensions/runtime';
 
 describe('mergeBuiltinSystemMenus', () => {
   afterEach(() => {
