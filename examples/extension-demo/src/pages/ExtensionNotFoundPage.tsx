@@ -1,23 +1,8 @@
 import { Compass, LifeBuoy, MapPinned } from 'lucide-react';
-import { getPluginBridge } from '@nop-chaos/plugin-bridge';
+import { getPluginBridge, usePluginI18n } from '@nop-chaos/plugin-bridge';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 
 import harborMarkHref from '../harbor-mark.svg';
-
-const quickLinks = [
-  {
-    title: 'Back to Harbor home',
-    description:
-      'Return to the extension dashboard page and continue browsing from the default Harbor workspace.',
-    path: '/',
-  },
-  {
-    title: 'Open Harbor page',
-    description:
-      'Jump directly to the extension builtin page registered by the Harbor demo package.',
-    path: '/examples/extension-harbor',
-  },
-] as const;
 
 function navigateTo(path: string) {
   const bridge = getPluginBridge();
@@ -31,6 +16,25 @@ function navigateTo(path: string) {
 }
 
 export function ExtensionNotFoundPage() {
+  const i18n = usePluginI18n();
+  const quickLinks = [
+    {
+      title: i18n.t('extensionDemo.notFound.quickLinks.home.title'),
+      description: i18n.t('extensionDemo.notFound.quickLinks.home.description'),
+      path: '/',
+    },
+    {
+      title: i18n.t('extensionDemo.notFound.quickLinks.page.title'),
+      description: i18n.t('extensionDemo.notFound.quickLinks.page.description'),
+      path: '/examples/extension-harbor',
+    },
+  ] as const;
+  const reasons = [
+    i18n.t('extensionDemo.notFound.reasons.loginOverride'),
+    i18n.t('extensionDemo.notFound.reasons.notFoundOverride'),
+    i18n.t('extensionDemo.notFound.reasons.sharedShell'),
+  ];
+
   return (
     <div className="grid min-h-[74vh] place-items-center">
       <div className="w-full max-w-5xl space-y-6">
@@ -40,18 +44,17 @@ export function ExtensionNotFoundPage() {
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-3 rounded-full border border-teal-200/70 bg-white/80 px-4 py-2 text-sm font-medium text-teal-700">
                   <Compass className="size-4" />
-                  Harbor extension 404
+                  {i18n.t('extensionDemo.notFound.badge')}
                 </div>
                 <div className="space-y-3">
                   <div className="eyebrow-text tracking-[0.24em] text-teal-700">
-                    System Page Override
+                    {i18n.t('extensionDemo.notFound.eyebrow')}
                   </div>
                   <CardTitle className="max-w-3xl text-4xl leading-tight text-slate-950">
-                    This route is not mapped inside the Harbor workspace.
+                    {i18n.t('extensionDemo.notFound.title')}
                   </CardTitle>
                   <p className="max-w-3xl text-base leading-7 text-slate-600">
-                    The host shell routed you to `/404`, but the rendered screen comes from the
-                    extension package. This demonstrates a second system page override beyond login.
+                    {i18n.t('extensionDemo.notFound.description')}
                   </p>
                 </div>
               </div>
@@ -60,8 +63,12 @@ export function ExtensionNotFoundPage() {
                   <img alt="Harbor" className="h-11 w-11 object-contain" src={harborMarkHref} />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-slate-500">Active application</div>
-                  <div className="text-2xl font-semibold text-slate-950">Harbor</div>
+                  <div className="text-sm font-medium text-slate-500">
+                    {i18n.t('extensionDemo.notFound.activeApplicationLabel')}
+                  </div>
+                  <div className="text-2xl font-semibold text-slate-950">
+                    {i18n.t('extensionDemo.notFound.activeApplicationValue')}
+                  </div>
                 </div>
               </div>
             </div>
@@ -70,7 +77,9 @@ export function ExtensionNotFoundPage() {
             <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/80 p-6 shadow-sm">
               <div className="flex items-center gap-3 text-slate-900">
                 <MapPinned className="size-5 text-teal-700" />
-                <span className="text-lg font-semibold">Suggested routes</span>
+                <span className="text-lg font-semibold">
+                  {i18n.t('extensionDemo.notFound.suggestedRoutes')}
+                </span>
               </div>
               <div className="mt-5 grid gap-4">
                 {quickLinks.map((item) => (
@@ -89,24 +98,20 @@ export function ExtensionNotFoundPage() {
             <div className="rounded-[1.5rem] border border-slate-200/80 bg-slate-950 p-6 text-slate-50 shadow-sm">
               <div className="flex items-center gap-3">
                 <LifeBuoy className="size-5 text-emerald-300" />
-                <span className="text-lg font-semibold">Why this matters</span>
+                <span className="text-lg font-semibold">
+                  {i18n.t('extensionDemo.notFound.whyThisMatters')}
+                </span>
               </div>
               <div className="mt-5 space-y-3 text-sm leading-7 text-slate-300">
-                <p>Login override proves that an extension can replace entry flows.</p>
-                <p>
-                  404 override proves that the host can keep route ownership while delegating system
-                  views.
-                </p>
-                <p>
-                  The same shell still handles auth state, menu loading, permissions, and plugin
-                  runtime coordination.
-                </p>
+                {reasons.map((item) => (
+                  <p key={item}>{item}</p>
+                ))}
               </div>
               <Button
                 className="mt-6 w-full justify-center bg-emerald-400 text-slate-950 hover:bg-emerald-300"
                 onClick={() => navigateTo('/')}
               >
-                Return to Harbor workspace
+                {i18n.t('extensionDemo.notFound.returnToWorkspace')}
               </Button>
             </div>
           </CardContent>

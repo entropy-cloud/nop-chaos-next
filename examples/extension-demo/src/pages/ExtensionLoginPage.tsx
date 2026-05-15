@@ -24,26 +24,11 @@ interface AuthStoreWithActions {
   login: (payload: AuthSession) => void;
 }
 
-const featureCards = [
-  {
-    title: 'Harbor identity',
-    description:
-      'This login page is provided by the extension itself, not by host-side loginUi field overrides.',
-    icon: ShieldCheck,
-  },
-  {
-    title: 'System page override',
-    description:
-      'The host still owns the `/auth/login` route, while the extension maps that route to a custom builtin page.',
-    icon: Layers3,
-  },
-  {
-    title: 'Shared runtime',
-    description:
-      'Authentication state, navigation, notifications, and language still come from the same host runtime bridge.',
-    icon: KeyRound,
-  },
-] as const;
+type BridgeAuthStore = {
+  getState: () => Partial<AuthStoreWithActions>;
+};
+
+const DEMO_PASSWORD = 'harbor-demo';
 
 function getAuthStoreActions() {
   const bridge = getPluginBridge();
@@ -52,7 +37,8 @@ function getAuthStoreActions() {
     return undefined;
   }
 
-  return bridge.stores.authStore.getState() as unknown as Partial<AuthStoreWithActions>;
+  const authStore = bridge.stores.authStore as BridgeAuthStore;
+  return authStore.getState();
 }
 
 function createDemoSession(username: string): AuthSession {
@@ -66,9 +52,9 @@ function createDemoSession(username: string): AuthSession {
 
   return {
     user,
-    token: 'extension-demo-token',
+    token: `extension-demo-token:${trimmedUsername}`,
     tokens: {
-      accessToken: 'extension-demo-token',
+      accessToken: `extension-demo-token:${trimmedUsername}`,
     },
   };
 }
@@ -78,8 +64,25 @@ export function ExtensionLoginPage() {
   const i18n = usePluginI18n();
   const notifications = usePluginNotifications();
   const [username, setUsername] = useState('harbor');
-  const [password, setPassword] = useState('123456');
+  const [password, setPassword] = useState(DEMO_PASSWORD);
   const [submitting, setSubmitting] = useState(false);
+  const featureCards = [
+    {
+      title: i18n.t('extensionDemo.login.overrideFeatures.identity.title'),
+      description: i18n.t('extensionDemo.login.overrideFeatures.identity.description'),
+      icon: ShieldCheck,
+    },
+    {
+      title: i18n.t('extensionDemo.login.overrideFeatures.systemPage.title'),
+      description: i18n.t('extensionDemo.login.overrideFeatures.systemPage.description'),
+      icon: Layers3,
+    },
+    {
+      title: i18n.t('extensionDemo.login.overrideFeatures.sharedRuntime.title'),
+      description: i18n.t('extensionDemo.login.overrideFeatures.sharedRuntime.description'),
+      icon: KeyRound,
+    },
+  ] as const;
   const supportedLanguages = i18n.options?.supportedLngs;
   const canChangeLanguage = typeof i18n.changeLanguage === 'function';
   const languageOptions = useMemo(() => {
@@ -95,22 +98,24 @@ export function ExtensionLoginPage() {
     const authActions = getAuthStoreActions();
 
     if (!bridge || typeof authActions?.login !== 'function') {
-      notifications.error('Host bridge is not ready for extension login.');
+      notifications.error(i18n.t('extensionDemo.login.messages.bridgeNotReady'));
       return;
     }
 
     try {
       setSubmitting(true);
 
-      if (password !== '123456') {
-        throw new Error('Use the Harbor demo password: 123456');
+      if (password !== DEMO_PASSWORD) {
+        throw new Error(i18n.t('extensionDemo.login.messages.invalidPassword'));
       }
 
       authActions.login(createDemoSession(username));
-      notifications.success('Welcome aboard Harbor.');
+      notifications.success(i18n.t('extensionDemo.login.messages.loginSuccess'));
       bridge.navigate('/', { replace: true });
     } catch (error) {
-      notifications.error(error instanceof Error ? error.message : 'Unable to sign in to Harbor.');
+      notifications.error(
+        error instanceof Error ? error.message : i18n.t('extensionDemo.login.messages.loginFailed'),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -126,21 +131,23 @@ export function ExtensionLoginPage() {
                 <img alt="Harbor" className="h-11 w-11 object-contain" src={harborMarkHref} />
               </div>
               <div>
-                <div className="eyebrow-text tracking-[0.22em] text-slate-600">Extension Login</div>
-                <div className="text-2xl font-semibold text-slate-950">Harbor Operations Suite</div>
+                <div className="eyebrow-text tracking-[0.22em] text-slate-600">
+                  {i18n.t('extensionDemo.login.heroEyebrow')}
+                </div>
+                <div className="text-2xl font-semibold text-slate-950">
+                  {i18n.t('extensionDemo.login.heroProduct')}
+                </div>
               </div>
             </div>
             <div className="space-y-4">
               <div className="eyebrow-text tracking-[0.24em] text-teal-700">
-                System Page Override
+                {i18n.t('extensionDemo.login.heroBadge')}
               </div>
               <h1 className="max-w-2xl text-5xl font-semibold leading-tight text-slate-950">
-                A full login page delivered by the extension package.
+                {i18n.t('extensionDemo.login.heroTitle')}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-600">
-                The host shell still owns routing, auth state, and navigation. This page proves that
-                an extension can replace the entire login experience while reusing the same runtime
-                bridge.
+                {i18n.t('extensionDemo.login.heroDescription')}
               </p>
             </div>
           </div>
@@ -171,35 +178,43 @@ export function ExtensionLoginPage() {
                 <img alt="Harbor" className="h-10 w-10 object-contain" src={harborMarkHref} />
               </div>
               <div>
-                <div className="eyebrow-text tracking-[0.24em] text-teal-700">Harbor Sign-in</div>
+                <div className="eyebrow-text tracking-[0.24em] text-teal-700">
+                  {i18n.t('extensionDemo.login.signInEyebrow')}
+                </div>
                 <CardTitle className="text-3xl text-slate-950">
-                  Board the Harbor workspace
+                  {i18n.t('extensionDemo.login.signInTitle')}
                 </CardTitle>
               </div>
             </div>
             <CardDescription className="text-base leading-7 text-slate-600">
-              This is a full page override registered through `builtinPages + systemPages.login`.
+              {i18n.t('extensionDemo.login.signInDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form className="space-y-5" onSubmit={handleSubmit}>
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-slate-900">Username</span>
+                <span className="text-sm font-medium text-slate-900">
+                  {i18n.t('extensionDemo.login.username')}
+                </span>
                 <div className="relative">
                   <User2 className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
                   <Input
                     className="border-slate-200 bg-white/90 pl-10"
+                    name="username"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                   />
                 </div>
               </label>
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-slate-900">Password</span>
+                <span className="text-sm font-medium text-slate-900">
+                  {i18n.t('extensionDemo.login.password')}
+                </span>
                 <div className="relative">
                   <KeyRound className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
                   <Input
                     className="border-slate-200 bg-white/90 pl-10"
+                    name="password"
                     type="password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
@@ -207,7 +222,7 @@ export function ExtensionLoginPage() {
                 </div>
               </label>
               <div className="rounded-[1.25rem] border border-dashed border-teal-200 bg-teal-50/70 px-4 py-3 text-sm text-slate-600">
-                Demo credentials for the extension override: any username + password `123456`
+                {i18n.t('extensionDemo.login.demoCredentials')}
               </div>
               {canChangeLanguage && languageOptions.length > 1 ? (
                 <div className="flex flex-wrap gap-2">
@@ -224,7 +239,9 @@ export function ExtensionLoginPage() {
                 </div>
               ) : null}
               <Button className="w-full justify-center" disabled={submitting} type="submit">
-                {submitting ? 'Signing in...' : 'Enter Harbor'}
+                {submitting
+                  ? i18n.t('extensionDemo.login.submitting')
+                  : i18n.t('extensionDemo.login.submit')}
                 <ArrowRight className="size-4" />
               </Button>
             </form>

@@ -1,0 +1,34 @@
+{
+  "plugins": {
+    "title": "插件系统",
+    "managementTitle": "插件管理",
+    "defaultReportTitle": "插件运营视图",
+    "remotePluginEyebrow": "远程插件",
+    "placeholder": "这是一个在宿主壳层中运行的参考远程插件。",
+    "notifyHost": "触发宿主通知",
+    "hostNotification": "{{user}} 已向宿主发送通知。",
+    "analyticsTitle": "自定义统计报表",
+    "bridgeTitle": "宿主桥接能力",
+    "bridgeDescription": "插件通过桥接层读取宿主用户、主题配置与导航状态。",
+    "bridgeState": "当前共享能力：主题 {{theme}} / 用户 {{user}} / 语言 {{language}} / 路由 {{path}} / 插件状态 {{status}}。",
+    "currentUser": "当前用户",
+    "currentLanguage": "当前语言",
+    "highlightThreshold": "高亮阈值",
+    "reportCount": "{{count}} 份报告",
+    "weekdays": {
+      "mon": "周一",
+      "tue": "周二",
+      "wed": "周三",
+      "thu": "周四",
+      "fri": "周五",
+      "sat": "周六",
+      "sun": "周日"
+    }
+  },
+  "common": {
+    "guest": "访客",
+    "guestLowercase": "访客",
+    "enabledLowercase": "启用",
+    "disabledLowercase": "停用"
+  }
+}

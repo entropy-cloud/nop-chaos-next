@@ -4,7 +4,10 @@ import { fileURLToPath } from 'node:url';
 
 const rootDir = dirname(fileURLToPath(import.meta.url));
 const sourceFile = resolve(rootDir, '../dist/plugin-demo.system.js');
-const targetFile = resolve(rootDir, '../../../apps/main/public/plugins/plugin-demo.system.js');
+const configuredTarget = process.env.NOP_PLUGIN_SYNC_TARGET;
+const targetFile = configuredTarget
+  ? resolve(configuredTarget)
+  : resolve(rootDir, '../../../apps/main/public/plugins/plugin-demo.system.js');
 const tempTargetFile = `${targetFile}.tmp`;
 
 const RETRY_DELAY_MS = 150;

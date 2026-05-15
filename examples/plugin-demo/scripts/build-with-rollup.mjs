@@ -1,4 +1,4 @@
-import { rm } from 'node:fs/promises';
+import { mkdir, rm } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rollup } from 'rollup';
@@ -10,7 +10,12 @@ const entry = resolve(appRoot, 'src/index.tsx');
 const outDir = resolve(appRoot, 'dist');
 const outputFile = resolve(outDir, 'plugin-demo.system.js');
 
+console.info(
+  '[plugin-demo] This bundle externalizes host-shared runtimes. Build output only works when the host registers matching shared modules before loading the plugin.',
+);
+
 await rm(outDir, { recursive: true, force: true });
+await mkdir(outDir, { recursive: true });
 
 const bundle = await rollup({
   input: entry,

@@ -1,0 +1,34 @@
+{
+  "plugins": {
+    "title": "Plugin system",
+    "managementTitle": "Plugin management",
+    "defaultReportTitle": "Plugin operations lens",
+    "remotePluginEyebrow": "Remote plugin",
+    "placeholder": "A reference remote plugin rendered inside the host shell.",
+    "notifyHost": "Notify host",
+    "hostNotification": "Host notification sent by {{user}}.",
+    "analyticsTitle": "Custom analytics",
+    "bridgeTitle": "Host bridge capabilities",
+    "bridgeDescription": "The plugin reads host user data, theme configuration, and navigation state through the bridge.",
+    "bridgeState": "Shared context: theme {{theme}} / user {{user}} / language {{language}} / route {{path}} / plugin status {{status}}.",
+    "currentUser": "Current user",
+    "currentLanguage": "Current language",
+    "highlightThreshold": "Highlight threshold",
+    "reportCount": "{{count}} reports",
+    "weekdays": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    }
+  },
+  "common": {
+    "guest": "Guest",
+    "guestLowercase": "guest",
+    "enabledLowercase": "enabled",
+    "disabledLowercase": "disabled"
+  }
+}

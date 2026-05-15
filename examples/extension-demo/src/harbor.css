@@ -41,6 +41,11 @@
   --app-tabs-bg: rgba(245, 251, 255, 0.74);
   --card-surface: rgba(255, 255, 255, 0.8);
   --border-surface: rgba(255, 255, 255, 0.56);
+  --chart-1: 196 82% 42%;
+  --chart-2: 154 58% 36%;
+  --chart-3: 40 92% 52%;
+  --chart-4: 208 62% 76%;
+  --chart-5: 0 72% 58%;
   background: linear-gradient(180deg, #f4fbff 0%, #e9f6fb 48%, #e2eef8 100%);
 }
 
@@ -87,5 +92,10 @@
   --app-tabs-bg: rgba(16, 30, 40, 0.76);
   --card-surface: rgba(22, 38, 49, 0.84);
   --border-surface: rgba(156, 214, 255, 0.12);
+  --chart-1: 196 72% 56%;
+  --chart-2: 154 50% 46%;
+  --chart-3: 40 84% 62%;
+  --chart-4: 208 46% 70%;
+  --chart-5: 0 70% 58%;
   background: linear-gradient(180deg, #08141c 0%, #0e212c 50%, #102835 100%);
 }

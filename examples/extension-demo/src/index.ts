@@ -93,7 +93,7 @@ const extension: ShellExtension = {
   menus: [
     {
       id: 'extension-demo-harbor',
-      title: 'Extension Harbor Page',
+      titleKey: 'extensionDemo.builtin.title',
       path: '/examples/extension-harbor',
       icon: 'palette',
       pageType: 'builtin',
