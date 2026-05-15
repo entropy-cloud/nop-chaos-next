@@ -118,6 +118,7 @@ function SidebarItem({ item, activePath, expandedIds, collapsed, depth, onNaviga
 
   const itemButton = (
     <button
+      aria-expanded={hasChildren && !collapsed ? expanded : undefined}
       className={cn('flex min-w-0 flex-1 cursor-pointer items-center py-2.5 text-left', collapsed ? 'justify-center px-2.5' : 'gap-3 px-3')}
       onClick={handleItemClick}
       title={collapsed ? getMenuLabel(item) : undefined}
@@ -154,6 +155,7 @@ function SidebarItem({ item, activePath, expandedIds, collapsed, depth, onNaviga
         {content}
         {hasChildren && !collapsed ? (
           <button
+            aria-expanded={expanded}
             className="mr-1 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-current/80 transition-colors hover:bg-black/5 hover:text-current dark:hover:bg-white/10"
             onClick={() => onToggleGroup(item.id)}
             type="button"
@@ -188,7 +190,8 @@ function SidebarItem({ item, activePath, expandedIds, collapsed, depth, onNaviga
 
 export function Sidebar({ items, activePath, expandedIds, collapsed, brand, footer, onNavigate, onToggleGroup, className }: SidebarProps) {
   return (
-    <div
+    <nav
+      aria-label="Primary navigation"
       className={cn(
         'relative flex h-screen flex-col overflow-hidden border-r border-[hsl(var(--border))] bg-[var(--app-sidebar-bg)] px-3 py-4 backdrop-blur-lg',
         collapsed ? 'w-[var(--sidebar-width-collapsed,5rem)]' : 'w-[var(--sidebar-width-expanded,18rem)]',
@@ -211,6 +214,6 @@ export function Sidebar({ items, activePath, expandedIds, collapsed, brand, foot
         ))}
       </div>
       <div className="mt-4 border-t border-[hsl(var(--border))] pt-4">{footer}</div>
-    </div>
+    </nav>
   )
 }

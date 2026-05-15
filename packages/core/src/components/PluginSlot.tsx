@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
+import { ErrorBoundary } from './ErrorBoundary';
 import { loadRemoteComponent } from '../utils/systemjs';
 
 interface PluginSlotProps {
@@ -14,11 +15,11 @@ interface PluginSlotProps {
 function LoadingView() {
   const { t } = useTranslation();
   return (
-    <Card className="theme-card">
+    <Card aria-busy="true" className="theme-card" role="status">
       <CardHeader>
         <CardTitle>{t('core.plugin.loading')}</CardTitle>
       </CardHeader>
-      <CardContent>{t('core.plugin.preparing')}</CardContent>
+      <CardContent aria-live="polite">{t('core.plugin.preparing')}</CardContent>
     </Card>
   );
 }
@@ -51,7 +52,7 @@ export function PluginSlot({ beforeLoad, url, title }: PluginSlotProps) {
 
   if (error) {
     return (
-      <Card className="theme-card border-[hsl(var(--danger))]/40">
+      <Card className="theme-card border-[hsl(var(--danger))]/40" role="alert">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-[hsl(var(--danger))]">
             <AlertCircle className="h-5 w-5" />
@@ -67,5 +68,9 @@ export function PluginSlot({ beforeLoad, url, title }: PluginSlotProps) {
     return <LoadingView />;
   }
 
-  return <Component />;
+  return (
+    <ErrorBoundary>
+      <Component />
+    </ErrorBoundary>
+  );
 }

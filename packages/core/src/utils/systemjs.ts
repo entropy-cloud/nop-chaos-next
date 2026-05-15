@@ -1,5 +1,6 @@
 import 'systemjs';
 import type { ComponentType } from 'react';
+import { getBaseOrigin } from '@nop-chaos/shared';
 
 export interface RemoteComponentModule {
   default: ComponentType;
@@ -13,10 +14,6 @@ interface SystemApi {
 
 function getSystem() {
   return (globalThis as typeof globalThis & { System: SystemApi }).System;
-}
-
-function getBaseOrigin() {
-  return typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
 }
 
 function toModuleUrl(path: string) {

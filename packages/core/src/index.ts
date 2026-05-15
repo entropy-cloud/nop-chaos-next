@@ -1,3 +1,4 @@
+export { ErrorBoundary } from './components/ErrorBoundary';
 export { LowCodeIcon } from './components/LowCodeIcon';
 export { MainLayout } from './components/MainLayout';
 export { PluginSlot } from './components/PluginSlot';

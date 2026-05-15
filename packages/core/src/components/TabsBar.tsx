@@ -55,6 +55,27 @@ function TabContextMenu({
   onCloseAll,
 }: TabContextMenuProps) {
   const { t } = useTranslation();
+  const firstItemRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (!menuState) {
+      return;
+    }
+
+    firstItemRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [menuState, onClose]);
 
   if (!menuState) {
     return null;
@@ -86,23 +107,34 @@ function TabContextMenu({
         };
 
   return (
-    <div
-      className="fixed inset-0 z-50"
-      onClick={onClose}
-      onContextMenu={(event) => event.preventDefault()}
-    >
+    <div className="fixed inset-0 z-50">
+      <button
+        aria-label={t('tabsBar.closeMenu')}
+        className="absolute inset-0"
+        onClick={onClose}
+        type="button"
+      />
       <div
+        aria-label={t('tabsBar.moreActions')}
         className="absolute min-w-40 rounded-[var(--radius-md)] border border-[hsl(var(--border))] bg-[var(--card-surface)] p-1 shadow-lg backdrop-blur-2xl"
+        role="menu"
         style={menuStyle}
       >
-        {items.map((item) => (
+        {items.map((item, index) => (
           <button
             key={item.label}
+            ref={index === 0 ? firstItemRef : undefined}
             className="flex w-full items-center rounded-[var(--radius-sm)] px-3 py-2 text-left text-sm text-foreground transition-colors hover:bg-[color-mix(in_hsl,hsl(var(--primary))_10%,transparent)]"
             onClick={() => {
               item.action();
               onClose();
             }}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                onClose();
+              }
+            }}
+            role="menuitem"
             type="button"
           >
             {item.label}
@@ -191,6 +223,7 @@ export function TabsBar({
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {isOverflowing ? (
               <Button
+                aria-label={t('tabsBar.scrollLeft')}
                 variant="ghost"
                 size="icon-sm"
                 className="shrink-0"
@@ -226,19 +259,20 @@ export function TabsBar({
                           ? 'border-primary bg-[color-mix(in_hsl,hsl(var(--primary))_10%,transparent)] text-foreground'
                           : 'border-transparent text-[hsl(var(--gray-500))] hover:text-foreground',
                       )}
-                      onContextMenu={(event) => {
-                        event.preventDefault();
-                        setMenuState({
-                          path: tab.path,
-                          x: event.clientX,
-                          y: event.clientY,
-                          align: 'left',
-                        });
-                      }}
                     >
                       <button
+                        aria-label={tab.title}
                         className="flex items-center gap-2"
                         onClick={() => onSelect(tab.path)}
+                        onContextMenu={(event) => {
+                          event.preventDefault();
+                          setMenuState({
+                            path: tab.path,
+                            x: event.clientX,
+                            y: event.clientY,
+                            align: 'left',
+                          });
+                        }}
                         type="button"
                       >
                         <Icon className="h-4 w-4" />
@@ -246,6 +280,7 @@ export function TabsBar({
                       </button>
                       {tab.closable === false ? null : (
                         <button
+                          aria-label={t('tabsBar.closeCurrent')}
                           className="rounded-full p-1 transition-colors hover:bg-[hsl(var(--gray-100))]"
                           onClick={() => onClose(tab.path)}
                           type="button"
@@ -260,6 +295,7 @@ export function TabsBar({
             </div>
             {isOverflowing ? (
               <Button
+                aria-label={t('tabsBar.scrollRight')}
                 variant="ghost"
                 size="icon-sm"
                 className="shrink-0"
@@ -272,7 +308,12 @@ export function TabsBar({
           </div>
           <div className="flex shrink-0 items-center gap-1">
             {activeTab ? (
-              <Button variant="ghost" size="icon" onClick={() => onRefresh(activeTab.path)}>
+              <Button
+                aria-label={t('tabsBar.refresh')}
+                variant="ghost"
+                size="icon"
+                onClick={() => onRefresh(activeTab.path)}
+              >
                 <RefreshCcw className="h-4 w-4" />
               </Button>
             ) : null}
@@ -296,11 +337,13 @@ export function TabsBar({
               </Button>
             ) : null}
             <Button
+              aria-haspopup="menu"
+              aria-label={t('tabsBar.moreActions')}
               variant="ghost"
               size="icon"
-               onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
-                 const rect = event.currentTarget.getBoundingClientRect();
-                 setMenuState({
+              onClick={(event: ReactMouseEvent<HTMLButtonElement>) => {
+                const rect = event.currentTarget.getBoundingClientRect();
+                setMenuState({
                   path: activePath,
                   x: rect.right,
                   y: rect.bottom + 8,
