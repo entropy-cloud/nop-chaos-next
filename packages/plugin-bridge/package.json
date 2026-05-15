@@ -6,7 +6,9 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@nop-chaos/shared": "workspace:*",
+    "@nop-chaos/shared": "workspace:*"
+  },
+  "peerDependencies": {
     "i18next": "26.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
