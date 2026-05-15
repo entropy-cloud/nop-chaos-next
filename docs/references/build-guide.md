@@ -157,6 +157,13 @@ pnpm dev:main     # Main app only
 
 No build step required. `pnpm sync:flux` reads source files directly from the sibling repo.
 
+### Guardrails and examples
+
+- `turbo lint` currently depends on upstream package builds via `turbo.json`, so a clean `pnpm build` remains part of the expected verification baseline before large lint sweeps
+- `lint-staged` runs `prettier --write` for `*.{ts,tsx}` in addition to ESLint, so pre-commit formatting is part of the live DX contract
+- `examples/plugin-demo` and `examples/extension-demo` now ship real `vitest.config.ts` files and focused tests; they are no longer allowed to rely on `--passWithNoTests` as a fake baseline
+- demo i18n is part of the reference surface: if a demo calls a translation API, it must also ship matching locale assets and tests
+
 ---
 
 ## 5. AMIS Development Workflow
@@ -337,3 +344,11 @@ The enforcement strategy has two layers:
 2. **Bundler-level**: `vite.config.ts` uses `resolve.alias` + `resolve.dedupe` to force all imports through a single canonical copy.
 
 See [main-bundle-dependency-strategy.md](../design/main-bundle-dependency-strategy.md) for full details.
+
+### Remote plugin bundle honesty
+
+`examples/plugin-demo/scripts/build-with-rollup.mjs` emits a SystemJS bundle that externalizes shared runtimes.
+
+That means the generated `plugin-demo.system.js` only works when the host registers matching shared modules first, including `react`, `react-dom`, `react-router-dom`, `@tanstack/react-query`, `@nop-chaos/plugin-bridge`, `@nop-chaos/ui`, and other externalized packages.
+
+Treat this demo as a host-coupled reference build, not a self-contained universal plugin artifact.

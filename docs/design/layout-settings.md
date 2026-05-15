@@ -55,6 +55,12 @@
 - 折叠模式下：隐藏右侧 padding，保持紧凑布局
 - 展开模式下：保留右侧 padding（pr-1），支持菜单滚动
 
+### 2.3 可访问性合同
+
+- shell 在页面左上角提供 skip link，目标为 `#main-content`
+- mobile sidebar overlay 支持点击遮罩关闭，并支持 `Escape` 关闭
+- `Sidebar` 使用导航 landmark，并为可展开分组暴露 `aria-expanded`
+
 ---
 
 ## 3. 标签页导航交互细节
@@ -75,6 +81,12 @@
 - 距离视口边缘至少 12px
 - 不会超出视口范围
 
+### 3.3 键盘与状态语义
+
+- `TabsBar` 更多操作菜单支持键盘打开与 `Escape` 关闭
+- 刷新按钮、更多按钮等 icon-only 控件必须提供可访问名称
+- 页面标题通过 `PageHeader` + `useDocumentTitle()` 设置浏览器 document title
+
 ---
 
 ## 4. 多标签页导航开关
@@ -90,3 +102,8 @@
 
 - 所有布局设置需要被持久化到 localStorage
 - 刷新页面后恢复之前的布局状态
+
+### 4.3 Immediate-Apply 合同
+
+- layout settings 页面的侧边栏宽度输入是 immediate-apply 配置，不存在单独保存按钮
+- 数字输入清空时不应把宽度写成 `0`；只有可解析数字才会提交到 store

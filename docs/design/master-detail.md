@@ -179,6 +179,12 @@
 | 取消编辑 | 支持取消/放弃所有编辑                    |
 | 离开确认 | 离开页面时如果有未保存修改，弹出确认提示 |
 
+### 7.3 草稿保护与错误反馈
+
+- detail query 刷新不会在存在未保存草稿时直接覆盖用户编辑
+- 首次详情请求失败时页面直接进入错误态，而不是继续呈现 loading 假象
+- 保存前先做整体验证；错误通过 toast 与字段级提示共同暴露
+
 ---
 
 ## 8. 批量操作
@@ -264,8 +270,14 @@ interface Logistics {
   orderId: string;
   company: string;
   trackingNo: string;
-  status: string;
+  status: 'pending' | 'shipping' | 'delivered';
   estimatedDelivery: Date;
   remark?: string;
 }
 ```
+
+### 10.5 当前实现约束
+
+- 物流状态字段在当前实现中使用受限枚举选择，不允许任意字符串写入草稿状态
+- 订单明细数量/单价输入会拦截 `NaN` 边界
+- 详情页根容器使用显式 `<form>` 语义，由“保存全部”统一提交
