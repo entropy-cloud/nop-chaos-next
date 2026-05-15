@@ -21,7 +21,7 @@ export interface AuthState {
   tokens?: AuthTokens;
 }
 
-export type AuthBootstrapStatus = 'idle' | 'pending' | 'ready' | 'anonymous';
+export type AuthBootstrapStatus = 'idle' | 'pending' | 'ready' | 'anonymous' | 'error';
 
 export interface AuthSession {
   user: User;

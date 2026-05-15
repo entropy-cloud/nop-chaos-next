@@ -2,6 +2,39 @@ import type { HttpRequestOptions, HttpResponse, HttpRuntime } from './types';
 import { resolveRequestUrl } from './url';
 
 const DEFAULT_APP_ID = 'nop-chaos';
+const DEFAULT_TIMEOUT_MS = 15_000;
+
+function createTimeoutError(timeoutMs: number) {
+  return new Error(`Request timed out after ${timeoutMs}ms`);
+}
+
+function createAbortSignal(signal: AbortSignal | undefined, timeoutMs: number) {
+  const controller = new AbortController();
+  const timeoutId = globalThis.setTimeout(
+    () => controller.abort(createTimeoutError(timeoutMs)),
+    timeoutMs,
+  );
+
+  const abortFromParent = () => {
+    controller.abort(signal?.reason);
+  };
+
+  if (signal) {
+    if (signal.aborted) {
+      abortFromParent();
+    } else {
+      signal.addEventListener('abort', abortFromParent, { once: true });
+    }
+  }
+
+  return {
+    signal: controller.signal,
+    cleanup: () => {
+      globalThis.clearTimeout(timeoutId);
+      signal?.removeEventListener('abort', abortFromParent);
+    },
+  };
+}
 
 function normalizeHeaders(headers: Headers) {
   const normalizedHeaders: Record<string, string> = {};
@@ -126,16 +159,31 @@ export function createHttpClient(runtime: HttpRuntime) {
     }
 
     const method = options.method ?? (options.data === undefined ? 'GET' : 'POST');
-    const response = await fetch(
-      resolveRequestUrl(options.url, options.query, runtime.getBaseUrl()),
-      {
+    const timeoutMs = options.timeoutMs ?? runtime.getTimeoutMs?.() ?? DEFAULT_TIMEOUT_MS;
+    const { signal, cleanup } = createAbortSignal(options.signal, timeoutMs);
+    let response: Response;
+
+    try {
+      response = await fetch(resolveRequestUrl(options.url, options.query, runtime.getBaseUrl()), {
         method,
         headers,
-        signal: options.signal,
+        signal,
         body:
           method.toUpperCase() === 'GET' ? undefined : serializeRequestBody(options.data, headers),
-      },
-    );
+      });
+    } catch (error: unknown) {
+      cleanup();
+
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw error.cause instanceof Error ? error.cause : createTimeoutError(timeoutMs);
+      }
+
+      throw new Error(
+        `Network request failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
+
+    cleanup();
 
     const responseToken = response.headers.get('x-access-token');
     if (responseToken) {
@@ -161,9 +209,12 @@ export function createHttpClient(runtime: HttpRuntime) {
             const newToken = await doRefreshToken();
             response = await doRequest<T>(options, newToken);
             return response;
-          } catch {
+          } catch (error: unknown) {
             runtime.clearTokens?.();
             runtime.onUnauthorized?.();
+            throw new Error(
+              `Token refresh failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            );
           }
         } else {
           runtime.onUnauthorized?.();

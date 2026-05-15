@@ -1,15 +1,89 @@
-export * from './types/icon';
-export * from './types/extension';
-export * from './types/menu';
-export * from './types/plugin';
-export * from './types/tab';
-export * from './types/theme';
-export * from './types/user';
-export * from './auth/config';
-export * from './auth/tokenManager';
-export * from './http/client';
-export * from './http/payload';
-export * from './http/types';
-export * from './http/url';
-export * from './utils/menuConfig';
-export * from './utils/menu';
+export { appIconNames } from './types/icon';
+export type { AppIconName } from './types/icon';
+export { isAppIconName, normalizeAppIconName } from './types/icon';
+
+export type { ExtensionBuiltinPageComponent } from './types/extension';
+export type {
+  ExtensionBuiltinPage,
+  ExtensionLanguage,
+  ExtensionI18nResource,
+  ExtensionI18nConfig,
+  ExtensionTheme,
+  ExtensionStyleAsset,
+  ExtensionAppConfig,
+  ExtensionBrandingConfig,
+  ExtensionLoginUiFeature,
+  ExtensionLoginUiConfig,
+  ExtensionShellConfig,
+  ExtensionSystemPagesConfig,
+  TokenStorageType,
+  ExtensionAuthConfig,
+  ExtensionModule,
+  ExtensionEntrySource,
+  ExtensionLoaderSource,
+  ExtensionSource,
+  ExtensionLogger,
+  ExtensionSetupContext,
+  ShellExtension,
+  LoadedExtension,
+  LoadExtensionsOptions,
+} from './types/extension';
+
+export type { MenuItem, MenuResponse } from './types/menu';
+
+export type { PluginManifest } from './types/plugin';
+
+export type { AppTab } from './types/tab';
+
+export type { DisplayMode, ThemeId } from './types/theme';
+export type { ThemeConfig } from './types/theme';
+export { normalizeThemeId } from './types/theme';
+
+export type {
+  User,
+  AuthTokens,
+  AuthState,
+  AuthBootstrapStatus,
+  AuthSession,
+} from './types/user';
+
+export type { AuthRuntimeConfig } from './auth/config';
+export { getAuthConfig, setAuthConfig, resetAuthConfig } from './auth/config';
+
+export type { TokenStorage, RefreshTokenResponse, RefreshTokenFetcher } from './auth/tokenManager';
+export {
+  createTokenStorage,
+  getTokenStorage,
+  resetTokenStorage,
+  setRefreshTokenFetcher,
+  getAccessToken,
+  getRefreshToken,
+  setTokens,
+  clearTokens,
+  isTokenExpiringSoon,
+  isTokenExpired,
+  refreshAccessToken,
+  getValidToken,
+  decodeJwtPayload,
+  getTokenExpiry,
+} from './auth/tokenManager';
+
+export { createHttpClient } from './http/client';
+
+export type { ApiPayload } from './http/payload';
+export { isApiPayload, unwrapApiPayload } from './http/payload';
+
+export type { HttpRuntime, HttpRequestOptions, HttpResponse } from './http/types';
+
+export { getBaseOrigin, isAbsoluteUrl, appendQueryParams, normalizeRequestUrl, resolveRequestUrl } from './http/url';
+
+export { validateMenuResponse } from './utils/menuConfig';
+
+export {
+  matchMenuPath,
+  flattenMenus,
+  findMenuItemByPath,
+  collectBreadcrumbTrail,
+  filterMenusByRoles,
+  sortMenus,
+} from './utils/menu';

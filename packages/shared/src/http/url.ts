@@ -1,4 +1,4 @@
-function getBaseOrigin() {
+export function getBaseOrigin() {
   return typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
 }
 

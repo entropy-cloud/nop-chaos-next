@@ -2,6 +2,7 @@ export interface HttpRuntime {
   getBaseUrl: () => string;
   getLocale: () => string;
   getAuthToken: () => string | undefined;
+  getTimeoutMs?: () => number;
   setAuthToken?: (token?: string) => void;
   onUnauthorized?: () => void;
   getRefreshToken?: () => string | undefined;
@@ -25,6 +26,7 @@ export interface HttpRequestOptions {
   withAuth?: boolean;
   responseType?: 'json' | 'blob' | 'text';
   signal?: AbortSignal;
+  timeoutMs?: number;
 }
 
 export interface HttpResponse<T = unknown> {
