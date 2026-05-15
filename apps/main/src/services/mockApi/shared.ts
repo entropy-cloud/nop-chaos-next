@@ -1,7 +1,8 @@
 import { isMockEnabled } from '../../config/env';
-import { getStorageItem, setStorageItem } from '../../utils/storage';
 
 const mockEnabled = isMockEnabled();
+const memoryOnly = import.meta.env.VITE_MOCK_MEMORY_ONLY === 'true';
+const memoryStore = new Map<string, string>();
 
 export function clone<T>(value: T): T {
   return structuredClone(value);
@@ -14,7 +15,7 @@ export function wait<T>(value: T, ms = 240): Promise<T> {
 }
 
 export function readStoredJson<T>(key: string, fallback: T): T {
-  const raw = getStorageItem(key);
+  const raw = memoryOnly ? memoryStore.get(key) ?? null : readFromLocalStorage(key);
   if (!raw) {
     return clone(fallback);
   }
@@ -27,5 +28,26 @@ export function readStoredJson<T>(key: string, fallback: T): T {
 }
 
 export function writeStoredJson<T>(key: string, value: T): void {
-  setStorageItem(key, JSON.stringify(value));
+  const json = JSON.stringify(value);
+  if (memoryOnly) {
+    memoryStore.set(key, json);
+  } else {
+    writeToLocalStorage(key, json);
+  }
+}
+
+function readFromLocalStorage(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeToLocalStorage(key: string, value: string): void {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    return;
+  }
 }

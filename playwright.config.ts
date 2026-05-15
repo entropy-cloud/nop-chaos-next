@@ -50,6 +50,7 @@ function loadMockEnv() {
 }
 
 const webServerEnv = loadMockEnv();
+webServerEnv.VITE_MOCK_MEMORY_ONLY = 'true';
 
 export default defineConfig({
   testDir: './tests/e2e',

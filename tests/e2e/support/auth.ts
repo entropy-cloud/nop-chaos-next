@@ -233,6 +233,15 @@ const defaultMenuResponse = {
           pageType: 'builtin',
           componentId: 'master-detail',
         },
+        {
+          id: 'master-detail-id',
+          title: 'Master Detail Detail',
+          path: '/data-management/master-detail/:id',
+          icon: 'file-text',
+          pageType: 'builtin',
+          componentId: 'master-detail-detail',
+          hideInMenu: true,
+        },
       ],
     },
     {
