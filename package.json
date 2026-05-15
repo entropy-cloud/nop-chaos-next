@@ -19,6 +19,7 @@
     "test": "turbo run test",
     "lint": "node scripts/verify-no-src-artifacts.mjs && turbo run lint",
     "format": "prettier --write .",
+    "setup:env": "node scripts/setup-env.mjs",
     "format:check": "prettier --check .",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
