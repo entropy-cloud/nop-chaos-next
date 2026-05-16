@@ -52,7 +52,7 @@ export function FlowInspectorPanel({
             </div>
             <ScrollArea className="min-h-0 flex-1 px-4 py-4">
               <div className="space-y-4">
-                <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 text-sm dark:bg-slate-900/25">
+                <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4 text-sm">
                   <div className="eyebrow-text">{t('flowEditor.editor.flow')}</div>
                   <div className="mt-2 font-medium text-foreground">{flowDocument?.name}</div>
                   <p className="meta-text mt-2">{flowDocument?.description}</p>
@@ -74,7 +74,7 @@ export function FlowInspectorPanel({
                     <span>{t('flowEditor.editor.edgeCount', { count: edgeCount })}</span>
                   </div>
                 </div>
-                <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/25">
+                <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4">
                   <div className="eyebrow-text">{t('flowEditor.editor.currentSelection')}</div>
                   {activeSummary ? (
                     <div className="mt-3 space-y-1">
@@ -86,7 +86,7 @@ export function FlowInspectorPanel({
                     <p className="meta-text mt-3">{t('flowEditor.editor.selectionEmpty')}</p>
                   )}
                 </div>
-                <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/25">
+                <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4">
                   {selectedNode ? (
                     <NodeInspector
                       selectedNode={selectedNode}

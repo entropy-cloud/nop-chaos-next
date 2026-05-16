@@ -129,9 +129,9 @@ export default function FlowEditorPage() {
             </div>
           ) : null}
 
-          <div className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-4 backdrop-blur-xl dark:bg-slate-900/35">
+          <div className="rounded-xl border border-[hsl(var(--border))] bg-surface-secondary p-4 backdrop-blur-xl">
             <div className="flex flex-wrap items-center gap-3 xl:flex-nowrap">
-              <div className="flex min-w-[18rem] flex-1 items-center gap-2 rounded-2xl border border-[hsl(var(--border))] bg-white/50 px-3 dark:bg-slate-900/35">
+              <div className="flex min-w-[18rem] flex-1 items-center gap-2 rounded-2xl border border-[hsl(var(--border))] bg-surface px-3">
                 <Search className="size-4 text-muted-foreground" />
                 <Input
                   className="border-none bg-transparent shadow-none focus-visible:ring-0"
@@ -154,7 +154,7 @@ export default function FlowEditorPage() {
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="w-[10rem] bg-white/50 dark:bg-slate-900/35">
+                <SelectTrigger className="w-[10rem] bg-surface">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -180,7 +180,7 @@ export default function FlowEditorPage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-white/35 backdrop-blur-xl dark:bg-slate-900/30">
+          <div className="overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-surface-secondary backdrop-blur-xl">
             <Table>
               <TableHeader>
                 <TableRow className="bg-[hsl(var(--gray-50))]/90">

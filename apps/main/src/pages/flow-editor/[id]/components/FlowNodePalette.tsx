@@ -32,7 +32,7 @@ export function FlowNodePalette({ onPaletteDragStart, onAddNode }: FlowNodePalet
             {paletteGroups.map((group) => (
               <section
                 key={group.id}
-                className="rounded-lg border border-[hsl(var(--border))] bg-white/45 p-2.5 dark:bg-slate-900/25"
+                className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-2.5"
               >
                 <div className="eyebrow-text mb-2 px-1 text-muted-foreground">
                   {t(group.titleKey)}
@@ -45,7 +45,7 @@ export function FlowNodePalette({ onPaletteDragStart, onAddNode }: FlowNodePalet
                     return (
                       <div
                         key={kind}
-                        className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-white/70 p-2 shadow-xs dark:bg-slate-950/35"
+                        className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-surface-highlight p-2 shadow-xs"
                       >
                         <button
                           data-testid={`palette-item-${kind}`}

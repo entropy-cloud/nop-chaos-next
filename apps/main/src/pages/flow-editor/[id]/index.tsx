@@ -1,35 +1,13 @@
+import { useMemo } from 'react';
 import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type DragEvent as ReactDragEvent,
-} from 'react';
-import {
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
-  MarkerType,
   ReactFlowProvider,
-  useReactFlow,
-  type Connection,
-  type EdgeChange,
   type EdgeTypes,
-  type NodeChange,
   type NodeTypes,
-  type XYPosition,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useNavigate, useParams } from 'react-router-dom';
-import { cn, toast } from '@nop-chaos/ui';
+import { useNavigate } from 'react-router-dom';
+import { cn } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import {
-  fetchFlowDetail,
-  saveFlowDetail,
-  type FlowDocument,
-  type FlowNodeKind,
-} from '../../../services/mockApi';
 import { nodeMeta } from './constants';
 import { FlowEditorActionsContext } from './context';
 import { FlowCanvas } from './components/FlowCanvas';
@@ -40,371 +18,36 @@ import { FlowInspectorPanel } from './components/FlowInspectorPanel';
 import { FlowMobilePanels } from './components/FlowMobilePanels';
 import { FlowNodePalette } from './components/FlowNodePalette';
 import { FlowNodeCard } from './components/FlowNodeCard';
-import {
-  cloneEdges,
-  cloneNodes,
-  createNode,
-  getEdgeStyle,
-  normalizeEdge,
-  shouldRecordEdgeChangeHistory,
-  shouldRecordNodeChangeHistory,
-} from './utils';
-import type {
-  DeleteTarget,
-  FlowEdge,
-  FlowEditorActions,
-  FlowNode,
-  FlowNodeData,
-  FlowSelectionSummary,
-} from './types';
-import { useFlowHistory } from './useFlowHistory';
+import type { FlowSelectionSummary } from './types';
+import { useFlowEditorState } from './useFlowEditorState';
+import { useFlowEditorActions } from './useFlowEditorActions';
+import { useFlowPersistence } from './useFlowPersistence';
+import { useFlowDragDrop } from './useFlowDragDrop';
 import { useFlowKeyboardShortcuts } from './useFlowKeyboardShortcuts';
 
 function FlowEditorPageInner() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { id = 'new' } = useParams();
-  const { screenToFlowPosition, fitView } = useReactFlow<FlowNode, FlowEdge>();
-  const [flowDocument, setFlowDocument] = useState<FlowDocument | null>(null);
-  const [nodes, setNodes] = useState<FlowNode[]>([]);
-  const [edges, setEdges] = useState<FlowEdge[]>([]);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
-  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
-  const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
-  const [gridEnabled, setGridEnabled] = useState(true);
-  const [propertyOpen, setPropertyOpen] = useState(false);
-  const [edgePanelOpen, setEdgePanelOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(null);
-  const [clipboardNode, setClipboardNode] = useState<FlowNode | null>(null);
-  const [savedSnapshot, setSavedSnapshot] = useState('');
-  const [inspectorCollapsed, setInspectorCollapsed] = useState(false);
-  const initializedRef = useRef(false);
-  // eslint-disable-next-line react-hooks/refs -- intentional ref read during render to track initialization
-  const dirty = initializedRef.current && JSON.stringify({ nodes, edges }) !== savedSnapshot;
-  const { canUndo, canRedo, initializeHistory, recordSnapshot, undo, redo } = useFlowHistory();
-
-  const selectedNode = useMemo(
-    () => nodes.find((node) => node.id === selectedNodeId) ?? null,
-    [nodes, selectedNodeId],
-  );
-  const selectedEdge = useMemo(
-    () => edges.find((edge) => edge.id === selectedEdgeId) ?? null,
-    [edges, selectedEdgeId],
-  );
-
-  const applyState = useCallback(
-    (nextNodes: FlowNode[], nextEdges: FlowEdge[], recordHistory = true) => {
-      const nodesSnapshot = cloneNodes(nextNodes);
-      const edgesSnapshot = cloneEdges(nextEdges);
-      setNodes(nodesSnapshot);
-      setEdges(edgesSnapshot);
-
-      if (!recordHistory) {
-        return;
-      }
-
-      recordSnapshot(nodesSnapshot, edgesSnapshot);
-    },
-    [recordSnapshot],
-  );
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    void fetchFlowDetail(id, controller.signal).then((payload) => {
-      
-      const normalizedNodes = payload.nodes.map((node) => ({
-        ...node,
-        data: node.data as FlowNodeData,
-      })) as FlowNode[];
-      const normalizedEdges = payload.edges.map((edge) => normalizeEdge(edge as FlowEdge));
-      const snapshot = JSON.stringify({ nodes: normalizedNodes, edges: normalizedEdges });
-      initializedRef.current = true;
-      setFlowDocument(payload);
-      setNodes(cloneNodes(normalizedNodes));
-      setEdges(cloneEdges(normalizedEdges));
-      initializeHistory({ nodes: cloneNodes(normalizedNodes), edges: cloneEdges(normalizedEdges) });
-      setSavedSnapshot(snapshot);
-      window.setTimeout(() => void fitView({ duration: 250, padding: 0.2 }), 50);
-    }).catch((error: unknown) => {
-      if (controller.signal.aborted) {
-        return;
-      }
-
-      toast.error(error instanceof Error ? error.message : t('flowEditor.loadFailed'));
-    });
-
-    return () => {
-      controller.abort(new Error('Flow editor unmounted'));
-    };
-  }, [fitView, id, initializeHistory, t]);
-
-  useEffect(() => {
-    if (selectedNodeId && !nodes.some((node) => node.id === selectedNodeId)) {
-      setSelectedNodeId(null);
-    }
-  }, [nodes, selectedNodeId]);
-
-  useEffect(() => {
-    if (selectedEdgeId && !edges.some((edge) => edge.id === selectedEdgeId)) {
-      setSelectedEdgeId(null);
-    }
-  }, [edges, selectedEdgeId]);
-
-  useEffect(() => {
-    const beforeUnload = (event: BeforeUnloadEvent) => {
-      if (!dirty) {
-        return;
-      }
-      event.preventDefault();
-      event.returnValue = '';
-    };
-
-    window.addEventListener('beforeunload', beforeUnload);
-    return () => window.removeEventListener('beforeunload', beforeUnload);
-  }, [dirty]);
-
-  const addNode = useCallback(
-    (kind: FlowNodeKind, position?: XYPosition) => {
-      const nextPosition = position ?? {
-        x: 180 + nodes.length * 28,
-        y: 120 + (nodes.length % 5) * 92,
-      };
-      if (kind === 'start' && nodes.some((node) => node.data.kind === 'start')) {
-        toast.error(t('flowEditor.editor.startNodeUnique'));
-        return;
-      }
-
-      const nextNode = createNode(kind, nextPosition);
-      const nextNodes = [...nodes, nextNode];
-      applyState(nextNodes, edges);
-      setSelectedNodeId(nextNode.id);
-      setSelectedEdgeId(null);
-    },
-    [applyState, edges, nodes, t],
-  );
-
-  const duplicateNode = useCallback(
-    (nodeId: string) => {
-      const source = nodes.find((node) => node.id === nodeId);
-      if (!source) {
-        return;
-      }
-      if (
-        source.data.kind === 'start' &&
-        nodes.some((node) => node.data.kind === 'start' && node.id !== nodeId)
-      ) {
-        toast.error(t('flowEditor.editor.startNodeDuplicateBlocked'));
-        return;
-      }
-
-      const duplicated = createNode(
-        source.data.kind,
-        { x: source.position.x + 48, y: source.position.y + 48 },
-        source.data,
-      );
-      const nextNodes = [...nodes, duplicated];
-      applyState(nextNodes, edges);
-      setSelectedNodeId(duplicated.id);
-      setSelectedEdgeId(null);
-    },
-    [applyState, edges, nodes, t],
-  );
-
-  const requestDelete = useCallback((target: DeleteTarget) => {
-    setDeleteTarget(target);
-    setDeleteDialogOpen(Boolean(target));
-  }, []);
-
-  const openNodeEditor = useCallback((nodeId: string) => {
-    setSelectedNodeId(nodeId);
-    setSelectedEdgeId(null);
-    setInspectorCollapsed(false);
-    if (window.matchMedia('(max-width: 1279px)').matches) {
-      setPropertyOpen(true);
-    }
-  }, []);
-
-  const openEdgeEditor = useCallback((edgeId: string) => {
-    setSelectedEdgeId(edgeId);
-    setSelectedNodeId(null);
-    setInspectorCollapsed(false);
-    if (window.matchMedia('(max-width: 1279px)').matches) {
-      setEdgePanelOpen(true);
-    }
-  }, []);
-
-  const editorActions = useMemo<FlowEditorActions>(
-    () => ({
-      hoveredNodeId,
-      hoveredEdgeId,
-      openNodeEditor,
-      openEdgeEditor,
-      duplicateNode,
-      requestDelete,
-      selectNode: setSelectedNodeId,
-      selectEdge: setSelectedEdgeId,
-      setHoveredNode: setHoveredNodeId,
-      setHoveredEdge: setHoveredEdgeId,
-    }),
-    [duplicateNode, hoveredEdgeId, hoveredNodeId, openEdgeEditor, openNodeEditor, requestDelete],
-  );
-
-  const saveSnapshot = async () => {
-    if (!flowDocument) {
-      return;
-    }
-
-    const payload: FlowDocument = {
-      ...flowDocument,
-      nodes: cloneNodes(nodes),
-      edges: cloneEdges(edges).map((edge) => ({
-        ...edge,
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: getEdgeStyle(edge.data?.lineStyle ?? 'solid'),
-        type: 'flowEdge',
-      })),
-    };
-
-    const saved = await saveFlowDetail(payload);
-    setFlowDocument(saved);
-    setSavedSnapshot(JSON.stringify({ nodes, edges }));
-    toast.success(t('flowEditor.editor.saveSuccess'));
-  };
-
-  const restoreSaved = () => {
-    if (!savedSnapshot) {
-      return;
-    }
-
-    const parsed = JSON.parse(savedSnapshot) as { nodes: FlowNode[]; edges: FlowEdge[] };
-    applyState(parsed.nodes, parsed.edges);
-    toast.success(t('flowEditor.editor.restoreSuccess'));
-  };
-
-  const onNodesChange = (changes: NodeChange[]) => {
-    applyState(
-      applyNodeChanges(changes, nodes) as FlowNode[],
-      edges,
-      shouldRecordNodeChangeHistory(changes),
-    );
-  };
-
-  const onEdgesChange = (changes: EdgeChange[]) => {
-    applyState(
-      nodes,
-      applyEdgeChanges(changes, edges) as FlowEdge[],
-      shouldRecordEdgeChangeHistory(changes),
-    );
-  };
-
-  const onConnect = (connection: Connection) => {
-    const edge: FlowEdge = normalizeEdge({
-      ...connection,
-      id: `edge-${Date.now()}`,
-      label: 'flowEditor.editor.defaultEdgePath',
-      data: { condition: 'flowEditor.editor.defaultEdgePath', lineStyle: 'solid' },
-    } as FlowEdge);
-    applyState(nodes, addEdge(edge, edges) as FlowEdge[]);
-  };
-
-  const updateNodeData = (nodeId: string, updater: (node: FlowNode) => FlowNode) => {
-    applyState(
-      nodes.map((node) => (node.id === nodeId ? updater(node) : node)),
-      edges,
-    );
-  };
-
-  const updateEdgeData = (edgeId: string, updater: (edge: FlowEdge) => FlowEdge) => {
-    applyState(
-      nodes,
-      edges.map((edge) => (edge.id === edgeId ? normalizeEdge(updater(edge)) : edge)),
-    );
-  };
-
-  const confirmDelete = () => {
-    if (!deleteTarget) {
-      return;
-    }
-
-    if (deleteTarget.type === 'node') {
-      const nextNodes = nodes.filter((node) => node.id !== deleteTarget.id);
-      const nextEdges = edges.filter(
-        (edge) => edge.source !== deleteTarget.id && edge.target !== deleteTarget.id,
-      );
-      applyState(nextNodes, nextEdges);
-      setSelectedNodeId(null);
-    } else {
-      applyState(
-        nodes,
-        edges.filter((edge) => edge.id !== deleteTarget.id),
-      );
-      setSelectedEdgeId(null);
-    }
-
-    setDeleteDialogOpen(false);
-    setDeleteTarget(null);
-  };
-
-  const handleUndo = useCallback(() => {
-    const snapshot = undo();
-    if (!snapshot) {
-      return;
-    }
-
-    setNodes(cloneNodes(snapshot.nodes));
-    setEdges(cloneEdges(snapshot.edges));
-  }, [undo]);
-
-  const handleRedo = useCallback(() => {
-    const snapshot = redo();
-    if (!snapshot) {
-      return;
-    }
-
-    setNodes(cloneNodes(snapshot.nodes));
-    setEdges(cloneEdges(snapshot.edges));
-  }, [redo]);
+  const state = useFlowEditorState();
+  const actions = useFlowEditorActions({ state });
+  const persistence = useFlowPersistence({ state });
+  const dragDrop = useFlowDragDrop({ addNode: actions.addNode });
 
   useFlowKeyboardShortcuts({
     t,
-    selectedNode,
-    clipboardNode,
-    nodes,
-    edges,
-    selectedNodeId,
-    selectedEdgeId,
-    setClipboardNode,
-    applyState,
-    setSelectedNodeId,
-    handleUndo,
-    handleRedo,
-    requestDelete,
+    selectedNode: state.selectedNode,
+    clipboardNode: state.clipboardNode,
+    nodes: state.nodes,
+    edges: state.edges,
+    selectedNodeId: state.selectedNodeId,
+    selectedEdgeId: state.selectedEdgeId,
+    setClipboardNode: state.setClipboardNode,
+    applyState: state.applyState,
+    setSelectedNodeId: state.setSelectedNodeId,
+    handleUndo: actions.handleUndo,
+    handleRedo: actions.handleRedo,
+    requestDelete: actions.requestDelete,
   });
-
-  const onPaletteDragStart = (event: ReactDragEvent<HTMLButtonElement>, kind: FlowNodeKind) => {
-    event.dataTransfer.setData('application/x-flow-node', kind);
-    event.dataTransfer.effectAllowed = 'copy';
-  };
-
-  const onCanvasDrop = (event: DragEvent) => {
-    event.preventDefault();
-    const kind = event.dataTransfer?.getData('application/x-flow-node') as FlowNodeKind | '';
-    if (!kind) {
-      return;
-    }
-    const position = screenToFlowPosition({ x: event.clientX, y: event.clientY }) ?? { x: 0, y: 0 };
-    addNode(kind, position);
-  };
-
-  const onCanvasDragOver = (event: DragEvent) => {
-    event.preventDefault();
-    if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'copy';
-    }
-  };
 
   const nodeTypes = useMemo<NodeTypes>(
     () => ({
@@ -420,35 +63,25 @@ function FlowEditorPageInner() {
 
   const edgeTypes = useMemo<EdgeTypes>(() => ({ flowEdge: FlowEdgeRenderer }), []);
 
-  const exportJson = () => {
-    const blob = new Blob([JSON.stringify({ ...flowDocument, nodes, edges }, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const anchor = window.document.createElement('a');
-    anchor.href = url;
-    anchor.download = `${flowDocument?.name ?? 'flow'}.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const activeSummary: FlowSelectionSummary | null = selectedNode
+  const activeSummary: FlowSelectionSummary | null = state.selectedNode
     ? {
-        title: t(selectedNode.data.label),
-        description: t(selectedNode.data.description),
-        type: t(nodeMeta[selectedNode.data.kind].labelKey),
+        title: t(state.selectedNode.data.label),
+        description: t(state.selectedNode.data.description),
+        type: t(nodeMeta[state.selectedNode.data.kind].labelKey),
       }
-    : selectedEdge
+    : state.selectedEdge
       ? {
-          title: t(selectedEdge.data?.condition ?? 'flowEditor.editor.edge'),
-          description: t(selectedEdge.label?.toString() ?? 'flowEditor.editor.pathConfig'),
+          title: t(state.selectedEdge.data?.condition ?? 'flowEditor.editor.edge'),
+          description: t(
+            state.selectedEdge.label?.toString() ?? 'flowEditor.editor.pathConfig',
+          ),
           type: t('flowEditor.editor.edge'),
         }
       : null;
   const inspectorHandleLabel = activeSummary?.type ?? t('flowEditor.editor.properties');
 
   const navigateBackWithGuard = () => {
-    if (dirty && !window.confirm(t('flowEditor.editor.leaveConfirm'))) {
+    if (state.dirty && !window.confirm(t('flowEditor.editor.leaveConfirm'))) {
       return;
     }
 
@@ -456,29 +89,29 @@ function FlowEditorPageInner() {
   };
 
   return (
-    <FlowEditorActionsContext.Provider value={editorActions}>
+    <FlowEditorActionsContext.Provider value={actions.editorActions}>
       <div className="flex h-[calc(100vh-10rem)] min-h-[40rem] flex-col gap-3">
         <FlowEditorToolbar
-          flowName={flowDocument?.name ?? t('flowEditor.editTitle')}
-          dirty={dirty}
-          nodeCount={nodes.length}
-          edgeCount={edges.length}
-          gridEnabled={gridEnabled}
-          setGridEnabled={setGridEnabled}
-          canUndo={canUndo}
-          canRedo={canRedo}
-          onUndo={handleUndo}
-          onRedo={handleRedo}
-          onRestore={restoreSaved}
-          onExportJson={exportJson}
+          flowName={state.flowDocument?.name ?? t('flowEditor.editTitle')}
+          dirty={state.dirty}
+          nodeCount={state.nodes.length}
+          edgeCount={state.edges.length}
+          gridEnabled={state.gridEnabled}
+          setGridEnabled={state.setGridEnabled}
+          canUndo={state.canUndo}
+          canRedo={state.canRedo}
+          onUndo={actions.handleUndo}
+          onRedo={actions.handleRedo}
+          onRestore={persistence.restoreSaved}
+          onExportJson={persistence.exportJson}
           onOpenProperties={() => {
-            if (selectedEdge) {
-              setEdgePanelOpen(true);
+            if (state.selectedEdge) {
+              state.setEdgePanelOpen(true);
               return;
             }
-            setPropertyOpen(true);
+            state.setPropertyOpen(true);
           }}
-          onSave={() => void saveSnapshot()}
+          onSave={() => void persistence.saveSnapshot()}
           onBack={navigateBackWithGuard}
         />
 
@@ -486,78 +119,81 @@ function FlowEditorPageInner() {
           <div
             className={cn(
               'grid min-h-0 h-full gap-3',
-              inspectorCollapsed
+              state.inspectorCollapsed
                 ? 'xl:grid-cols-[15rem_minmax(0,1fr)]'
                 : 'xl:grid-cols-[15rem_minmax(0,1fr)_22rem]',
             )}
           >
-            <FlowNodePalette onPaletteDragStart={onPaletteDragStart} onAddNode={addNode} />
+            <FlowNodePalette
+              onPaletteDragStart={dragDrop.onPaletteDragStart}
+              onAddNode={actions.addNode}
+            />
 
             <FlowCanvas
-              nodes={nodes}
-              edges={edges}
+              nodes={state.nodes}
+              edges={state.edges}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
-              gridEnabled={gridEnabled}
-              onConnect={onConnect}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
+              gridEnabled={state.gridEnabled}
+              onConnect={actions.onConnect}
+              onNodesChange={actions.onNodesChange}
+              onEdgesChange={actions.onEdgesChange}
               onPaneClick={() => {
-                setSelectedNodeId(null);
-                setSelectedEdgeId(null);
+                state.setSelectedNodeId(null);
+                state.setSelectedEdgeId(null);
               }}
               onNodeClick={(nodeId) => {
-                setSelectedNodeId(nodeId);
-                setSelectedEdgeId(null);
+                state.setSelectedNodeId(nodeId);
+                state.setSelectedEdgeId(null);
               }}
-              onNodeDoubleClick={openNodeEditor}
+              onNodeDoubleClick={actions.openNodeEditor}
               onEdgeClick={(edgeId) => {
-                setSelectedEdgeId(edgeId);
-                setSelectedNodeId(null);
+                state.setSelectedEdgeId(edgeId);
+                state.setSelectedNodeId(null);
               }}
-              onEdgeDoubleClick={openEdgeEditor}
-              onCanvasDragOver={onCanvasDragOver}
-              onCanvasDrop={onCanvasDrop}
+              onEdgeDoubleClick={actions.openEdgeEditor}
+              onCanvasDragOver={dragDrop.onCanvasDragOver}
+              onCanvasDrop={dragDrop.onCanvasDrop}
             />
 
             <FlowInspectorPanel
-              inspectorCollapsed={inspectorCollapsed}
+              inspectorCollapsed={state.inspectorCollapsed}
               inspectorHandleLabel={inspectorHandleLabel}
-              flowDocument={flowDocument}
-              nodeCount={nodes.length}
-              edgeCount={edges.length}
+              flowDocument={state.flowDocument}
+              nodeCount={state.nodes.length}
+              edgeCount={state.edges.length}
               activeSummary={activeSummary}
-              selectedNode={selectedNode}
-              selectedEdge={selectedEdge}
-              nodes={nodes}
-              updateNodeData={updateNodeData}
-              updateEdgeData={updateEdgeData}
-              onToggleCollapsed={() => setInspectorCollapsed((value) => !value)}
+              selectedNode={state.selectedNode}
+              selectedEdge={state.selectedEdge}
+              nodes={state.nodes}
+              updateNodeData={actions.updateNodeData}
+              updateEdgeData={actions.updateEdgeData}
+              onToggleCollapsed={() => state.setInspectorCollapsed((value) => !value)}
             />
           </div>
         </div>
 
         <FlowMobilePanels
-          propertyOpen={propertyOpen}
-          setPropertyOpen={setPropertyOpen}
-          edgePanelOpen={edgePanelOpen}
-          setEdgePanelOpen={setEdgePanelOpen}
-          selectedNode={selectedNode}
-          selectedEdge={selectedEdge}
-          nodes={nodes}
-          updateNodeData={updateNodeData}
-          updateEdgeData={updateEdgeData}
+          propertyOpen={state.propertyOpen}
+          setPropertyOpen={state.setPropertyOpen}
+          edgePanelOpen={state.edgePanelOpen}
+          setEdgePanelOpen={state.setEdgePanelOpen}
+          selectedNode={state.selectedNode}
+          selectedEdge={state.selectedEdge}
+          nodes={state.nodes}
+          updateNodeData={actions.updateNodeData}
+          updateEdgeData={actions.updateEdgeData}
         />
 
         <FlowDeleteDialog
-          open={deleteDialogOpen}
+          open={state.deleteDialogOpen}
           onOpenChange={(open) => {
-            setDeleteDialogOpen(open);
+            state.setDeleteDialogOpen(open);
             if (!open) {
-              setDeleteTarget(null);
+              state.setDeleteTarget(null);
             }
           }}
-          onConfirm={confirmDelete}
+          onConfirm={actions.confirmDelete}
         />
       </div>
     </FlowEditorActionsContext.Provider>
