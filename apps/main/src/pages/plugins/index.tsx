@@ -16,7 +16,7 @@ export default function PluginsHomePage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <p>{t('plugins.homeCapabilities')}</p>
-            <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-white/40 p-4 backdrop-blur-xl dark:bg-slate-900/30">
+            <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-surface-secondary p-4 backdrop-blur-xl">
               {t('plugins.homeSupport')}
             </div>
           </CardContent>

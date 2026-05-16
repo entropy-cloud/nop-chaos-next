@@ -19,17 +19,17 @@ export function SummaryCard({ draft, totalDirty }: SummaryCardProps) {
         </Badge>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30">
+        <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4">
           <div className="text-sm text-muted-foreground">{t('masterDetail.columns.orderNo')}</div>
           <div className="mt-2 font-semibold text-foreground">{draft.orderNo}</div>
         </div>
-        <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30">
+        <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4">
           <div className="text-sm text-muted-foreground">
             {t('masterDetail.columns.customerName')}
           </div>
           <div className="mt-2 font-semibold text-foreground">{draft.customerName}</div>
         </div>
-        <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30">
+        <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4">
           <div className="text-sm text-muted-foreground">
             {t('masterDetail.detail.orderStatus')}
           </div>
@@ -37,11 +37,11 @@ export function SummaryCard({ draft, totalDirty }: SummaryCardProps) {
             {t(`common.orderStatuses.${draft.status}`)}
           </div>
         </div>
-        <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30">
+        <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4">
           <div className="text-sm text-muted-foreground">{t('masterDetail.columns.createdAt')}</div>
           <div className="mt-2 font-semibold text-foreground">{draft.createdAt}</div>
         </div>
-        <div className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30">
+        <div className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4">
           <div className="text-sm text-muted-foreground">
             {t('masterDetail.detail.ownerChannel')}
           </div>

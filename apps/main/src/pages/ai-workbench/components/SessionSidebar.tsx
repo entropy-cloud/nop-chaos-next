@@ -48,7 +48,7 @@ export function SessionSidebar({
       style={{ width: sidebarWidth }}
     >
       <div className="border-b border-[hsl(var(--border))] p-4">
-        <div className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-white/50 px-3 dark:bg-slate-900/35">
+        <div className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-surface px-3">
           <Search className="size-4 text-muted-foreground" />
           <Input
             className="border-none bg-transparent shadow-none focus-visible:ring-0"
@@ -69,7 +69,7 @@ export function SessionSidebar({
             return (
               <div
                 key={session.id}
-                className={`w-full rounded-xl border p-3 text-left transition ${active ? 'border-transparent bg-[linear-gradient(135deg,color-mix(in_hsl,hsl(var(--primary))_20%,white),color-mix(in_hsl,hsl(var(--secondary))_16%,transparent))] shadow-md' : 'border-[hsl(var(--border))] bg-white/40 hover:bg-white/55 dark:bg-slate-900/35 dark:hover:bg-slate-900/50'}`}
+                className={`w-full rounded-xl border p-3 text-left transition ${active ? 'border-transparent bg-[linear-gradient(135deg,color-mix(in_hsl,hsl(var(--primary))_20%,white),color-mix(in_hsl,hsl(var(--secondary))_16%,transparent))] shadow-md' : 'border-[hsl(var(--border))] bg-surface-secondary hover:bg-surface-hover'}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <button
@@ -81,7 +81,7 @@ export function SessionSidebar({
                     {renameId === session.id ? (
                       <Input
                         autoFocus
-                        className="h-8 bg-white/80 dark:bg-slate-900/50"
+                        className="h-8 bg-surface-highlight"
                         value={session.title}
                         onBlur={(event) => {
                           renameSession(session.id, event.target.value, session.title);

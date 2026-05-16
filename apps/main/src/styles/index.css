@@ -36,7 +36,6 @@
 }
 
 :root {
-  --radius: 0.75rem;
   --sidebar: hsl(var(--card));
   --sidebar-foreground: hsl(var(--foreground));
   --sidebar-primary: hsl(var(--primary));

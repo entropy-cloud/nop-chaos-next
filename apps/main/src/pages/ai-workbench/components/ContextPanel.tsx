@@ -29,7 +29,7 @@ export function ContextPanel({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
-          <div className="rounded-xl border border-[hsl(var(--border))] bg-white/45 p-4 dark:bg-slate-900/35">
+          <div className="rounded-xl border border-[hsl(var(--border))] bg-surface-secondary p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="font-medium text-foreground">{t('aiWorkbench.contextStatus')}</div>
               <Badge variant={contextEnabled ? 'success' : 'outline'}>
@@ -40,7 +40,7 @@ export function ContextPanel({
             </div>
             <p className="mt-3 leading-6">{t('aiWorkbench.contextStatusDescription')}</p>
           </div>
-          <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-white/35 p-4 dark:bg-slate-900/20">
+          <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-surface-secondary p-4">
             <div className="eyebrow-text">{t('aiWorkbench.contextPreview')}</div>
             <div className="mt-3 leading-6">{contextSummary}</div>
           </div>
@@ -55,7 +55,7 @@ export function ContextPanel({
           {assistantCatalog.map((assistant) => (
             <div
               key={assistant.id}
-              className="rounded-lg border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30"
+              className="rounded-lg border border-[hsl(var(--border))] bg-surface-secondary p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-medium text-foreground">{getAssistantName(t, assistant)}</div>

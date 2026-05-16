@@ -92,7 +92,7 @@ export function ItemsSection({
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="overflow-hidden rounded-lg border border-[hsl(var(--border))] bg-white/25 dark:bg-slate-900/20">
+        <div className="overflow-hidden rounded-lg border border-[hsl(var(--border))] bg-surface-ghost">
           <Table>
             <TableHeader>
               <TableRow>

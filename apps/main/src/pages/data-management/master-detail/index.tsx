@@ -219,7 +219,7 @@ export default function MasterDetailPage() {
 
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2 xl:flex-nowrap">
-          <div className="flex min-w-[15rem] flex-1 items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-white/55 px-3 dark:bg-slate-900/35">
+          <div className="flex min-w-[15rem] flex-1 items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-surface px-3">
             <Search className="size-4 text-muted-foreground" />
             <Input
               className="h-9 border-none bg-transparent px-0 shadow-none focus-visible:ring-0"
@@ -241,7 +241,7 @@ export default function MasterDetailPage() {
               }
             }}
           >
-            <SelectTrigger className="h-9 w-[9rem] bg-white/55 dark:bg-slate-900/35">
+            <SelectTrigger className="h-9 w-[9rem] bg-surface">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -252,7 +252,7 @@ export default function MasterDetailPage() {
               <SelectItem value="closed">{t('common.orderStatuses.closed')}</SelectItem>
             </SelectContent>
           </Select>
-          <div className="flex min-w-[17rem] items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-white/45 px-3 py-1.5 dark:bg-slate-900/25">
+          <div className="flex min-w-[17rem] items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-surface-secondary px-3 py-1.5">
             <Input
               type="date"
               value={dateFrom}
@@ -284,20 +284,20 @@ export default function MasterDetailPage() {
           </div>
         </div>
         {showMore ? (
-          <div className="grid gap-2 rounded-xl border border-dashed border-[hsl(var(--border))] bg-white/25 p-2.5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_1.1fr] dark:bg-slate-900/20">
+          <div className="grid gap-2 rounded-xl border border-dashed border-[hsl(var(--border))] bg-surface-ghost p-2.5 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_1.1fr]">
             <Input
               placeholder={t('masterDetail.channelPlaceholder')}
               value={channel}
               onChange={(event) => setChannel(event.target.value)}
-              className="bg-white/55 dark:bg-slate-900/35"
+              className="bg-surface"
             />
             <Input
               placeholder={t('masterDetail.ownerPlaceholder')}
               value={owner}
               onChange={(event) => setOwner(event.target.value)}
-              className="bg-white/55 dark:bg-slate-900/35"
+              className="bg-surface"
             />
-            <div className="flex items-center rounded-xl bg-white/40 px-3 py-2 text-sm text-muted-foreground dark:bg-slate-900/25">
+            <div className="flex items-center rounded-xl bg-surface-secondary px-3 py-2 text-sm text-muted-foreground">
               {t('masterDetail.advancedHint')}
             </div>
           </div>
@@ -312,7 +312,7 @@ export default function MasterDetailPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-2.5 pt-0">
-          <div className="overflow-hidden rounded-lg border border-[hsl(var(--border))] bg-white/25 dark:bg-slate-900/20">
+          <div className="overflow-hidden rounded-lg border border-[hsl(var(--border))] bg-surface-ghost">
             <Table className="text-[13px]">
               <TableHeader className="sticky top-0 z-10 bg-[hsl(var(--gray-50))]/95 backdrop-blur">
                 <TableRow className="bg-[hsl(var(--gray-50))]/90">
@@ -454,7 +454,7 @@ export default function MasterDetailPage() {
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="h-8 w-[6.5rem] bg-white/55 dark:bg-slate-900/35">
+                <SelectTrigger className="h-8 w-[6.5rem] bg-surface">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

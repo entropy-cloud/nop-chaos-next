@@ -261,8 +261,12 @@ export default function AIWorkbenchPage() {
   };
 
   const handleCopy = async (message: WorkbenchMessage) => {
-    await navigator.clipboard.writeText(message.content);
-    toast.success(t('aiWorkbench.copySuccess'));
+    try {
+      await navigator.clipboard.writeText(message.content);
+      toast.success(t('aiWorkbench.copySuccess'));
+    } catch {
+      toast.error(t('aiWorkbench.copyFailed', { defaultValue: 'Failed to copy to clipboard' }));
+    }
   };
 
   const setScrollContainer = (node: HTMLDivElement | null) => {
@@ -285,7 +289,7 @@ export default function AIWorkbenchPage() {
                 }
               }}
             >
-              <SelectTrigger className="min-w-[13rem] bg-white/50 backdrop-blur-xl dark:bg-slate-900/35">
+              <SelectTrigger className="min-w-[13rem] bg-surface backdrop-blur-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -304,7 +308,7 @@ export default function AIWorkbenchPage() {
                 }
               }}
             >
-              <SelectTrigger className="min-w-[10rem] bg-white/50 backdrop-blur-xl dark:bg-slate-900/35">
+              <SelectTrigger className="min-w-[10rem] bg-surface backdrop-blur-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -320,7 +324,7 @@ export default function AIWorkbenchPage() {
         }
       />
 
-      <div className="relative flex min-h-[42rem] overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-white/30 backdrop-blur-md dark:bg-slate-950/25">
+      <div className="relative flex min-h-[42rem] overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-surface-ghost backdrop-blur-md">
         <SessionSidebar
           sidebarWidth={sidebarWidth}
           search={search}

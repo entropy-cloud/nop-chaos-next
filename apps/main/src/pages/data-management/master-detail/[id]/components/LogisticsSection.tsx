@@ -58,7 +58,7 @@ export function LogisticsSection({
         {filteredLogistics.map((item) => (
           <div
             key={item.id}
-            className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-4 dark:bg-slate-900/30"
+            className="rounded-xl border border-[hsl(var(--border))] bg-surface-secondary p-4"
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>

@@ -50,7 +50,7 @@ export function ConversationPanel({
   return (
     <div className="flex h-full flex-col border-r border-[hsl(var(--border))]">
       <div className="border-b border-[hsl(var(--border))] p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[hsl(var(--border))] bg-white/45 p-4 backdrop-blur-xl dark:bg-slate-900/35">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[hsl(var(--border))] bg-surface-secondary p-4 backdrop-blur-xl">
           <div>
             <div className="text-sm font-semibold text-foreground">{activeSession?.title}</div>
             <div className="mt-1 text-sm text-muted-foreground">
@@ -103,7 +103,7 @@ export function ConversationPanel({
                 className={
                   message.role === 'user'
                     ? 'rounded-xl rounded-br-md bg-[linear-gradient(135deg,hsl(var(--primary)),color-mix(in_hsl,hsl(var(--secondary))_70%,white))] px-5 py-4 text-sm text-white shadow-primary-md'
-                    : 'rounded-xl rounded-bl-md border border-[hsl(var(--border))] bg-white/55 px-5 py-4 text-sm text-muted-foreground backdrop-blur-xl dark:bg-slate-900/40'
+                    : 'rounded-xl rounded-bl-md border border-[hsl(var(--border))] bg-surface px-5 py-4 text-sm text-muted-foreground backdrop-blur-xl'
                 }
               >
                 <div className="space-y-2">{renderMarkdownBlocks(message.content)}</div>
@@ -129,7 +129,7 @@ export function ConversationPanel({
       </div>
 
       <div className="border-t border-[hsl(var(--border))] p-5">
-        <div className="rounded-xl border border-[hsl(var(--border))] bg-white/50 p-4 backdrop-blur-xl dark:bg-slate-900/35">
+        <div className="rounded-xl border border-[hsl(var(--border))] bg-surface p-4 backdrop-blur-xl">
           <Textarea
             className="min-h-[7rem] border-none bg-transparent px-0 shadow-none focus-visible:ring-0"
             placeholder={t('aiWorkbench.promptPlaceholder')}

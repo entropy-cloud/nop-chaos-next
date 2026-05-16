@@ -94,7 +94,7 @@ export default function LoginPage() {
             {loginUi.features.map((feature) => (
               <div
                 key={feature.titleKey}
-                className="rounded-xl border border-[hsl(var(--border))] bg-white/40 p-5 backdrop-blur-xl dark:bg-slate-900/40"
+                className="rounded-xl border border-[hsl(var(--border))] bg-surface-secondary p-5 backdrop-blur-xl"
               >
                 <div className="text-sm font-semibold text-foreground">{t(feature.titleKey)}</div>
                 <div className="mt-2 text-sm text-muted-foreground">

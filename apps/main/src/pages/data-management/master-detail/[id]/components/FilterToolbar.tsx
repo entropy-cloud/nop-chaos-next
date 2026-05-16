@@ -23,19 +23,19 @@ export function FilterToolbar({
   return (
     <div className="flex flex-wrap items-center gap-3 xl:flex-nowrap">
       <Input
-        className="min-w-[15rem] flex-1 bg-white/55 dark:bg-slate-900/35"
+        className="min-w-[15rem] flex-1 bg-surface"
         placeholder={t('masterDetail.detail.itemFilter')}
         value={itemKeyword}
         onChange={(event) => setItemKeyword(event.target.value)}
       />
       <Input
-        className="min-w-[15rem] flex-1 bg-white/55 dark:bg-slate-900/35"
+        className="min-w-[15rem] flex-1 bg-surface"
         placeholder={t('masterDetail.detail.addressFilter')}
         value={addressKeyword}
         onChange={(event) => setAddressKeyword(event.target.value)}
       />
       <Input
-        className="min-w-[15rem] flex-1 bg-white/55 dark:bg-slate-900/35"
+        className="min-w-[15rem] flex-1 bg-surface"
         placeholder={t('masterDetail.detail.logisticsFilter')}
         value={logisticsKeyword}
         onChange={(event) => setLogisticsKeyword(event.target.value)}

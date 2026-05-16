@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { LowCodeIcon } from '@nop-chaos/core';
 import { Settings2 } from 'lucide-react';
 import {
@@ -23,27 +22,17 @@ import {
 } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../../components/common/PageHeader';
-import { fetchPluginList } from '../../../services/mockApi';
 import { usePluginStore } from '../../../store/pluginStore';
 
 export default function PluginsManagementPage() {
   const { t } = useTranslation();
-  const pluginQuery = useQuery({ queryKey: ['plugins'], queryFn: fetchPluginList });
   const plugins = usePluginStore((state) => state.plugins);
-  const setPlugins = usePluginStore((state) => state.setPlugins);
   const updatePlugin = usePluginStore((state) => state.updatePlugin);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [configId, setConfigId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (pluginQuery.data && plugins.length === 0) {
-      setPlugins(pluginQuery.data);
-    }
-  }, [pluginQuery.data, plugins.length, setPlugins]);
-
-  const items = plugins.length > 0 ? plugins : (pluginQuery.data ?? []);
-  const detailPlugin = items.find((plugin) => plugin.id === detailId) ?? null;
-  const configPlugin = items.find((plugin) => plugin.id === configId) ?? null;
+  const detailPlugin = plugins.find((plugin) => plugin.id === detailId) ?? null;
+  const configPlugin = plugins.find((plugin) => plugin.id === configId) ?? null;
 
   return (
     <div className="space-y-6">
@@ -52,14 +41,8 @@ export default function PluginsManagementPage() {
         title={t('plugins.managementTitle')}
         description={t('plugins.managementPageDescription')}
       />
-      {pluginQuery.isLoading ? <div className="text-sm text-muted-foreground">{t('common.loading')}</div> : null}
-      {pluginQuery.isError ? (
-        <div className="rounded-xl border border-[hsl(var(--danger))] px-4 py-3 text-sm text-[hsl(var(--danger))]">
-          {pluginQuery.error instanceof Error ? pluginQuery.error.message : t('errors.serverDescription')}
-        </div>
-      ) : null}
       <div className="grid gap-4">
-        {items.map((plugin) => {
+        {plugins.map((plugin) => {
           return (
             <Card key={plugin.id} className="theme-card overflow-hidden">
               <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3">

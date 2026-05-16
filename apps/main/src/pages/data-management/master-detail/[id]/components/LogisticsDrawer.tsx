@@ -116,7 +116,7 @@ export function LogisticsDrawer({
                   }
                 />
               </div>
-              <div className="rounded-lg border border-dashed border-[hsl(var(--border))] bg-white/35 p-4 text-sm text-muted-foreground dark:bg-slate-900/20">
+              <div className="rounded-lg border border-dashed border-[hsl(var(--border))] bg-surface-secondary p-4 text-sm text-muted-foreground">
                 <div className="font-medium text-foreground">
                   {t('masterDetail.detail.logisticsTimeline')}
                 </div>

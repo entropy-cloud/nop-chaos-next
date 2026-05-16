@@ -28,7 +28,7 @@ export default function SettingsThemePage() {
               return (
                 <button
                   key={theme.id}
-                  className={`rounded-lg border p-4 text-left transition ${active ? 'border-transparent bg-[color-mix(in_hsl,hsl(var(--primary))_12%,transparent)] text-foreground shadow-sm' : 'border-[hsl(var(--border))] bg-white/40 text-foreground hover:border-[hsl(var(--primary))] dark:bg-slate-900/30'}`}
+                  className={`rounded-lg border p-4 text-left transition ${active ? 'border-transparent bg-[color-mix(in_hsl,hsl(var(--primary))_12%,transparent)] text-foreground shadow-sm' : 'border-[hsl(var(--border))] bg-surface-secondary text-foreground hover:border-[hsl(var(--primary))]'}`}
                   onClick={() => setThemeId(theme.id)}
                   type="button"
                 >

@@ -19,7 +19,7 @@ export function PluginMountPanel() {
             {t('plugins.mountTitle')}
           </CardTitle>
         </CardHeader>
-        <CardContent className="rounded-3xl border border-dashed border-[hsl(var(--border))] bg-white/35 p-5 text-sm text-muted-foreground backdrop-blur-xl dark:bg-slate-900/30">
+        <CardContent className="rounded-3xl border border-dashed border-[hsl(var(--border))] bg-surface-secondary p-5 text-sm text-muted-foreground backdrop-blur-xl">
           {t('plugins.mountEmpty')}
         </CardContent>
       </Card>
@@ -45,7 +45,7 @@ export function PluginMountPanel() {
         {enabledPlugins.map((plugin, index) => (
           <div
             key={plugin.id}
-            className="list-item-animate rounded-xl border border-[hsl(var(--border))] bg-white/40 p-5 backdrop-blur-xl dark:bg-slate-900/35"
+            className="list-item-animate rounded-xl border border-[hsl(var(--border))] bg-surface-secondary p-5 backdrop-blur-xl"
             style={{ animationDelay: `${index * 0.08}s` }}
           >
             <div className="flex items-start justify-between gap-3">
