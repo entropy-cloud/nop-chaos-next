@@ -33,7 +33,7 @@ export interface AmisRequestOptions {
 export interface AmisFetcherResult<T = unknown> {
   status: number;
   data: T;
-  headers?: Record<string, string>;
+  headers: Record<string, string>;
 }
 
 export function isAmisFetcherResult(value: unknown): value is AmisFetcherResult {
@@ -61,26 +61,47 @@ export interface AmisPageObject {
   destroy: () => void;
 }
 
+/** Adapter that bridges the amis renderer to the host shell's runtime services. */
 export interface AmisRuntimeAdapter {
+  /** Returns the i18n helper for translations. */
   getI18n: () => AmisI18nLike;
+  /** Returns the current locale string (e.g. "zh-CN"). */
   getLocale: () => string;
+  /** Returns the currently authenticated user, or null. */
   getCurrentUser: () => User | null;
+  /** Returns the current auth token, if any. */
   getAuthToken: () => string | undefined;
+  /** Persists or clears the auth token. */
   setAuthToken: (token?: string) => void;
+  /** Checks whether the current user holds the given role. */
   hasRole: (role: string) => boolean;
+  /** Returns the active theme configuration. */
   getThemeConfig: () => ThemeConfig;
+  /** Navigates to a URL within the host shell. */
   navigate: (to: string, options?: { replace?: boolean; state?: unknown }) => void;
+  /** Checks whether the given URL matches the current location. */
   isCurrentUrl: (to: string) => boolean;
+  /** Displays a toast notification to the user. */
   notify: (type: AmisToastType, message: string) => void;
+  /** Shows a modal alert dialog. */
   alert: (message: string, title?: string) => Promise<void>;
+  /** Shows a modal confirmation dialog. */
   confirm: (message: string, title?: string) => Promise<boolean>;
+  /** Initiates logout with the given reason. */
   logout: (reason: string) => void;
+  /** Provider for loading page schemas by path. */
   pageProvider: AmisPageProvider;
+  /** Provider for loading dictionary data. */
   dictProvider: AmisDictProvider;
+  /** Optional hook to transform outgoing requests. */
   processRequest?: (request: AmisRequestOptions) => AmisRequestOptions;
+  /** Optional hook to transform the response promise. */
   processResponse?: <T>(response: Promise<T>) => Promise<T>;
+  /** Optional custom HTTP request implementation. */
   request?: <T>(request: HttpRequestOptions) => Promise<HttpResponse<T>>;
+  /** Optional resolver for named actions bound to a page. */
   resolveAction?: (name: string, page: AmisPageObject) => AmisAction | undefined;
+  /** Optional compiler for turning code strings into callable actions. */
   compileFunction?: (code: string, page: AmisPageObject) => AmisAction;
 }
 

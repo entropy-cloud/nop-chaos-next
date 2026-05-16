@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { registerAmisRuntimeAdapter } from '../adapter';
+import { createMockAdapter } from '../test-helpers/mockAdapter';
 import type { AmisAction } from '../types';
 import { bindActions } from './action';
 import { createAmisPageObject } from './page';
@@ -16,27 +17,12 @@ describe('bindActions', () => {
   it('converts @action strings into action urls', async () => {
     const page = createAmisPageObject('mock://preview');
 
-    registerAmisRuntimeAdapter({
-      getI18n: () => ({}) as never,
-      getLocale: () => 'en-US',
-      getCurrentUser: () => null,
-      getAuthToken: () => undefined,
-      setAuthToken: () => undefined,
-      hasRole: () => false,
-      getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' }),
-      navigate: () => undefined,
-      isCurrentUrl: () => false,
-      notify: () => undefined,
-      alert: async () => undefined,
-      confirm: async () => true,
-      logout: () => undefined,
-      pageProvider: { getPage: async () => ({}) },
-      dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-      },
-      resolveAction: (name: string) => (name === 'preview.notify' ? () => 'ok' : undefined),
-      compileFunction: compileTestFunction,
-    });
+    registerAmisRuntimeAdapter(
+      createMockAdapter({
+        resolveAction: (name: string) => (name === 'preview.notify' ? () => 'ok' : undefined),
+        compileFunction: compileTestFunction,
+      }),
+    );
 
     const bound = await bindActions(
       {
@@ -53,26 +39,11 @@ describe('bindActions', () => {
   it('compiles @fn expressions into callable functions', async () => {
     const page = createAmisPageObject('mock://preview');
 
-    registerAmisRuntimeAdapter({
-      getI18n: () => ({}) as never,
-      getLocale: () => 'en-US',
-      getCurrentUser: () => null,
-      getAuthToken: () => undefined,
-      setAuthToken: () => undefined,
-      hasRole: () => false,
-      getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' }),
-      navigate: () => undefined,
-      isCurrentUrl: () => false,
-      notify: () => undefined,
-      alert: async () => undefined,
-      confirm: async () => true,
-      logout: () => undefined,
-      pageProvider: { getPage: async () => ({}) },
-      dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-      },
-      compileFunction: compileTestFunction,
-    });
+    registerAmisRuntimeAdapter(
+      createMockAdapter({
+        compileFunction: compileTestFunction,
+      }),
+    );
 
     const bound = (await bindActions({ onClick: '@fn:(page) => page.id' }, page)) as {
       onClick: AmisAction;
@@ -84,26 +55,11 @@ describe('bindActions', () => {
   it('converts graphql prefix urls into scheme urls', async () => {
     const page = createAmisPageObject('mock://preview');
 
-    registerAmisRuntimeAdapter({
-      getI18n: () => ({}) as never,
-      getLocale: () => 'en-US',
-      getCurrentUser: () => null,
-      getAuthToken: () => undefined,
-      setAuthToken: () => undefined,
-      hasRole: () => false,
-      getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' }),
-      navigate: () => undefined,
-      isCurrentUrl: () => false,
-      notify: () => undefined,
-      alert: async () => undefined,
-      confirm: async () => true,
-      logout: () => undefined,
-      pageProvider: { getPage: async () => ({}) },
-      dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-      },
-      compileFunction: compileTestFunction,
-    });
+    registerAmisRuntimeAdapter(
+      createMockAdapter({
+        compileFunction: compileTestFunction,
+      }),
+    );
 
     const bound = await bindActions(
       {
@@ -118,28 +74,13 @@ describe('bindActions', () => {
   it('lazily resolves actions referenced inside compiled functions', async () => {
     const page = createAmisPageObject('mock://preview');
 
-    registerAmisRuntimeAdapter({
-      getI18n: () => ({}) as never,
-      getLocale: () => 'en-US',
-      getCurrentUser: () => null,
-      getAuthToken: () => undefined,
-      setAuthToken: () => undefined,
-      hasRole: () => false,
-      getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' }),
-      navigate: () => undefined,
-      isCurrentUrl: () => false,
-      notify: () => undefined,
-      alert: async () => undefined,
-      confirm: async () => true,
-      logout: () => undefined,
-      pageProvider: { getPage: async () => ({}) },
-      dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-      },
-      resolveAction: (name: string) =>
-        name === 'preview.notify' ? () => 'resolved lazily' : undefined,
-      compileFunction: compileTestFunction,
-    });
+    registerAmisRuntimeAdapter(
+      createMockAdapter({
+        resolveAction: (name: string) =>
+          name === 'preview.notify' ? () => 'resolved lazily' : undefined,
+        compileFunction: compileTestFunction,
+      }),
+    );
 
     const bound = (await bindActions(
       { onClick: '@fn:() => page.getAction("preview.notify")?.()' },
@@ -153,26 +94,11 @@ describe('bindActions', () => {
   it('loads imported system modules and resolves scoped actions', async () => {
     const page = createAmisPageObject('https://example.com/schema/demo.json');
 
-    registerAmisRuntimeAdapter({
-      getI18n: () => ({}) as never,
-      getLocale: () => 'en-US',
-      getCurrentUser: () => null,
-      getAuthToken: () => undefined,
-      setAuthToken: () => undefined,
-      hasRole: () => false,
-      getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' }),
-      navigate: () => undefined,
-      isCurrentUrl: () => false,
-      notify: () => undefined,
-      alert: async () => undefined,
-      confirm: async () => true,
-      logout: () => undefined,
-      pageProvider: { getPage: async () => ({}) },
-      dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-      },
-      compileFunction: compileTestFunction,
-    });
+    registerAmisRuntimeAdapter(
+      createMockAdapter({
+        compileFunction: compileTestFunction,
+      }),
+    );
 
     const systemImport = vi.fn(async () => ({
       notify: () => 'from-import',
@@ -198,26 +124,11 @@ describe('bindActions', () => {
   it('uses native import for non-system imported modules even when System is available', async () => {
     const page = createAmisPageObject('https://example.com/schema/demo.json');
 
-    registerAmisRuntimeAdapter({
-      getI18n: () => ({}) as never,
-      getLocale: () => 'en-US',
-      getCurrentUser: () => null,
-      getAuthToken: () => undefined,
-      setAuthToken: () => undefined,
-      hasRole: () => false,
-      getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' }),
-      navigate: () => undefined,
-      isCurrentUrl: () => false,
-      notify: () => undefined,
-      alert: async () => undefined,
-      confirm: async () => true,
-      logout: () => undefined,
-      pageProvider: { getPage: async () => ({}) },
-      dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-      },
-      compileFunction: compileTestFunction,
-    });
+    registerAmisRuntimeAdapter(
+      createMockAdapter({
+        compileFunction: compileTestFunction,
+      }),
+    );
 
     const systemImport = vi.fn(async () => ({
       notify: () => 'from-system',
@@ -245,26 +156,11 @@ describe('bindActions', () => {
   it('stops parent scoped lookup at standalone import boundaries', async () => {
     const page = createAmisPageObject('https://example.com/schema/demo.json');
 
-    registerAmisRuntimeAdapter({
-      getI18n: () => ({}) as never,
-      getLocale: () => 'en-US',
-      getCurrentUser: () => null,
-      getAuthToken: () => undefined,
-      setAuthToken: () => undefined,
-      hasRole: () => false,
-      getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' }),
-      navigate: () => undefined,
-      isCurrentUrl: () => false,
-      notify: () => undefined,
-      alert: async () => undefined,
-      confirm: async () => true,
-      logout: () => undefined,
-      pageProvider: { getPage: async () => ({}) },
-      dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-      },
-      compileFunction: compileTestFunction,
-    });
+    registerAmisRuntimeAdapter(
+      createMockAdapter({
+        compileFunction: compileTestFunction,
+      }),
+    );
 
     const systemImport = vi.fn(async (url: string) => {
       if (url.endsWith('/root-actions.js')) {

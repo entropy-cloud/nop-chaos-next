@@ -39,6 +39,7 @@ function buildSuccessResponse(data: unknown): AmisFetcherResult {
       msg: '',
       data,
     },
+    headers: {},
   };
 }
 
@@ -189,6 +190,7 @@ async function normalizeNetworkError(error: unknown): Promise<AmisFetcherResult>
         status: -1,
         msg: message,
       },
+      headers: {},
     };
   }
 
@@ -198,6 +200,7 @@ async function normalizeNetworkError(error: unknown): Promise<AmisFetcherResult>
       status: -1,
       msg: messageCatalog.apiRequestFailed,
     },
+    headers: {},
   };
 }
 
@@ -282,6 +285,30 @@ function createAbortSignal(cancelExecutor: AmisRequestOptions['cancelExecutor'])
   return controller.signal;
 }
 
+let _client: ReturnType<typeof createHttpClient> | null = null;
+
+function getClient() {
+  if (!_client) {
+    const adapter = getAmisRuntimeAdapter();
+
+    _client = createHttpClient({
+      getBaseUrl: getApiBaseUrl,
+      getLocale: () => adapter.getLocale()?.replace('_', '-') || 'zh-CN',
+      getAuthToken: () => adapter.getAuthToken(),
+      setAuthToken: (token) => {
+        if (token) {
+          adapter.setAuthToken(token);
+        }
+      },
+      onUnauthorized: () => {
+        adapter.logout('401');
+      },
+    });
+  }
+
+  return _client;
+}
+
 async function executeSharedRequest(options: HttpRequestOptions) {
   const adapter = getAmisRuntimeAdapter();
 
@@ -289,21 +316,7 @@ async function executeSharedRequest(options: HttpRequestOptions) {
     return adapter.request(options);
   }
 
-  const client = createHttpClient({
-    getBaseUrl: getApiBaseUrl,
-    getLocale: () => adapter.getLocale()?.replace('_', '-') || 'zh-CN',
-    getAuthToken: () => adapter.getAuthToken(),
-    setAuthToken: (token) => {
-      if (token) {
-        adapter.setAuthToken(token);
-      }
-    },
-    onUnauthorized: () => {
-      adapter.logout('401');
-    },
-  });
-
-  return client.request(options);
+  return getClient().request(options);
 }
 
 async function executeNetworkRequest(options: AmisRequestOptions): Promise<AmisFetcherResult> {

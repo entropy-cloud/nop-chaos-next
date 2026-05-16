@@ -26,7 +26,7 @@ describe('fetchAmisRequest', () => {
       logout: () => undefined,
       pageProvider: { getPage: async () => ({}) },
       dictProvider: {
-        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
+        getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] }, headers: {} }),
       },
     });
   });

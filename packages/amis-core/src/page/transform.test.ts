@@ -1,33 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { registerAmisRuntimeAdapter } from '../adapter';
+import { createMockAdapter } from '../test-helpers/mockAdapter';
 import type { AmisSchemaRecord } from '../types';
 import { transformPageJson } from './transform';
 
-function createMockAdapter() {
-  return {
-    getI18n: () => ({}) as never,
-    getLocale: () => 'en-US',
-    getCurrentUser: () => null,
-    getAuthToken: () => undefined,
-    setAuthToken: () => undefined,
-    hasRole: (role: string) => role === 'admin',
-    getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' as const }),
-    navigate: () => undefined,
-    isCurrentUrl: () => false,
-    notify: () => undefined,
-    alert: async () => undefined,
-    confirm: async () => true,
-    logout: () => undefined,
-    pageProvider: { getPage: async () => ({}) },
-    dictProvider: {
-      getDict: async () => ({ status: 200, data: { status: 0, msg: '', data: [] } }),
-    },
-  };
-}
-
 describe('transformPageJson', () => {
   it('removes nodes blocked by xui:roles', async () => {
-    registerAmisRuntimeAdapter(createMockAdapter());
+    registerAmisRuntimeAdapter(createMockAdapter({ hasRole: (role: string) => role === 'admin' }));
 
     const transformed = await transformPageJson({
       type: 'page',
