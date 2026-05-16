@@ -50,15 +50,26 @@ export interface PluginBridgeNavigateOptions {
   state?: unknown;
 }
 
+/** Bridge object injected by the host into each plugin iframe. */
 export interface PluginBridge {
+  /** Internationalization helpers for the current plugin. */
   i18n: BridgeI18n;
+  /** Toast notification helpers. */
   notifications: PluginBridgeNotifications;
+  /** Access to host Zustand stores bound to the plugin. */
   stores: PluginBridgeStores;
+  /** Navigate to a different route inside the host shell. */
   navigate: (to: string, options?: PluginBridgeNavigateOptions) => void;
+  /** Returns the currently authenticated user, or null. */
   getCurrentUser: () => User | null;
+  /** Returns the current URL pathname inside the host shell. */
   getCurrentPath: () => string;
+  /** Returns the active theme configuration. */
   getThemeConfig: () => ThemeConfig;
+  /** Retrieves the manifest for a specific plugin by ID. */
   getPluginManifest: (pluginId: string) => PluginManifest | undefined;
+  /** Subscribes a listener that fires on any bridge state change. */
   subscribe: (listener: () => void) => () => void;
+  /** Returns a snapshot of the current bridge state. */
   getSnapshot: () => BridgeSnapshot;
 }

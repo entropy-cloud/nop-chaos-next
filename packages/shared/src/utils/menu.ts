@@ -96,9 +96,15 @@ export function filterMenusByRoles(items: MenuItem[], userRoles: string[]): Menu
     const selfAllowed = userRoles.some((role) => allowed.has(role));
 
     if (selfAllowed || hasVisibleChildren) {
+      // When a parent has roles, passes selfAllowed, but all children were filtered out,
+      // clear roles so it acts as a navigation container instead of a restricted page.
+      // When a parent has no roles and all children are filtered, it is still kept as an
+      // expandable empty container (consistent with the cleared-roles behavior above).
+      const shouldClearRoles = selfAllowed && !hasVisibleChildren;
       result.push({
         ...item,
         children: filteredChildren,
+        ...(shouldClearRoles ? { roles: undefined } : {}),
       });
     }
 

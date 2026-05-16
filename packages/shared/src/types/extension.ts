@@ -125,26 +125,47 @@ export interface ExtensionSetupContext {
   logger: ExtensionLogger;
 }
 
+/** Describes a single extension that contributes configuration to the shell. */
 export interface ShellExtension {
+  /** Unique identifier for this extension. */
   id: string;
+  /** Loading priority; lower values load first. */
   order?: number;
+  /** Application-level metadata (name, logo, home path). */
   app?: ExtensionAppConfig;
+  /** Branding assets (logo, favicon, document title). */
   branding?: ExtensionBrandingConfig;
+  /** Login page UI configuration. */
   loginUi?: ExtensionLoginUiConfig;
+  /** Shell-wide settings (home path, help/about URLs). */
   shell?: ExtensionShellConfig;
+  /** Paths for system pages (login, 403, 404, 500). */
   systemPages?: ExtensionSystemPagesConfig;
+  /** Arbitrary key-value environment variables exposed to the shell. */
   env?: Record<string, string>;
+  /** Deprecated — use `supportedLanguages` instead. */
   languages?: ExtensionLanguage[];
+  /** Languages this extension provides translations for. */
   supportedLanguages?: ExtensionLanguage[];
+  /** i18n resource location and namespace configuration. */
   i18n?: ExtensionI18nConfig;
+  /** Inline i18n translation resources. */
   i18nResources?: ExtensionI18nResource[];
+  /** Available visual themes. */
   themes?: ExtensionTheme[];
+  /** CSS/style assets to load into the shell. */
   styles?: ExtensionStyleAsset[];
+  /** Page components registered as built-in routes. */
   builtinPages?: ExtensionBuiltinPage[];
+  /** Remote plugin manifests to register. */
   plugins?: PluginManifest[];
+  /** Menu items to add to the sidebar. */
   menus?: MenuItem[];
+  /** When true, replaces the entire menu tree instead of merging. */
   overrideMenus?: boolean;
+  /** Authentication configuration (token storage, refresh). */
   auth?: ExtensionAuthConfig;
+  /** Lifecycle hook called after the extension is loaded. */
   setup?: (context: ExtensionSetupContext) => void | Promise<void>;
 }
 
