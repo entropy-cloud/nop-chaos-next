@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { RefreshCw, RotateCcw, Save } from 'lucide-react';
 import type { MouseEvent as ReactMouseEvent } from 'react';
@@ -23,7 +23,12 @@ import { LogisticsSection } from './components/LogisticsSection';
 import { SummaryCard } from './components/SummaryCard';
 import { shouldRenderDetailError } from '../detailState';
 import type { DirtySectionKey, DirtySections, ValidationErrors } from './types';
-import { buildValidationErrors, containsIgnoreCase, normalizeOrder } from './utils';
+import {
+  buildValidationErrors,
+  containsIgnoreCase,
+  hasOrderChanged,
+  normalizeOrder,
+} from './utils';
 
 export default function MasterDetailDetailPage() {
   const { t } = useTranslation();
@@ -48,34 +53,44 @@ export default function MasterDetailDetailPage() {
   const [itemKeyword, setItemKeyword] = useState('');
   const [addressKeyword, setAddressKeyword] = useState('');
   const [logisticsKeyword, setLogisticsKeyword] = useState('');
+  const savedStateRef = useRef<OrderRecord | null>(null);
+
+  useEffect(() => {
+    savedStateRef.current = savedState;
+  }, [savedState]);
 
   useEffect(() => {
     if (!detailQuery.data) {
       return;
     }
+
     const next = normalizeOrder(detailQuery.data);
+    const savedSnapshot = savedStateRef.current;
+
     setDraft((current) => {
-      if (current && savedState && JSON.stringify(current) !== JSON.stringify(savedState)) {
+      if (current && savedSnapshot && hasOrderChanged(current, savedSnapshot)) {
         return current;
       }
 
+      return hasOrderChanged(current, next) ? next : current;
+    });
+    setSavedState((current) => {
+      if (!hasOrderChanged(current, next)) {
+        return current;
+      }
+
+      savedStateRef.current = next;
       return next;
     });
-    setSavedState(normalizeOrder(detailQuery.data));
-    setDirtySections((current) =>
-      Object.values(current).some(Boolean)
-        ? current
-        : { items: false, addresses: false, logistics: false },
-    );
-    setErrors((current) => (Object.keys(current).length > 0 ? current : {}));
-  }, [detailQuery.data, savedState]);
+    setErrors((current) => (Object.keys(current).length > 0 ? {} : current));
+  }, [detailQuery.data]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (!draft || !savedState) {
         return;
       }
-      if (JSON.stringify(draft) === JSON.stringify(savedState)) {
+      if (!hasOrderChanged(draft, savedState)) {
         return;
       }
       event.preventDefault();

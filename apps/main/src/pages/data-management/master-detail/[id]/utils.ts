@@ -9,6 +9,14 @@ export function normalizeOrder(order: OrderRecord): OrderRecord {
   return structuredClone(order);
 }
 
+export function hasOrderChanged(left: OrderRecord | null, right: OrderRecord | null) {
+  if (!left || !right) {
+    return left !== right;
+  }
+
+  return JSON.stringify(left) !== JSON.stringify(right);
+}
+
 export function containsIgnoreCase(value: string, keyword: string) {
   return value.toLowerCase().includes(keyword.trim().toLowerCase());
 }

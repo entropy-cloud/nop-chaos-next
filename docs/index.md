@@ -58,6 +58,9 @@ Bug fix records for non-trivial issues.
 | [27-main-i18n-initialization-menu-title-fallback.md](./bugs/27-main-i18n-initialization-menu-title-fallback.md) | Main i18n initialization menu title fallback |
 | [28-core-i18next-singleton-split.md](./bugs/28-core-i18next-singleton-split.md) | Core i18next singleton split |
 | [29-flux-react-i18next-default-instance-pollution.md](./bugs/29-flux-react-i18next-default-instance-pollution.md) | Flux react-i18next default instance pollution |
+| [32-plugin-bridge-unstable-snapshot-loop.md](./bugs/32-plugin-bridge-unstable-snapshot-loop.md) | Plugin bridge unstable snapshot render loop |
+| [33-dialog-padding-and-drawer-select-broken.md](./bugs/33-dialog-padding-and-drawer-select-broken.md) | Dialog padding and drawer select broken |
+| [34-master-detail-query-sync-effect-loop.md](./bugs/34-master-detail-query-sync-effect-loop.md) | Master detail query sync effect loop |
 
 ## Testing (`testing/`)
 
