@@ -64,7 +64,7 @@ function DialogBody({ className, ...props }) {
     return (_jsx("div", { "data-slot": "dialog-body", className: cn('flex flex-col gap-4 p-4', className), ...props }));
 }
 function DialogFooter({ className, showCloseButton = false, children, ...props }) {
-    return (_jsxs("div", { "data-slot": "dialog-footer", className: cn('mt-auto flex flex-col-reverse gap-2 border-t bg-muted/50 p-4 pt-0 sm:flex-row sm:justify-end', className), ...props, children: [children, showCloseButton && (_jsx(DialogPrimitive.Close, { render: _jsx(Button, { variant: "outline" }), children: t('flux.common.close') }))] }));
+    return (_jsxs("div", { "data-slot": "dialog-footer", className: cn('mt-auto flex flex-col-reverse gap-2 border-t bg-muted/50 p-4 sm:flex-row sm:justify-end', className), ...props, children: [children, showCloseButton && (_jsx(DialogPrimitive.Close, { render: _jsx(Button, { variant: "outline" }), children: t('flux.common.close') }))] }));
 }
 function DialogTitle({ className, ...props }) {
     return (_jsx(DialogPrimitive.Title, { "data-slot": "dialog-title", className: cn('font-heading text-base leading-none font-medium', className), ...props }));

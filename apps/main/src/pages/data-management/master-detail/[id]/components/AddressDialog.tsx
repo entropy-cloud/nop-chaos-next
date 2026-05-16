@@ -1,6 +1,7 @@
 import {
   Button,
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -43,7 +44,8 @@ export function AddressDialog({
           <DialogDescription>{t('masterDetail.detail.addressDialogDescription')}</DialogDescription>
         </DialogHeader>
         {editingAddress ? (
-          <div className="grid gap-3">
+          <DialogBody>
+            <div className="grid gap-3">
             <div className="grid gap-2">
               <Label>{t('masterDetail.detail.addressFields.receiver')}</Label>
               <Input
@@ -103,6 +105,7 @@ export function AddressDialog({
               />
             </div>
           </div>
+          </DialogBody>
         ) : null}
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>

@@ -1,6 +1,7 @@
 import {
   Button,
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -25,6 +26,7 @@ export function FlowDeleteDialog({ open, onOpenChange, onConfirm }: FlowDeleteDi
           <DialogTitle>{t('flowEditor.editor.deleteTitle')}</DialogTitle>
           <DialogDescription>{t('flowEditor.editor.deleteDescription')}</DialogDescription>
         </DialogHeader>
+        <DialogBody />
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.cancel')}

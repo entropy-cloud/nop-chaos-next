@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -122,7 +123,8 @@ export default function PluginsManagementPage() {
             <DialogTitle>{detailPlugin?.name}</DialogTitle>
             <DialogDescription>{t('plugins.detailOverview')}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 text-sm text-muted-foreground">
+          <DialogBody>
+            <div className="space-y-3 text-sm text-muted-foreground">
             <div>
               {t('common.versionLabel')}
               {detailPlugin?.version}
@@ -144,6 +146,7 @@ export default function PluginsManagementPage() {
               {detailPlugin?.description}
             </div>
           </div>
+          </DialogBody>
         </DialogContent>
       </Dialog>
 
@@ -155,8 +158,9 @@ export default function PluginsManagementPage() {
             </DialogTitle>
             <DialogDescription>{t('plugins.configureDescription')}</DialogDescription>
           </DialogHeader>
-          <form
-            id="plugin-config-form"
+          <DialogBody>
+            <form
+              id="plugin-config-form"
             className="space-y-4"
             onSubmit={(event) => {
               event.preventDefault();
@@ -213,6 +217,7 @@ export default function PluginsManagementPage() {
               </div>
             ))}
           </form>
+          </DialogBody>
           <DialogFooter>
             <Button form="plugin-config-form" type="submit">
               {t('common.done')}
