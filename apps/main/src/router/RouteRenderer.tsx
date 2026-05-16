@@ -40,6 +40,10 @@ export function resolvePluginManifest(
   );
 }
 
+// RouteRenderer is the route-level permission guard (layer 2 of the two-layer model).
+// Layer 1 (menu filtering) already hides unauthorized items from the sidebar, but this
+// guard ensures that direct URL navigation to a restricted route still results in a
+// ForbiddenPage rather than silently rendering protected content.
 export function RouteRenderer({ item }: RouteRendererProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -59,6 +63,8 @@ export function RouteRenderer({ item }: RouteRendererProps) {
 
   const content = (() => {
     if (!allowed) {
+      // ForbiddenPage is shown when the route render guard denies access.
+      // This is the safety net for direct URL navigation to restricted routes.
       return <ForbiddenPage />;
     }
 
@@ -72,7 +78,7 @@ export function RouteRenderer({ item }: RouteRendererProps) {
               <CardTitle>{item.title ?? t('common.loading')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-white/40 p-4 backdrop-blur-xl dark:bg-slate-900/25">
+              <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-surface-secondary p-4 backdrop-blur-xl">
                 {t('route.pluginNotEnabled')}
               </div>
               <div>{t('route.pluginStatusDisabled')}</div>

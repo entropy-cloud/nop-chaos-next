@@ -29,6 +29,7 @@ export const mainAmisDictProvider: AmisDictProvider = {
           data: [],
           dictName,
         },
+        headers: {},
       };
     }
 
@@ -41,6 +42,7 @@ export const mainAmisDictProvider: AmisDictProvider = {
         msg: '',
         data,
       },
+      headers: {},
     };
   },
 };

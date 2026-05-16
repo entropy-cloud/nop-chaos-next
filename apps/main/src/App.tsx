@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { toast } from '@nop-chaos/ui';
 import { setPluginBridge } from '@nop-chaos/plugin-bridge';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { registerBaseSharedModules } from './plugins/sharedModules';
 import { usePluginStore } from './store/pluginStore';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
-import { applyThemeToDocument } from './utils/themeCss';
+import { useSystemDisplayMode } from './hooks/useSystemDisplayMode';
 
 let didRegisterSharedModules = false;
 
@@ -25,9 +25,7 @@ export default function App() {
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending';
   useMenuConfigQuery(isAuthenticated && !bootstrapPending);
 
-  useEffect(() => {
-    applyThemeToDocument(themeConfig);
-  }, [themeConfig]);
+  useSystemDisplayMode(themeConfig);
 
   useEffect(() => {
     if (didRegisterSharedModules) {
@@ -110,7 +108,7 @@ export default function App() {
     [bridgeSnapshot, bridgeStores, location.pathname, navigate, pluginThemeConfig],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setPluginBridge(pluginBridge);
   }, [pluginBridge, bridgeSnapshot]);
 

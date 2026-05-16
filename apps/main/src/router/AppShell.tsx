@@ -56,6 +56,7 @@ export function AppShell() {
   const toggleMenuGroup = useLayoutStore((state) => state.toggleMenuGroup);
   const setWorkspaceFullscreen = useLayoutStore((state) => state.setWorkspaceFullscreen);
   const registerTab = useTabStore((state) => state.openTab);
+  const syncActivePath = useTabStore((state) => state.setActivePath);
   const tabs = useTabManagement();
 
   const menuQuery = useMenuConfigQuery();
@@ -83,6 +84,10 @@ export function AppShell() {
       closable: location.pathname !== '/dashboard',
     });
   }, [currentMenu, location.pathname, registerTab]);
+
+  useEffect(() => {
+    syncActivePath(location.pathname);
+  }, [location.pathname, syncActivePath]);
 
   useEffect(() => {
     const syncFullscreenState = () => {

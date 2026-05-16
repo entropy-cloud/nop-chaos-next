@@ -49,7 +49,7 @@ export function FluxRouteRenderer({ schemaPath, title }: FluxRouteRendererProps)
     void fetchFluxPage(schemaPath, controller.signal)
       .then((value) => {
         setResolvedSchemaPath(schemaPath);
-        setSchema(value as FluxSchema);
+        setSchema(value);
         setError(null);
       })
       .catch((reason: unknown) => {

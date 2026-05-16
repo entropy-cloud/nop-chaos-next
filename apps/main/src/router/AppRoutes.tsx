@@ -25,6 +25,9 @@ function dedupeRoutesByPath(items: ReturnType<typeof flattenMenus>) {
     const normalized = normalizePath(item.path);
 
     if (seenPaths.has(normalized)) {
+      console.warn(
+        `[dedupeRoutesByPath] Duplicate route path "${normalized}" - keeping first registration, discarding route "${item.id}"`,
+      );
       return false;
     }
 
@@ -33,6 +36,12 @@ function dedupeRoutesByPath(items: ReturnType<typeof flattenMenus>) {
   });
 }
 
+// Two-layer permission model (intentional design):
+// 1. Menu filtering: `filterMenusByRoles` removes menu items the user cannot see.
+// 2. Route render guard: `RouteRenderer` checks `usePermissionGuard` before rendering
+//    page content and shows `ForbiddenPage` when access is denied.
+// Both layers operate independently so that direct URL access is still guarded even
+// when a route is not present in the filtered menu.
 export function AppRoutes() {
   const { isAuthenticated, user, bootstrapStatus } = useAuth();
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending';
