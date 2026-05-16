@@ -26,6 +26,24 @@ export interface ShellLoginUiRuntimeConfig {
   showDemoHint?: boolean
 }
 
+/**
+ * ShellRuntimeConfig — the resolved runtime configuration for the host shell.
+ *
+ * This interface is intentionally defined here (rather than in @nop-chaos/shared)
+ * because it represents a **runtime-merged** shape assembled from multiple extension
+ * contributions. It combines branding, login UI, shell settings, and system pages into
+ * a single resolved object via `resolveShellConfig()`.
+ *
+ * Related types in @nop-chaos/shared:
+ * - `ExtensionBranding` — per-extension branding fields (subset of ShellBrandingRuntimeConfig)
+ * - `ExtensionLoginUiFeature` — feature descriptor used in loginUi.features
+ * - `ExtensionSystemPagesConfig` — system page component ID registry
+ * - `LoadedExtension` — the full extension envelope processed at load time
+ *
+ * The separation is deliberate: shared types describe the **input** contract that
+ * extensions must satisfy, while ShellRuntimeConfig describes the **output** shape
+ * the host shell consumes after merging all extensions.
+ */
 export interface ShellRuntimeConfig {
   branding: ShellBrandingRuntimeConfig
   loginUi: ShellLoginUiRuntimeConfig

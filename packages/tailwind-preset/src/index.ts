@@ -52,6 +52,14 @@ export const nopTailwindPreset: Partial<Config> = {
         success: 'hsl(var(--success))',
         warning: 'hsl(var(--warning))',
       },
+      backgroundColor: {
+        surface: 'var(--surface-primary)',
+        'surface-secondary': 'var(--surface-secondary)',
+        'surface-ghost': 'var(--surface-ghost)',
+        'surface-highlight': 'var(--surface-highlight)',
+        'surface-hover': 'var(--surface-hover)',
+        'surface-overlay': 'var(--surface-overlay)',
+      },
       borderRadius: {
         xl: 'var(--radius-xl)',
         lg: 'var(--radius-lg)',
