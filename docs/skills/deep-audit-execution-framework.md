@@ -351,7 +351,7 @@
    c. @nop-chaos/core 只能依赖 @nop-chaos/shared 和 @nop-chaos/ui
    d. @nop-chaos/plugin-bridge 只能依赖 @nop-chaos/shared
    e. @nop-chaos/amis-core 只能依赖 @nop-chaos/shared
-   f. @nop-chaos/amis-react 只能依赖 @nop-chaos/amis-core 和 @nop-chaos/shared
+   f. @nop-chaos/amis-react 只能依赖 @nop-chaos/amis-core、@nop-chaos/shared 和 @nop-chaos/ui（amis-react 使用 ui 组件进行 amis 表单渲染桥接，属于合理架构依赖）
    g. @nop-chaos/theme-tokens 和 @nop-chaos/tailwind-preset 不能依赖任何运行时包
    h. apps/main 可以依赖所有 @nop-chaos/* 包
    i. examples/plugin-demo 只能依赖 peerDependencies 中声明的包

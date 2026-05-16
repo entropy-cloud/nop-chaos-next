@@ -16,7 +16,7 @@
 
 | 文件                                           | 说明                                                                           |
 | ---------------------------------------------- | ------------------------------------------------------------------------------ |
-| `packages/core/src/utils/iconMap.tsx`          | `iconRegistry` 映射、`getIconByName()`/`resolveIcon()`/`renderIcon()` 渲染入口 |
+| `packages/core/src/utils/iconMap.tsx`          | `faNameMap` 统一映射、`getIconByName()`/`resolveIcon()`/`renderIcon()` 渲染入口 |
 | `packages/core/src/components/LowCodeIcon.tsx` | 通用 icon 组件                                                                 |
 | `packages/shared/src/types/icon.ts`            | `AppIconName` 类型定义                                                         |
 
@@ -43,7 +43,7 @@
 
 1. 如果是显式 FontAwesome 形式（如 `fa-house`、`fa fa-house`、`fa-solid fa-gear`）→ 直接按 FontAwesome 渲染
 2. 如果是普通 kebab-case 名称（如 `blocks`、`workflow`）→ 先尝试按 Lucide 图标名渲染
-3. 如果 Lucide 未命中 → 走 FontAwesome alias 与 `iconRegistry` 映射
+3. 如果 Lucide 未命中 → 走 FontAwesome alias 与 `faNameMap` 映射
 4. 无法识别 → 使用 fallback（默认 `home`）
 
 ---
@@ -58,7 +58,7 @@
 - `plug-zap`
 - `settings-2`
 
-说明：标准业务名会经过 `normalizeAppIconName()` 归一化，再由 `iconRegistry` 落到具体实现。
+说明：标准业务名会经过 `normalizeAppIconName()` 归一化，再由 `faNameMap` 落到具体实现。
 
 ### 菜单和低代码
 
