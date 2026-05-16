@@ -45,7 +45,7 @@ export function MainLayout({
       <div
         aria-hidden={!mobileSidebarOpen || workspaceFullscreen}
         className={cn(
-          'fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden',
+          'fixed inset-0 z-40 bg-surface-overlay backdrop-blur-sm transition-opacity duration-300 lg:hidden',
           mobileSidebarOpen && !workspaceFullscreen
             ? 'opacity-100'
             : 'pointer-events-none opacity-0',

@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-[hsl(var(--danger))]/30 bg-white/40 p-8 backdrop-blur-xl dark:bg-slate-900/25">
+        <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-[hsl(var(--danger))]/30 bg-surface-secondary p-8 backdrop-blur-xl">
           <div className="flex flex-col items-center gap-3 text-center">
             <AlertCircle className="h-8 w-8 text-[hsl(var(--danger))]" />
             <p className="text-sm text-[hsl(var(--muted-foreground))]">

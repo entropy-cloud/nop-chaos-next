@@ -1,18 +1,17 @@
 import { cn } from '@nop-chaos/ui';
-import { normalizeAppIconName, type AppIconName } from '@nop-chaos/shared';
-import * as LucideIcons from 'lucide-react';
+import type { AppIconName } from '@nop-chaos/shared';
+import { icons, type LucideIcon } from 'lucide-react';
 import type { HTMLAttributes, JSX } from 'react';
 
 export type AppIconProps = HTMLAttributes<HTMLSpanElement>;
 export type AppIconComponent = (props: AppIconProps) => JSX.Element;
 
-const fontAwesomeAliasMap: Record<string, string> = {
+const faNameMap: Record<string, string> = {
   'badge-help': 'circle-question',
   blocks: 'cubes',
   'book-open-text': 'book-open',
   bot: 'robot',
   chartline: 'chart-line',
-  'line-chart': 'chart-line',
   cog: 'gear',
   cubes: 'cubes',
   database: 'database',
@@ -27,6 +26,7 @@ const fontAwesomeAliasMap: Record<string, string> = {
   language: 'language',
   languages: 'language',
   'layout-dashboard': 'table-columns',
+  'line-chart': 'chart-line',
   list: 'list',
   palette: 'palette',
   'panels-top-left': 'table-cells-large',
@@ -39,41 +39,16 @@ const fontAwesomeAliasMap: Record<string, string> = {
   workflow: 'diagram-project',
 };
 
-export const iconRegistry: Record<AppIconName, string> = {
-  'badge-help': 'circle-question',
-  blocks: 'cubes',
-  'book-open-text': 'book-open',
-  bot: 'robot',
-  database: 'database',
-  edit: 'pen-to-square',
-  'git-branch': 'code-branch',
-  'globe-2': 'globe',
-  home: 'house',
-  languages: 'language',
-  'layout-dashboard': 'table-columns',
-  list: 'list',
-  palette: 'palette',
-  'panels-top-left': 'table-cells-large',
-  'plug-zap': 'plug',
-  puzzle: 'puzzle-piece',
-  'settings-2': 'gear',
-  table: 'table',
-  workflow: 'diagram-project',
-};
-
 function toIconLookupKey(value: string) {
   return value.trim().replace(/\s+/g, '-').replace(/_/g, '-').toLowerCase();
 }
 
 function resolveFontAwesomeName(iconName?: string, fallback: AppIconName = 'home') {
-  const normalizedAppIcon = normalizeAppIconName(iconName);
-
-  if (normalizedAppIcon) {
-    return iconRegistry[normalizedAppIcon];
+  if (!iconName) {
+    return faNameMap[fallback];
   }
-
-  const lookupKey = iconName ? toIconLookupKey(iconName) : '';
-  return (fontAwesomeAliasMap[lookupKey] ?? lookupKey) || iconRegistry[fallback];
+  const lookupKey = toIconLookupKey(iconName);
+  return (faNameMap[lookupKey] ?? lookupKey) || faNameMap[fallback];
 }
 
 function hasFontAwesomeBaseClass(iconName: string) {
@@ -91,11 +66,11 @@ function kebabToPascalCase(str: string): string {
     .join('');
 }
 
-function getLucideIcon(iconName: string): LucideIcons.LucideIcon | null {
+function getLucideIcon(iconName: string): LucideIcon | null {
   const pascalName = kebabToPascalCase(iconName);
-  const icon = (LucideIcons as Record<string, unknown>)[pascalName];
-  if (icon && (typeof icon === 'function' || typeof icon === 'object')) {
-    return icon as LucideIcons.LucideIcon;
+  const icon = (icons as Record<string, LucideIcon>)[pascalName];
+  if (icon) {
+    return icon;
   }
   return null;
 }
@@ -104,7 +79,7 @@ function buildFontAwesomeClassName(iconName?: string, fallback: AppIconName = 'h
   const trimmedIconName = iconName?.trim();
 
   if (!trimmedIconName) {
-    return `fa fa-${iconRegistry[fallback]}`;
+    return `fa fa-${faNameMap[fallback]}`;
   }
 
   if (hasFontAwesomeBaseClass(trimmedIconName)) {
