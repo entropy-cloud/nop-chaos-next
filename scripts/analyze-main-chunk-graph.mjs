@@ -193,7 +193,7 @@ function isIgnorableViolation(sourceChunk, importedChunk) {
   const sourceStem = path.basename(sourceChunk.name, '.js');
   const targetStem = path.basename(importedChunk.name, '.js');
 
-  if (sourceStem.startsWith('host-entry') && targetStem.startsWith('index-')) {
+  if (targetStem.startsWith('index-') && sourceStem.startsWith('host-')) {
     return true;
   }
 

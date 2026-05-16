@@ -26,6 +26,7 @@ const bundle = await rollup({
     'react',
     'react-dom',
     'react/jsx-runtime',
+    'react/jsx-dev-runtime',
     'react-router-dom',
     '@tanstack/react-query',
     'zustand',
