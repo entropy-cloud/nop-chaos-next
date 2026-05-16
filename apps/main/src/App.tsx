@@ -105,14 +105,9 @@ export default function App() {
           unsubscribePlugins();
         };
       },
-      getSnapshot: () => ({
-        i18n,
-        themeConfig: pluginThemeConfig,
-        user: useAuthStore.getState().user,
-        plugins: usePluginStore.getState().plugins,
-      }),
+      getSnapshot: () => bridgeSnapshot,
     }),
-    [bridgeStores, location.pathname, navigate, pluginThemeConfig],
+    [bridgeSnapshot, bridgeStores, location.pathname, navigate, pluginThemeConfig],
   );
 
   useEffect(() => {

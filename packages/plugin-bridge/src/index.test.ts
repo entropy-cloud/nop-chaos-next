@@ -92,10 +92,43 @@ describe('plugin bridge', () => {
 
   it('returns a stable fallback snapshot when bridge is missing', () => {
     const snapshot = getPluginBridgeSnapshot();
+    const nextSnapshot = getPluginBridgeSnapshot();
 
     expect(snapshot.themeConfig.themeId).toBe('classic');
     expect(snapshot.user).toBeNull();
     expect(snapshot.plugins).toEqual([]);
     expect(snapshot.i18n.t('demo.key')).toBe('demo.key');
+    expect(nextSnapshot).toBe(snapshot);
+  });
+
+  it('does not clone bridge snapshots on repeated reads', () => {
+    const snapshot = {
+      i18n: {
+        language: 'en-US',
+        t: (key: string) => key,
+      } as PluginBridge['i18n'],
+      themeConfig: { themeId: 'classic', displayMode: 'light' } as ThemeConfig,
+      user: null,
+      plugins: [],
+    };
+    const bridge = {
+      ...createBridge(),
+      getSnapshot: () => snapshot,
+    } satisfies PluginBridge;
+
+    setPluginBridge(bridge);
+
+    expect(getPluginBridgeSnapshot()).toBe(snapshot);
+    expect(getPluginBridgeSnapshot()).toBe(snapshot);
+  });
+
+  it('returns stable fallback theme and i18n references when bridge is missing', () => {
+    const firstSnapshot = getPluginBridgeSnapshot();
+    const secondSnapshot = getPluginBridgeSnapshot();
+
+    expect(firstSnapshot.themeConfig).toBe(secondSnapshot.themeConfig);
+    expect(firstSnapshot.i18n).toBe(secondSnapshot.i18n);
+    expect(firstSnapshot.themeConfig.themeId).toBe('classic');
+    expect(firstSnapshot.i18n.t('demo.key')).toBe('demo.key');
   });
 });

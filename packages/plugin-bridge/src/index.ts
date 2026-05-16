@@ -6,6 +6,9 @@ import { setPluginBridge, getPluginBridge, subscribePluginBridge, getPluginBridg
 export type { BridgeI18n, BridgeSnapshot, PluginBridge, PluginBridgeNotifications, PluginBridgeNavigateOptions, PluginBridgeStores };
 export { setPluginBridge, getPluginBridge, subscribePluginBridge, getPluginBridgeSnapshot };
 
+const FALLBACK_THEME_CONFIG: ThemeConfig = { themeId: 'classic', displayMode: 'light' };
+const FALLBACK_I18N: BridgeI18n = { language: 'en-US', t: (key: string) => key };
+
 function subscribeBridgeSnapshot(listener: () => void): () => void {
   const unsubscribeBridge = subscribePluginBridge(listener);
   const unsubscribeSnapshot = getPluginBridge()?.subscribe(listener) ?? (() => undefined);
@@ -21,7 +24,7 @@ function subscribeBridgeStore(listener: () => void): () => void {
 }
 
 function getBridgeThemeConfig(): ThemeConfig {
-  return getPluginBridge()?.getSnapshot().themeConfig ?? { themeId: 'classic', displayMode: 'light' };
+  return getPluginBridge()?.getSnapshot().themeConfig ?? FALLBACK_THEME_CONFIG;
 }
 
 function getBridgeUser(): User | null {
@@ -29,7 +32,7 @@ function getBridgeUser(): User | null {
 }
 
 function getBridgeI18n(): BridgeI18n {
-  return getPluginBridge()?.getSnapshot().i18n ?? { language: 'en-US', t: (key: string) => key };
+  return getPluginBridge()?.getSnapshot().i18n ?? FALLBACK_I18N;
 }
 
 export function usePluginBridge(): PluginBridge | undefined {

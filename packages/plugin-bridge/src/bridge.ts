@@ -2,6 +2,12 @@ import type { PluginBridge, BridgeSnapshot } from './types';
 
 const BRIDGE_KEY = '__NOP_PLUGIN_BRIDGE__';
 const BRIDGE_LISTENERS_KEY = '__NOP_PLUGIN_BRIDGE_LISTENERS__';
+const FALLBACK_SNAPSHOT: BridgeSnapshot = {
+  i18n: { language: 'en-US', t: (key: string) => key },
+  themeConfig: { themeId: 'classic', displayMode: 'light' },
+  user: null,
+  plugins: [],
+};
 
 function getHost() {
   return globalThis as typeof globalThis & {
@@ -37,10 +43,5 @@ export function subscribePluginBridge(listener: () => void): () => void {
 }
 
 export function getPluginBridgeSnapshot(): BridgeSnapshot {
-  return getPluginBridge()?.getSnapshot() ?? {
-    i18n: { language: 'en-US', t: (key: string) => key },
-    themeConfig: { themeId: 'classic', displayMode: 'light' },
-    user: null,
-    plugins: [],
-  };
+  return getPluginBridge()?.getSnapshot() ?? FALLBACK_SNAPSHOT;
 }
