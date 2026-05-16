@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { clearStoresCache, render as renderAmis, setDefaultLocale } from 'amis';
+import type { Schema as AmisSchema, RenderOptions } from 'amis-core';
 import {
   bindActions,
   createAmisPageObject,
@@ -119,9 +120,9 @@ export function AmisSchemaPage({
   return (
     <div className="amis">
       {renderAmis(
-        transformedSchema as unknown as never,
-        renderProps as unknown as never,
-        env as unknown as never,
+        transformedSchema as AmisSchema, // safety: schema transformed by our adapter layer
+        renderProps as Parameters<typeof renderAmis>[1], // safety: props shape matches amis RootRenderProps
+        env as RenderOptions, // safety: env constructed with required amis fields
       )}
     </div>
   );
