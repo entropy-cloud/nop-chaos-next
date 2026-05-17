@@ -40,7 +40,7 @@ vi.mock('@nop-chaos/amis-core', () => ({
     if (req.url.startsWith('@query:') || req.url.startsWith('@mutation:')) {
       const colonIdx = req.url.indexOf(':');
       const slashIdx = req.url.indexOf('/');
-      const operationType = req.url.slice(1, colonIdx);
+      const _operationType = req.url.slice(1, colonIdx);
       const action = slashIdx >= 0 ? req.url.slice(colonIdx + 1, slashIdx) : req.url.slice(colonIdx + 1);
       return {
         operationName: action,
@@ -68,7 +68,7 @@ describe('http ajaxFetch/ajaxQuery', () => {
     });
     mockRequest.mockReset();
     mockUnwrapApiPayload.mockReset();
-    mockCreateHttpClient.mockImplementation((config: Record<string, unknown>) => ({
+    mockCreateHttpClient.mockImplementation((_config: Record<string, unknown>) => ({
       request: mockRequest,
     }));
   });
@@ -78,7 +78,7 @@ describe('http ajaxFetch/ajaxQuery', () => {
     mockUnwrapApiPayload.mockImplementation((d: unknown) => (d as Record<string, unknown>).data);
 
     const { ajaxFetch } = await import('./http');
-    const result = await ajaxFetch('/api/test', { method: 'GET' });
+    await ajaxFetch('/api/test', { method: 'GET' });
 
     expect(mockRequest).toHaveBeenCalledOnce();
     const req = mockRequest.mock.calls[0][0];
