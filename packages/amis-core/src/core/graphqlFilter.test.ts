@@ -188,12 +188,13 @@ describe('toFilter', () => {
   });
 
   it('ignores non-object options.filter', () => {
-    const result = toFilter({ filter_name: 'test' }, { filter: 'invalid' as unknown as Record<string, unknown> });
+    const result = toFilter({ filter_name: 'test' }, { url: '', filter: 'invalid' as unknown as Record<string, unknown> });
     expect(result?.$body).toHaveLength(1);
   });
 
   it('filters out non-plain-object entries from $body', () => {
     const options = {
+      url: '',
       filter: {
         $type: 'and',
         $body: [{ $type: 'eq', name: 'ok' }, 'string-entry', 42],
@@ -205,6 +206,7 @@ describe('toFilter', () => {
 
   it('handles options.filter with non-array $body', () => {
     const options = {
+      url: '',
       filter: {
         $type: 'and',
         $body: 'not-an-array',
