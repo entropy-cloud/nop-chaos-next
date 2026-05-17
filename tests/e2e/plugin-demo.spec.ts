@@ -81,8 +81,6 @@ test('plugin demo reuses host navigation and shared shell context with seeded de
     .first()
     .click();
   await expect(page).toHaveURL(/\/plugins\/demo$/);
-  await page.waitForLoadState('networkidle');
-
   await expect(page.locator('main')).not.toContainText('p[1] is not a function');
   await expect(page.getByText('Plugin operations lens')).toBeVisible();
   await expect(page.getByText(/route \/plugins\/demo|路由 \/plugins\/demo/)).toBeVisible();

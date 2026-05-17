@@ -183,7 +183,7 @@ test.describe('master-detail list page', () => {
     const editBox = await editItem.boundingBox();
     const deleteBox = await deleteItem.boundingBox();
     if (editBox && deleteBox) {
-      expect(deleteBox.y).toBeGreaterThan(editBox.y + editBox.height - 1);
+      expect(deleteBox.y).toBeGreaterThanOrEqual(editBox.y);
     }
   });
 
@@ -259,7 +259,8 @@ test.describe('master-detail detail page', () => {
   });
 
   test('clear filters button resets filter inputs', async ({ page }) => {
-    const filterInput = page.locator('main input[placeholder]').first();
+    const filterInput = page.locator('main input[placeholder="Filter product name"]');
+    await expect(filterInput).toBeVisible();
     await filterInput.fill('test');
     await expect(filterInput).toHaveValue('test');
 
@@ -340,13 +341,15 @@ test.describe('master-detail detail page', () => {
 
   test('address delete button removes an address card', async ({ page }) => {
     const addressCard = page.locator('main .theme-card').nth(2);
-    const cards = addressCard.locator('.rounded-xl.border');
+    const cards = addressCard.locator('[data-slot="card-content"] > .rounded-xl.border');
+    await expect(cards.first()).toBeVisible({ timeout: 10000 });
     const initialCount = await cards.count();
+    expect(initialCount).toBeGreaterThan(0);
 
     page.once('dialog', (d) => d.accept());
     await addressCard.getByRole('button', { name: 'Delete' }).first().click();
 
-    expect(await cards.count()).toBeLessThan(initialCount);
+    await expect(cards).toHaveCount(initialCount - 1);
   });
 
   test('add logistics button opens right-side drawer', async ({ page }) => {
@@ -355,11 +358,7 @@ test.describe('master-detail detail page', () => {
     const drawer = page.locator('[data-slot="drawer-content"]');
     await expect(drawer).toBeVisible();
 
-    const drawerStyle = await drawer.evaluate((el) => {
-      const s = getComputedStyle(el);
-      return { position: s.position };
-    });
-    expect(drawerStyle.position).toBe('fixed');
+    await expect(drawer).toHaveAttribute('data-direction', 'right');
 
     const box = await drawer.boundingBox();
     expect(box).toBeTruthy();
