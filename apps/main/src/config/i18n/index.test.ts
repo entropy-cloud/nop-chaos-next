@@ -59,4 +59,24 @@ describe('initializeI18n', () => {
       }),
     );
   });
+
+  it('resets initializationPromise on error', async () => {
+    initMock.mockRejectedValue(new Error('i18n load failed'));
+
+    const { initializeI18n } = await import('./index');
+
+    await expect(initializeI18n()).rejects.toThrow('Failed to initialize i18n resources');
+
+    initMock.mockResolvedValue(undefined);
+
+    await expect(initializeI18n()).resolves.toBeDefined();
+  });
+
+  it('wraps non-Error i18n init failure', async () => {
+    initMock.mockRejectedValue('string error');
+
+    const { initializeI18n } = await import('./index');
+
+    await expect(initializeI18n()).rejects.toThrow('Failed to initialize i18n resources');
+  });
 });

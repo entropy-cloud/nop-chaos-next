@@ -83,4 +83,27 @@ describe('fetchMenuConfig', () => {
 
     runtime.setLoadedExtensions([]);
   });
+
+  it('throws on non-2xx status', async () => {
+    vi.stubEnv('VITE_ENABLE_MOCK', 'true');
+    requestMock.mockResolvedValue({
+      status: 404,
+      data: null,
+    });
+
+    const runtime = await import('@nop-chaos/extension-host');
+    runtime.setLoadedExtensions([]);
+
+    const { fetchMenuConfig } = await import('./menu');
+
+    let thrownError: Error | undefined;
+    const resultPromise = fetchMenuConfig().catch((e: Error) => {
+      thrownError = e;
+    });
+
+    await vi.runAllTimersAsync();
+    await resultPromise;
+
+    expect(thrownError?.message).toBe('Failed to load menu config: 404');
+  });
 });
