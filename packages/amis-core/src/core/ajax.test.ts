@@ -30,21 +30,6 @@ function createTestAdapter(overrides: Record<string, unknown> = {}) {
   };
 }
 
-function mockFetchResponse(body: unknown, status = 200, headers: Record<string, string> = {}) {
-  return vi.fn(async () => {
-    if (typeof body === 'string') {
-      return new Response(body, { status, headers });
-    }
-    if (body instanceof Blob) {
-      return new Response(body, { status, headers });
-    }
-    return new Response(JSON.stringify(body), {
-      status,
-      headers: { 'content-type': 'application/json', ...headers },
-    });
-  });
-}
-
 describe('handleSpecialRequest', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
