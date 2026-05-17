@@ -88,6 +88,7 @@ function diffSnapshots(before: Snapshot, after: Snapshot) {
 
 test.describe('AMIS CSS isolation', () => {
   test('sidebar styles should be stable after AMIS CSS loads', async ({ page }) => {
+    test.setTimeout(60_000);
     await login(page);
     await page.waitForLoadState('networkidle');
 

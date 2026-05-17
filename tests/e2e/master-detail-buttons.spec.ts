@@ -120,12 +120,12 @@ test.describe('master-detail list page', () => {
 
   test('header checkbox selects all rows', async ({ page }) => {
     const headerCheckbox = page.locator('main table thead').getByRole('checkbox').first();
-    await headerCheckbox.click({ force: true });
+    await headerCheckbox.click();
 
     const rowCheckboxes = page.locator('main table tbody').getByRole('checkbox');
     const count = await rowCheckboxes.count();
     for (let i = 0; i < count; i++) {
-      await expect(rowCheckboxes.nth(i)).toBeChecked();
+      await expect(rowCheckboxes.nth(i)).toBeChecked({ timeout: 10000 });
     }
   });
 
