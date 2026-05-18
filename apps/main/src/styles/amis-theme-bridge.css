@@ -152,7 +152,6 @@
   --shadows-shadow-2xl: var(--shadow-xl);
 
   /* ===== 组件级变量覆盖 ===== */
-  --background: hsl(var(--card));
   --Tooltip-bg: hsl(var(--card));
   --Tooltip-boxShadow: var(--shadow-md);
   --Tooltip--attr-bg: hsl(var(--foreground) / 0.9);

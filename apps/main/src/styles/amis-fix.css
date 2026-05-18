@@ -160,7 +160,7 @@ body.is-modalOpened .ant-popover {
 }
 
 .amis-dialog-widget .cxd-Modal-overlay {
-  background: hsl(var(--foreground) / 0.36);
+  background: var(--surface-overlay);
 }
 
 /* ===== 主题适配增强 ===== */

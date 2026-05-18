@@ -31,7 +31,7 @@ function DrawerClose({ ...props }) {
     return _jsx(DrawerPrimitive.Close, { "data-slot": "drawer-close", ...props });
 }
 function DrawerOverlay({ className, ...props }) {
-    return (_jsx(DrawerPrimitive.Backdrop, { "data-slot": "drawer-overlay", className: cn('fixed inset-0 z-40 bg-black/10 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', className), ...props }));
+    return (_jsx(DrawerPrimitive.Backdrop, { "data-slot": "drawer-overlay", className: cn('fixed inset-0 z-40 bg-surface-overlay supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', className), ...props }));
 }
 function DrawerContent({ className, children, showMask = true, ...props }) {
     const { direction } = React.useContext(DrawerContext);

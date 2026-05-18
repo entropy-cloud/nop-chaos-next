@@ -210,7 +210,7 @@ function createIndexTs({
     '  app: {',
     "    defaultLanguage: 'en-US'",
     '  },',
-    '  languages: [',
+    '  supportedLanguages: [',
     '    {',
     "      code: 'fr-FR',",
     "      labelKey: 'settings.languageOptions.frFR'",

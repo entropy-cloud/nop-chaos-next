@@ -36,7 +36,7 @@ function DialogClose({ ...props }) {
 function DialogOverlay({ className, ...props }) {
     const { containerElement } = React.useContext(DialogContext);
     const isContained = containerElement != null;
-    return (_jsx(DialogPrimitive.Backdrop, { "data-slot": "dialog-overlay", className: cn('isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', isContained ? 'absolute inset-0' : 'fixed inset-0', className), ...props }));
+    return (_jsx(DialogPrimitive.Backdrop, { "data-slot": "dialog-overlay", className: cn('isolate z-50 bg-surface-overlay duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', isContained ? 'absolute inset-0' : 'fixed inset-0', className), ...props }));
 }
 const DialogContent = React.forwardRef(function DialogContent({ className, children, showCloseButton = true, offsetRef, baseTransform, size = 'default', ...props }, ref) {
     const { draggable, noOverlay, noCenter, containerElement } = React.useContext(DialogContext);
