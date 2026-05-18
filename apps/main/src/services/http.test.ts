@@ -7,12 +7,16 @@ const mockClearTokens = vi.fn();
 const mockSetTokens = vi.fn();
 const mockGetValidToken = vi.fn();
 const mockUnwrapApiPayload = vi.fn();
+const mockGetAccessToken = vi.fn();
+const mockGetRefreshToken = vi.fn();
 
 vi.mock('@nop-chaos/shared', () => ({
   createHttpClient: (...args: unknown[]) => mockCreateHttpClient(...args),
   setRefreshTokenFetcher: (...args: unknown[]) => mockSetRefreshTokenFetcher(...args),
   clearTokens: (...args: unknown[]) => mockClearTokens(...args),
   setTokens: (...args: unknown[]) => mockSetTokens(...args),
+  getAccessToken: (...args: unknown[]) => mockGetAccessToken(...args),
+  getRefreshToken: (...args: unknown[]) => mockGetRefreshToken(...args),
   getValidToken: (...args: unknown[]) => mockGetValidToken(...args),
   unwrapApiPayload: (...args: unknown[]) => mockUnwrapApiPayload(...args),
 }));
@@ -36,6 +40,11 @@ describe('http', () => {
   let capturedConfig: any;
 
   beforeEach(() => {
+    mockCreateHttpClient.mockReset();
+    mockClearTokens.mockReset();
+    mockSetTokens.mockReset();
+    mockGetValidToken.mockReset();
+    mockUnwrapApiPayload.mockReset();
     useAuthStore.setState({
       user: null,
       isAuthenticated: false,
@@ -43,6 +52,10 @@ describe('http', () => {
       tokens: undefined,
       bootstrapStatus: 'idle',
     });
+    mockGetAccessToken.mockReset();
+    mockGetRefreshToken.mockReset();
+    mockGetAccessToken.mockImplementation(() => useAuthStore.getState().token);
+    mockGetRefreshToken.mockImplementation(() => useAuthStore.getState().tokens?.refreshToken);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockCreateHttpClient.mockImplementation((config: any) => {
       capturedConfig = config;
@@ -65,7 +78,7 @@ describe('http', () => {
     expect(mockSetRefreshTokenFetcher).toHaveBeenCalledOnce();
   });
 
-  it('getAuthToken reads from auth store', async () => {
+  it('getAuthToken reads from managed token storage', async () => {
     await import('./http');
     useAuthStore.getState().setUser({ id: '1', username: 'test', roles: [] });
     useAuthStore.getState().setTokens('my-auth-token');
@@ -74,7 +87,7 @@ describe('http', () => {
     expect(token).toBe('my-auth-token');
   });
 
-  it('getRefreshToken reads from auth store tokens', async () => {
+  it('getRefreshToken reads from managed token storage', async () => {
     await import('./http');
     useAuthStore.getState().setUser({ id: '1', username: 'test', roles: [] });
     useAuthStore.getState().setTokens('tok', 'rt-456', 3600, 86400);
@@ -107,7 +120,6 @@ describe('http', () => {
     const result = await capturedConfig.refreshAccessToken();
 
     expect(result).toBe('new-access');
-    expect(mockSetTokens).toHaveBeenCalled();
     expect(useAuthStore.getState().token).toBe('new-access');
   });
 
@@ -149,7 +161,7 @@ describe('http', () => {
 
     capturedConfig.onUnauthorized();
 
-    expect(mockClearTokens).toHaveBeenCalled();
+    expect(mockClearTokens).toHaveBeenCalledTimes(1);
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
     expect(useAuthStore.getState().bootstrapStatus).toBe('anonymous');
   });

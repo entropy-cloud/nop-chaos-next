@@ -49,6 +49,11 @@ export function removeStorageItem(key: string, scope: StorageScope = DEFAULT_STO
 
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (event) => {
+    if (event.key === null) {
+      storageCache.clear();
+      return;
+    }
+
     if (event.key) {
       storageCache.delete(`local:${event.key}`);
       storageCache.delete(`session:${event.key}`);

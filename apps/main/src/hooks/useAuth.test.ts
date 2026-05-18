@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { getAccessToken } from '@nop-chaos/shared';
 import { useAuthStore } from '../store/authStore';
+import { restoreAuthSession } from './useAuth';
 
 const mockFetchCurrentUser = vi.fn();
 const mockToastError = vi.fn();
@@ -62,39 +64,8 @@ describe('useAuthBootstrap logic (store-level)', () => {
     mockToastError.mockReset();
   });
 
-  async function simulateBootstrap() {
-    const mod = await import('../services/authApi');
-    const i18n = (await import('../config/i18n')).default;
-    const { toast } = await import('@nop-chaos/ui');
-
-    const state = useAuthStore.getState();
-
-    if (!state.token) {
-      state.setBootstrapStatus('anonymous');
-      return;
-    }
-
-    try {
-      state.setBootstrapStatus('pending');
-      const currentUser = await mod.fetchCurrentUser(state.token);
-      useAuthStore.getState().setSession({
-        user: currentUser,
-        token: state.token,
-        tokens: state.tokens,
-      });
-    } catch (error: unknown) {
-      useAuthStore.getState().logout();
-      useAuthStore.getState().setBootstrapStatus('error');
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : i18n.t('auth.bootstrapFailed', 'Unable to restore your session.'),
-      );
-    }
-  }
-
   it('sets anonymous when no token exists', async () => {
-    await simulateBootstrap();
+    await restoreAuthSession();
     expect(useAuthStore.getState().bootstrapStatus).toBe('anonymous');
   });
 
@@ -103,9 +74,9 @@ describe('useAuthBootstrap logic (store-level)', () => {
     mockFetchCurrentUser.mockResolvedValue(mockUser);
     useAuthStore.setState({ token: 'valid-token', tokens: { accessToken: 'valid-token' } });
 
-    await simulateBootstrap();
+    await restoreAuthSession();
 
-    expect(mockFetchCurrentUser).toHaveBeenCalledWith('valid-token');
+    expect(mockFetchCurrentUser).toHaveBeenCalledWith();
     const state = useAuthStore.getState();
     expect(state.user?.username).toBe('bootuser');
     expect(state.isAuthenticated).toBe(true);
@@ -116,7 +87,7 @@ describe('useAuthBootstrap logic (store-level)', () => {
     mockFetchCurrentUser.mockRejectedValue(new Error('Network error'));
     useAuthStore.setState({ token: 'bad-token' });
 
-    await simulateBootstrap();
+    await restoreAuthSession();
 
     const state = useAuthStore.getState();
     expect(state.isAuthenticated).toBe(false);
@@ -129,7 +100,7 @@ describe('useAuthBootstrap logic (store-level)', () => {
     mockFetchCurrentUser.mockRejectedValue('string-error');
     useAuthStore.setState({ token: 'bad-token' });
 
-    await simulateBootstrap();
+    await restoreAuthSession();
 
     expect(mockToastError).toHaveBeenCalledWith('Unable to restore your session.');
   });
@@ -138,9 +109,33 @@ describe('useAuthBootstrap logic (store-level)', () => {
     mockFetchCurrentUser.mockResolvedValue({ id: 'x', username: 'x', roles: [] });
     useAuthStore.setState({ token: 'tok' });
 
-    await simulateBootstrap();
+    await restoreAuthSession();
 
     expect(useAuthStore.getState().bootstrapStatus).toBe('ready');
+  });
+
+  it('ignores stale bootstrap responses after token ownership changes', async () => {
+    let resolveUser: ((value: { id: string; username: string; roles: string[] }) => void) | undefined;
+    mockFetchCurrentUser.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveUser = resolve;
+        }),
+    );
+
+    useAuthStore.setState({
+      token: 'original-token',
+      tokens: { accessToken: 'original-token', refreshToken: 'original-refresh' },
+    });
+
+    const restorePromise = restoreAuthSession();
+    useAuthStore.getState().setTokens('next-token', 'next-refresh', 3600, 7200);
+    resolveUser?.({ id: 'u1', username: 'stale-user', roles: ['admin'] });
+    await restorePromise;
+
+    const state = useAuthStore.getState();
+    expect(state.user).toBeNull();
+    expect(state.token).toBe('next-token');
   });
 });
 
@@ -164,5 +159,15 @@ describe('useAuth hook', () => {
 
     expect(typeof state.login).toBe('function');
     expect(typeof state.logout).toBe('function');
+  });
+
+  it('keeps shared token manager synchronized through store writes', () => {
+    useAuthStore.getState().setUser({ id: '1', username: 'test', roles: [] });
+    useAuthStore.getState().setTokens('sync-token', 'sync-refresh', 3600, 7200);
+
+    expect(getAccessToken()).toBe('sync-token');
+
+    useAuthStore.getState().clearTokens();
+    expect(getAccessToken()).toBeUndefined();
   });
 });

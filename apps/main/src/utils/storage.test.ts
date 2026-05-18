@@ -15,6 +15,9 @@ function createStorageMock() {
     removeItem(key: string) {
       store.delete(key);
     },
+    clear() {
+      store.clear();
+    },
   };
 }
 
@@ -41,6 +44,16 @@ describe('storage scope contract', () => {
   it('removes the targeted scoped value', () => {
     setStorageItem('plugin-state', 'local-value', 'local');
     removeStorageItem('plugin-state', 'local');
+
+    expect(getStorageItem('plugin-state', 'local')).toBeNull();
+  });
+
+  it('clears the in-memory cache when storage is cleared in another tab', () => {
+    setStorageItem('plugin-state', 'cached-value', 'local');
+    expect(getStorageItem('plugin-state', 'local')).toBe('cached-value');
+
+    localStorage.clear();
+    window.dispatchEvent(new StorageEvent('storage', { key: null, storageArea: localStorage }));
 
     expect(getStorageItem('plugin-state', 'local')).toBeNull();
   });

@@ -7,7 +7,11 @@ import type {
   User,
   AuthTokens,
 } from '@nop-chaos/shared';
-import { clearTokens as clearManagedTokens, getAuthConfig, setTokens as setManagedTokens } from '@nop-chaos/shared';
+import {
+  clearTokens as clearManagedTokens,
+  getAuthConfig,
+  setTokens as setManagedTokens,
+} from '@nop-chaos/shared';
 import { APP_STORAGE_KEYS } from '../constants/storage';
 
 interface AuthStore extends AuthState {
@@ -51,6 +55,22 @@ function getStorageType(): 'sessionStorage' | 'localStorage' {
   return 'sessionStorage';
 }
 
+function syncManagedAuthTokens(token?: string, tokens?: AuthTokens) {
+  const accessToken = tokens?.accessToken ?? token;
+
+  if (!accessToken) {
+    clearManagedTokens();
+    return;
+  }
+
+  setManagedTokens(
+    accessToken,
+    tokens?.refreshToken,
+    toExpiresIn(tokens?.expiresAt),
+    toExpiresIn(tokens?.refreshExpiresAt),
+  );
+}
+
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
@@ -59,16 +79,7 @@ export const useAuthStore = create<AuthStore>()(
       setBootstrapStatus: (bootstrapStatus) => set({ bootstrapStatus }),
       login: ({ user, token, tokens }) =>
         set(() => {
-          if (tokens) {
-            setManagedTokens(
-              tokens.accessToken,
-              tokens.refreshToken,
-              toExpiresIn(tokens.expiresAt),
-              toExpiresIn(tokens.refreshExpiresAt),
-            );
-          } else if (token) {
-            setManagedTokens(token);
-          }
+          syncManagedAuthTokens(token, tokens);
 
           return {
             user,
@@ -79,12 +90,16 @@ export const useAuthStore = create<AuthStore>()(
           };
         }),
       setSession: ({ user, token, tokens }) =>
-        set({
-          user,
-          token,
-          tokens,
-          isAuthenticated: true,
-          bootstrapStatus: 'ready',
+        set(() => {
+          syncManagedAuthTokens(token, tokens);
+
+          return {
+            user,
+            token,
+            tokens,
+            isAuthenticated: true,
+            bootstrapStatus: 'ready',
+          };
         }),
       setUser: (user) =>
         set((state) => ({
@@ -92,16 +107,26 @@ export const useAuthStore = create<AuthStore>()(
           isAuthenticated: Boolean(user && state.token),
         })),
       setToken: (token) =>
-        set((state) => ({
-          token,
-          tokens: state.tokens
-            ? {
-                ...state.tokens,
-                accessToken: token ?? state.tokens.accessToken,
-              }
-            : state.tokens,
-          isAuthenticated: Boolean(state.user && token),
-        })),
+        set((state) => {
+          const nextTokens = token
+            ? state.tokens
+              ? {
+                  ...state.tokens,
+                  accessToken: token,
+                }
+              : {
+                  accessToken: token,
+                }
+            : undefined;
+
+          syncManagedAuthTokens(token, nextTokens);
+
+          return {
+            token,
+            tokens: nextTokens,
+            isAuthenticated: Boolean(state.user && token),
+          };
+        }),
       setTokens: (accessToken, refreshToken?, expiresIn?, refreshExpiresIn?) => {
         const now = Date.now();
         const tokens: AuthTokens = {
@@ -110,6 +135,7 @@ export const useAuthStore = create<AuthStore>()(
           refreshToken,
           refreshExpiresAt: refreshExpiresIn ? now + refreshExpiresIn * 1000 : undefined,
         };
+        syncManagedAuthTokens(accessToken, tokens);
         set((state) => ({
           token: accessToken,
           tokens,
@@ -117,12 +143,14 @@ export const useAuthStore = create<AuthStore>()(
         }));
       },
       getRefreshToken: () => get().tokens?.refreshToken,
-      clearTokens: () =>
+      clearTokens: () => {
+        clearManagedTokens();
         set({
           token: undefined,
           tokens: undefined,
           isAuthenticated: false,
-        }),
+        });
+      },
       logout: () =>
         set(() => {
           clearManagedTokens();
@@ -158,6 +186,9 @@ export const useAuthStore = create<AuthStore>()(
           }
         }
         return result;
+      },
+      onRehydrateStorage: () => (state) => {
+        syncManagedAuthTokens(state?.token, state?.tokens);
       },
     },
   ),

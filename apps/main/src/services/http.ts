@@ -1,10 +1,10 @@
 import type { AmisRequestOptions } from '@nop-chaos/amis-core';
 import {
-  clearTokens as clearManagedTokens,
   createHttpClient,
+  getAccessToken,
+  getRefreshToken as getManagedRefreshToken,
   getValidToken,
   setRefreshTokenFetcher,
-  setTokens as setManagedTokens,
   unwrapApiPayload,
 } from '@nop-chaos/shared';
 import i18n from '../config/i18n';
@@ -52,12 +52,6 @@ async function refreshWithStore(refreshToken: string) {
     refreshed.expiresIn,
     refreshed.refreshExpiresIn,
   );
-  setManagedTokens(
-    refreshed.accessToken,
-    refreshed.refreshToken ?? refreshToken,
-    refreshed.expiresIn,
-    refreshed.refreshExpiresIn,
-  );
   return refreshed;
 }
 
@@ -67,11 +61,11 @@ export const mainHttpClient = createHttpClient({
   getBaseUrl: getApiBaseUrl,
   getLocale: getLocaleHeader,
   getTimeoutMs: () => 15_000,
-  getAuthToken: () => useAuthStore.getState().token,
-  getRefreshToken: () => useAuthStore.getState().tokens?.refreshToken,
+  getAuthToken: () => getAccessToken(),
+  getRefreshToken: () => getManagedRefreshToken(),
   getValidToken,
   refreshAccessToken: async () => {
-    const refreshToken = useAuthStore.getState().tokens?.refreshToken;
+    const refreshToken = getManagedRefreshToken();
 
     if (!refreshToken) {
       throw new Error('No refresh token available');
@@ -86,11 +80,9 @@ export const mainHttpClient = createHttpClient({
     }
   },
   clearTokens: () => {
-    clearManagedTokens();
     useAuthStore.getState().clearTokens();
   },
   onUnauthorized: () => {
-    clearManagedTokens();
     useAuthStore.getState().logout();
   },
 });

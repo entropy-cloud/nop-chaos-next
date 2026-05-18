@@ -6,7 +6,55 @@ import { useAuthStore } from '../store/authStore';
 
 const authBootstrapState = {
   didBootstrapAuth: false,
+  activeRequestId: 0,
 };
+
+function getAuthOwnershipKey() {
+  const state = useAuthStore.getState();
+  return state.tokens?.refreshToken ?? state.token;
+}
+
+export async function restoreAuthSession() {
+  const state = useAuthStore.getState();
+
+  if (!state.token) {
+    state.setBootstrapStatus('anonymous');
+    return;
+  }
+
+  const requestId = ++authBootstrapState.activeRequestId;
+  const ownershipKey = getAuthOwnershipKey();
+
+  try {
+    state.setBootstrapStatus('pending');
+    const currentUser = await fetchCurrentUser();
+    const nextState = useAuthStore.getState();
+
+    if (authBootstrapState.activeRequestId !== requestId || getAuthOwnershipKey() !== ownershipKey) {
+      return;
+    }
+
+    nextState.setSession({
+      user: currentUser,
+      token: nextState.token ?? state.token,
+      tokens: nextState.tokens,
+    });
+  } catch (error: unknown) {
+    const nextState = useAuthStore.getState();
+
+    if (authBootstrapState.activeRequestId !== requestId || getAuthOwnershipKey() !== ownershipKey) {
+      return;
+    }
+
+    nextState.logout();
+    nextState.setBootstrapStatus('error');
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : i18n.t('auth.bootstrapFailed', 'Unable to restore your session.'),
+    );
+  }
+}
 
 export function useAuth() {
   const user = useAuthStore((state) => state.user);
@@ -31,34 +79,7 @@ export function useAuthBootstrap() {
 
     authBootstrapState.didBootstrapAuth = true;
 
-    const bootstrap = async () => {
-      const state = useAuthStore.getState();
-
-      if (!state.token) {
-        state.setBootstrapStatus('anonymous');
-        return;
-      }
-
-      try {
-        state.setBootstrapStatus('pending');
-        const currentUser = await fetchCurrentUser(state.token);
-        useAuthStore.getState().setSession({
-          user: currentUser,
-          token: state.token,
-          tokens: state.tokens,
-        });
-      } catch (error: unknown) {
-        useAuthStore.getState().logout();
-        useAuthStore.getState().setBootstrapStatus('error');
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : i18n.t('auth.bootstrapFailed', 'Unable to restore your session.'),
-        );
-      }
-    };
-
-    void bootstrap();
+    void restoreAuthSession();
   }, []);
 
   return { isAuthenticated, bootstrapStatus, user };

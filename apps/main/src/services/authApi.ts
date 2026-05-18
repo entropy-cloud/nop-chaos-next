@@ -89,7 +89,7 @@ export async function fetchCurrentUser(token?: string): Promise<User> {
       accessToken: token,
     },
     {
-      withAuth: false,
+      withAuth: token ? false : undefined,
       headers: buildTokenHeaders(token),
     },
   );

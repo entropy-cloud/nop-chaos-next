@@ -94,6 +94,38 @@ describe('authStore', () => {
     expect(state.token).toBeUndefined();
     expect(state.tokens).toBeUndefined();
     expect(state.isAuthenticated).toBe(false);
+    expect(mockClearTokens).toHaveBeenCalledTimes(1);
+  });
+
+  it('setSession syncs managed tokens', () => {
+    useAuthStore.getState().setSession({
+      user: { id: '1', username: 'test', roles: ['admin'] },
+      token: 'session-token',
+      tokens: {
+        accessToken: 'session-token',
+        refreshToken: 'refresh-token',
+        expiresAt: Date.now() + 3600_000,
+        refreshExpiresAt: Date.now() + 7200_000,
+      },
+    });
+
+    expect(mockSetTokens).toHaveBeenCalledWith(
+      'session-token',
+      'refresh-token',
+      expect.any(Number),
+      expect.any(Number),
+    );
+  });
+
+  it('setToken creates tokens when store only has bare token mirror', () => {
+    useAuthStore.getState().setUser({ id: '1', username: 'test', roles: [] });
+
+    useAuthStore.getState().setToken('header-token');
+
+    const state = useAuthStore.getState();
+    expect(state.token).toBe('header-token');
+    expect(state.tokens?.accessToken).toBe('header-token');
+    expect(mockSetTokens).toHaveBeenCalledWith('header-token', undefined, undefined, undefined);
   });
 
   it('getRefreshToken returns undefined when no tokens', () => {
