@@ -5,6 +5,7 @@ vi.mock('@nop-chaos/extension-host', () => ({
   getShellRuntimeConfig: () => ({
     branding: { name: 'Test', shortName: 'T' },
     loginUi: { features: [] },
+    shell: { helpUrl: '/help', aboutUrl: '/about', supportUrl: '/support' },
     systemPages: {},
   }),
 }));
@@ -27,5 +28,6 @@ describe('useShellConfig', () => {
     const { useShellConfig } = await import('./useShellConfig');
     const config = useShellConfig();
     expect(config.branding.name).toBe('Test');
+    expect(config.shell.helpUrl).toBe('/help');
   });
 });

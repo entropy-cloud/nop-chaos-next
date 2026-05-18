@@ -1,5 +1,5 @@
-import { getDefaultThemeId, hasRegisteredTheme } from '../config/themeRegistry';
 import { normalizeThemeId, type DisplayMode, type ThemeConfig } from '@nop-chaos/shared';
+import { resolveThemeConfig } from '../config/themeResolution';
 
 export function resolveDisplayMode(mode: DisplayMode): 'light' | 'dark' {
   if (mode === 'system') {
@@ -11,11 +11,10 @@ export function resolveDisplayMode(mode: DisplayMode): 'light' | 'dark' {
 
 export function applyThemeToDocument(themeConfig: ThemeConfig): void {
   const root = document.documentElement;
-  const resolvedMode = resolveDisplayMode(themeConfig.displayMode);
   const normalizedThemeId = normalizeThemeId(themeConfig.themeId);
-  const resolvedThemeId = hasRegisteredTheme(normalizedThemeId)
-    ? normalizedThemeId
-    : getDefaultThemeId();
+  const resolvedThemeConfig = resolveThemeConfig(themeConfig);
+  const resolvedMode = resolveDisplayMode(resolvedThemeConfig.displayMode);
+  const resolvedThemeId = resolvedThemeConfig.themeId;
 
   if (import.meta.env.DEV && resolvedThemeId !== normalizedThemeId) {
     console.warn(

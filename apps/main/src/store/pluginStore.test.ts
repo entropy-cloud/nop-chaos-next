@@ -74,4 +74,41 @@ describe('pluginStore', () => {
     const updated = usePluginStore.getState().plugins.find((p) => p.id === 'test-plugin');
     expect(updated?.enabled).toBe(false);
   });
+
+  it('merges persisted plugins on top of the current plugin baseline by id', async () => {
+    localStorageMock.setItem(
+      'plugins:v1',
+      JSON.stringify({
+        state: {
+          plugins: [makePlugin({ id: 'test-plugin', enabled: false, name: 'Persisted name' })],
+        },
+        version: 0,
+      }),
+    );
+
+    const { usePluginStore } = await import('./pluginStore');
+
+    expect(usePluginStore.getState().plugins).toEqual([
+      expect.objectContaining({ id: 'test-plugin', enabled: false, name: 'Persisted name' }),
+    ]);
+  });
+
+  it('keeps current baseline plugins when persisted storage adds new ids', async () => {
+    localStorageMock.setItem(
+      'plugins:v1',
+      JSON.stringify({
+        state: {
+          plugins: [makePlugin({ id: 'extension-plugin', name: 'Extension plugin' })],
+        },
+        version: 0,
+      }),
+    );
+
+    const { usePluginStore } = await import('./pluginStore');
+
+    expect(usePluginStore.getState().plugins.map((plugin) => plugin.id)).toEqual([
+      'test-plugin',
+      'extension-plugin',
+    ]);
+  });
 });

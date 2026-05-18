@@ -1,13 +1,16 @@
 import type { ReactNode } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { MenuItem } from '@nop-chaos/shared';
 
-import { RouteRenderer } from './RouteRenderer';
+import { RouteRenderer, resolvePluginManifest } from './RouteRenderer';
+
+const pluginSlotMock = vi.fn(({ url }: { url: string }) => <div>Plugin slot: {url}</div>);
+let pluginsState: Array<{ id: string; url: string; enabled: boolean }> = [];
 
 vi.mock('@nop-chaos/core', () => ({
   ErrorBoundary: ({ children }: { children: ReactNode }) => children,
-  PluginSlot: () => null,
+  PluginSlot: (props: { url: string }) => pluginSlotMock(props),
   usePermissionGuard: () => true,
 }));
 
@@ -33,7 +36,8 @@ vi.mock('../plugins/sharedModules', () => ({
 }));
 
 vi.mock('../store/pluginStore', () => ({
-  usePluginStore: (selector: (state: { plugins: Array<never> }) => unknown) => selector({ plugins: [] }),
+  usePluginStore: (selector: (state: { plugins: Array<{ id: string; url: string; enabled: boolean }> }) => unknown) =>
+    selector({ plugins: pluginsState }),
 }));
 
 vi.mock('./pageRegistry', () => ({
@@ -41,17 +45,6 @@ vi.mock('./pageRegistry', () => ({
   ServerErrorPage: () => <div>Server error</div>,
   getBuiltinPage: () => null,
 }));
-
-function resolvePluginManifest(
-  item: MenuItem,
-  plugins: Array<{ id: string; url: string; enabled: boolean }>,
-) {
-  return (
-    plugins.find((plugin) => plugin.id === item.componentId) ??
-    plugins.find((plugin) => plugin.id === item.id) ??
-    plugins.find((plugin) => plugin.url === item.pluginUrl)
-  );
-}
 
 describe('resolvePluginManifest', () => {
   const plugins = [
@@ -94,6 +87,11 @@ describe('resolvePluginManifest', () => {
 });
 
 describe('RouteRenderer iframe security', () => {
+  beforeEach(() => {
+    pluginsState = [];
+    pluginSlotMock.mockClear();
+  });
+
   it('renders iframe routes with the fixed sandbox allowlist', () => {
     const markup = renderToStaticMarkup(
       <RouteRenderer
@@ -110,5 +108,49 @@ describe('RouteRenderer iframe security', () => {
 
     expect(markup).toContain('sandbox="allow-scripts allow-same-origin allow-forms allow-popups"');
     expect(markup).toContain('src="https://example.com/embed"');
+  });
+
+  it('resolves extension-registered plugin manifests for plugin routes', () => {
+    pluginsState = [{ id: 'plugin-demo', url: '/plugins/plugin-demo.system.js', enabled: true }];
+
+    const markup = renderToStaticMarkup(
+      <RouteRenderer
+        item={{
+          id: 'plugins-demo-menu',
+          title: 'Plugin Demo',
+          path: '/plugins/demo',
+          pageType: 'plugin',
+          icon: 'puzzle',
+          componentId: 'plugin-demo',
+          pluginUrl: '/plugins/plugin-demo.system.js',
+        }}
+      />,
+    );
+
+    expect(markup).toContain('Plugin slot: /plugins/plugin-demo.system.js');
+    expect(pluginSlotMock).toHaveBeenCalledWith(
+      expect.objectContaining({ url: '/plugins/plugin-demo.system.js' }),
+    );
+  });
+
+  it('shows the disabled state when the matched plugin manifest is not enabled', () => {
+    pluginsState = [{ id: 'plugin-demo', url: '/plugins/plugin-demo.system.js', enabled: false }];
+
+    const markup = renderToStaticMarkup(
+      <RouteRenderer
+        item={{
+          id: 'plugins-demo-menu',
+          title: 'Plugin Demo',
+          path: '/plugins/demo',
+          pageType: 'plugin',
+          icon: 'puzzle',
+          componentId: 'plugin-demo',
+          pluginUrl: '/plugins/plugin-demo.system.js',
+        }}
+      />,
+    );
+
+    expect(markup).toContain('route.pluginNotEnabled');
+    expect(markup).toContain('route.pluginStatusDisabled');
   });
 });

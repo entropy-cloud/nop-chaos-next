@@ -8,7 +8,7 @@ export function useMenuConfigQuery(enabled = true) {
   const token = useAuthStore((state) => state.token);
 
   return useQuery<MenuResponse>({
-    queryKey: ['menus', userId ?? 'anonymous', token ? 'token' : 'no-token'],
+    queryKey: ['menus', userId ?? 'anonymous', token ?? 'no-token'],
     queryFn: fetchMenuConfig,
     enabled,
     staleTime: 5 * 60 * 1000,

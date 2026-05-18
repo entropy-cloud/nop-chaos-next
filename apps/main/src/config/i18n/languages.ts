@@ -47,6 +47,11 @@ export function replaceLanguages(languages: LanguageOption[]): void {
   languageRegistry.push(...languages);
 }
 
+export function resetLanguages(): void {
+  languageRegistry.length = 0;
+  languageRegistry.push(...defaultLanguageOptions);
+}
+
 export function getLanguageOptions(): LanguageOption[] {
   return [...languageRegistry];
 }

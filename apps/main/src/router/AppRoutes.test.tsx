@@ -7,6 +7,14 @@ import { MemoryRouter, Outlet } from 'react-router-dom';
 import type { MenuResponse } from '@nop-chaos/shared';
 
 import { AppRoutes } from './AppRoutes';
+import * as homePath from '../config/homePath';
+
+const mockGetSystemPage = vi.fn();
+const authState = {
+  isAuthenticated: true,
+  user: { roles: ['viewer'] },
+  bootstrapStatus: 'ready',
+};
 
 const menuResponse: MenuResponse = {
   home: '/dashboard',
@@ -42,11 +50,7 @@ const menuResponse: MenuResponse = {
 };
 
 vi.mock('../hooks/useAuth', () => ({
-  useAuth: () => ({
-    isAuthenticated: true,
-    user: { roles: ['viewer'] },
-    bootstrapStatus: 'ready',
-  }),
+  useAuth: () => authState,
 }));
 
 vi.mock('../hooks/useMenuConfig', () => ({
@@ -76,7 +80,7 @@ vi.mock('./pageRegistry', () => ({
   LoginPage: () => <div>Login page</div>,
   NotFoundPage: () => <div>Not found page</div>,
   ServerErrorPage: () => <div>Server error page</div>,
-  getSystemPage: () => undefined,
+  getSystemPage: (...args: unknown[]) => mockGetSystemPage(...args),
 }));
 
 describe('AppRoutes permission layering', () => {
@@ -84,6 +88,10 @@ describe('AppRoutes permission layering', () => {
   let root: ReturnType<typeof createRoot>;
 
   beforeEach(() => {
+    mockGetSystemPage.mockReset();
+    authState.isAuthenticated = true;
+    authState.user = { roles: ['viewer'] };
+    authState.bootstrapStatus = 'ready';
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
@@ -118,5 +126,72 @@ describe('AppRoutes permission layering', () => {
     expect(container.textContent).toContain('Shell');
     expect(container.textContent).toContain('Forbidden route: /plugins/management');
     expect(container.textContent).not.toContain('Not found page');
+  });
+
+  it('uses the canonical home path for authenticated redirects after menu resolution', async () => {
+    const previousHome = menuResponse.home;
+    menuResponse.home = '/plugins/management';
+    try {
+      const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+      await act(async () => {
+        root.render(
+          <QueryClientProvider client={queryClient}>
+            <MemoryRouter initialEntries={['/auth/login']}>
+              <AppRoutes />
+            </MemoryRouter>
+          </QueryClientProvider>,
+        );
+      });
+
+      expect(container.textContent).toContain('Shell');
+      expect(container.textContent).toContain('Allowed route: /dashboard');
+      expect(homePath.getCurrentHomePath()).toBe('/dashboard');
+    } finally {
+      menuResponse.home = previousHome;
+    }
+  });
+
+  it('uses system page overrides for login and not-found routes', async () => {
+    mockGetSystemPage.mockImplementation((key: string) => {
+      if (key === 'login') {
+        return () => <div>Custom login page</div>;
+      }
+
+      if (key === 'notFound') {
+        return () => <div>Custom not-found page</div>;
+      }
+
+      return undefined;
+    });
+
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+    await act(async () => {
+      root.render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter initialEntries={['/missing']}> 
+            <AppRoutes />
+          </MemoryRouter>
+        </QueryClientProvider>,
+      );
+    });
+
+    expect(container.textContent).toContain('Custom not-found page');
+
+    authState.isAuthenticated = false;
+
+    await act(async () => {
+      root.render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter initialEntries={['/auth/login']}>
+            <AppRoutes />
+          </MemoryRouter>
+        </QueryClientProvider>,
+      );
+    });
+
+    expect(container.textContent).toContain('Custom login page');
+    expect(mockGetSystemPage).toHaveBeenCalledWith('login');
   });
 });

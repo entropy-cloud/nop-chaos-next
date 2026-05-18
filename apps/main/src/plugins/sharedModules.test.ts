@@ -1,12 +1,18 @@
 // @vitest-environment node
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   registerHostSharedModules,
   registerBaseSharedModules,
   ensurePluginSharedModules,
+  resetSharedModulesForTests,
+  setPluginExtraModulesLoaderForTests,
 } from './sharedModules';
 
 describe('sharedModules', () => {
+  beforeEach(() => {
+    resetSharedModulesForTests();
+  });
+
   it('registerHostSharedModules populates __NOP_SHARED__', () => {
     delete globalThis.__NOP_SHARED__;
     registerHostSharedModules();
@@ -15,6 +21,7 @@ describe('sharedModules', () => {
     expect(globalThis.__NOP_SHARED__!.react).toBeDefined();
     expect(globalThis.__NOP_SHARED__!['@nop-chaos/shared']).toBeDefined();
     expect(globalThis.__NOP_SHARED__!.zustand).toBeDefined();
+    expect(globalThis.__NOP_SHARED__!['@nop-chaos/shared']).not.toHaveProperty('setRefreshTokenFetcher');
   });
 
   it('registerHostSharedModules merges with existing entries', () => {
@@ -44,4 +51,28 @@ describe('sharedModules', () => {
 
     expect(globalThis.__NOP_SHARED__!.recharts).toBeDefined();
   }, 30000);
+
+  it('deduplicates concurrent plugin extra module loads', async () => {
+    const loader = vi.fn(async () => ({ marker: 'recharts' } as never));
+    setPluginExtraModulesLoaderForTests(loader);
+
+    await Promise.all([ensurePluginSharedModules(), ensurePluginSharedModules(), ensurePluginSharedModules()]);
+
+    expect(loader).toHaveBeenCalledTimes(1);
+    expect(globalThis.__NOP_SHARED__!.recharts).toEqual({ marker: 'recharts' });
+  });
+
+  it('retries after a failed extra module load', async () => {
+    const loader = vi
+      .fn<() => Promise<unknown>>()
+      .mockRejectedValueOnce(new Error('boom'))
+      .mockResolvedValueOnce({ marker: 'retry-success' });
+    setPluginExtraModulesLoaderForTests(loader as () => Promise<typeof import('recharts')>);
+
+    await expect(ensurePluginSharedModules()).rejects.toThrow('boom');
+    await expect(ensurePluginSharedModules()).resolves.toBeUndefined();
+
+    expect(loader).toHaveBeenCalledTimes(2);
+    expect(globalThis.__NOP_SHARED__!.recharts).toEqual({ marker: 'retry-success' });
+  });
 });

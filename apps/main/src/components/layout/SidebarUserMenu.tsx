@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@nop-chaos/ui';
 import { useAuth } from '../../hooks/useAuth';
+import { useShellConfig } from '../../hooks/useShellConfig';
 
 interface SidebarUserMenuProps {
   collapsed?: boolean;
@@ -31,6 +32,7 @@ export function SidebarUserMenu({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { shell } = useShellConfig();
 
   const displayName = user?.nickname ?? user?.username ?? t('common.user');
   const secondaryLabel = user?.email ?? user?.roles.join(', ');
@@ -43,6 +45,12 @@ export function SidebarUserMenu({
     onToggleSidebar?.();
     onActionComplete?.();
   };
+
+  const shellLinks = [
+    shell.helpUrl ? { key: 'help', label: t('menu.help'), href: shell.helpUrl } : null,
+    shell.aboutUrl ? { key: 'about', label: t('common.about', { defaultValue: 'About' }), href: shell.aboutUrl } : null,
+    shell.supportUrl ? { key: 'support', label: t('common.support', { defaultValue: 'Support' }), href: shell.supportUrl } : null,
+  ].filter((item): item is { key: string; label: string; href: string } => Boolean(item));
 
   return (
     <DropdownMenu>
@@ -109,6 +117,19 @@ export function SidebarUserMenu({
           <Languages className="size-4" />
           {t('settings.languageTitle')}
         </DropdownMenuItem>
+        {shellLinks.length ? <DropdownMenuSeparator /> : null}
+        {shellLinks.map((link) => (
+          <DropdownMenuItem
+            key={link.key}
+            data-testid={`sidebar-user-menu-${link.key}`}
+            onClick={() => {
+              window.open(link.href, '_blank', 'noopener,noreferrer');
+              onActionComplete?.();
+            }}
+          >
+            {link.label}
+          </DropdownMenuItem>
+        ))}
         {onToggleSidebar ? (
           <>
             <DropdownMenuSeparator />

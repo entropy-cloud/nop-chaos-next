@@ -1,12 +1,13 @@
-import { resetTokenStorage, setAuthConfig } from '@nop-chaos/shared'
+import { resetTokenStorage, setAuthConfig, type PluginManifest } from '@nop-chaos/shared'
 import type { ExtensionLogger, LoadedExtension } from '@nop-chaos/shared'
 import { loadExtensions, resolveShellRuntimeConfig, setLoadedExtensions, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import i18n, { initializeI18n } from '../config/i18n'
-import { registerLanguages, replaceLanguages, setDefaultLanguage } from '../config/i18n/languages'
+import { registerLanguages, resetLanguages, setDefaultLanguage } from '../config/i18n/languages'
 import { registerThemes } from '../config/themeRegistry'
 import { registerHostSharedModules } from '../plugins/sharedModules'
 import { registerBuiltinPages } from '../router/pageRegistry'
 import { mainHttpClient } from '../services/http'
+import { mergePluginManifests, usePluginStore } from '../store/pluginStore'
 import { getExtensionSources } from './config'
 
 const logger: ExtensionLogger = {
@@ -60,6 +61,10 @@ function applyDocumentBranding(loaded: LoadedExtension[]) {
 }
 
 function applyExtensionDefinitions(loaded: LoadedExtension[]) {
+  resetLanguages()
+
+  const extensionPlugins: PluginManifest[] = []
+
   for (const { extension } of loaded) {
     if (extension.auth) {
       setAuthConfig(extension.auth)
@@ -71,9 +76,13 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
     }
 
     if (extension.supportedLanguages) {
-      replaceLanguages(extension.supportedLanguages)
+      registerLanguages(extension.supportedLanguages)
     } else if (extension.languages) {
       registerLanguages(extension.languages)
+    }
+
+    if (extension.plugins?.length) {
+      extensionPlugins.push(...extension.plugins)
     }
 
     if (extension.themes) {
@@ -104,6 +113,11 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
     if (extension.builtinPages) {
       registerBuiltinPages(extension.builtinPages)
     }
+  }
+
+  if (extensionPlugins.length) {
+    const currentPlugins = usePluginStore.getState().plugins
+    usePluginStore.getState().setPlugins(mergePluginManifests(currentPlugins, extensionPlugins))
   }
 }
 

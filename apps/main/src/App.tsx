@@ -1,9 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { toast } from '@nop-chaos/ui';
-import { setPluginBridge } from '@nop-chaos/plugin-bridge';
+import { setPluginBridge } from '@nop-chaos/plugin-bridge/host';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoutes } from './router/AppRoutes';
-import { getDefaultThemeId } from './config/themeRegistry';
 import i18n from './config/i18n';
 import { useAuthBootstrap } from './hooks/useAuth';
 import { useMenuConfigQuery } from './hooks/useMenuConfig';
@@ -13,6 +12,7 @@ import { usePluginStore } from './store/pluginStore';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
 import { useSystemDisplayMode } from './hooks/useSystemDisplayMode';
+import { resolveThemeConfig } from './config/themeResolution';
 
 let didRegisterSharedModules = false;
 
@@ -45,10 +45,7 @@ export default function App() {
   }, []);
 
   const pluginThemeConfig = useMemo(
-    () => ({
-      ...themeConfig,
-      themeId: themeConfig.themeId || getDefaultThemeId(),
-    }),
+    () => resolveThemeConfig(themeConfig),
     [themeConfig],
   );
 

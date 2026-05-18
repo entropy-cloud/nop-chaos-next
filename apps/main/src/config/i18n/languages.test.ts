@@ -1,14 +1,20 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import {
   getLanguageOptions,
   normalizeLanguageCode,
   registerLanguages,
   replaceLanguages,
+  resetLanguages,
   getDefaultLanguage,
   setDefaultLanguage,
 } from './languages';
 
 describe('i18n language config', () => {
+  beforeEach(() => {
+    resetLanguages();
+    setDefaultLanguage('zh-CN');
+  });
+
   it('normalizes short language codes to the supported locale codes', () => {
     expect(normalizeLanguageCode(undefined)).toBe('zh-CN');
     expect(normalizeLanguageCode('en')).toBe('en-US');
@@ -46,6 +52,17 @@ describe('i18n language config', () => {
     const options = getLanguageOptions();
     expect(options).toHaveLength(1);
     expect(options[0].code).toBe('fr-FR');
+  });
+
+  it('resetLanguages restores the default language registry', () => {
+    replaceLanguages([{ code: 'fr-FR', labelKey: 'settings.languageOptions.fr' }]);
+
+    resetLanguages();
+
+    expect(getLanguageOptions()).toEqual([
+      { code: 'zh-CN', labelKey: 'settings.languageOptions.zhCN' },
+      { code: 'en-US', labelKey: 'settings.languageOptions.en' },
+    ]);
   });
 
   it('getDefaultLanguage returns zh-CN', () => {

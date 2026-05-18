@@ -19,6 +19,9 @@ declare global {
   var __NOP_SHARED__: Record<string, unknown> | undefined;
 }
 
+const { setAuthConfig: _setAuthConfig, resetAuthConfig: _resetAuthConfig, setRefreshTokenFetcher: _setRefreshTokenFetcher, ...pluginSafeSharedLib } = SharedLib;
+const { setI18nGetter: _setI18nGetter, ...pluginSafeUiLib } = UiLib;
+
 const baseSharedModules = {
   react: ReactLib,
   'react-dom': ReactDOMLib,
@@ -28,8 +31,8 @@ const baseSharedModules = {
   zustand: ZustandLib,
   '@tanstack/react-query': ReactQueryLib,
   '@nop-chaos/plugin-bridge': PluginBridgeLib,
-  '@nop-chaos/shared': SharedLib,
-  '@nop-chaos/ui': UiLib,
+  '@nop-chaos/shared': pluginSafeSharedLib,
+  '@nop-chaos/ui': pluginSafeUiLib,
   i18next: I18NextLib,
   'react-i18next': ReactI18NextLib,
   'lucide-react': LucideReactLib,
@@ -39,6 +42,7 @@ const baseSharedModules = {
 let didRegisterBaseModules = false;
 let didRegisterPluginExtraModules = false;
 let pluginExtraModulesPromise: Promise<void> | null = null;
+let pluginExtraModulesLoader: () => Promise<typeof import('recharts')> = () => import('recharts');
 
 export function registerHostSharedModules() {
   globalThis.__NOP_SHARED__ = {
@@ -58,13 +62,27 @@ export function registerBaseSharedModules() {
   didRegisterBaseModules = true;
 }
 
+export function resetSharedModulesForTests() {
+  didRegisterBaseModules = false;
+  didRegisterPluginExtraModules = false;
+  pluginExtraModulesPromise = null;
+  pluginExtraModulesLoader = () => import('recharts');
+  delete globalThis.__NOP_SHARED__;
+}
+
+export function setPluginExtraModulesLoaderForTests(
+  loader: () => Promise<typeof import('recharts')>,
+) {
+  pluginExtraModulesLoader = loader;
+}
+
 async function ensurePluginExtraSharedModules() {
   if (didRegisterPluginExtraModules) {
     return;
   }
 
   if (!pluginExtraModulesPromise) {
-    pluginExtraModulesPromise = import('recharts')
+    pluginExtraModulesPromise = pluginExtraModulesLoader()
       .then((rechartsModule) => {
         const pluginExtraSharedModules = {
           recharts: rechartsModule,

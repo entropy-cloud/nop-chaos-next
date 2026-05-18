@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter } from 'react-router-dom';
-import { setI18nGetter, Toaster } from '@nop-chaos/ui';
+import { Toaster } from '@nop-chaos/ui';
 import { I18nextProvider } from 'react-i18next';
 import App from './App';
 import { ConfirmDialogHost } from './components/common/ConfirmDialogHost';
-import i18n, { initializeI18n } from './config/i18n';
+import i18n from './config/i18n';
 import { bootstrapExtensions } from './extensions/bootstrap';
 import './config/i18n';
 import './styles/tailwind.css';
@@ -84,8 +84,6 @@ function renderBootstrapFallback(error: Error) {
 
 export async function bootstrap() {
   try {
-    await initializeI18n();
-    setI18nGetter((key) => i18n.t(key));
     await bootstrapExtensions();
     renderApp();
   } catch (error: unknown) {

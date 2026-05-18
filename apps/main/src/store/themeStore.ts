@@ -6,6 +6,7 @@ import {
   type ThemeConfig,
   type ThemeId,
 } from '@nop-chaos/shared';
+import { resolveThemeConfig } from '../config/themeResolution';
 import { getDefaultThemeId } from '../config/themeRegistry';
 
 interface ThemeState {
@@ -50,11 +51,11 @@ export const useThemeStore = create<ThemeState>()(
         return {
           ...currentState,
           ...persisted,
-          themeConfig: {
+          themeConfig: resolveThemeConfig({
             ...currentState.themeConfig,
             ...persistedTheme,
             themeId: normalizeThemeId(persistedTheme.themeId),
-          },
+          }),
         };
       },
     },

@@ -14,6 +14,10 @@ type StoreHook<T> = {
   setState: (nextState: T) => void;
 };
 
+type ThemeStoreState = {
+  themeConfig: { themeId: string; displayMode: 'light' | 'dark' | 'system' };
+};
+
 const {
   setPluginBridgeMock,
   registerBaseSharedModulesMock,
@@ -47,7 +51,7 @@ const {
   return {
     setPluginBridgeMock: vi.fn(),
     registerBaseSharedModulesMock: vi.fn(),
-    useThemeStoreMock: createStoreHook({
+    useThemeStoreMock: createStoreHook<ThemeStoreState>({
       themeConfig: { themeId: 'classic', displayMode: 'light' as const },
     }),
     useAuthStoreMock: createStoreHook({ user: null, isAuthenticated: false }),
@@ -62,7 +66,7 @@ vi.mock('@nop-chaos/ui', () => ({
   },
 }));
 
-vi.mock('@nop-chaos/plugin-bridge', () => ({
+vi.mock('@nop-chaos/plugin-bridge/host', () => ({
   setPluginBridge: (bridge: unknown) => setPluginBridgeMock(bridge),
 }));
 
@@ -115,6 +119,10 @@ describe('App plugin bridge wiring', () => {
   beforeEach(() => {
     setPluginBridgeMock.mockReset();
     registerBaseSharedModulesMock.mockReset();
+    useThemeStoreMock.setState({
+      themeConfig: { themeId: 'classic', displayMode: 'light' },
+    });
+    usePluginStoreMock.setState({ plugins: [] as Array<never> });
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
@@ -149,5 +157,51 @@ describe('App plugin bridge wiring', () => {
 
     expect(setPluginBridgeMock).toHaveBeenCalledTimes(1);
     expect(bridge.getCurrentPath()).toBe('/next');
+  });
+
+  it('publishes the resolved theme config to the plugin bridge snapshot', async () => {
+    useThemeStoreMock.setState({
+      themeConfig: { themeId: 'missing-theme', displayMode: 'dark' as const },
+    });
+
+    await act(async () => {
+      root.render(
+        <MemoryRouter initialEntries={['/start']}>
+          <App />
+        </MemoryRouter>,
+      );
+    });
+
+    const bridge = setPluginBridgeMock.mock.calls[0][0] as { getThemeConfig: () => { themeId: string; displayMode: string } };
+    expect(bridge.getThemeConfig()).toEqual({ themeId: 'classic', displayMode: 'dark' });
+  });
+
+  it('publishes extension-registered plugin manifests through getPluginManifest', async () => {
+    const pluginManifest = {
+      id: 'plugin-demo',
+      name: 'Plugin Demo',
+      icon: 'puzzle',
+      description: 'Demo plugin',
+      version: '1.0.0',
+      author: 'NOP',
+      source: 'extension',
+      enabled: true,
+      url: '/plugins/plugin-demo.system.js',
+      updatedAt: '2026-05-18',
+    };
+    usePluginStoreMock.setState({ plugins: [pluginManifest] as Array<never> });
+
+    await act(async () => {
+      root.render(
+        <MemoryRouter initialEntries={['/start']}>
+          <App />
+        </MemoryRouter>,
+      );
+    });
+
+    const bridge = setPluginBridgeMock.mock.calls[0][0] as {
+      getPluginManifest: (pluginId: string) => unknown;
+    };
+    expect(bridge.getPluginManifest('plugin-demo')).toEqual(pluginManifest);
   });
 });
