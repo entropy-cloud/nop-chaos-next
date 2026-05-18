@@ -26,6 +26,7 @@ import {
 import { getTableRowClassName } from '../../lib/tableRowClassName';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/common/PageHeader';
+import { confirmInApp } from '../../services/confirm';
 import {
   deleteFlow,
   fetchFlowList,
@@ -91,10 +92,11 @@ export default function FlowEditorPage() {
     });
   };
 
-  const removeFlow = (flowId: string) => {
-    if (!window.confirm(t('flowEditor.deleteConfirm'))) {
+  const removeFlow = async (flowId: string) => {
+    if (!(await confirmInApp(t('flowEditor.deleteConfirm'), { destructive: true }))) {
       return;
     }
+
     actionMutation.mutate(async () => {
       await deleteFlow(flowId);
       toast.success(t('flowEditor.deleteSuccess'));

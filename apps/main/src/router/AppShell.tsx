@@ -14,11 +14,13 @@ import { AppBrand } from '../components/layout/AppBrand';
 import { MobileTopBar } from '../components/layout/MobileTopBar';
 import { OfflineBanner } from '../components/layout/OfflineBanner';
 import { SidebarUserMenu } from '../components/layout/SidebarUserMenu';
+import { getCurrentHomePath } from '../config/homePath';
 import { toRem } from '../config/layout';
 import { useAuth } from '../hooks/useAuth';
 import { useMenuConfigQuery } from '../hooks/useMenuConfig';
 import { useTabManagement } from '../hooks/useTabManagement';
 import { logoutRequest } from '../services/authApi';
+import { confirmInApp } from '../services/confirm';
 import { useLayoutStore } from '../store/layoutStore';
 import { useTabStore } from '../store/tabStore';
 
@@ -81,7 +83,7 @@ export function AppShell() {
       path: location.pathname,
       title: currentMenu.title ?? currentMenu.id,
       icon: currentMenu.icon,
-      closable: location.pathname !== '/dashboard',
+      closable: location.pathname !== getCurrentHomePath(),
     });
   }, [currentMenu, location.pathname, registerTab]);
 
@@ -131,8 +133,11 @@ export function AppShell() {
       try {
         await shellElement.requestFullscreen();
       } catch {
+        setWorkspaceFullscreen(false);
         return;
       }
+    } else {
+      setWorkspaceFullscreen(false);
     }
   }, [setWorkspaceFullscreen, workspaceFullscreen]);
 
@@ -176,7 +181,13 @@ export function AppShell() {
   }, [handleToggleWorkspaceFullscreen]);
 
   const handleLogout = async () => {
-    if (!window.confirm(t('auth.logoutConfirm'))) {
+    if (
+      !(await confirmInApp(t('auth.logoutConfirm'), {
+        title: t('common.confirm', { defaultValue: 'Confirm' }),
+        confirmText: t('auth.logout', { defaultValue: 'Logout' }),
+        destructive: true,
+      }))
+    ) {
       return;
     }
 

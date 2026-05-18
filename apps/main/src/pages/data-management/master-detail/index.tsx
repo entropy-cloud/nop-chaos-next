@@ -40,6 +40,7 @@ import {
 import { getTableRowClassName } from '../../../lib/tableRowClassName';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../../components/common/PageHeader';
+import { confirmInApp } from '../../../services/confirm';
 import { deleteOrders, fetchOrderList, type OrderRecord } from '../../../services/mockApi';
 import { useTabStore } from '../../../store/tabStore';
 
@@ -121,22 +122,26 @@ export default function MasterDetailPage() {
     );
   };
 
-  const handleBatchDelete = () => {
+  const handleBatchDelete = async () => {
     if (selectedIds.length === 0) {
       return;
     }
-    if (!window.confirm(t('masterDetail.batchDeleteConfirm', { count: selectedIds.length }))) {
+    if (
+      !(await confirmInApp(t('masterDetail.batchDeleteConfirm', { count: selectedIds.length }), {
+        destructive: true,
+      }))
+    ) {
       return;
     }
     deleteMutation.mutate(selectedIds);
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (selectedIds.length === 0) {
       toast.info(t('masterDetail.exportSelectHint'));
       return;
     }
-    if (!window.confirm(t('masterDetail.exportConfirm', { count: selectedIds.length }))) {
+    if (!(await confirmInApp(t('masterDetail.exportConfirm', { count: selectedIds.length })))) {
       return;
     }
     const data = rows.filter((row) => selectedIds.includes(row.id));
@@ -154,8 +159,12 @@ export default function MasterDetailPage() {
     setSortOrder((current) => (sortKey === key ? (current === 'asc' ? 'desc' : 'asc') : 'desc'));
   };
 
-  const handleDeleteRow = (row: OrderRecord) => {
-    if (!window.confirm(t('masterDetail.rowDeleteConfirm', { orderNo: row.orderNo }))) {
+  const handleDeleteRow = async (row: OrderRecord) => {
+    if (
+      !(await confirmInApp(t('masterDetail.rowDeleteConfirm', { orderNo: row.orderNo }), {
+        destructive: true,
+      }))
+    ) {
       return;
     }
     deleteMutation.mutate([row.id], {

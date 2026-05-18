@@ -17,10 +17,15 @@ export function ensureAmisRuntime(): Promise<void> {
     return amisRuntimeInitPromise;
   }
 
-  amisRuntimeInitPromise = loadAmisStyles().then(() => {
-    registerMainXuiComponents();
-    didInitAmisRuntime = true;
-  });
+  amisRuntimeInitPromise = loadAmisStyles()
+    .then(() => {
+      registerMainXuiComponents();
+      didInitAmisRuntime = true;
+    })
+    .catch((error: unknown) => {
+      amisRuntimeInitPromise = null;
+      throw error instanceof Error ? error : new Error(String(error));
+    });
 
   return amisRuntimeInitPromise;
 }

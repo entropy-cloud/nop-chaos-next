@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
+import { confirmInApp } from '../../../../../services/confirm';
 import type { LogisticsRecord, OrderRecord } from '../../../../../services/mockApi';
 import type { ValidationErrors } from '../types';
 
@@ -90,8 +91,12 @@ export function LogisticsSection({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => {
-                    if (!window.confirm(t('masterDetail.detail.deleteLogisticsConfirm'))) {
+                  onClick={async () => {
+                    if (
+                      !(await confirmInApp(t('masterDetail.detail.deleteLogisticsConfirm'), {
+                        destructive: true,
+                      }))
+                    ) {
                       return;
                     }
                     setDraft((state) =>

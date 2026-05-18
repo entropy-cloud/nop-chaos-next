@@ -1,13 +1,14 @@
 import type {
-  AmisAction,
   AmisDictProvider,
   AmisPageProvider,
   AmisRuntimeAdapter,
 } from '@nop-chaos/amis-core';
 import type { HttpRequestOptions } from '@nop-chaos/shared';
+import { clearTokens as clearManagedTokens } from '@nop-chaos/shared';
 import { toast } from '@nop-chaos/ui';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
+import { confirmInApp } from '../services/confirm';
 import { mainHttpClient } from '../services/http';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
@@ -48,7 +49,6 @@ export function createMainAmisAdapter({
       const response = await mainHttpClient.request<T>(options);
 
       if (response.status === 401) {
-        useAuthStore.getState().logout();
         navigate('/auth/login', { replace: true });
       }
 
@@ -87,16 +87,13 @@ export function createMainAmisAdapter({
     alert: async (message) => {
       toast(message);
     },
-    confirm: async (message) => {
-      toast(message);
-      return true;
-    },
+    confirm: async (message, title) => confirmInApp(message, { title }),
     logout: () => {
+      clearManagedTokens();
       useAuthStore.getState().logout();
       navigate('/auth/login', { replace: true });
     },
     pageProvider,
     dictProvider,
-    compileFunction: (code, page) => new Function('page', `return (${code})`)(page) as AmisAction,
   };
 }

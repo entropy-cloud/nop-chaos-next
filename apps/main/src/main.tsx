@@ -5,6 +5,7 @@ import { HashRouter } from 'react-router-dom';
 import { setI18nGetter, Toaster } from '@nop-chaos/ui';
 import { I18nextProvider } from 'react-i18next';
 import App from './App';
+import { ConfirmDialogHost } from './components/common/ConfirmDialogHost';
 import i18n, { initializeI18n } from './config/i18n';
 import { bootstrapExtensions } from './extensions/bootstrap';
 import './config/i18n';
@@ -35,6 +36,7 @@ function renderApp() {
       <I18nextProvider i18n={i18n}>
         <HashRouter>
           <App />
+          <ConfirmDialogHost />
           <Toaster richColors position="top-right" />
         </HashRouter>
       </I18nextProvider>

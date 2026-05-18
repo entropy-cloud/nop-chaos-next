@@ -8,6 +8,7 @@ import '@xyflow/react/dist/style.css';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
+import { confirmInApp } from '../../../services/confirm';
 import { nodeMeta } from './constants';
 import { FlowEditorActionsContext } from './context';
 import { FlowCanvas } from './components/FlowCanvas';
@@ -80,8 +81,8 @@ function FlowEditorPageInner() {
       : null;
   const inspectorHandleLabel = activeSummary?.type ?? t('flowEditor.editor.properties');
 
-  const navigateBackWithGuard = () => {
-    if (state.dirty && !window.confirm(t('flowEditor.editor.leaveConfirm'))) {
+  const navigateBackWithGuard = async () => {
+    if (state.dirty && !(await confirmInApp(t('flowEditor.editor.leaveConfirm')))) {
       return;
     }
 

@@ -20,23 +20,27 @@ export function useFlowPersistence({ state }: UseFlowPersistenceOptions) {
       return;
     }
 
-    const payload: FlowDocument = {
-      ...flowDocument,
-      nodes: cloneNodes(nodes),
-      edges: cloneEdges(edges).map((edge) => ({
-        ...edge,
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: getEdgeStyle(edge.data?.lineStyle ?? 'solid'),
-        type: 'flowEdge',
-      })),
-    };
+    try {
+      const payload: FlowDocument = {
+        ...flowDocument,
+        nodes: cloneNodes(nodes),
+        edges: cloneEdges(edges).map((edge) => ({
+          ...edge,
+          markerEnd: { type: MarkerType.ArrowClosed },
+          style: getEdgeStyle(edge.data?.lineStyle ?? 'solid'),
+          type: 'flowEdge',
+        })),
+      };
 
-    const saved = await import('../../../services/mockApi').then((m) =>
-      m.saveFlowDetail(payload),
-    );
-    setFlowDocument(saved);
-    setSavedSnapshot(JSON.stringify({ nodes, edges }));
-    toast.success(t('flowEditor.editor.saveSuccess'));
+      const saved = await import('../../../services/mockApi').then((m) =>
+        m.saveFlowDetail(payload),
+      );
+      setFlowDocument(saved);
+      setSavedSnapshot(JSON.stringify({ nodes, edges }));
+      toast.success(t('flowEditor.editor.saveSuccess'));
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : t('flowEditor.editor.saveFailed'));
+    }
   }, [flowDocument, nodes, edges, setFlowDocument, setSavedSnapshot, t]);
 
   const restoreSaved = useCallback(() => {

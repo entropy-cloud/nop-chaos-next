@@ -18,10 +18,12 @@ import {
   Input,
   Label,
   Switch,
+  Toggle,
   toast,
 } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../../components/common/PageHeader';
+import { confirmInApp } from '../../../services/confirm';
 import { usePluginStore } from '../../../store/pluginStore';
 
 export default function PluginsManagementPage() {
@@ -69,12 +71,12 @@ export default function PluginsManagementPage() {
                   </Badge>
                   <Switch
                     checked={plugin.enabled}
-                    onCheckedChange={(checked) => {
+                    onCheckedChange={async (checked) => {
                       const actionKey = checked ? 'common.enable' : 'common.disable';
                       if (
-                        !window.confirm(
+                        !(await confirmInApp(
                           t('plugins.confirmToggle', { action: t(actionKey), name: plugin.name }),
-                        )
+                        ))
                       ) {
                         return;
                       }
@@ -177,9 +179,11 @@ export default function PluginsManagementPage() {
                         String(configPlugin.settings?.[field.key] ?? field.defaultValue ?? '') ===
                         option;
                       return (
-                        <button
+                        <Toggle
+                          aria-label={`${field.label}: ${option}`}
+                          aria-pressed={active}
                           key={option}
-                          className={`rounded-full border px-3 py-1 ${active ? 'border-transparent bg-[hsl(var(--primary))] text-white' : 'border-[hsl(var(--border))]'}`}
+                          className={`rounded-full border px-3 py-1 ${active ? 'border-transparent bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))] hover:text-white' : 'border-[hsl(var(--border))]'}`}
                           onClick={() =>
                             updatePlugin(configPlugin.id, (current) => ({
                               ...current,
@@ -189,10 +193,9 @@ export default function PluginsManagementPage() {
                               },
                             }))
                           }
-                          type="button"
                         >
                           {option}
-                        </button>
+                        </Toggle>
                       );
                     })}
                   </div>

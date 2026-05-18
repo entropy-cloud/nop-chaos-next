@@ -1,5 +1,6 @@
 import type { FluxApiRequest, FluxApiRequestContext, FluxRendererEnv } from '@nop-chaos/flux';
 import { toast } from '@nop-chaos/ui';
+import { confirmInApp } from '../services/confirm';
 import { mainHttpClient } from '../services/http';
 
 interface CreateMainFluxEnvOptions {
@@ -44,6 +45,6 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
       toast(message);
     },
     navigate,
-    confirm: async (message) => window.confirm(message),
+    confirm: async (message) => confirmInApp(message),
   };
 }

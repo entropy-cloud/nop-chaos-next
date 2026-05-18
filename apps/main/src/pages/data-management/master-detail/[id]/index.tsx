@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, toast } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../../../components/common/PageHeader';
+import { confirmInApp } from '../../../../services/confirm';
 import {
   fetchOrderDetail,
   saveOrderDetail,
@@ -133,11 +134,11 @@ export default function MasterDetailDetailPage() {
     [draft?.logistics, logisticsKeyword],
   );
 
-  const navigateWithDirtyGuard = (
+  const navigateWithDirtyGuard = async (
     event: ReactMouseEvent<HTMLButtonElement>,
     targetPath: string,
   ) => {
-    if (totalDirty && !window.confirm(t('masterDetail.detail.leaveConfirm'))) {
+    if (totalDirty && !(await confirmInApp(t('masterDetail.detail.leaveConfirm')))) {
       event.preventDefault();
       return;
     }
@@ -196,11 +197,11 @@ export default function MasterDetailDetailPage() {
     saveMutation.mutate(draft);
   };
 
-  const cancelAll = () => {
+  const cancelAll = async () => {
     if (!savedState) {
       return;
     }
-    if (!window.confirm(t('masterDetail.detail.discardConfirm'))) {
+    if (!(await confirmInApp(t('masterDetail.detail.discardConfirm')))) {
       return;
     }
     setDraft(normalizeOrder(savedState));

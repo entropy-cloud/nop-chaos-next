@@ -27,6 +27,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     this.props.onError?.(error, errorInfo);
   }
 
+  resetErrorBoundary = () => {
+    this.setState({ hasError: false, error: null });
+  };
+
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
@@ -40,6 +44,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <p className="text-sm text-[hsl(var(--muted-foreground))]">
               {this.state.error?.message ?? 'Something went wrong'}
             </p>
+            <button
+              type="button"
+              aria-label="Retry error boundary"
+              className="rounded-md border border-[hsl(var(--border))] px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted"
+              onClick={this.resetErrorBoundary}
+            >
+              ↻
+            </button>
           </div>
         </div>
       );

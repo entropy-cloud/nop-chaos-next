@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Switch } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
+import { confirmInApp } from '../../../../../services/confirm';
 import type { AddressRecord, OrderRecord } from '../../../../../services/mockApi';
 import type { ValidationErrors } from '../types';
 
@@ -114,8 +115,12 @@ export function AddressesSection({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => {
-                    if (!window.confirm(t('masterDetail.detail.deleteAddressConfirm'))) {
+                  onClick={async () => {
+                    if (
+                      !(await confirmInApp(t('masterDetail.detail.deleteAddressConfirm'), {
+                        destructive: true,
+                      }))
+                    ) {
                       return;
                     }
                     setDraft((state) =>
