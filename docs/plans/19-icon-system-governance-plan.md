@@ -1,7 +1,7 @@
 # 19 Icon System Governance Plan
 
-> Plan Status: done
-> Last Reviewed: 2026-05-16
+> Plan Status: completed
+> Last Reviewed: 2026-05-17
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (findings 10-03, 10-05, 10-06)
 > Related: `docs/plans/14-type-safety-api-surface-plan.md`
 
@@ -44,7 +44,7 @@
 
 ### Phase 1 - Full Import Fix
 
-Status: planned
+Status: completed
 Targets: `packages/core/src/utils/iconMap.tsx`
 
 - Item Types: `Fix`
@@ -57,12 +57,12 @@ Exit Criteria:
 
 - [x] `iconMap.tsx` 不包含 `import * as LucideIcons`
 - [x] `pnpm --filter @nop-chaos/core build` 通过
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 2 - Mapping Unification
 
-Status: planned
+Status: completed
 Targets: `packages/core/src/utils/iconMap.tsx`
 
 - Item Types: `Fix`, `Decision`
@@ -75,12 +75,12 @@ Exit Criteria:
 
 - [x] `iconMap.tsx` 中图标映射仅有单一权威来源
 - [x] `pnpm build` 通过
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 3 - Convention Documentation
 
-Status: planned
+Status: completed
 Targets: `docs/design/` 或相关 README
 
 - Item Types: `Decision`
@@ -92,16 +92,16 @@ Exit Criteria:
 
 - [x] 图标使用约定已文档化
 - [x] 相关 `docs/design/` 已更新
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `docs/logs/` 对应日期条目已更新
 
 ## Closure Gates
 
 - [x] `iconMap.tsx` 不再全量导入 lucide-react（10-06）
 - [x] 图标映射仅有单一权威来源（10-03）
 - [x] 图标使用约定已文档化（10-05）
-- [ ] `pnpm typecheck && pnpm build && pnpm lint && pnpm test` 全过
-- [ ] 独立子 agent closure-audit 已完成并记录证据
-- [ ] `docs/logs/` 收口记录已更新
+- [x] `pnpm typecheck && pnpm build && pnpm lint && pnpm test` 全过
+- [x] 独立子 agent closure-audit 已完成并记录证据
+- [x] `docs/logs/` 收口记录已更新
 
 ## Deferred But Adjudicated
 
@@ -117,12 +117,12 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: All three phases completed. iconMap.tsx now uses `import { icons } from 'lucide-react'` instead of namespace import, dual maps merged into single `faNameMap`, and conventions documented in `docs/design/icon-system.md`.
+Status Note: All three phases are complete and closure has been re-audited against the live repository. `iconMap.tsx` now uses `import { icons } from 'lucide-react'`, the duplicate FA alias maps have been collapsed into a single `faNameMap`, icon usage conventions are documented in `docs/design/icon-system.md`, and workspace `typecheck` / `build` / `lint` / `test` are all green.
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: opencode (automated execution)
-- Evidence: Plan 19 executed 2026-05-16 Session 4. All phases verified: `pnpm --filter @nop-chaos/core build` passes, `pnpm typecheck` passes (21/21 tasks), core tests 13/13 pass. Pre-existing `@nop-chaos/main` flow-editor build errors unrelated.
+- Reviewer / Agent: independent closure audit (current session)
+- Evidence: initial execution recorded in `docs/logs/2026/05-16.md` Session 4; live re-audit confirmed `packages/core/src/utils/iconMap.tsx` uses `icons` + single `faNameMap`, `docs/design/icon-system.md` documents the conventions, and workspace `pnpm typecheck`, `pnpm build`, `pnpm lint`, `pnpm test` all pass on 2026-05-17.
 
 Follow-up:
 
