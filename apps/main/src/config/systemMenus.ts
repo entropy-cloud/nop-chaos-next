@@ -1,5 +1,6 @@
 import { flattenMenus, type MenuItem, type MenuResponse } from '@nop-chaos/shared';
 import { getExtensionDefaultHomePath, hasMenuOverride } from '@nop-chaos/extension-host';
+import { getDefaultHomePath, setCurrentHomePath } from './homePath';
 
 const builtinSystemMenuItems: MenuItem[] = [
   {
@@ -146,11 +147,14 @@ export function mergeBuiltinSystemMenus(menuResponse: MenuResponse): MenuRespons
         ? menuResponse.home
         : (menuResponse.items[0]?.path ?? '/');
 
-    return {
+    const merged = {
       ...menuResponse,
       home: homeCandidate,
       items,
     };
+
+    setCurrentHomePath(merged.home);
+    return merged;
   }
 
   const items = mergeMenuItems(menuResponse.items, builtinSystemMenuItems) ?? [];
@@ -162,11 +166,14 @@ export function mergeBuiltinSystemMenus(menuResponse: MenuResponse): MenuRespons
       ? menuResponse.home
       : extensionHome && availablePaths.has(extensionHome)
         ? extensionHome
-        : '/dashboard';
+        : getDefaultHomePath();
 
-  return {
+  const merged = {
     ...menuResponse,
     home: homeCandidate,
     items,
   };
+
+  setCurrentHomePath(merged.home);
+  return merged;
 }

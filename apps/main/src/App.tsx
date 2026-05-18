@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { toast } from '@nop-chaos/ui';
 import { setPluginBridge } from '@nop-chaos/plugin-bridge';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { getDefaultThemeId } from './config/themeRegistry';
 import i18n from './config/i18n';
 import { useAuthBootstrap } from './hooks/useAuth';
 import { useMenuConfigQuery } from './hooks/useMenuConfig';
+import { createBoundStore } from './plugins/boundStore';
 import { registerBaseSharedModules } from './plugins/sharedModules';
 import { usePluginStore } from './store/pluginStore';
 import { useAuthStore } from './store/authStore';
@@ -21,11 +22,18 @@ export default function App() {
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
   const location = useLocation();
+  const currentPathRef = useRef(location.pathname);
+  const navigateRef = useRef(navigate);
   const { isAuthenticated, bootstrapStatus } = useAuthBootstrap();
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending';
   useMenuConfigQuery(isAuthenticated && !bootstrapPending);
 
   useSystemDisplayMode(themeConfig);
+
+  useLayoutEffect(() => {
+    currentPathRef.current = location.pathname;
+    navigateRef.current = navigate;
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
     if (didRegisterSharedModules) {
@@ -46,15 +54,15 @@ export default function App() {
 
   const bridgeStores = useMemo(
     () => ({
-      authStore: Object.assign(() => useAuthStore.getState(), {
+      authStore: createBoundStore({
         getState: useAuthStore.getState,
         subscribe: useAuthStore.subscribe,
       }),
-      themeStore: Object.assign(() => useThemeStore.getState(), {
+      themeStore: createBoundStore({
         getState: useThemeStore.getState,
         subscribe: useThemeStore.subscribe,
       }),
-      pluginStore: Object.assign(() => usePluginStore.getState(), {
+      pluginStore: createBoundStore({
         getState: usePluginStore.getState,
         subscribe: usePluginStore.subscribe,
       }),
@@ -81,10 +89,10 @@ export default function App() {
         info: (message: string) => toast(message),
       },
       navigate: (to: string, options?: { replace?: boolean; state?: unknown }) =>
-        navigate(to, options),
+        navigateRef.current(to, options),
       stores: bridgeStores,
       getCurrentUser: () => useAuthStore.getState().user,
-      getCurrentPath: () => location.pathname,
+      getCurrentPath: () => currentPathRef.current,
       getThemeConfig: () => pluginThemeConfig,
       getPluginManifest: (pluginId: string) =>
         usePluginStore.getState().plugins.find((plugin) => plugin.id === pluginId),
@@ -105,7 +113,7 @@ export default function App() {
       },
       getSnapshot: () => bridgeSnapshot,
     }),
-    [bridgeSnapshot, bridgeStores, location.pathname, navigate, pluginThemeConfig],
+    [bridgeSnapshot, bridgeStores, pluginThemeConfig],
   );
 
   useLayoutEffect(() => {

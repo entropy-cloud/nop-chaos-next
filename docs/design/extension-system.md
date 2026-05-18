@@ -163,12 +163,47 @@ Extension 模块本身仍支持三种导出方式：
 // 获取 shell 运行时配置
 getShellRuntimeConfig(): ShellRuntimeConfig
 
+// 订阅 shell 运行时配置变化
+subscribeShellRuntimeConfig(listener: () => void): () => void
+
 // 获取默认首页路径
 getExtensionDefaultHomePath(): string | undefined
 
 // 获取系统页 componentId
 getSystemPageComponentId(page: keyof ExtensionSystemPagesConfig): string | undefined
 ```
+
+主应用中的 `useShellConfig()` 已改为通过 `useSyncExternalStore` 订阅这份 runtime config，因此 extension bootstrap 完成后若 branding / loginUi / systemPages 发生变化，消费这些字段的 React 组件会自动重新渲染。
+
+为满足 `useSyncExternalStore` 的快照契约，`getShellRuntimeConfig()` 现在会在配置未变化时返回稳定的对象引用；只有 `setShellRuntimeConfig()` 落地新配置时才替换快照，避免登录页等消费方因每次读取都拿到新对象而触发额外渲染或白屏错误。
+
+### 3.5 首页路径合同
+
+当前首页路径不是多点硬编码，而是通过 `apps/main/src/config/homePath.ts` 维护单一 canonical source：
+
+- 默认值仍为 `/dashboard`
+- `apps/main/src/config/systemMenus.ts` 在 merge 菜单响应后调用 `setCurrentHomePath(...)`
+- 解析优先级为：后端 `menuResponse.home` 且路径仍存在于当前菜单，其次 extension `shell.defaultHomePath` 且路径存在，最后回退到默认 `/dashboard`
+- `apps/main/src/store/tabStore.ts`、`apps/main/src/hooks/useTabManagement.ts`、以及 `apps/main/src/pages/errors/{403,404,500}.tsx` 都通过 `getCurrentHomePath()` 读取当前首页，而不是再硬编码 `/dashboard`
+
+这意味着 extension 可以声明默认首页，但 live runtime 仍以当前可访问菜单中的实际 homePath 为准。
+
+### 3.6 菜单过滤与路由守卫
+
+当前宿主保留两层权限模型：
+
+- 菜单层：侧边导航基于过滤后的菜单决定哪些入口可见
+- 路由层：`apps/main/src/router/AppRoutes.tsx` 继续基于完整菜单注册路由，`apps/main/src/router/RouteRenderer.tsx` 在渲染时执行权限检查
+
+该设计是有意的。结果上，低权限用户看不到受限菜单项，但若直接访问受限 URL，仍会命中对应路由并渲染 `ForbiddenPage`，而不是因为路由缺失退化成 `404`。
+
+### 3.4 Bootstrap 并发保护
+
+`bootstrapExtensions()` 现在带有 Promise 级别的并发去重：
+
+- 启动期重复调用会复用同一条 bootstrap promise
+- 失败时会重置 promise，允许后续重试
+- 成功后保留已完成结果，避免重复应用语言、主题、样式和 builtin page 注册
 
 ---
 

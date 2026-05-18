@@ -2,6 +2,7 @@ import { AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { getCurrentHomePath } from '../../config/homePath';
 
 export default function NotFoundPage() {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ export default function NotFoundPage() {
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>{t('errors.notFoundDescription')}</p>
-          <Button onClick={() => navigate('/dashboard')}>{t('common.backHome')}</Button>
+          <Button onClick={() => navigate(getCurrentHomePath())}>{t('common.backHome')}</Button>
         </CardContent>
       </Card>
     </div>

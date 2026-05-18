@@ -9,6 +9,7 @@ const MOCK_REFRESH_TOKEN_PREFIX = 'mock-refresh-token:';
 interface LoginOptions {
   setup?: () => Promise<void> | void;
   username?: string;
+  roles?: string[];
   defaultPassword?: string;
   harborPassword?: string;
 }
@@ -338,7 +339,7 @@ const defaultMenuResponse = {
   ],
 };
 
-function buildMockLoginResponse(username: string) {
+function buildMockLoginResponse(username: string, roles: string[] = ['admin', 'developer']) {
   const normalizedUsername = username.trim() || 'nop';
 
   return {
@@ -350,13 +351,19 @@ function buildMockLoginResponse(username: string) {
       username: normalizedUsername,
       nickname: normalizedUsername === 'nop' ? 'NOP Mock User' : `${normalizedUsername} Mock User`,
       email: `${normalizedUsername}@mock.local`,
-      roles: [{ value: 'admin' }, { value: 'developer' }],
+      roles: roles.map((role) => ({ value: role })),
     },
   };
 }
 
 export async function login(page: Page, options: LoginOptions = {}): Promise<LoginVariant> {
-  const { setup, username, defaultPassword = '123456', harborPassword = '123456' } = options;
+  const {
+    setup,
+    username,
+    roles,
+    defaultPassword = '123456',
+    harborPassword = '123456',
+  } = options;
   const preferredUsername = username ?? 'nop';
 
   await page.addInitScript(() => {
@@ -388,7 +395,7 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<Log
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(buildMockLoginResponse(requestedUsername)),
+      body: JSON.stringify(buildMockLoginResponse(requestedUsername, roles)),
     });
   });
 
@@ -411,22 +418,24 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<Log
   await setup?.();
   await page.goto('/#/auth/login');
 
-  const harborHeading = page.getByText('Harbor Sign-in');
-  const isHarborLogin = await harborHeading
+  const passwordInput = page.locator('input[type="password"]');
+  const hasPasswordInput = await passwordInput
     .waitFor({ state: 'visible', timeout: 5_000 })
     .then(() => true)
     .catch(() => false);
 
-  if (isHarborLogin) {
-    await page.getByLabel('Username').fill(username ?? 'harbor');
-    await page.getByLabel('Password').fill(harborPassword);
-    await page.getByRole('button', { name: /Enter Harbor/i }).click();
+  if (!hasPasswordInput) {
+    const usernameInput = page.locator('input').first();
+    const submitButton = page.locator('button[type="submit"]');
+
+    await expect(submitButton).toBeVisible();
+    await usernameInput.fill(username ?? 'harbor');
+    await submitButton.click();
     await expect(page).not.toHaveURL(/#\/auth\/login$/);
     return 'harbor';
   }
 
   const usernameInput = page.locator('input').first();
-  const passwordInput = page.locator('input[type="password"]');
   const submitButton = page.locator('button[type="submit"]');
 
   await expect(submitButton).toBeVisible();

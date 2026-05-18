@@ -1,6 +1,6 @@
 import { Suspense, lazy, useMemo } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { filterMenusByRoles, flattenMenus, sortMenus } from '@nop-chaos/shared';
+import { flattenMenus, sortMenus } from '@nop-chaos/shared';
 import { useAuth } from '../hooks/useAuth';
 import { useMenuConfigQuery } from '../hooks/useMenuConfig';
 import { RouteRenderer } from './RouteRenderer';
@@ -43,15 +43,12 @@ function dedupeRoutesByPath(items: ReturnType<typeof flattenMenus>) {
 // Both layers operate independently so that direct URL access is still guarded even
 // when a route is not present in the filtered menu.
 export function AppRoutes() {
-  const { isAuthenticated, user, bootstrapStatus } = useAuth();
+  const { isAuthenticated, bootstrapStatus } = useAuth();
   const bootstrapPending = bootstrapStatus === 'idle' || bootstrapStatus === 'pending';
   const menuQuery = useMenuConfigQuery(isAuthenticated && !bootstrapPending);
-  const items = useMemo(
-    () =>
-      dedupeRoutesByPath(
-        flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? [])),
-      ),
-    [menuQuery.data?.items, user?.roles],
+  const routeItems = useMemo(
+    () => dedupeRoutesByPath(flattenMenus(sortMenus(menuQuery.data?.items ?? []))),
+    [menuQuery.data?.items],
   );
 
   const homePath = menuQuery.data?.home ?? '/';
@@ -99,7 +96,7 @@ export function AppRoutes() {
           return <Route key={path} path={path} element={<Component />} />;
         })}
         {menuQuery.isSuccess
-          ? items.map((item) => (
+          ? routeItems.map((item) => (
               <Route
                 key={item.id}
                 path={normalizePath(item.path)}

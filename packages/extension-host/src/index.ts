@@ -5,6 +5,7 @@ export {
   setLoadedExtensions,
   getLoadedExtensions,
   setShellRuntimeConfig,
+  subscribeShellRuntimeConfig,
   getShellRuntimeConfig,
   getExtensionDefaultHomePath,
   getSystemPageComponentId,

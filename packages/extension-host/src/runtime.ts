@@ -89,6 +89,13 @@ const defaultShellRuntimeConfig: ShellRuntimeConfig = {
 }
 
 let shellRuntimeConfig: ShellRuntimeConfig = defaultShellRuntimeConfig
+const shellRuntimeConfigListeners = new Set<() => void>()
+
+function notifyShellRuntimeConfigListeners() {
+  for (const listener of shellRuntimeConfigListeners) {
+    listener()
+  }
+}
 
 export function setLoadedExtensions(extensions: LoadedExtension[]) {
   loadedExtensions = extensions
@@ -114,23 +121,19 @@ export function setShellRuntimeConfig(config: ShellRuntimeConfig) {
       ...config.systemPages
     }
   }
+
+  notifyShellRuntimeConfigListeners()
 }
 
 export function getShellRuntimeConfig(): ShellRuntimeConfig {
-  return {
-    branding: {
-      ...shellRuntimeConfig.branding
-    },
-    loginUi: {
-      ...shellRuntimeConfig.loginUi,
-      features: [...shellRuntimeConfig.loginUi.features]
-    },
-    shell: {
-      ...shellRuntimeConfig.shell
-    },
-    systemPages: {
-      ...shellRuntimeConfig.systemPages
-    }
+  return shellRuntimeConfig
+}
+
+export function subscribeShellRuntimeConfig(listener: () => void): () => void {
+  shellRuntimeConfigListeners.add(listener)
+
+  return () => {
+    shellRuntimeConfigListeners.delete(listener)
   }
 }
 

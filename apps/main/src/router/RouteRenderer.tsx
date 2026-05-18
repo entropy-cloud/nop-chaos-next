@@ -8,6 +8,8 @@ import { ensurePluginSharedModules } from '../plugins/sharedModules';
 import { usePluginStore } from '../store/pluginStore';
 import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry';
 
+const IFRAME_SANDBOX_ALLOWLIST = 'allow-scripts allow-same-origin allow-forms allow-popups';
+
 const AmisRouteRenderer = lazy(async () => {
   const [{ ensureAmisRuntime }, module] = await Promise.all([
     import('../amis/init'),
@@ -109,7 +111,12 @@ export function RouteRenderer({ item }: RouteRendererProps) {
     if (item.pageType === 'iframe' && item.frameSrc) {
       return (
         <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[hsl(var(--border))] bg-[var(--card-surface)] shadow-md">
-          <iframe className="h-[calc(100vh-11rem)] w-full" src={item.frameSrc} title={title} />
+          <iframe
+            className="h-[calc(100vh-11rem)] w-full"
+            sandbox={IFRAME_SANDBOX_ALLOWLIST}
+            src={item.frameSrc}
+            title={title}
+          />
         </div>
       );
     }

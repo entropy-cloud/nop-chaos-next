@@ -1,13 +1,16 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { AppTab } from '@nop-chaos/shared';
+import { getCurrentHomePath } from '../config/homePath';
 
-const homeTab: AppTab = {
-  path: '/dashboard',
-  title: 'Dashboard',
-  icon: 'layout-dashboard',
-  closable: false,
-};
+function createHomeTab(): AppTab {
+  return {
+    path: getCurrentHomePath(),
+    title: 'Dashboard',
+    icon: 'layout-dashboard',
+    closable: false,
+  };
+}
 
 interface TabStore {
   tabs: AppTab[];
@@ -22,8 +25,8 @@ interface TabStore {
 export const useTabStore = create<TabStore>()(
   persist(
     (set) => ({
-      tabs: [homeTab],
-      activePath: homeTab.path,
+      tabs: [createHomeTab()],
+      activePath: getCurrentHomePath(),
       openTab: (tab) =>
         set((state) => ({
           activePath: tab.path,
@@ -33,9 +36,16 @@ export const useTabStore = create<TabStore>()(
         })),
       setActivePath: (path) => set({ activePath: path }),
       closeTab: (path) => {
-        let nextPath = homeTab.path;
+        let nextPath = getCurrentHomePath();
         set((state) => {
+          const homeTab = createHomeTab();
           const currentIndex = state.tabs.findIndex((item) => item.path === path);
+
+          if (currentIndex < 0) {
+            nextPath = state.activePath;
+            return { tabs: state.tabs, activePath: state.activePath };
+          }
+
           const nextTabs = state.tabs.filter(
             (item) => item.path !== path || item.closable === false,
           );
@@ -49,11 +59,22 @@ export const useTabStore = create<TabStore>()(
         return nextPath;
       },
       closeOtherTabs: (path) =>
-        set((state) => ({
-          tabs: state.tabs.filter((item) => item.closable === false || item.path === path),
-          activePath: path,
-        })),
-      closeAllTabs: () => set({ tabs: [homeTab], activePath: homeTab.path }),
+        set((state) => {
+          const homeTab = createHomeTab();
+          const keptTabs = state.tabs.filter((item) => item.closable === false || item.path === path);
+          const homeAwareTabs = keptTabs.some((item) => item.path === homeTab.path)
+            ? keptTabs.map((item) => (item.closable === false ? homeTab : item))
+            : [homeTab, ...keptTabs.filter((item) => item.path !== homeTab.path)];
+
+          return {
+            tabs: homeAwareTabs,
+            activePath: path,
+          };
+        }),
+      closeAllTabs: () => {
+        const homeTab = createHomeTab();
+        set({ tabs: [homeTab], activePath: homeTab.path });
+      },
     }),
     {
       name: 'tabs:v1',

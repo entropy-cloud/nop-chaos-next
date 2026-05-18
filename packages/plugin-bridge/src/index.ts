@@ -8,15 +8,14 @@ export { setPluginBridge, getPluginBridge, subscribePluginBridge, getPluginBridg
 
 const FALLBACK_THEME_CONFIG: ThemeConfig = { themeId: 'classic', displayMode: 'light' };
 const FALLBACK_I18N: BridgeI18n = { language: 'en-US', t: (key: string) => key };
+const FALLBACK_NOTIFICATIONS: PluginBridgeNotifications = {
+  success: () => undefined,
+  error: () => undefined,
+  info: () => undefined,
+};
 
 function subscribeBridgeSnapshot(listener: () => void): () => void {
-  const unsubscribeBridge = subscribePluginBridge(listener);
-  const unsubscribeSnapshot = getPluginBridge()?.subscribe(listener) ?? (() => undefined);
-
-  return () => {
-    unsubscribeSnapshot();
-    unsubscribeBridge();
-  };
+  return subscribePluginBridge(listener);
 }
 
 function subscribeBridgeStore(listener: () => void): () => void {
@@ -69,11 +68,9 @@ export function usePluginI18n(): BridgeI18n {
 }
 
 export function usePluginNotifications(): PluginBridgeNotifications {
-  return (
-    getPluginBridge()?.notifications ?? {
-      success: () => undefined,
-      error: () => undefined,
-      info: () => undefined,
-    }
+  return useSyncExternalStore(
+    subscribeBridgeStore,
+    () => getPluginBridge()?.notifications ?? FALLBACK_NOTIFICATIONS,
+    () => getPluginBridge()?.notifications ?? FALLBACK_NOTIFICATIONS,
   );
 }

@@ -27,3 +27,21 @@ export function applyThemeToDocument(themeConfig: ThemeConfig): void {
   root.dataset.mode = resolvedMode;
   root.classList.toggle('dark', resolvedMode === 'dark');
 }
+
+export function subscribeToSystemDisplayMode(themeConfig: ThemeConfig, onChange?: () => void) {
+  if (themeConfig.displayMode !== 'system') {
+    return () => undefined;
+  }
+
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const handleChange = () => {
+    applyThemeToDocument(themeConfig);
+    onChange?.();
+  };
+
+  mediaQuery.addEventListener('change', handleChange);
+
+  return () => {
+    mediaQuery.removeEventListener('change', handleChange);
+  };
+}

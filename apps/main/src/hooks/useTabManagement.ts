@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { AppTab } from '@nop-chaos/shared';
+import { getCurrentHomePath } from '../config/homePath';
 import { useTabStore } from '../store/tabStore';
 
 export function useTabManagement() {
@@ -35,7 +36,7 @@ export function useTabManagement() {
       },
       closeAllTabs: () => {
         closeAll();
-        navigate('/dashboard');
+        navigate(getCurrentHomePath());
       },
     }),
     [activate, activePath, close, closeAll, closeOthers, navigate, open, tabs],

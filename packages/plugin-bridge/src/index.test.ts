@@ -21,6 +21,56 @@ import {
 const hostKey = '__NOP_PLUGIN_BRIDGE__';
 const listenersKey = '__NOP_PLUGIN_BRIDGE_LISTENERS__';
 
+function createBoundStore<T>(state: T) {
+  return Object.assign(
+    <U,>(selector?: (current: T) => U) => (selector ? selector(state) : state),
+    {
+      getState: () => state,
+      subscribe: () => () => undefined,
+    },
+  );
+}
+
+function createSubscribableBridge(options?: {
+  notifications?: PluginBridge['notifications'];
+  onSubscribe?: (listener: () => void) => void;
+}) {
+  const themeConfig: ThemeConfig = { themeId: 'classic', displayMode: 'light' };
+  let listener: (() => void) | undefined;
+
+  return {
+    bridge: {
+      ...createBridge(),
+      notifications:
+        options?.notifications ??
+        ({
+          success: vi.fn(),
+          error: vi.fn(),
+          info: vi.fn(),
+        } satisfies PluginBridge['notifications']),
+      subscribe: (nextListener: () => void) => {
+        listener = nextListener;
+        options?.onSubscribe?.(nextListener);
+        return () => {
+          if (listener === nextListener) {
+            listener = undefined;
+          }
+        };
+      },
+      getSnapshot: () => ({
+        i18n: {
+          language: 'en-US',
+          t: (key: string) => key,
+        } as PluginBridge['i18n'],
+        themeConfig,
+        user: null,
+        plugins: [],
+      }),
+    } satisfies PluginBridge,
+    emit: () => listener?.(),
+  };
+}
+
 function createBridge(): PluginBridge {
   const themeConfig: ThemeConfig = { themeId: 'classic', displayMode: 'light' };
 
@@ -35,18 +85,9 @@ function createBridge(): PluginBridge {
       info: vi.fn(),
     },
     stores: {
-      authStore: Object.assign(() => ({ user: null, isAuthenticated: false }), {
-        getState: () => ({ user: null, isAuthenticated: false }),
-        subscribe: () => () => undefined,
-      }),
-      themeStore: Object.assign(() => ({ themeConfig }), {
-        getState: () => ({ themeConfig }),
-        subscribe: () => () => undefined,
-      }),
-      pluginStore: Object.assign(() => ({ plugins: [] }), {
-        getState: () => ({ plugins: [] }),
-        subscribe: () => () => undefined,
-      }),
+      authStore: createBoundStore({ user: null, isAuthenticated: false }),
+      themeStore: createBoundStore({ themeConfig }),
+      pluginStore: createBoundStore({ plugins: [] }),
     },
     navigate: vi.fn(),
     getCurrentUser: () => null,
@@ -89,6 +130,18 @@ describe('plugin bridge', () => {
     expect(bridge.navigate).toHaveBeenCalledWith('/plugins/management', { replace: true });
   });
 
+  it('supports selector calls on bound stores', () => {
+    const user: User = {
+      id: 'user-1',
+      username: 'tester',
+      roles: ['admin'],
+    };
+    const bridge = createBridgeWithUser(user);
+
+    expect(bridge.stores.authStore((state) => state.user?.id)).toBe('user-1');
+    expect(bridge.stores.authStore((state) => state.isAuthenticated)).toBe(true);
+  });
+
   it('notifies bridge subscribers when host bridge updates', () => {
     const listener = vi.fn();
     const unsubscribe = subscribePluginBridge(listener);
@@ -96,6 +149,25 @@ describe('plugin bridge', () => {
     setPluginBridge(createBridge());
 
     expect(listener).toHaveBeenCalledTimes(1);
+
+    unsubscribe();
+  });
+
+  it('fans out bridge snapshot notifications through one host listener path', () => {
+    const subscribedListeners: Array<() => void> = [];
+    const { bridge, emit } = createSubscribableBridge({
+      onSubscribe: (listener) => subscribedListeners.push(listener),
+    });
+    const hostListener = vi.fn();
+
+    const unsubscribe = subscribePluginBridge(hostListener);
+
+    setPluginBridge(bridge);
+    expect(subscribedListeners).toHaveLength(1);
+    expect(hostListener).toHaveBeenCalledTimes(1);
+
+    emit();
+    expect(hostListener).toHaveBeenCalledTimes(2);
 
     unsubscribe();
   });
@@ -164,18 +236,9 @@ function createBridgeWithUser(user: User | null = null): PluginBridge {
       info: vi.fn(),
     },
     stores: {
-      authStore: Object.assign(() => ({ user, isAuthenticated: user !== null }), {
-        getState: () => ({ user, isAuthenticated: user !== null }),
-        subscribe: () => () => undefined,
-      }),
-      themeStore: Object.assign(() => ({ themeConfig }), {
-        getState: () => ({ themeConfig }),
-        subscribe: () => () => undefined,
-      }),
-      pluginStore: Object.assign(() => ({ plugins: [] }), {
-        getState: () => ({ plugins: [] }),
-        subscribe: () => () => undefined,
-      }),
+      authStore: createBoundStore({ user, isAuthenticated: user !== null }),
+      themeStore: createBoundStore({ themeConfig }),
+      pluginStore: createBoundStore({ plugins: [] }),
     },
     navigate: vi.fn(),
     getCurrentUser: () => user,
@@ -364,6 +427,42 @@ describe('plugin bridge hooks', () => {
       notifications.success('ok');
 
       expect(bridge.notifications.success).toHaveBeenCalledWith('ok');
+    });
+
+    it('updates to the latest bridge notifications when bridge instance changes', () => {
+      const firstNotifications = {
+        success: vi.fn(),
+        error: vi.fn(),
+        info: vi.fn(),
+      };
+      const secondNotifications = {
+        success: vi.fn(),
+        error: vi.fn(),
+        info: vi.fn(),
+      };
+
+      setPluginBridge(createSubscribableBridge({ notifications: firstNotifications }).bridge);
+      let notifications = usePluginNotifications();
+      notifications.success('first');
+
+      setPluginBridge(createSubscribableBridge({ notifications: secondNotifications }).bridge);
+      notifications = usePluginNotifications();
+      notifications.success('second');
+
+      expect(firstNotifications.success).toHaveBeenCalledWith('first');
+      expect(secondNotifications.success).toHaveBeenCalledWith('second');
+    });
+
+    it('subscribes through useSyncExternalStore', () => {
+      const mockFn = React.useSyncExternalStore as ReturnType<typeof vi.fn>;
+
+      usePluginNotifications();
+
+      expect(mockFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        expect.any(Function),
+      );
     });
   });
 });
