@@ -1,7 +1,7 @@
 # 07 Demo Reference Surface Plan
 
-> Plan Status: in_progress
-> Last Reviewed: 2026-05-15
+> Plan Status: completed
+> Last Reviewed: 2026-05-17
 > Source: `docs/analysis/2026-05-15-open-ended-review/round-02-demo-quality.md`
 > Related: `docs/plans/06-accessibility-and-i18n-contract-plan.md`
 
@@ -92,7 +92,7 @@ Exit Criteria:
 - [x] `ExtensionLoginPage.tsx` 的类型边界不再使用 `as unknown as`。
 - [x] 相关 package 声明与文档口径一致。
 - [x] `docs/examples/plugin-dev-guide.md` 已同步更新依赖边界与 demo 脚本约定
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 2 - 示例 i18n 诚实化
 
@@ -112,7 +112,7 @@ Exit Criteria:
 - [x] extension-demo 页面不再与其 locale 资产自相矛盾。
 - [x] 两个 demo 至少各有一条测试证明其 i18n 路径真实成立。
 - [x] 如 demo 对外开发说明发生变化，`docs/examples/plugin-dev-guide.md` 已同步更新
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 3 - 测试发现与文档对齐
 
@@ -131,7 +131,7 @@ Exit Criteria:
 - [x] `vitest.workspace.ts` 能发现两个 demo 的测试配置。
 - [x] 两个 demo 都至少有一个测试文件，并可通过各自 package script 运行。
 - [x] `docs/examples/plugin-dev-guide.md` 的目录、版本、脚本、依赖边界与 live repo 一致。
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 4 - 示例目录最小静态约束
 
@@ -150,20 +150,20 @@ Exit Criteria:
 - [x] 对 examples 的允许例外边界有明确规则，而非依赖隐式惯例。
 - [x] `pnpm lint` 通过。
 - [x] `docs/examples/plugin-dev-guide.md` 已记录 examples 的相关开发约束
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `docs/logs/` 对应日期条目已更新
 
 ## Closure Gates
 
-- [ ] 所有 in-scope confirmed live defects 已修复或被明确移出当前 scope
-- [ ] demo/reference surface 已达到仓库内最低可信基线，不再误导复制者
-- [ ] 两个 demo 均有最小测试基线，且 workspace discovery 可验证
-- [ ] 文档与 live repo 已同步，不存在目录/版本/脚本漂移
-- [ ] examples 的最小静态约束已建立
-- [ ] 独立子 agent / 独立审阅者 closure-audit 已完成并记录证据
-- [ ] `pnpm typecheck`
-- [ ] `pnpm build`
-- [ ] `pnpm lint`
-- [ ] `pnpm test`
+- [x] 所有 in-scope confirmed live defects 已修复或被明确移出当前 scope
+- [x] demo/reference surface 已达到仓库内最低可信基线，不再误导复制者
+- [x] 两个 demo 均有最小测试基线，且 workspace discovery 可验证
+- [x] 文档与 live repo 已同步，不存在目录/版本/脚本漂移
+- [x] examples 的最小静态约束已建立
+- [x] 独立子 agent / 独立审阅者 closure-audit 已完成并记录证据
+- [x] `pnpm typecheck`
+- [x] `pnpm build`
+- [x] `pnpm lint`
+- [x] `pnpm test`
 
 ## Deferred But Adjudicated
 
@@ -180,13 +180,13 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: Live repo 已完成 demo 依赖/安全反模式修复、plugin-demo 与 extension-demo i18n 资源对齐、focused tests 补齐与 plugin dev guide 同步；closure 仍待本轮总体验证与独立 closure-audit 回填。
+Status Note: Live repo 现已完成 demo 依赖声明、portable build/docs、i18n 资源、最小测试基线与 examples 静态约束收口；`extension-demo` 登录示例已改为显式 demo-only mock session 生成，不再依赖硬编码密码或固定 token，且全仓 `pnpm typecheck`、`pnpm build`、`pnpm lint`、`pnpm test` 已通过。
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: independent closure audit（earlier pass in current session）
-- Evidence: 审核结论曾将 `examples/extension-demo/src/pages/ExtensionLoginPage.tsx`、`ExtensionBuiltinPage.tsx`、`ExtensionNotFoundPage.tsx`、`docs/examples/plugin-dev-guide.md`、`examples/plugin-demo/src/index.test.tsx`、`examples/extension-demo/src/index.test.ts` 识别为 closure blocker；本轮已逐项补齐 live code、locale assets、focused tests 与文档，但需要在总计划 closure audit 中重新验证后再标记整计划完成。
+- Reviewer / Agent: independent closure audit（current session, refreshed after final fixes）
+- Evidence: 终态收口后重新核对 `docs/examples/plugin-dev-guide.md`、`examples/plugin-demo/package.json`、`examples/plugin-demo/scripts/{build-with-rollup,sync-to-host}.mjs`、`examples/plugin-demo/src/index.test.tsx`、`examples/extension-demo/package.json`、`examples/extension-demo/src/index.test.ts`、`examples/extension-demo/src/pages/{ExtensionLoginPage,ExtensionBuiltinPage,ExtensionNotFoundPage}.tsx`、`examples/extension-demo/src/pages/demoSession.ts` 与 locale 资源；确认 demo 登录已改为无硬编码凭据的 mock session，workspace discovery 仍覆盖两个 demo，且全仓 `pnpm typecheck`、`pnpm build`、`pnpm lint`、`pnpm test` 全部通过。
 
 Follow-up:
 
-- <<只记录 non-blocking follow-up>>
+- `Plugin Shared Module` 的生产级竞态治理仍由 `docs/plans/11-dx-store-security-plan.md` 后续承接，不阻塞当前 demo/reference baseline closure。

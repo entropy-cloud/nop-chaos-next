@@ -113,27 +113,42 @@ examples/extension-demo/
 
 ```json
 {
+  "devDependencies": {
+    "@nop-chaos/plugin-bridge": "workspace:*",
+    "@nop-chaos/shared": "workspace:*",
+    "@nop-chaos/ui": "workspace:*",
+    "@tanstack/react-query": "^5.96.1",
+    "i18next": "26.0.5",
+    "lucide-react": "^1.7.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "17.0.4",
+    "react-router-dom": "^7.14.0",
+    "recharts": "^3.8.1",
+    "sonner": "^2.0.7",
+    "systemjs": "^6.15.1",
+    "zustand": "^5.0.12"
+  },
   "peerDependencies": {
     "@nop-chaos/plugin-bridge": "workspace:*",
     "@nop-chaos/shared": "workspace:*",
     "@nop-chaos/ui": "workspace:*",
-    "@tanstack/react-query": "^5",
-    "i18next": "^25",
-    "react-i18next": "^16",
-    "react-router-dom": "^7",
-    "recharts": "^2",
-    "sonner": "^2",
-    "systemjs": "^6",
-    "zustand": "^5"
-  },
-  "devDependencies": {
-    "react": "^18",
-    "react-dom": "^18"
+    "@tanstack/react-query": "^5.96.1",
+    "i18next": "26.0.5",
+    "lucide-react": "^1.7.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "17.0.4",
+    "react-router-dom": "^7.14.0",
+    "recharts": "^3.8.1",
+    "sonner": "^2.0.7",
+    "systemjs": "^6.15.1",
+    "zustand": "^5.0.12"
   }
 }
 ```
 
-> 注意：`plugin-demo` 将 `react` / `react-dom` 保留在 devDependencies 中用于本地开发与测试，运行时依赖仍由宿主提供；其他共享运行时能力通过 peerDependencies 声明。
+> 注意：`plugin-demo` 将 `react` / `react-dom` 保留在 devDependencies 中用于本地开发与测试，运行时依赖仍由宿主提供；其余共享运行时能力会同时出现在 devDependencies 与 peerDependencies 中，以兼顾 monorepo 内本地构建/测试和脱离 workspace 后的宿主契约声明。
 
 ---
 

@@ -7,18 +7,11 @@ import {
   usePluginI18n,
   usePluginNotifications,
 } from '@nop-chaos/plugin-bridge';
-import type { AuthSession, User } from '@nop-chaos/shared';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Input,
-} from '@nop-chaos/ui';
+import type { AuthSession } from '@nop-chaos/shared';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from '@nop-chaos/ui';
 
 import harborMarkHref from '../harbor-mark.svg';
+import { createDemoSession } from './demoSession';
 
 interface AuthStoreWithActions {
   login: (payload: AuthSession) => void;
@@ -27,8 +20,6 @@ interface AuthStoreWithActions {
 type BridgeAuthStore = {
   getState: () => Partial<AuthStoreWithActions>;
 };
-
-const DEMO_PASSWORD = 'harbor-demo';
 
 function getAuthStoreActions() {
   const bridge = getPluginBridge();
@@ -41,30 +32,11 @@ function getAuthStoreActions() {
   return authStore.getState();
 }
 
-function createDemoSession(username: string): AuthSession {
-  const trimmedUsername = username.trim() || 'harbor';
-  const user: User = {
-    id: trimmedUsername,
-    username: trimmedUsername,
-    nickname: 'Harbor Captain',
-    roles: ['admin'],
-  };
-
-  return {
-    user,
-    token: `extension-demo-token:${trimmedUsername}`,
-    tokens: {
-      accessToken: `extension-demo-token:${trimmedUsername}`,
-    },
-  };
-}
-
 export function ExtensionLoginPage() {
   const bridge = usePluginBridge();
   const i18n = usePluginI18n();
   const notifications = usePluginNotifications();
   const [username, setUsername] = useState('harbor');
-  const [password, setPassword] = useState(DEMO_PASSWORD);
   const [submitting, setSubmitting] = useState(false);
   const featureCards = [
     {
@@ -104,10 +76,6 @@ export function ExtensionLoginPage() {
 
     try {
       setSubmitting(true);
-
-      if (password !== DEMO_PASSWORD) {
-        throw new Error(i18n.t('extensionDemo.login.messages.invalidPassword'));
-      }
 
       authActions.login(createDemoSession(username));
       notifications.success(i18n.t('extensionDemo.login.messages.loginSuccess'));
@@ -203,21 +171,6 @@ export function ExtensionLoginPage() {
                     name="username"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
-                  />
-                </div>
-              </label>
-              <label className="block space-y-2">
-                <span className="text-sm font-medium text-slate-900">
-                  {i18n.t('extensionDemo.login.password')}
-                </span>
-                <div className="relative">
-                  <KeyRound className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    className="border-slate-200 bg-white/90 pl-10"
-                    name="password"
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
                   />
                 </div>
               </label>

@@ -38,7 +38,7 @@ describe('extension-demo i18n contract', () => {
     const requiredKeys = [
       'extensionDemo.login.heroEyebrow',
       'extensionDemo.login.signInTitle',
-      'extensionDemo.login.messages.invalidPassword',
+      'extensionDemo.login.demoCredentials',
       'extensionDemo.login.overrideFeatures.sharedRuntime.description',
       'extensionDemo.builtinPage.howItWorks.title',
       'extensionDemo.builtinPage.sharedStack.items.hostRegistration',
