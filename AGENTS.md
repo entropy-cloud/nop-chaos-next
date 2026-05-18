@@ -220,6 +220,7 @@ When creating, revising, executing, or auditing a file under `docs/plans/`, you 
 - Consider Playwright when changing visible cross-component flows.
 - For routing, permissions, theme, plugin loading, or shell changes, run the narrowest meaningful test first.
 - If you cannot run verification, state exactly what should be run manually.
+- Whenever unit tests and e2e tests both pass completely (full green), record that result in the daily dev log and include the verification status explicitly in the git commit message.
 
 ## Agent Habits
 
