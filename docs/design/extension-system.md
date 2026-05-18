@@ -96,6 +96,14 @@ interface ExtensionShellConfig {
 }
 ```
 
+当前这 3 个外链字段属于 supported shell 合同，而不是仅做 runtime merge 的保留位：
+
+- `helpUrl`：显示在侧栏用户菜单的 Help 项
+- `aboutUrl`：显示在侧栏用户菜单的 About 项
+- `supportUrl`：显示在侧栏用户菜单的 Support 项
+
+主应用消费点位于 `apps/main/src/components/layout/SidebarUserMenu.tsx`，点击后通过 `window.open(url, '_blank', 'noopener,noreferrer')` 打开外链。
+
 ### 2.5 系统页替换
 
 ```ts
@@ -152,6 +160,13 @@ Extension 模块本身仍支持三种导出方式：
 5. 归并 shell runtime config
 6. 注册语言、主题、样式、内置页面
 7. 合并菜单和插件清单
+
+当前 live bootstrap 还有两条语义约束：
+
+- `bootstrapExtensions()` 在宿主首次渲染前完成，且 `initializeI18n()` 会在 extension 定义落地后才执行；因此 extension 的 auth config、default language、supported languages、theme 和 builtin page 注册不会再晚于首次 i18n 初始化或首次页面渲染。
+- 语言注册优先使用 `supportedLanguages`；`languages` 仅保留为兼容旧 manifest 的 deprecated alias。bootstrap 会先 `resetLanguages()` 回到 host 默认语言表，再按 extension 顺序执行 `registerLanguages(...)`，因此多个 extension 会叠加语言能力，而不是由最后一个 extension 覆盖前面的注册结果。
+- `plugins` 不再是“类型存在但 host 忽略”的半连接字段。`apps/main/src/extensions/bootstrap.ts` 会把 extension 提供的 plugin manifests 合并进 `apps/main/src/store/pluginStore.ts`，因此插件管理页和 plugin bridge 快照都能观察到同一份扩展后的插件清单。
+- `systemPages.login` 和 `systemPages.notFound` 现在都会被 `apps/main/src/router/AppRoutes.tsx` 消费；extension 可以在不改动宿主 URL 结构的前提下覆盖登录页和 shell fallback 页面。
 
 ### 3.3 Runtime 配置
 
@@ -220,6 +235,12 @@ getSystemPageComponentId(page: keyof ExtensionSystemPagesConfig): string | undef
 
 兼容性：如果 `branding` 未提供，回退到 `app` 字段。
 
+语言字段的兼容策略单独约定如下：
+
+- 推荐字段：`supportedLanguages`
+- 兼容字段：`languages`（deprecated）
+- 运行时语义：host 默认语言 + 所有 extension 追加注册后的去重合集
+
 ---
 
 ## 5. 页面级扩展
@@ -262,6 +283,7 @@ systemPages: {
 - 菜单扩展
 - 插件清单声明
 - 默认首页路径
+- Help / About / Support 外链
 - 系统页替换
 
 ### 6.2 适合 Page Component 替换
@@ -319,10 +341,17 @@ VITE_DEMO_EXTENSION_ALIAS_PATH=../external-extension/src/index.ts
 - 单个 extension 加载失败不阻塞宿主启动
 - 记录清晰错误日志
 - 失败项不参与后续合并
+- `loadExtensions()` 对 `load` / `resolve` / `setup` 三个阶段都施加 `10_000ms` timeout；挂死或永不 resolve 的 source 会被记录为失败并跳过，而不会无限阻塞宿主启动
 
 ### 8.2 冲突处理
 
 对关键主键冲突（theme id、menu path、plugin id）打出告警日志。
+
+### 8.3 Contract Guard
+
+- `ShellExtension` 不再以“非空 `id`”作为唯一通过条件。
+- 当前 runtime guard 还会校验 `setup` 必须是函数、`supportedLanguages` 条目必须具备合法 `code` 与 `labelKey`、`themes` 条目必须具备合法 `id` / `labelKey`，以及可选 `descriptionKey` / `cssHref` 的类型正确。
+- 不满足这些最小 public contract 的扩展会被按加载失败处理，并输出带 source id 的错误信息。
 
 ---
 
@@ -334,4 +363,6 @@ VITE_DEMO_EXTENSION_ALIAS_PATH=../external-extension/src/index.ts
 | `apps/main/src/extensions/loadExtensions.ts` | 加载逻辑       |
 | `apps/main/src/extensions/bootstrap.ts`      | 启动引导       |
 | `apps/main/src/extensions/runtime.ts`        | 运行时配置     |
+| `apps/main/src/components/layout/SidebarUserMenu.tsx` | shell 外链消费 |
+| `apps/main/src/store/pluginStore.ts`         | extension plugin 合并后的宿主清单 |
 | `apps/main/src/extensions/demo/index.ts`     | 示例 extension |

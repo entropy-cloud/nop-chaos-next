@@ -61,6 +61,9 @@ Bug fix records for non-trivial issues.
 | [32-plugin-bridge-unstable-snapshot-loop.md](./bugs/32-plugin-bridge-unstable-snapshot-loop.md) | Plugin bridge unstable snapshot render loop |
 | [33-dialog-padding-and-drawer-select-broken.md](./bugs/33-dialog-padding-and-drawer-select-broken.md) | Dialog padding and drawer select broken |
 | [34-master-detail-query-sync-effect-loop.md](./bugs/34-master-detail-query-sync-effect-loop.md) | Master detail query sync effect loop |
+| [36-extension-contract-half-connection-closure.md](./bugs/36-extension-contract-half-connection-closure.md) | Extension contract half-connection closure |
+| [37-runtime-state-canonicalization-fixes.md](./bugs/37-runtime-state-canonicalization-fixes.md) | Runtime state canonicalization fixes |
+| [38-ai-workbench-lifecycle-cancellation.md](./bugs/38-ai-workbench-lifecycle-cancellation.md) | AI Workbench lifecycle cancellation |
 
 ## Testing (`testing/`)
 

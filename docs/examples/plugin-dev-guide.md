@@ -55,6 +55,7 @@
 
 - `examples/plugin-demo` 是远程插件参考实现：组件内使用 `react-i18next` 的 `useTranslation()`，locale 文件位于 `examples/plugin-demo/public/locales/{lng}/translation.json`
 - `examples/extension-demo` 是 extension 内建页 / system page 参考实现：页面文案通过 `@nop-chaos/plugin-bridge` 的 `usePluginI18n()` 读取，locale 文件位于 `examples/extension-demo/public/locales/{lng}/translation.json`
+- extension manifest 声明语言时优先使用 `supportedLanguages`；`languages` 仅为兼容旧 manifest 的 deprecated alias，不再作为新示例或脚手架默认写法
 - 如果示例代码声明自己支持多语言，就必须同时提交对应 locale 资源与最小 focused test；不要保留“调用 `t()` 但没有资源文件”的假基线
 - 示例目录已纳入 `eslint.config.js` 的 `i18next/no-literal-string` 约束；demo-only 文案例外需要显式收口到翻译资源或明确的非用户可见常量
 

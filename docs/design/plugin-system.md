@@ -23,6 +23,7 @@
 - 插件共享模块注册：`apps/main/src/plugins/sharedModules.ts`
 - extension 启动与 i18n 资源加载：`apps/main/src/extensions/bootstrap.ts`
 - 插件桥接快照与 hooks：`packages/plugin-bridge/src/index.ts`
+- host-only bridge setter：`packages/plugin-bridge/src/host.ts`
 
 ### 2.2 Remote plugin 侧
 
@@ -34,6 +35,7 @@
 
 - manifest / builtin page registration：`examples/extension-demo/src/index.ts`
 - system page override：`systemPages.login`、`systemPages.notFound`、`systemPages.dashboard`
+- extension plugin manifests：`ShellExtension.plugins`
 - locale 资源：`examples/extension-demo/public/locales/{lng}/translation.json`
 - focused proof：`examples/extension-demo/src/index.test.ts`
 
@@ -53,8 +55,27 @@
 
 - bridge 对 React 的可订阅更新只走一条 fan-out 路径：host 调用 `setPluginBridge()` 后，由当前 bridge 的 `subscribe()` 负责把 theme/auth/plugins/i18n 变化扇出到 `subscribePluginBridge()` listeners，避免重复通知或 bridge 首次注入后漏订阅
 - route change 不再重建 bridge identity；当前路径通过 runtime getter `getCurrentPath()` 读取，因此插件可以拿到最新 path，而不需要 host 因 `pathname` 变化重新注入整份 bridge
+- host 注入给 plugin bridge 的 `themeConfig` 是 canonical resolved theme，而不是持久化的原始 themeId；失效 themeId 会先回退到默认主题，再同时反映到 DOM、store 可见状态和 bridge snapshot
+- plugin-facing 根入口 `@nop-chaos/plugin-bridge` 不再导出 `setPluginBridge()`；该 setter 只从 `@nop-chaos/plugin-bridge/host` 暴露给宿主，remote plugin 无法再通过共享模块覆写全局 bridge
+- `PluginBridge.stores` 的 public contract 已明确为只读 `ReadableStore`（`getState()` + `subscribe()`），不再伪装成 Zustand hook
+- `usePluginI18n()` 返回 language-aware snapshot：当 bridge i18n 实例或 `language` / `supportedLngs` 变化时会生成新快照，确保语言切换能稳定触发 bridge 消费方重渲染
 
 不允许插件直接 import `@nop-chaos/core` 来绕过桥接层读取宿主运行时状态。
+
+### 3.1 Extension `plugins` 合同
+
+`ShellExtension.plugins` 当前属于 supported contract，不是保留字段。
+
+- runtime 接线：`apps/main/src/extensions/bootstrap.ts`
+- 宿主状态：`apps/main/src/store/pluginStore.ts`
+- 管理页消费：`apps/main/src/pages/plugins/management/index.tsx`
+- bridge 快照消费：`packages/plugin-bridge/src/index.ts`
+
+当前语义：
+
+- extension bootstrap 时，extension 提供的 plugin manifests 会合并进宿主现有 plugin baseline
+- 持久化插件状态仍以 `plugin.id` 为键覆盖当前 baseline，不会因为 bootstrap 重新注册而丢失 enablement 或 settings
+- plugin bridge hooks 从 host snapshot 读取这份合并后的插件清单，因此 `usePluginManifest(pluginId)` 与插件管理页看到的是同一份运行时数据
 
 ---
 
@@ -77,6 +98,7 @@
 
 - remote plugin：若组件调用 `react-i18next` 的 `t()`，必须同时提供真实 locale 资源与 focused test；当前参考实现见 `examples/plugin-demo`
 - extension builtin/system page：若 manifest 声明 `i18n.baseUrl` 与 `languages`，页面用户文案必须通过 `usePluginI18n()` 读取真实资源；当前参考实现见 `examples/extension-demo`
+- extension manifest 注册可选语言时，优先使用 `supportedLanguages`；`languages` 仅保留兼容旧 manifest
 - 示例目录已纳入 `eslint.config.js` 的 `i18next/no-literal-string` 约束，不能再用“大量硬编码英文 + 零资源文件”伪装支持多语言
 
 ---
@@ -96,6 +118,8 @@
 
 - 查询：`fetchPluginList()` (`apps/main/src/services/mockApi/plugins.ts`)
 - 本地状态：`apps/main/src/store/pluginStore.ts`
+
+extension `plugins` 会在 bootstrap 时并入 `pluginStore` baseline，因此这里的“本地状态”不仅包含 mock API seeds，也包含扩展清单贡献。
 
 “插件已注册”与“插件已被路由渲染”仍然是两个层次：
 

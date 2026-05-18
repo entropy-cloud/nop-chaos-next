@@ -111,3 +111,8 @@ VITE_DEMO_EXTENSION_ALIAS_PATH=../external-extension/src/index.ts
 - `src/standalone/main.tsx` - 独立调试入口
 - `src/theme.css` / `src/shell.css` / `src/component-page.css` - 样式文件
 - `README.md` - 项目说明
+
+生成器当前默认约定：
+
+- 新 manifest 使用 `supportedLanguages`，不再生成 deprecated `languages`
+- 生成的页面入口仍是 extension builtin page 合同，不会默认生成 remote plugin manifest

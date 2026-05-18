@@ -12,8 +12,8 @@
 
 - 默认 timeout：15 秒，由 `getTimeoutMs: () => 15_000` 提供
 - 自动注入 locale header：来自 `normalizeLanguageCode(i18n.language)`
-- 自动读取 access token / refresh token：来自 `useAuthStore`
-- login / logout 会同步 shared managed token storage，避免 Zustand auth state 与 shared tokenManager 双源漂移
+- 自动读取 access token / refresh token：来自 `@nop-chaos/shared` managed token storage
+- `apps/main/src/store/authStore.ts` 仍保留 UI/session state，但 `login` / `setSession` / `setToken` / `setTokens` / `clearTokens` / `logout` / persist rehydrate 都会同步 shared managed token storage，避免 Zustand auth state 与 shared tokenManager 双源漂移
 - 主动刷新与 401 重试共享同一把 refresh lock，避免并发重复 refresh
 - 首次 401 会在存在 refresh token 时触发一次 refresh + retry；若 refresh 失败、没有 refresh token，或 retry 后仍为 401，则统一走 unauthorized 终止路径
 - unauthorized 终止路径必须清理 managed tokens / auth store token state，并执行 `useAuthStore.getState().logout()`
@@ -46,9 +46,9 @@
 
 当前 bootstrap 顺序：
 
-1. `initializeI18n()`
-2. `setI18nGetter((key) => i18n.t(key))`
-3. `bootstrapExtensions()`
+1. `bootstrapExtensions()`
+2. `bootstrapExtensions()` 内先注册 extension auth / language / theme / builtin page 等定义
+3. `initializeI18n()` 在 extension 定义落地后执行，并在成功后由 i18n 模块内部调用 `setI18nGetter((key) => i18n.t(key))`
 4. `renderApp()`
 
 若上述任一步失败：
@@ -106,7 +106,8 @@
 当前合同：
 
 - auth 默认使用 session scope；其余 mock/shared 数据默认使用 local scope，除非显式另行裁定
-- `zustand persist`、storage helper 与 mock shared storage 需要保持同一 key/scope 口径
+- `zustand persist`、storage helper 与 managed token storage 需要保持同一 key/scope 口径
+- HTTP client 的运行时 token 读取以 managed token storage 为 canonical source；auth store 负责同步 UI/session state 与持久化恢复
 - bootstrap / unauthorized 失败后必须能清理 token 与认证态，避免刷新后重复复现无效 token
 
 ---
