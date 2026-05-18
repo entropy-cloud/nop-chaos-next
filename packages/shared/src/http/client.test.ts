@@ -63,7 +63,7 @@ describe('createHttpClient', () => {
     expect(setAuthToken).toHaveBeenCalledWith('token-2');
   });
 
-  it('calls unauthorized callback on 401 responses', async () => {
+  it('calls unauthorized callback and rejects when a 401 cannot be refreshed', async () => {
     const onUnauthorized = vi.fn();
     const client = createHttpClient({
       getBaseUrl: () => '',
@@ -85,12 +85,39 @@ describe('createHttpClient', () => {
       ),
     );
 
-    const response = await client.request({ url: '/secure' });
+    await expect(client.request({ url: '/secure' })).rejects.toThrow('Authentication required');
+    expect(onUnauthorized).toHaveBeenCalledTimes(1);
+  });
 
-    expect(response).toMatchObject({
-      status: 401,
-      data: 'denied',
+  it('clears tokens and triggers unauthorized flow when refresh retry still returns 401', async () => {
+    const onUnauthorized = vi.fn();
+    const clearTokens = vi.fn();
+    const client = createHttpClient({
+      getBaseUrl: () => '',
+      getLocale: () => 'en-US',
+      getAuthToken: () => 'expired-token',
+      getRefreshToken: () => 'refresh-token',
+      refreshAccessToken: async () => 'fresh-token',
+      clearTokens,
+      onUnauthorized,
     });
+
+    let callCount = 0;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        callCount += 1;
+        return new Response(JSON.stringify({ status: 401, msg: 'unauthorized' }), {
+          status: 401,
+          headers: { 'content-type': 'application/json' },
+        });
+      }),
+    );
+
+    await expect(client.request({ url: '/secure' })).rejects.toThrow('Authentication required');
+
+    expect(callCount).toBe(2);
+    expect(clearTokens).toHaveBeenCalledTimes(1);
     expect(onUnauthorized).toHaveBeenCalledTimes(1);
   });
 

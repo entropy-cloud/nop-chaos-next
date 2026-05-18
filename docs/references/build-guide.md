@@ -163,6 +163,7 @@ No build step required. `pnpm sync:flux` reads source files directly from the si
 - `lint-staged` runs `prettier --write` for `*.{ts,tsx}` in addition to ESLint, so pre-commit formatting is part of the live DX contract
 - `examples/plugin-demo` and `examples/extension-demo` now ship real `vitest.config.ts` files and focused tests; they are no longer allowed to rely on `--passWithNoTests` as a fake baseline
 - demo i18n is part of the reference surface: if a demo calls a translation API, it must also ship matching locale assets and tests
+- remote plugin bundles are expected to `default export` a React component; the host plugin slot now treats invalid default exports and long-running loads as explicit runtime errors instead of leaving the page in an indefinite loading state
 
 ---
 

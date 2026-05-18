@@ -13,8 +13,12 @@ describe('systemjs utils', () => {
   it('detects system entry urls with query strings', () => {
     expect(isSystemJsEntry('/plugins/plugin-demo.system.js')).toBe(true);
     expect(isSystemJsEntry('/plugins/plugin-demo.system.js?t=1')).toBe(true);
-    expect(isSystemJsEntry('https://example.com/plugins/plugin-demo.js')).toBe(false);
-    expect(isSystemJsEntry('data:text/javascript,export default {}')).toBe(false);
+    expect(() => isSystemJsEntry('https://example.com/plugins/plugin-demo.js')).toThrow(
+      'Only relative same-origin paths are allowed',
+    );
+    expect(() => isSystemJsEntry('data:text/javascript,export default {}')).toThrow(
+      'Only relative same-origin paths are allowed',
+    );
   });
 
   it('loads system bundles through System.import', async () => {
@@ -31,10 +35,10 @@ describe('systemjs utils', () => {
     expect(systemImport).toHaveBeenCalledWith('/plugins/plugin-demo.system.js?t=2');
   });
 
-  it('uses native import for non-system bundles', async () => {
-    const moduleUrl = 'data:text/javascript,export default function PluginDemo() { return null }';
-
-    await expect(loadRemoteComponent(moduleUrl)).resolves.toBeTypeOf('function');
+  it('rejects protocol-based remote component urls', async () => {
+    await expect(loadRemoteComponent('https://example.com/plugin.js')).rejects.toThrow(
+      'Only relative same-origin paths are allowed: https://example.com/plugin.js',
+    );
   });
 
   it('throws when SystemJS is missing for system entries', async () => {
@@ -80,5 +84,15 @@ describe('systemjs utils', () => {
 
     const result = await loadRemoteComponent('/plugins/test.system.js');
     expect(result).toBe(DefaultComponent);
+  });
+
+  it('rejects remote modules whose default export is not a component', async () => {
+    const systemImport = vi.fn(async () => ({ default: 'not-a-component' }));
+
+    vi.stubGlobal('System', { import: systemImport });
+
+    await expect(loadRemoteComponent('/plugins/invalid.system.js')).rejects.toThrow(
+      'Remote module must default export a React component: /plugins/invalid.system.js',
+    );
   });
 });

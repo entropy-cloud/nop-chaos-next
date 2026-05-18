@@ -1,8 +1,23 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuthStore } from './authStore';
+
+const mockClearTokens = vi.fn();
+const mockSetTokens = vi.fn();
+
+vi.mock('@nop-chaos/shared', async () => {
+  const actual = await vi.importActual<typeof import('@nop-chaos/shared')>('@nop-chaos/shared');
+
+  return {
+    ...actual,
+    clearTokens: (...args: Parameters<typeof mockClearTokens>) => mockClearTokens(...args),
+    setTokens: (...args: Parameters<typeof mockSetTokens>) => mockSetTokens(...args),
+  };
+});
 
 describe('authStore', () => {
   beforeEach(() => {
+    mockClearTokens.mockReset();
+    mockSetTokens.mockReset();
     sessionStorage.removeItem('auth:v2');
     useAuthStore.setState({
       user: null,
@@ -31,6 +46,7 @@ describe('authStore', () => {
     expect(state.user?.username).toBe('test');
     expect(state.token).toBe('abc');
     expect(state.bootstrapStatus).toBe('ready');
+    expect(mockSetTokens).toHaveBeenCalledWith('abc', undefined, undefined, undefined);
   });
 
   it('logout resets to initial state with anonymous bootstrap', () => {
@@ -46,6 +62,7 @@ describe('authStore', () => {
     expect(state.user).toBeNull();
     expect(state.token).toBeUndefined();
     expect(state.bootstrapStatus).toBe('anonymous');
+    expect(mockClearTokens).toHaveBeenCalledTimes(1);
   });
 
   it('setBootstrapStatus updates status', () => {

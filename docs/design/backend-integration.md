@@ -13,7 +13,11 @@
 - 默认 timeout：15 秒，由 `getTimeoutMs: () => 15_000` 提供
 - 自动注入 locale header：来自 `normalizeLanguageCode(i18n.language)`
 - 自动读取 access token / refresh token：来自 `useAuthStore`
-- 401 或 refresh 失败时：清理 managed tokens，并执行 `useAuthStore.getState().logout()`
+- login / logout 会同步 shared managed token storage，避免 Zustand auth state 与 shared tokenManager 双源漂移
+- 主动刷新与 401 重试共享同一把 refresh lock，避免并发重复 refresh
+- 首次 401 会在存在 refresh token 时触发一次 refresh + retry；若 refresh 失败、没有 refresh token，或 retry 后仍为 401，则统一走 unauthorized 终止路径
+- unauthorized 终止路径必须清理 managed tokens / auth store token state，并执行 `useAuthStore.getState().logout()`
+- `amis-core` 的 shared HTTP fallback 与主应用 HTTP client 现在复用同一套 401 / refresh / unauthorized 语义，不再保留 amis-local 的 “401 直接 logout” 分支
 - React Query 默认 retry：`apps/main/src/main.tsx` 中对 `401/403/404` 不重试，其余错误只重试 1 次
 
 不应再在 in-scope 路径直接使用 raw `fetch` 绕过这些合同。
@@ -107,21 +111,21 @@
 
 ---
 
-## 7. AMIS 动态代码边界
+## 7. AMIS 动态动作边界
 
-`apps/main/src/amis/adapter.ts` 当前仍存在：
-
-- `compileFunction: (code, page) => new Function('page', \`return (${code})\`)(page)`
-
-这不是通用脚本执行入口，而是为受信任 schema 场景保留的动态表达式能力。
+当前 baseline 已明确移除 `@fn:` / `compileFunction` 动态代码执行能力。
 
 当前 owner 裁定：
 
-- 仅允许对受信任、受控来源的 AMIS schema 使用
-- 不允许把终端用户任意输入直接送入 `compileFunction`
-- lint 例外仅限 `apps/main/src/amis/adapter.ts` 与相关受控测试文件，不代表仓库允许任意 `new Function()` 扩散
+- AMIS schema 只允许通过 `@action:` 绑定预注册动作
+- Host 动作必须由运行时 adapter 显式注册（如 `resolveAction` 或 `xui:import` 产出的模块动作）
+- 不再接受把 schema 字符串编译为可执行函数的实现回流到主线
 
-如后续需要不受信任输入场景，必须单独立计划处理隔离执行或能力收缩，不在当前 baseline 内默认开放。
+这意味着：
+
+- schema 仍可通过 `xui:import` 获得扩展模块能力
+- 但不再允许内联 JavaScript 作为动作表达式
+- 如后续确需恢复动态执行能力，必须单独立计划并重新定义安全边界，而不是在当前 baseline 上直接恢复 `new Function()`
 
 ---
 

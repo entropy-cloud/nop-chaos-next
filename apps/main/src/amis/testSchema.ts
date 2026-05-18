@@ -72,7 +72,7 @@ export const testAmisSchema = {
       body: [
         {
           type: 'tpl',
-          tpl: '<ul><li>@action resolves imported module functions</li><li>Imported modules can call host actions</li><li>@fn keeps the original source for schema serialization</li></ul>',
+          tpl: '<ul><li>@action resolves imported module functions</li><li>Imported modules can call host actions</li><li>Host actions stay pre-registered and typeable</li></ul>',
         },
         {
           type: 'button-toolbar',
@@ -102,14 +102,15 @@ export const testAmisSchema = {
           type: 'button',
           label: 'Trigger host toast',
           level: 'primary',
-          onClick: "@fn:(event, props) => page.getAction('preview.notify')?.(event, props)",
+          actionType: 'ajax',
+          api: '@action:preview.notify',
         },
         {
           type: 'button',
           label: 'Go to plugins',
           level: 'default',
-          onClick:
-            "@fn:(event, props) => page.getAction('preview.navigatePlugins')?.(event, props)",
+          actionType: 'ajax',
+          api: '@action:preview.navigatePlugins',
         },
       ],
     },

@@ -56,6 +56,8 @@ export {
   getTokenStorage,
   resetTokenStorage,
   setRefreshTokenFetcher,
+  getRefreshPromise,
+  setRefreshPromise,
   getAccessToken,
   getRefreshToken,
   setTokens,
@@ -75,7 +77,17 @@ export { isApiPayload, unwrapApiPayload } from './http/payload';
 
 export type { HttpRuntime, HttpRequestOptions, HttpResponse } from './http/types';
 
-export { getBaseOrigin, isAbsoluteUrl, appendQueryParams, normalizeRequestUrl, resolveRequestUrl } from './http/url';
+export {
+  getBaseOrigin,
+  hasProtocolPath,
+  isAbsoluteUrl,
+  isProtocolRelativePath,
+  isRelativeOrRootPath,
+  appendQueryParams,
+  normalizeRequestUrl,
+  resolveRequestUrl,
+  resolveSameOriginPath,
+} from './http/url';
 
 export { validateMenuResponse } from './utils/menuConfig';
 

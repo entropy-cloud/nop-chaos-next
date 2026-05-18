@@ -2,6 +2,32 @@ export function getBaseOrigin() {
   return typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
 }
 
+export function hasProtocolPath(path: string) {
+  return /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(path);
+}
+
+export function isProtocolRelativePath(path: string) {
+  return path.startsWith('//');
+}
+
+export function isRelativeOrRootPath(path: string) {
+  return Boolean(path) && !hasProtocolPath(path) && !isProtocolRelativePath(path);
+}
+
+export function resolveSameOriginPath(path: string, baseUrl = getBaseOrigin()) {
+  if (!isRelativeOrRootPath(path)) {
+    throw new Error(`Only relative same-origin paths are allowed: ${path}`);
+  }
+
+  const resolved = new URL(path, baseUrl);
+
+  if (resolved.origin !== getBaseOrigin()) {
+    throw new Error(`Only same-origin paths are allowed: ${path}`);
+  }
+
+  return resolved;
+}
+
 export function isAbsoluteUrl(url: string) {
   return /^https?:\/\//.test(url);
 }

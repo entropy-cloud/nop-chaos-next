@@ -287,6 +287,18 @@ describe('tokenManager', () => {
       expect(fetchCount).toBe(1);
     });
 
+    it('exposes shared refresh promise accessors', async () => {
+      const mod = await import('./tokenManager');
+      const promise = Promise.resolve('token');
+
+      mod.setRefreshPromise(promise);
+
+      expect(mod.getRefreshPromise()).toBe(promise);
+
+      mod.setRefreshPromise(null);
+      expect(mod.getRefreshPromise()).toBeNull();
+    });
+
     it('returns access token when not expiring and auto-refresh enabled', async () => {
       const { setTokens, getValidToken } = await import('./tokenManager');
       setTokens('fresh-access', undefined, 999999);

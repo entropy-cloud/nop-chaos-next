@@ -99,15 +99,20 @@ export interface AmisRuntimeAdapter {
   processResponse?: <T>(response: Promise<T>) => Promise<T>;
   /** Optional custom HTTP request implementation. */
   request?: <T>(request: HttpRequestOptions) => Promise<HttpResponse<T>>;
+  /** Optional refresh token accessor for the shared HTTP client fallback. */
+  getRefreshToken?: () => string | undefined;
+  /** Optional token clearing hook used by the shared HTTP client fallback. */
+  clearTokens?: () => void;
+  /** Optional refresh hook used by the shared HTTP client fallback. */
+  refreshAccessToken?: () => Promise<string>;
   /** Optional resolver for named actions bound to a page. */
   resolveAction?: (name: string, page: AmisPageObject) => AmisAction | undefined;
-  /** Optional compiler for turning code strings into callable actions. */
-  compileFunction?: (code: string, page: AmisPageObject) => AmisAction;
 }
 
 export type AmisSchemaRecord = Record<string, unknown>;
 
 export interface ProcessSchemaOptions {
+  maxDepth?: number;
   onObject?: (
     value: AmisSchemaRecord,
   ) => Promise<AmisSchemaRecord | null | undefined> | AmisSchemaRecord | null | undefined;

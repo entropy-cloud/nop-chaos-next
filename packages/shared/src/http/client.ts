@@ -1,11 +1,20 @@
 import type { HttpRequestOptions, HttpResponse, HttpRuntime } from './types';
+import { getRefreshPromise, setRefreshPromise } from '../auth/tokenManager';
 import { resolveRequestUrl } from './url';
 
 const DEFAULT_APP_ID = 'nop-chaos';
 const DEFAULT_TIMEOUT_MS = 15_000;
 
+type HttpStatusError = Error & { status?: number };
+
 function createTimeoutError(timeoutMs: number) {
   return new Error(`Request timed out after ${timeoutMs}ms`);
+}
+
+function createHttpStatusError(status: number, message: string): HttpStatusError {
+  const error = new Error(message) as HttpStatusError;
+  error.status = status;
+  return error;
 }
 
 function createAbortSignal(signal: AbortSignal | undefined, timeoutMs: number) {
@@ -114,8 +123,6 @@ async function parseResponseBody(
 }
 
 export function createHttpClient(runtime: HttpRuntime) {
-  let refreshPromise: Promise<string> | null = null;
-
   async function getValidToken(): Promise<string | undefined> {
     if (runtime.getValidToken) {
       return runtime.getValidToken();
@@ -124,15 +131,19 @@ export function createHttpClient(runtime: HttpRuntime) {
   }
 
   async function doRefreshToken(): Promise<string> {
-    if (refreshPromise) {
-      return refreshPromise;
+    const activeRefresh = getRefreshPromise();
+
+    if (activeRefresh) {
+      return activeRefresh;
     }
 
     if (runtime.refreshAccessToken) {
-      refreshPromise = runtime.refreshAccessToken().finally(() => {
-        refreshPromise = null;
+      const nextRefreshPromise = runtime.refreshAccessToken().finally(() => {
+        setRefreshPromise(null);
       });
-      return refreshPromise;
+
+      setRefreshPromise(nextRefreshPromise);
+      return nextRefreshPromise;
     }
 
     throw new Error('Token refresh not available');
@@ -199,6 +210,12 @@ export function createHttpClient(runtime: HttpRuntime) {
 
   return {
     async request<T = unknown>(options: HttpRequestOptions): Promise<HttpResponse<T>> {
+      const failUnauthorized = (message = 'Authentication required'): never => {
+        runtime.clearTokens?.();
+        runtime.onUnauthorized?.();
+        throw createHttpStatusError(401, message);
+      };
+
       const token = options.withAuth === false ? runtime.getAuthToken() : await getValidToken();
       let response = await doRequest<T>(options, token);
 
@@ -208,17 +225,20 @@ export function createHttpClient(runtime: HttpRuntime) {
           try {
             const newToken = await doRefreshToken();
             response = await doRequest<T>(options, newToken);
-            return response;
           } catch (error: unknown) {
-            runtime.clearTokens?.();
-            runtime.onUnauthorized?.();
-            throw new Error(
+            failUnauthorized(
               `Token refresh failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
             );
           }
-        } else {
-          runtime.onUnauthorized?.();
+
+          if (response.status === 401) {
+            failUnauthorized();
+          }
+
+          return response;
         }
+
+        failUnauthorized();
       }
 
       return response;

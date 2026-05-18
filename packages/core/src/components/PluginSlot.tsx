@@ -6,6 +6,18 @@ import { useTranslation } from 'react-i18next';
 import { ErrorBoundary } from './ErrorBoundary';
 import { loadRemoteComponent } from '../utils/systemjs';
 
+const PLUGIN_LOAD_TIMEOUT_MS = 10_000;
+
+type PluginSlotState = {
+  sourceUrl: string;
+  component: ComponentType | null;
+  error: string | null;
+};
+
+function createPluginLoadTimeout(url: string) {
+  return new Error(`Plugin load timed out after ${PLUGIN_LOAD_TIMEOUT_MS}ms: ${url}`);
+}
+
 interface PluginSlotProps {
   beforeLoad?: () => Promise<void> | void;
   url: string;
@@ -25,32 +37,66 @@ function LoadingView() {
 }
 
 export function PluginSlot({ beforeLoad, url, title }: PluginSlotProps) {
-  const [Component, setComponent] = useState<ComponentType | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [state, setState] = useState<PluginSlotState>({
+    sourceUrl: url,
+    component: null,
+    error: null,
+  });
 
   useEffect(() => {
     let active = true;
+    let settled = false;
     const requestUrl = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    const timeoutId = globalThis.setTimeout(() => {
+      if (!active || settled) {
+        return;
+      }
+
+      settled = true;
+      setState({
+        sourceUrl: url,
+        component: null,
+        error: createPluginLoadTimeout(url).message,
+      });
+    }, PLUGIN_LOAD_TIMEOUT_MS);
 
     void Promise.resolve(beforeLoad?.())
       .then(() => loadRemoteComponent(requestUrl))
       .then((resolved) => {
-        if (active) {
-          setComponent(() => resolved);
+        if (active && !settled) {
+          settled = true;
+          setState({
+            sourceUrl: url,
+            component: resolved,
+            error: null,
+          });
         }
       })
       .catch((reason: unknown) => {
-        if (active) {
-          setError(reason instanceof Error ? reason.message : 'Failed to load plugin');
+        if (active && !settled) {
+          settled = true;
+          setState({
+            sourceUrl: url,
+            component: null,
+            error: reason instanceof Error ? reason.message : 'Failed to load plugin',
+          });
         }
+      })
+      .finally(() => {
+        globalThis.clearTimeout(timeoutId);
       });
 
     return () => {
       active = false;
+      globalThis.clearTimeout(timeoutId);
     };
   }, [beforeLoad, url]);
 
-  if (error) {
+  if (state.sourceUrl !== url) {
+    return <LoadingView />;
+  }
+
+  if (state.error) {
     return (
       <Card className="theme-card border-[hsl(var(--danger))]/40" role="alert">
         <CardHeader>
@@ -59,14 +105,16 @@ export function PluginSlot({ beforeLoad, url, title }: PluginSlotProps) {
             {title}
           </CardTitle>
         </CardHeader>
-        <CardContent>{error}</CardContent>
+        <CardContent>{state.error}</CardContent>
       </Card>
     );
   }
 
-  if (!Component) {
+  if (!state.component) {
     return <LoadingView />;
   }
+
+  const Component = state.component;
 
   return (
     <ErrorBoundary>

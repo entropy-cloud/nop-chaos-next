@@ -1,4 +1,5 @@
 import type { ExtensionSource } from '@nop-chaos/shared'
+import { isRelativeOrRootPath } from '@nop-chaos/shared'
 
 type ExtensionHost = typeof globalThis & {
   __NOP_EXTENSIONS__?: ExtensionSource[]
@@ -7,7 +8,7 @@ type ExtensionHost = typeof globalThis & {
 function getConfiguredDemoExtensionSource(): ExtensionSource[] {
   const entry = import.meta.env.VITE_DEMO_EXTENSION_ENTRY
 
-  if (!entry) {
+  if (!entry || !isRelativeOrRootPath(entry)) {
     return []
   }
 
@@ -76,7 +77,7 @@ function getDemoExtensionSources(): ExtensionSource[] {
   return [
     {
       id: 'demo-shell-extension',
-      entry: new URL('./demo/index.ts', import.meta.url).href
+      entry: './demo/index.ts'
     }
   ]
 }

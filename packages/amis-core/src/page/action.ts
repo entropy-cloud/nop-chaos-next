@@ -1,7 +1,7 @@
 import { getAmisRuntimeAdapter } from '../adapter';
 import type { AmisAction, AmisPageObject, AmisSchemaRecord } from '../types';
 import { splitPrefixUrl } from '../core/url';
-import { getBaseOrigin } from '@nop-chaos/shared';
+import { getBaseOrigin, resolveSameOriginPath } from '@nop-chaos/shared';
 
 interface ImportedScope {
   standalone: boolean;
@@ -12,27 +12,25 @@ function isRecord(value: unknown): value is AmisSchemaRecord {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function isAbsoluteHttpUrl(url: string) {
-  return /^https?:\/\//i.test(url);
-}
-
 function resolveModuleUrl(modulePath: string, schemaPath?: string) {
-  if (isAbsoluteHttpUrl(modulePath)) {
-    return modulePath;
-  }
-
   if (modulePath.startsWith('/')) {
-    return new URL(modulePath, getBaseOrigin()).href;
+    return resolveSameOriginPath(modulePath).href;
   }
 
-  if (schemaPath && (isAbsoluteHttpUrl(schemaPath) || !splitPrefixUrl(schemaPath))) {
-    const baseUrl = isAbsoluteHttpUrl(schemaPath)
-      ? schemaPath
-      : new URL(schemaPath, getBaseOrigin()).href;
-    return new URL(modulePath, baseUrl).href;
+  if (schemaPath) {
+    const prefix = splitPrefixUrl(schemaPath);
+
+    if (prefix?.[0] === 'http' || prefix?.[0] === 'https') {
+      return resolveSameOriginPath(modulePath, schemaPath).href;
+    }
+
+    if (!prefix) {
+      const baseUrl = resolveSameOriginPath(schemaPath, getBaseOrigin()).href;
+      return resolveSameOriginPath(modulePath, baseUrl).href;
+    }
   }
 
-  return new URL(modulePath, getBaseOrigin()).href;
+  return resolveSameOriginPath(modulePath).href;
 }
 
 function getPathName(path: string) {
@@ -139,12 +137,6 @@ function resolveImportedAction(actionName: string, scopes: ImportedScope[], page
   return page.getAction(actionName);
 }
 
-function wrapFunction(action: AmisAction, source: string) {
-  const wrapped = (...args: unknown[]) => action(...args);
-  (wrapped as typeof wrapped & { toJSON: () => string }).toJSON = () => source;
-  return wrapped as AmisAction;
-}
-
 function registerScopedAction(page: AmisPageObject, actionName: string, action: AmisAction) {
   for (let index = 0; index < 1000; index += 1) {
     const candidateName = index === 0 ? actionName : `${actionName}-${index}`;
@@ -196,13 +188,7 @@ function processActionString(value: string, page: AmisPageObject, scopes: Import
   }
 
   if (value.startsWith('@fn:')) {
-    const source = value.slice('@fn:'.length).trim();
-
-    if (!adapter.compileFunction) {
-      throw new Error('Amis runtime adapter does not support @fn compilation');
-    }
-
-    return wrapFunction(adapter.compileFunction(source, page), value);
+    throw new Error('The @fn: action syntax has been removed. Use @action: with a registered action instead.');
   }
 
   return value;

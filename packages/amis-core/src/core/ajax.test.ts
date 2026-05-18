@@ -13,7 +13,12 @@ function createTestAdapter(overrides: Record<string, unknown> = {}) {
     getLocale: () => 'en-US',
     getCurrentUser: () => null,
     getAuthToken: () => 'token',
+    getRefreshToken: () => undefined,
     setAuthToken: () => undefined,
+    clearTokens: () => undefined,
+    refreshAccessToken: async () => {
+      throw new Error('Refresh token not available');
+    },
     hasRole: () => false,
     getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' as const }),
     navigate: () => undefined,
@@ -189,25 +194,48 @@ describe('notifyResult', () => {
   });
 });
 
-describe('handleLogout on 401', () => {
+describe('shared unauthorized contract', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it('calls logout on 401 response', async () => {
+  it('uses refresh + unauthorized flow instead of amis-local 401 logout fallback', async () => {
     const logout = vi.fn();
-    const setAuthToken = vi.fn();
-    const request = vi.fn(async () => ({
-      status: 401,
-      headers: { 'content-type': 'application/json' },
-      data: { status: 401, msg: 'unauthorized', data: null },
-    }));
-    registerAmisRuntimeAdapter(
-      createTestAdapter({ logout, setAuthToken, getAuthToken: () => 'token', request }),
+    const clearTokens = vi.fn();
+    let callCount = 0;
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        callCount += 1;
+        return new Response(JSON.stringify({ status: 401, msg: 'unauthorized', data: null }), {
+          status: 401,
+          headers: { 'content-type': 'application/json' },
+        });
+      }),
     );
 
-    await fetchAmisRequest({ url: '/demo' });
-    expect(setAuthToken).toHaveBeenCalledWith(undefined);
+    registerAmisRuntimeAdapter(
+      createTestAdapter({
+        logout,
+        clearTokens,
+        getAuthToken: () => 'expired-token',
+        getRefreshToken: () => 'refresh-token',
+        refreshAccessToken: async () => 'fresh-token',
+      }),
+    );
+
+    const result = await fetchAmisRequest({ url: '/demo' });
+
+    expect(result).toMatchObject({
+      status: 0,
+      data: {
+        status: -1,
+        msg: 'The request failed, please try again later',
+      },
+    });
+    expect(callCount).toBe(2);
+    expect(clearTokens).toHaveBeenCalledTimes(1);
     expect(logout).toHaveBeenCalledWith('401');
   });
 });

@@ -5,6 +5,7 @@ import type {
   LoadedExtension,
   ShellExtension
 } from '@nop-chaos/shared'
+import { resolveSameOriginPath } from '@nop-chaos/shared'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
@@ -35,7 +36,7 @@ async function loadExtensionModule(source: ExtensionSource): Promise<ExtensionMo
     return source.load()
   }
 
-  return import(/* @vite-ignore */ source.entry) as Promise<ExtensionModule>
+  return import(/* @vite-ignore */ resolveSameOriginPath(source.entry).href) as Promise<ExtensionModule>
 }
 
 function normalizeExtension(raw: unknown, source: ExtensionSource): ShellExtension {

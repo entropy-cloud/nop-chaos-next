@@ -75,6 +75,7 @@ export function createTokenStorage(): TokenStorage {
 }
 
 let tokenStorage: TokenStorage | null = null;
+let refreshPromise: Promise<string> | null = null;
 
 export function getTokenStorage(): TokenStorage {
   if (!tokenStorage) {
@@ -87,6 +88,14 @@ export function resetTokenStorage(): void {
   tokenStorage = null;
 }
 
+export function getRefreshPromise(): Promise<string> | null {
+  return refreshPromise;
+}
+
+export function setRefreshPromise(promise: Promise<string> | null): void {
+  refreshPromise = promise;
+}
+
 export interface RefreshTokenResponse {
   accessToken: string;
   expiresIn: number;
@@ -97,7 +106,6 @@ export interface RefreshTokenResponse {
 export type RefreshTokenFetcher = (refreshToken: string) => Promise<RefreshTokenResponse>;
 
 let refreshTokenFetcher: RefreshTokenFetcher | null = null;
-let refreshPromise: Promise<string> | null = null;
 
 export function setRefreshTokenFetcher(fetcher: RefreshTokenFetcher): void {
   refreshTokenFetcher = fetcher;

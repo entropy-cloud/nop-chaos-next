@@ -1,6 +1,6 @@
 import 'systemjs';
 import type { ComponentType } from 'react';
-import { getBaseOrigin } from '@nop-chaos/shared';
+import { getBaseOrigin, resolveSameOriginPath } from '@nop-chaos/shared';
 
 export interface RemoteComponentModule {
   default: ComponentType;
@@ -17,14 +17,16 @@ function getSystem() {
 }
 
 function toModuleUrl(path: string) {
-  return new URL(path, getBaseOrigin()).href;
+  return resolveSameOriginPath(path, getBaseOrigin()).href;
 }
 
 export function isSystemJsEntry(url: string) {
-  return new URL(url, getBaseOrigin()).pathname.endsWith('.system.js');
+  return resolveSameOriginPath(url, getBaseOrigin()).pathname.endsWith('.system.js');
 }
 
 async function importRemoteModule(url: string) {
+  const resolvedUrl = resolveSameOriginPath(url, getBaseOrigin());
+
   if (isSystemJsEntry(url)) {
     const system = getSystem();
 
@@ -32,10 +34,19 @@ async function importRemoteModule(url: string) {
       throw new Error(`SystemJS is required to load plugin module: ${url}`);
     }
 
-    return system.import<RemoteComponentModule>(url);
+    return system.import<RemoteComponentModule>(
+      `${resolvedUrl.pathname}${resolvedUrl.search}${resolvedUrl.hash}`,
+    );
   }
 
-  return import(/* @vite-ignore */ url) as Promise<RemoteComponentModule>;
+  return import(/* @vite-ignore */ resolvedUrl.href) as Promise<RemoteComponentModule>;
+}
+
+function isRenderableComponent(value: unknown): value is ComponentType {
+  return (
+    typeof value === 'function' ||
+    (typeof value === 'object' && value !== null && '$$typeof' in value)
+  );
 }
 
 export function registerSharedModules(
@@ -59,5 +70,10 @@ export function registerSharedModules(
 
 export async function loadRemoteComponent(url: string): Promise<ComponentType> {
   const module = await importRemoteModule(url);
+
+  if (!isRenderableComponent(module.default)) {
+    throw new Error(`Remote module must default export a React component: ${url}`);
+  }
+
   return module.default;
 }

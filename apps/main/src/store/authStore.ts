@@ -7,7 +7,7 @@ import type {
   User,
   AuthTokens,
 } from '@nop-chaos/shared';
-import { getAuthConfig } from '@nop-chaos/shared';
+import { clearTokens as clearManagedTokens, getAuthConfig, setTokens as setManagedTokens } from '@nop-chaos/shared';
 import { APP_STORAGE_KEYS } from '../constants/storage';
 
 interface AuthStore extends AuthState {
@@ -35,6 +35,14 @@ const initialState: AuthState = {
   tokens: undefined,
 };
 
+function toExpiresIn(expiresAt?: number): number | undefined {
+  if (!expiresAt) {
+    return undefined;
+  }
+
+  return Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
+}
+
 function getStorageType(): 'sessionStorage' | 'localStorage' {
   const config = getAuthConfig();
   if (config.tokenStorage === 'localStorage') {
@@ -50,12 +58,25 @@ export const useAuthStore = create<AuthStore>()(
       bootstrapStatus: 'idle',
       setBootstrapStatus: (bootstrapStatus) => set({ bootstrapStatus }),
       login: ({ user, token, tokens }) =>
-        set({
-          user,
-          token,
-          tokens,
-          isAuthenticated: true,
-          bootstrapStatus: 'ready',
+        set(() => {
+          if (tokens) {
+            setManagedTokens(
+              tokens.accessToken,
+              tokens.refreshToken,
+              toExpiresIn(tokens.expiresAt),
+              toExpiresIn(tokens.refreshExpiresAt),
+            );
+          } else if (token) {
+            setManagedTokens(token);
+          }
+
+          return {
+            user,
+            token,
+            tokens,
+            isAuthenticated: true,
+            bootstrapStatus: 'ready',
+          };
         }),
       setSession: ({ user, token, tokens }) =>
         set({
@@ -102,7 +123,11 @@ export const useAuthStore = create<AuthStore>()(
           tokens: undefined,
           isAuthenticated: false,
         }),
-      logout: () => set({ ...initialState, bootstrapStatus: 'anonymous' }),
+      logout: () =>
+        set(() => {
+          clearManagedTokens();
+          return { ...initialState, bootstrapStatus: 'anonymous' };
+        }),
     }),
     {
       name: APP_STORAGE_KEYS.auth,

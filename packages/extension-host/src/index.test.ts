@@ -61,6 +61,21 @@ describe('extension-host loadExtensions', () => {
     expect(errorSpy).toHaveBeenCalled();
   });
 
+  it('rejects protocol-based extension entries', async () => {
+    const errorSpy = vi.fn();
+    const loaded = await loadExtensions({
+      sources: [{ id: 'remote-ext', entry: 'https://example.com/extension.js' }],
+      context: {
+        logger: { info: vi.fn(), warn: vi.fn(), error: errorSpy },
+      },
+    });
+
+    expect(loaded).toHaveLength(0);
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Only relative same-origin paths are allowed: https://example.com/extension.js'),
+    );
+  });
+
   it('resolves extension from mod.extension field', async () => {
     const extension: ShellExtension = { id: 'ext-field' };
     const loaded = await loadExtensions({

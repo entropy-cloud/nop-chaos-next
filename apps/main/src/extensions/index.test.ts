@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { ExtensionSource, LoadedExtension } from '@nop-chaos/shared'
+import type { ExtensionModule, ExtensionSource, LoadedExtension } from '@nop-chaos/shared'
 import { loadExtensions, getShellRuntimeConfig, getSystemPageComponentId, mergeExtensionMenus, resolveShellRuntimeConfig, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import { getLanguageOptions } from '../config/i18n/languages'
 import { mergeBuiltinSystemMenus } from '../config/systemMenus'
@@ -85,14 +85,14 @@ describe('extension source resolution', () => {
     setRuntimeExtensionSources([
       {
         id: 'runtime-source',
-        entry: 'https://example.com/runtime-extension.js'
+        entry: '/runtime-extension.js'
       }
     ])
 
     expect(getExtensionSources()).toEqual([
       {
         id: 'runtime-source',
-        entry: 'https://example.com/runtime-extension.js'
+        entry: '/runtime-extension.js'
       }
     ])
   })
@@ -111,18 +111,24 @@ describe('extension source resolution', () => {
       throw new Error('Expected entry-based extension source')
     }
 
-    expect(source.entry).toContain('/extensions/demo/index.ts')
+    expect(source.entry).toBe('./demo/index.ts')
   })
 
   it('prefers an explicit demo extension entry when configured', () => {
-    vi.stubEnv('VITE_DEMO_EXTENSION_ENTRY', 'http://127.0.0.1:4180/src/index.ts')
+    vi.stubEnv('VITE_DEMO_EXTENSION_ENTRY', '/extensions/demo/index.ts')
 
     expect(getExtensionSources()).toEqual([
       {
         id: 'demo-shell-extension',
-        entry: 'http://127.0.0.1:4180/src/index.ts'
+        entry: '/extensions/demo/index.ts'
       }
     ])
+  })
+
+  it('ignores protocol-based demo extension entries', () => {
+    vi.stubEnv('VITE_DEMO_EXTENSION_ENTRY', 'https://example.com/extension.js')
+
+    expect(getExtensionSources()).toEqual([])
   })
 
   it('uses the local aliased extension loader when configured', () => {
@@ -152,11 +158,11 @@ describe('loadExtensions', () => {
       sources: [
         {
           id: 'example-extension-demo',
-          entry: fixtureExtensionEntry
+          load: async () => import(/* @vite-ignore */ fixtureExtensionEntry)
         },
         {
           id: 'demo-shell-extension',
-          entry: new URL('./demo/index.ts', import.meta.url).href
+          load: async () => import('./demo/index')
         }
       ],
       context: {
@@ -207,7 +213,7 @@ describe('loadExtensions', () => {
       sources: [
         {
           id: 'invalid-extension',
-          entry: new URL('./fixtures/invalidExtension.ts', import.meta.url).href
+          load: async () => (await import('./fixtures/invalidExtension')) as unknown as ExtensionModule
         }
       ],
       context: {
@@ -302,7 +308,7 @@ describe('bootstrapExtensions', () => {
     setRuntimeExtensionSources([
       {
         id: 'example-extension-demo',
-        entry: fixtureExtensionEntry
+        load: async () => import(/* @vite-ignore */ fixtureExtensionEntry)
       }
     ])
 
@@ -333,7 +339,7 @@ describe('bootstrapExtensions', () => {
     setRuntimeExtensionSources([
       {
         id: 'example-extension-demo',
-        entry: fixtureExtensionEntry
+        load: async () => import(/* @vite-ignore */ fixtureExtensionEntry)
       }
     ])
 

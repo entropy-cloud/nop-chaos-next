@@ -15,6 +15,8 @@ const logger: ExtensionLogger = {
   error: (message) => console.error(message)
 }
 
+let bootstrapPromise: Promise<LoadedExtension[]> | null = null
+
 function ensureStylesheet(id: string, href: string) {
   const selector = `link[data-extension-style='${id}']`
 
@@ -146,6 +148,11 @@ export async function loadExtensionI18nFromBaseUrl(loaded: LoadedExtension[]) {
 }
 
 export async function bootstrapExtensions(): Promise<LoadedExtension[]> {
+  if (bootstrapPromise) {
+    return bootstrapPromise
+  }
+
+  bootstrapPromise = (async () => {
   registerHostSharedModules()
 
   const sources = getExtensionSources()
@@ -172,4 +179,9 @@ export async function bootstrapExtensions(): Promise<LoadedExtension[]> {
   applyExtensionI18nResources(loaded)
 
   return loaded
+  })().finally(() => {
+    bootstrapPromise = null
+  })
+
+  return bootstrapPromise
 }

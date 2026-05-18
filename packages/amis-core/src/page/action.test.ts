@@ -1,18 +1,21 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { registerAmisRuntimeAdapter } from '../adapter';
 import { createMockAdapter } from '../test-helpers/mockAdapter';
-import type { AmisAction } from '../types';
 import { bindActions } from './action';
 import { createAmisPageObject } from './page';
-
-function compileTestFunction(code: string, currentPage: unknown): AmisAction {
-  return new Function('page', `return (${code})`)(currentPage) as AmisAction;
-}
 
 describe('bindActions', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
+
+  function stubSameOrigin() {
+    vi.stubGlobal('window', {
+      location: {
+        origin: 'https://example.com',
+      },
+    });
+  }
 
   it('converts @action strings into action urls', async () => {
     const page = createAmisPageObject('mock://preview');
@@ -20,7 +23,6 @@ describe('bindActions', () => {
     registerAmisRuntimeAdapter(
       createMockAdapter({
         resolveAction: (name: string) => (name === 'preview.notify' ? () => 'ok' : undefined),
-        compileFunction: compileTestFunction,
       }),
     );
 
@@ -36,30 +38,10 @@ describe('bindActions', () => {
     expect(page.getAction('preview.notify')).toBeTypeOf('function');
   });
 
-  it('compiles @fn expressions into callable functions', async () => {
-    const page = createAmisPageObject('mock://preview');
-
-    registerAmisRuntimeAdapter(
-      createMockAdapter({
-        compileFunction: compileTestFunction,
-      }),
-    );
-
-    const bound = (await bindActions({ onClick: '@fn:(page) => page.id' }, page)) as {
-      onClick: AmisAction;
-    };
-
-    expect(bound.onClick(page)).toBe(page.id);
-  });
-
   it('converts graphql prefix urls into scheme urls', async () => {
     const page = createAmisPageObject('mock://preview');
 
-    registerAmisRuntimeAdapter(
-      createMockAdapter({
-        compileFunction: compileTestFunction,
-      }),
-    );
+    registerAmisRuntimeAdapter(createMockAdapter());
 
     const bound = await bindActions(
       {
@@ -71,34 +53,11 @@ describe('bindActions', () => {
     expect(bound).toMatchObject({ api: 'query://PageProvider__getPage' });
   });
 
-  it('lazily resolves actions referenced inside compiled functions', async () => {
-    const page = createAmisPageObject('mock://preview');
-
-    registerAmisRuntimeAdapter(
-      createMockAdapter({
-        resolveAction: (name: string) =>
-          name === 'preview.notify' ? () => 'resolved lazily' : undefined,
-        compileFunction: compileTestFunction,
-      }),
-    );
-
-    const bound = (await bindActions(
-      { onClick: '@fn:() => page.getAction("preview.notify")?.()' },
-      page,
-    )) as { onClick: AmisAction };
-
-    expect(bound.onClick()).toBe('resolved lazily');
-    expect(page.getAction('preview.notify')).toBeTypeOf('function');
-  });
-
   it('loads imported system modules and resolves scoped actions', async () => {
+    stubSameOrigin();
     const page = createAmisPageObject('https://example.com/schema/demo.json');
 
-    registerAmisRuntimeAdapter(
-      createMockAdapter({
-        compileFunction: compileTestFunction,
-      }),
-    );
+    registerAmisRuntimeAdapter(createMockAdapter());
 
     const systemImport = vi.fn(async () => ({
       notify: () => 'from-import',
@@ -121,46 +80,51 @@ describe('bindActions', () => {
     expect(systemImport).toHaveBeenCalledWith('https://example.com/schema/actions.system.js');
   });
 
-  it('uses native import for non-system imported modules even when System is available', async () => {
+  it('rejects protocol-based xui:import module paths', async () => {
+    stubSameOrigin();
     const page = createAmisPageObject('https://example.com/schema/demo.json');
 
-    registerAmisRuntimeAdapter(
-      createMockAdapter({
-        compileFunction: compileTestFunction,
-      }),
-    );
+    registerAmisRuntimeAdapter(createMockAdapter());
 
-    const systemImport = vi.fn(async () => ({
-      notify: () => 'from-system',
-    }));
-
-    vi.stubGlobal('System', {
-      import: systemImport,
-    });
-
-    const bound = await bindActions(
-      {
-        'xui:import': {
-          previewLib: "data:text/javascript,export const notify = () => 'from-native-import'",
+    await expect(
+      bindActions(
+        {
+          'xui:import': {
+            previewLib: 'https://example.com/actions.js',
+          },
+          api: '@action:previewLib.notify',
         },
-        api: '@action:previewLib.notify',
-      },
-      page,
-    );
+        page,
+      ),
+    ).rejects.toThrow('Only relative same-origin paths are allowed: https://example.com/actions.js');
+  });
 
-    expect(bound).toMatchObject({ api: 'action://previewLib.notify' });
-    expect(page.getAction('previewLib.notify')?.()).toBe('from-native-import');
-    expect(systemImport).not.toHaveBeenCalled();
+  it('rejects data url xui:import module paths', async () => {
+    stubSameOrigin();
+    const page = createAmisPageObject('https://example.com/schema/demo.json');
+
+    registerAmisRuntimeAdapter(createMockAdapter());
+
+    await expect(
+      bindActions(
+        {
+          'xui:import': {
+            previewLib: 'data:text/javascript,export const notify = () => true',
+          },
+          api: '@action:previewLib.notify',
+        },
+        page,
+      ),
+    ).rejects.toThrow(
+      'Only relative same-origin paths are allowed: data:text/javascript,export const notify = () => true',
+    );
   });
 
   it('stops parent scoped lookup at standalone import boundaries', async () => {
+    stubSameOrigin();
     const page = createAmisPageObject('https://example.com/schema/demo.json');
 
-    registerAmisRuntimeAdapter(
-      createMockAdapter({
-        compileFunction: compileTestFunction,
-      }),
-    );
+    registerAmisRuntimeAdapter(createMockAdapter());
 
     const systemImport = vi.fn(async (url: string) => {
       if (url.endsWith('/root-actions.js')) {
@@ -187,5 +151,15 @@ describe('bindActions', () => {
         page,
       ),
     ).rejects.toThrow('Unknown amis action: root.root');
+  });
+
+  it('throws when @fn: syntax is used', async () => {
+    const page = createAmisPageObject('mock://preview');
+
+    registerAmisRuntimeAdapter(createMockAdapter());
+
+    await expect(bindActions({ onClick: '@fn:(page) => page.id' }, page)).rejects.toThrow(
+      'The @fn: action syntax has been removed. Use @action: with a registered action instead.',
+    );
   });
 });

@@ -222,12 +222,6 @@ function notifyResult(options: AmisRequestOptions, result: AmisFetcherResult) {
   adapter.notify(type, message);
 }
 
-function handleLogout() {
-  const adapter = getAmisRuntimeAdapter();
-  adapter.setAuthToken(undefined);
-  adapter.logout('401');
-}
-
 async function handleSpecialRequest(
   options: AmisRequestOptions,
 ): Promise<AmisFetcherResult | null> {
@@ -286,20 +280,28 @@ function createAbortSignal(cancelExecutor: AmisRequestOptions['cancelExecutor'])
 }
 
 let _client: ReturnType<typeof createHttpClient> | null = null;
+let _clientAdapter: ReturnType<typeof getAmisRuntimeAdapter> | null = null;
 
 function getClient() {
-  if (!_client) {
-    const adapter = getAmisRuntimeAdapter();
+  const adapter = getAmisRuntimeAdapter();
+
+  if (!_client || _clientAdapter !== adapter) {
+    _clientAdapter = adapter;
 
     _client = createHttpClient({
       getBaseUrl: getApiBaseUrl,
       getLocale: () => adapter.getLocale()?.replace('_', '-') || 'zh-CN',
       getAuthToken: () => adapter.getAuthToken(),
+      getRefreshToken: () => adapter.getRefreshToken?.(),
       setAuthToken: (token) => {
         if (token) {
           adapter.setAuthToken(token);
         }
       },
+      clearTokens: () => {
+        adapter.clearTokens?.();
+      },
+      refreshAccessToken: adapter.refreshAccessToken,
       onUnauthorized: () => {
         adapter.logout('401');
       },
@@ -391,15 +393,11 @@ async function executeNetworkRequest(options: AmisRequestOptions): Promise<AmisF
   if (isApiPayload(data)) {
     const payloadStatus = Number(data.status ?? -1);
 
-    if ((response.status === 401 || payloadStatus === 401) && adapter.getAuthToken()) {
-      handleLogout();
-    } else if ((payloadStatus === 0 || payloadStatus === 200) && processedRequest.responseKey) {
+    if ((payloadStatus === 0 || payloadStatus === 200) && processedRequest.responseKey) {
       data = {
         [processedRequest.responseKey]: data.data,
       };
     }
-  } else if (response.status === 401 && adapter.getAuthToken()) {
-    handleLogout();
   }
 
   return {

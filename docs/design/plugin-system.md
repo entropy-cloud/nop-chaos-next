@@ -49,6 +49,11 @@
 - i18n：remote plugin 通常使用自己的 `useTranslation()`；extension builtin/system page 使用 `usePluginI18n()` 读取宿主已注入的 locale 资源
 - 导航：细粒度 hooks 优先；若是 extension builtin/system page，则通过 bridge `navigate()` 保持宿主路由所有权
 
+当前 host 注入合同还有两条运行时约束：
+
+- bridge 对 React 的可订阅更新只走一条 fan-out 路径：host 调用 `setPluginBridge()` 后，由当前 bridge 的 `subscribe()` 负责把 theme/auth/plugins/i18n 变化扇出到 `subscribePluginBridge()` listeners，避免重复通知或 bridge 首次注入后漏订阅
+- route change 不再重建 bridge identity；当前路径通过 runtime getter `getCurrentPath()` 读取，因此插件可以拿到最新 path，而不需要 host 因 `pathname` 变化重新注入整份 bridge
+
 不允许插件直接 import `@nop-chaos/core` 来绕过桥接层读取宿主运行时状态。
 
 ---
@@ -62,6 +67,7 @@
 - 构建产物不会自带 `react`、`react-dom`、`react-router-dom`、`@tanstack/react-query`、`@nop-chaos/plugin-bridge`、`@nop-chaos/ui`、`recharts` 等共享运行时
 - 只有在宿主先注册匹配 shared modules 后，remote plugin 才能正确加载
 - 这不是“对任意宿主都可直接运行”的自包含 bundle
+- remote module 必须 `default export` 一个合法 React 组件；若导出无效或加载超时，host 会显示明确错误态，而不是永久 loading 或让 React 在运行时抛出无效元素错误
 
 该前提已经由构建脚本在输出时打印提示，文档也必须保持同一口径。
 

@@ -14,7 +14,12 @@ function registerTestAdapter() {
     getLocale: () => 'en-US',
     getCurrentUser: () => null,
     getAuthToken: () => undefined,
+    getRefreshToken: () => undefined,
     setAuthToken: () => undefined,
+    clearTokens: () => undefined,
+    refreshAccessToken: async () => {
+      throw new Error('Refresh token not available');
+    },
     hasRole: () => false,
     getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' as const }),
     navigate,

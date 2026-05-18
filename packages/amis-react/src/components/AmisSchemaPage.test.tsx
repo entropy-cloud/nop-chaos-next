@@ -23,7 +23,12 @@ vi.mock('@nop-chaos/amis-core', () => ({
     confirm: vi.fn(async () => true),
     getLocale: vi.fn(() => 'en-US'),
     getAuthToken: vi.fn(() => undefined),
+    getRefreshToken: vi.fn(() => undefined),
     setAuthToken: vi.fn(),
+    clearTokens: vi.fn(),
+    refreshAccessToken: vi.fn(async () => {
+      throw new Error('Refresh token not available');
+    }),
     logout: vi.fn(),
   })),
   transformPageJson: vi.fn(async (s: unknown) => s),
@@ -49,7 +54,12 @@ function createAdapter(): AmisRuntimeAdapter {
     getLocale: () => 'en-US',
     getCurrentUser: () => null,
     getAuthToken: () => undefined,
+    getRefreshToken: () => undefined,
     setAuthToken: () => undefined,
+    clearTokens: () => undefined,
+    refreshAccessToken: async () => {
+      throw new Error('Refresh token not available');
+    },
     hasRole: () => false,
     getThemeConfig: () => ({ themeId: 'classic', displayMode: 'light' as const }),
     navigate: () => undefined,
