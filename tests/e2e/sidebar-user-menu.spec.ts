@@ -5,6 +5,10 @@ function sidebarTrigger(page: import('@playwright/test').Page) {
   return page.locator('aside [data-testid="sidebar-user-menu-trigger"]');
 }
 
+function confirmDialog(page: import('@playwright/test').Page) {
+  return page.locator('[role="alertdialog"]');
+}
+
 test('sidebar user menu opens, shows user info, and navigates to settings', async ({ page }) => {
   await login(page);
   await expect(page.locator('aside').getByRole('button', { name: 'Dashboard' })).toBeVisible();
@@ -42,7 +46,8 @@ test('sidebar user menu logout clears session and redirects to login', async ({ 
   await sidebarTrigger(page).click();
   const menuContent = page.locator('[data-slot="dropdown-menu-content"]');
   await expect(menuContent).toBeVisible();
-  page.on('dialog', (dialog) => dialog.accept());
   await page.locator('[data-testid="sidebar-user-menu-logout"]').click();
+  await expect(confirmDialog(page)).toBeVisible();
+  await confirmDialog(page).getByRole('button', { name: 'Log out' }).click();
   await expect(page).toHaveURL(/#\/auth\/login$/);
 });

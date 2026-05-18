@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { login } from './support/auth';
 
+function confirmDialog(page: import('@playwright/test').Page) {
+  return page.locator('[role="alertdialog"]');
+}
+
 test.describe('master-detail list page', () => {
   test.beforeEach(async ({ page }) => {
     await login(page, { username: 'admin', defaultPassword: '123456' });
@@ -132,17 +136,13 @@ test.describe('master-detail list page', () => {
   test('batch delete button triggers confirm dialog', async ({ page }) => {
     await page.locator('main table tbody').getByRole('checkbox').first().click({ force: true });
 
-    const dialogPromise = new Promise<string>((resolve) => {
-      page.once('dialog', async (dialog) => {
-        const msg = dialog.message();
-        await dialog.dismiss();
-        resolve(msg);
-      });
-    });
-
     await page.locator('main').getByRole('button', { name: 'Batch delete' }).click();
-    const msg = await dialogPromise;
-    expect(msg.length).toBeGreaterThan(0);
+    const dialog = confirmDialog(page);
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText(/delete/i);
+    await expect(dialog.getByRole('button', { name: 'Cancel' })).toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'Confirm' })).toBeVisible();
+    await dialog.getByRole('button', { name: 'Cancel' }).click();
   });
 
   test('export button shows toast when no rows selected', async ({ page }) => {
@@ -315,11 +315,11 @@ test.describe('master-detail detail page', () => {
     const footer = dialog.locator('[data-slot="dialog-footer"]');
     const cancelBtn = footer.getByRole('button', { name: 'Cancel' });
     const saveBtn = footer.getByRole('button', { name: 'Save address' });
-    const cancelBox = await cancelBtn.boundingBox();
-    const saveBox = await saveBtn.boundingBox();
-    if (cancelBox && saveBox) {
-      expect(saveBox.x).toBeGreaterThan(cancelBox.x + cancelBox.width - 1);
-    }
+    await expect(cancelBtn).toBeVisible();
+    await expect(saveBtn).toBeVisible();
+
+    const footerPaddingTop = await footer.evaluate((el) => getComputedStyle(el).paddingTop);
+    expect(parseFloat(footerPaddingTop)).toBeGreaterThan(0);
 
     await cancelBtn.click();
     await expect(dialog).not.toBeVisible();
@@ -346,8 +346,10 @@ test.describe('master-detail detail page', () => {
     const initialCount = await cards.count();
     expect(initialCount).toBeGreaterThan(0);
 
-    page.once('dialog', (d) => d.accept());
     await addressCard.getByRole('button', { name: 'Delete' }).first().click();
+    const dialog = confirmDialog(page);
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole('button', { name: 'Confirm' }).click();
 
     await expect(cards).toHaveCount(initialCount - 1);
   });
@@ -424,17 +426,11 @@ test.describe('master-detail detail page', () => {
     const original = await firstInput.inputValue();
     await firstInput.fill('Dirty value');
 
-    const dialogPromise = new Promise<string>((resolve) => {
-      page.once('dialog', async (d) => {
-        const msg = d.message();
-        await d.accept();
-        resolve(msg);
-      });
-    });
-
     await page.locator('main').getByRole('button', { name: 'Discard all edits' }).click();
-    const msg = await dialogPromise;
-    expect(msg.length).toBeGreaterThan(0);
+    const dialog = confirmDialog(page);
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText(/discard/i);
+    await dialog.getByRole('button', { name: 'Confirm' }).click();
 
     await expect(firstInput).toHaveValue(original);
   });

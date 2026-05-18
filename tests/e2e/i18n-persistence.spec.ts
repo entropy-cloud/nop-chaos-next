@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { login } from './support/auth';
 
+function confirmDialog(page: import('@playwright/test').Page) {
+  return page.locator('[role="alertdialog"]');
+}
+
 const fluxEnabledSiteMapResponse = {
   status: 0,
   data: {
@@ -109,9 +113,10 @@ test('english translations persist after sidebar interactions and logout', async
 
   await expect(page.locator('aside').getByRole('button', { name: 'Settings' })).toBeVisible();
 
-  page.on('dialog', (dialog) => dialog.accept());
   await page.locator('aside [data-testid="sidebar-user-menu-trigger"]').click();
   await page.locator('[data-testid="sidebar-user-menu-logout"]').click();
+  await expect(confirmDialog(page)).toBeVisible();
+  await confirmDialog(page).getByRole('button', { name: 'Log out' }).click();
 
   await expect(page).toHaveURL(/#\/auth\/login$/);
   await expect(page.getByText('Username', { exact: true })).toBeVisible();
@@ -144,9 +149,10 @@ test('english translations persist after visiting Flux Demo and logging out', as
   await expect(page.locator('aside')).not.toContainText('menu.dashboard');
   await expect(page.locator('aside')).not.toContainText('menu.settings');
 
-  page.on('dialog', (dialog) => dialog.accept());
   await page.locator('aside [data-testid="sidebar-user-menu-trigger"]').click();
   await page.locator('[data-testid="sidebar-user-menu-logout"]').click();
+  await expect(confirmDialog(page)).toBeVisible();
+  await confirmDialog(page).getByRole('button', { name: 'Log out' }).click();
 
   await expect(page).toHaveURL(/#\/auth\/login$/);
   await expect(page.getByText('Username', { exact: true })).toBeVisible();
