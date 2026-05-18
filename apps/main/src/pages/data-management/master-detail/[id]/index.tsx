@@ -29,6 +29,7 @@ import {
   containsIgnoreCase,
   hasOrderChanged,
   normalizeOrder,
+  shouldApplyOrderResult,
 } from './utils';
 
 export default function MasterDetailDetailPage() {
@@ -61,7 +62,19 @@ export default function MasterDetailDetailPage() {
   }, [savedState]);
 
   useEffect(() => {
-    if (!detailQuery.data) {
+    setDraft(null);
+    setSavedState(null);
+    savedStateRef.current = null;
+    setDirtySections({ items: false, addresses: false, logistics: false });
+    setAddressDialogOpen(false);
+    setEditingAddress(null);
+    setLogisticsOpen(false);
+    setEditingLogistics(null);
+    setErrors({});
+  }, [id]);
+
+  useEffect(() => {
+    if (!detailQuery.data || !shouldApplyOrderResult(id, detailQuery.data)) {
       return;
     }
 
@@ -84,7 +97,7 @@ export default function MasterDetailDetailPage() {
       return next;
     });
     setErrors((current) => (Object.keys(current).length > 0 ? {} : current));
-  }, [detailQuery.data]);
+  }, [detailQuery.data, id]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -148,14 +161,22 @@ export default function MasterDetailDetailPage() {
 
   const saveMutation = useMutation({
     mutationFn: saveOrderDetail,
-    onSuccess: (saved) => {
+    onSuccess: (saved, submitted) => {
+      if (!shouldApplyOrderResult(id, submitted)) {
+        return;
+      }
+
       setSavedState(normalizeOrder(saved));
       setDraft(normalizeOrder(saved));
       setDirtySections({ items: false, addresses: false, logistics: false });
       setErrors({});
       toast.success(t('masterDetail.detail.saveSuccess'));
     },
-    onError: () => {
+    onError: (_error, submitted) => {
+      if (!shouldApplyOrderResult(id, submitted)) {
+        return;
+      }
+
       toast.error(t('masterDetail.detail.saveFailed'));
     },
   });

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from '@nop-chaos/ui';
@@ -50,6 +50,8 @@ export interface FlowEditorState {
   setInspectorCollapsed: Dispatch<SetStateAction<boolean>>;
   undo: () => import('./types').FlowStateSnapshot | null;
   redo: () => import('./types').FlowStateSnapshot | null;
+  getActiveFlowRouteId: () => string;
+  getActiveFlowDocumentId: () => string | null;
 }
 
 export function useFlowEditorState(): FlowEditorState {
@@ -74,12 +76,23 @@ export function useFlowEditorState(): FlowEditorState {
   const [savedSnapshot, setSavedSnapshot] = useState('');
   const [inspectorCollapsed, setInspectorCollapsed] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const activeRequestIdRef = useRef(0);
+  const activeFlowRouteIdRef = useRef(id);
+  const activeFlowDocumentIdRef = useRef<string | null>(null);
 
   const dirty =
     initialized && JSON.stringify({ nodes, edges }) !== savedSnapshot;
 
-  const { canUndo, canRedo, initializeHistory, recordSnapshot, undo, redo } =
+  const { canUndo, canRedo, initializeHistory, resetHistory, recordSnapshot, undo, redo } =
     useFlowHistory();
+
+  useEffect(() => {
+    activeFlowRouteIdRef.current = id;
+  }, [id]);
+
+  useEffect(() => {
+    activeFlowDocumentIdRef.current = flowDocument?.id ?? null;
+  }, [flowDocument]);
 
   const selectedNode = useMemo(
     () => nodes.find((node) => node.id === selectedNodeId) ?? null,
@@ -106,11 +119,32 @@ export function useFlowEditorState(): FlowEditorState {
     [recordSnapshot],
   );
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const controller = new AbortController();
+    const requestId = ++activeRequestIdRef.current;
+    let fitViewTimeoutId: number | undefined;
+
+    setInitialized(false);
+    setFlowDocument(null);
+    setNodes([]);
+    setEdges([]);
+    setSelectedNodeId(null);
+    setSelectedEdgeId(null);
+    setHoveredNodeId(null);
+    setHoveredEdgeId(null);
+    setDeleteDialogOpen(false);
+    setDeleteTarget(null);
+    setClipboardNode(null);
+    setSavedSnapshot('');
+    resetHistory();
 
     void fetchFlowDetail(id, controller.signal)
       .then((payload) => {
+        if (controller.signal.aborted || activeRequestIdRef.current !== requestId || activeFlowRouteIdRef.current !== id) {
+          return;
+        }
+
         const normalizedNodes = payload.nodes.map((node) => ({
           ...node,
           data: node.data as FlowNodeData,
@@ -131,13 +165,14 @@ export function useFlowEditorState(): FlowEditorState {
           edges: cloneEdges(normalizedEdges),
         });
         setSavedSnapshot(snapshot);
-        window.setTimeout(
-          () => void fitView({ duration: 250, padding: 0.2 }),
-          50,
-        );
+        fitViewTimeoutId = window.setTimeout(() => {
+          if (activeRequestIdRef.current === requestId && activeFlowRouteIdRef.current === id) {
+            void fitView({ duration: 250, padding: 0.2 });
+          }
+        }, 50);
       })
       .catch((error: unknown) => {
-        if (controller.signal.aborted) {
+        if (controller.signal.aborted || activeRequestIdRef.current !== requestId || activeFlowRouteIdRef.current !== id) {
           return;
         }
 
@@ -147,9 +182,13 @@ export function useFlowEditorState(): FlowEditorState {
       });
 
     return () => {
+      if (fitViewTimeoutId !== undefined) {
+        window.clearTimeout(fitViewTimeoutId);
+      }
       controller.abort(new Error('Flow editor unmounted'));
     };
-  }, [fitView, id, initializeHistory, t]);
+  }, [fitView, id, initializeHistory, resetHistory, t]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
@@ -217,5 +256,7 @@ export function useFlowEditorState(): FlowEditorState {
     setInspectorCollapsed,
     undo,
     redo,
+    getActiveFlowRouteId: () => activeFlowRouteIdRef.current,
+    getActiveFlowDocumentId: () => activeFlowDocumentIdRef.current,
   };
 }

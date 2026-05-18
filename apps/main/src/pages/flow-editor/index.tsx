@@ -21,9 +21,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  getTableRowClassName,
   toast,
 } from '@nop-chaos/ui';
-import { getTableRowClassName } from '../../lib/tableRowClassName';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/common/PageHeader';
 import { confirmInApp } from '../../services/confirm';

@@ -16,7 +16,7 @@ const plugins: PluginManifest[] = [
     description: 'Demo plugin',
     version: '1.0.0',
     author: 'NOP',
-    source: 'local',
+    source: 'extension',
     enabled: true,
     url: '/plugins/plugin-demo.system.js',
     updatedAt: '2026-05-17',
@@ -99,5 +99,27 @@ describe('PluginsManagementPage', () => {
     });
 
     expect(updatePluginMock).toHaveBeenCalledWith('plugin-demo', expect.any(Function));
+  });
+
+  it('renders extension-provided plugin manifests in the management list', () => {
+    act(() => {
+      root.render(<PluginsManagementPage />);
+    });
+
+    expect(container.textContent).toContain('Plugin Demo');
+    expect(container.textContent).toContain('Demo plugin');
+    expect(container.textContent).toContain('extension');
+
+    const detailButton = Array.from(container.querySelectorAll('button')).find((button) =>
+      button.textContent?.includes('common.viewDetails'),
+    );
+
+    act(() => {
+      detailButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    const dialogContent = Array.from(document.body.querySelectorAll('[role="dialog"]')).at(-1) ?? document.body;
+
+    expect(dialogContent.textContent).toContain('/plugins/plugin-demo.system.js');
   });
 });

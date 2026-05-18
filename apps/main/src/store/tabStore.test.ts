@@ -87,4 +87,19 @@ describe('tabStore', () => {
     ]);
     expect(useTabStore.getState().activePath).toBe('/plugins');
   });
+
+  it('replaces the legacy non-closable home tab when a new canonical home tab is opened', () => {
+    homePath.setCurrentHomePath('/plugins');
+
+    useTabStore.getState().openTab({
+      path: '/plugins',
+      title: 'Plugins',
+      icon: 'puzzle',
+      closable: false,
+    });
+
+    expect(useTabStore.getState().tabs).toEqual([
+      { path: '/plugins', title: 'Plugins', icon: 'puzzle', closable: false },
+    ]);
+  });
 });

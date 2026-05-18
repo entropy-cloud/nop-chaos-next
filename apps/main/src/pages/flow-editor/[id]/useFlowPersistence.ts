@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { MarkerType } from '@xyflow/react';
 import { toast } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { cloneEdges, cloneNodes, getEdgeStyle } from './utils';
+import { cloneEdges, cloneNodes, getEdgeStyle, shouldApplyFlowSaveResult } from './utils';
 import type { FlowDocument } from '../../../services/mockApi';
 import type { FlowEditorState } from './useFlowEditorState';
 
@@ -12,8 +12,17 @@ interface UseFlowPersistenceOptions {
 
 export function useFlowPersistence({ state }: UseFlowPersistenceOptions) {
   const { t } = useTranslation();
-  const { flowDocument, nodes, edges, savedSnapshot, applyState, setFlowDocument, setSavedSnapshot } =
-    state;
+  const {
+    flowDocument,
+    nodes,
+    edges,
+    savedSnapshot,
+    applyState,
+    setFlowDocument,
+    setSavedSnapshot,
+    getActiveFlowRouteId,
+    getActiveFlowDocumentId,
+  } = state;
 
   const saveSnapshot = useCallback(async () => {
     if (!flowDocument) {
@@ -35,13 +44,33 @@ export function useFlowPersistence({ state }: UseFlowPersistenceOptions) {
       const saved = await import('../../../services/mockApi').then((m) =>
         m.saveFlowDetail(payload),
       );
+
+      if (
+        !shouldApplyFlowSaveResult(
+          getActiveFlowRouteId(),
+          getActiveFlowDocumentId(),
+          flowDocument.id,
+        )
+      ) {
+        return;
+      }
+
       setFlowDocument(saved);
       setSavedSnapshot(JSON.stringify({ nodes, edges }));
       toast.success(t('flowEditor.editor.saveSuccess'));
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : t('flowEditor.editor.saveFailed'));
     }
-  }, [flowDocument, nodes, edges, setFlowDocument, setSavedSnapshot, t]);
+  }, [
+    edges,
+    flowDocument,
+    getActiveFlowDocumentId,
+    getActiveFlowRouteId,
+    nodes,
+    setFlowDocument,
+    setSavedSnapshot,
+    t,
+  ]);
 
   const restoreSaved = useCallback(() => {
     if (!savedSnapshot) {

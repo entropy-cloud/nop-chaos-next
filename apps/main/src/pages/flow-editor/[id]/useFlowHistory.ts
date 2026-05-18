@@ -19,6 +19,12 @@ export function useFlowHistory(initialSnapshot?: FlowStateSnapshot) {
     setHistoryIndex(0);
   }, []);
 
+  const resetHistory = useCallback(() => {
+    historyIndexRef.current = -1;
+    setHistory([]);
+    setHistoryIndex(-1);
+  }, []);
+
   const recordSnapshot = useCallback((nodes: FlowNode[], edges: FlowEdge[]) => {
     setHistory((current) => {
       const base = current.slice(0, historyIndexRef.current + 1);
@@ -54,6 +60,7 @@ export function useFlowHistory(initialSnapshot?: FlowStateSnapshot) {
     canUndo,
     canRedo,
     initializeHistory,
+    resetHistory,
     recordSnapshot,
     undo,
     redo,

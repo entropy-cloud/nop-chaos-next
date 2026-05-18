@@ -13,8 +13,8 @@ import {
   TableHeader,
   TableRow,
   cn,
+  getTableRowClassName,
 } from '@nop-chaos/ui';
-import { getTableRowClassName } from '../../../../../lib/tableRowClassName';
 import { useTranslation } from 'react-i18next';
 import type { OrderItem, OrderRecord } from '../../../../../services/mockApi';
 import type { ValidationErrors } from '../types';

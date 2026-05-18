@@ -42,6 +42,10 @@ export default function AIWorkbenchPage() {
   const [historyLoadingId, setHistoryLoadingId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const stopStreamRef = useRef(false);
+  const streamTimerRef = useRef<number | null>(null);
+  const streamDelayResolveRef = useRef<(() => void) | null>(null);
+  const historyTimerRef = useRef<number | null>(null);
+  const mountedRef = useRef(true);
   const resizingRef = useRef(false);
   const activeSession = sessions.find((session) => session.id === activeSessionId) ?? sessions[0];
   const selectedAssistantId =
@@ -76,6 +80,39 @@ export default function AIWorkbenchPage() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [activeSession?.messages, streaming]);
 
+  const clearPendingStreamDelay = () => {
+    if (streamTimerRef.current !== null) {
+      window.clearTimeout(streamTimerRef.current);
+      streamTimerRef.current = null;
+    }
+
+    if (streamDelayResolveRef.current) {
+      const resolve = streamDelayResolveRef.current;
+      streamDelayResolveRef.current = null;
+      resolve();
+    }
+  };
+
+  const cancelStreaming = () => {
+    stopStreamRef.current = true;
+    clearPendingStreamDelay();
+    if (mountedRef.current) {
+      setStreaming(false);
+    }
+  };
+
+  const waitForStreamDelay = () =>
+    new Promise<void>((resolve) => {
+      streamDelayResolveRef.current = () => {
+        streamDelayResolveRef.current = null;
+        resolve();
+      };
+      streamTimerRef.current = window.setTimeout(() => {
+        streamTimerRef.current = null;
+        streamDelayResolveRef.current?.();
+      }, 12);
+    });
+
   const loadOlderMessages = (sessionId: string) => {
     if (historyLoadedIds.includes(sessionId) || historyLoadingId === sessionId) {
       return;
@@ -87,7 +124,7 @@ export default function AIWorkbenchPage() {
     }
 
     setHistoryLoadingId(sessionId);
-    window.setTimeout(() => {
+    historyTimerRef.current = window.setTimeout(() => {
       setSessions((state) =>
         state.map((item) =>
           item.id === sessionId
@@ -100,6 +137,7 @@ export default function AIWorkbenchPage() {
       );
       setHistoryLoadedIds((state) => [...state, sessionId]);
       setHistoryLoadingId((current) => (current === sessionId ? null : current));
+      historyTimerRef.current = null;
     }, 220);
   };
 
@@ -123,6 +161,18 @@ export default function AIWorkbenchPage() {
     };
   }, []);
 
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+      stopStreamRef.current = true;
+      clearPendingStreamDelay();
+      if (historyTimerRef.current !== null) {
+        window.clearTimeout(historyTimerRef.current);
+        historyTimerRef.current = null;
+      }
+    };
+  }, []);
+
   const updateSession = (
     sessionId: string,
     updater: (session: WorkbenchSession) => WorkbenchSession,
@@ -133,13 +183,14 @@ export default function AIWorkbenchPage() {
   };
 
   const createSession = (seed?: Partial<WorkbenchSession>) => {
-      const nextSession: WorkbenchSession = {
-        id: `session-${Date.now()}`,
-        title: seed?.title ?? t('aiWorkbench.newSessionTitle', { index: sessions.length + 1 }),
-        assistantId: seed?.assistantId ?? selectedAssistantId,
-        updatedAt: t('aiWorkbench.timestamps.justNow'),
-        messages: seed?.messages ?? [],
-      };
+    cancelStreaming();
+    const nextSession: WorkbenchSession = {
+      id: `session-${Date.now()}`,
+      title: seed?.title ?? t('aiWorkbench.newSessionTitle', { index: sessions.length + 1 }),
+      assistantId: seed?.assistantId ?? selectedAssistantId,
+      updatedAt: t('aiWorkbench.timestamps.justNow'),
+      messages: seed?.messages ?? [],
+    };
     setSessions((state) => [nextSession, ...state]);
     setActiveSessionId(nextSession.id);
     return nextSession;
@@ -168,6 +219,9 @@ export default function AIWorkbenchPage() {
   };
 
   const handleDeleteSession = (sessionId: string) => {
+    if (activeSessionId === sessionId) {
+      cancelStreaming();
+    }
     const nextSessions = sessions.filter((session) => session.id !== sessionId);
     setSessions(nextSessions);
     if (activeSessionId === sessionId && nextSessions.length > 0) {
@@ -175,7 +229,17 @@ export default function AIWorkbenchPage() {
     }
   };
 
+  const handleSelectSession = (sessionId: string) => {
+    if (sessionId === activeSessionId) {
+      return;
+    }
+
+    cancelStreaming();
+    setActiveSessionId(sessionId);
+  };
+
   const streamAssistantReply = async (sessionId: string, prompt: string) => {
+    clearPendingStreamDelay();
     stopStreamRef.current = false;
     const reply = createMockAiReply(prompt, selectedAssistantId, contextEnabled, contextSummary);
     const assistantMessageId = `assistant-${Date.now()}`;
@@ -206,10 +270,12 @@ export default function AIWorkbenchPage() {
           message.id === assistantMessageId ? { ...message, content: partial } : message,
         ),
       }));
-      await new Promise((resolve) => window.setTimeout(resolve, 12));
+      await waitForStreamDelay();
     }
 
-    setStreaming(false);
+    if (mountedRef.current) {
+      setStreaming(false);
+    }
   };
 
   const handleSend = async () => {
@@ -236,8 +302,7 @@ export default function AIWorkbenchPage() {
   };
 
   const handleStop = () => {
-    stopStreamRef.current = true;
-    setStreaming(false);
+    cancelStreaming();
     toast.info(t('aiWorkbench.stopSuccess'));
   };
 
@@ -333,7 +398,7 @@ export default function AIWorkbenchPage() {
           activeSessionId={activeSessionId}
           renameId={renameId}
           setRenameId={setRenameId}
-          setActiveSessionId={setActiveSessionId}
+          setActiveSessionId={handleSelectSession}
           updateSession={updateSession}
           handleDeleteSession={handleDeleteSession}
         />

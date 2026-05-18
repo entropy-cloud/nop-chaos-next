@@ -8,6 +8,7 @@ const {
   getEdgeStyle,
   shouldRecordNodeChangeHistory,
   shouldRecordEdgeChangeHistory,
+  shouldApplyFlowSaveResult,
 } = flowEditorTestUtils();
 
 describe('flow editor helpers', () => {
@@ -78,5 +79,12 @@ describe('flow editor helpers', () => {
       false,
     );
     expect(shouldRecordEdgeChangeHistory([{ id: 'edge-1', type: 'remove' }])).toBe(true);
+  });
+
+  it('applies saved flow results only to the active flow ownership', () => {
+    expect(shouldApplyFlowSaveResult('flow-1', 'flow-1', 'flow-1')).toBe(true);
+    expect(shouldApplyFlowSaveResult('new', 'flow-123', 'flow-123')).toBe(true);
+    expect(shouldApplyFlowSaveResult('flow-2', 'flow-1', 'flow-1')).toBe(false);
+    expect(shouldApplyFlowSaveResult('flow-1', 'flow-2', 'flow-1')).toBe(false);
   });
 });

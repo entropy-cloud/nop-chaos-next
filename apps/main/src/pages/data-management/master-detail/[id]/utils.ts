@@ -17,6 +17,10 @@ export function hasOrderChanged(left: OrderRecord | null, right: OrderRecord | n
   return JSON.stringify(left) !== JSON.stringify(right);
 }
 
+export function shouldApplyOrderResult(activeOrderId: string, order: Pick<OrderRecord, 'id'>) {
+  return order.id === activeOrderId;
+}
+
 export function containsIgnoreCase(value: string, keyword: string) {
   return value.toLowerCase().includes(keyword.trim().toLowerCase());
 }

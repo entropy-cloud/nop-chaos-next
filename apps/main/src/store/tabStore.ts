@@ -30,9 +30,17 @@ export const useTabStore = create<TabStore>()(
       openTab: (tab) =>
         set((state) => ({
           activePath: tab.path,
-          tabs: state.tabs.some((item) => item.path === tab.path)
-            ? state.tabs
-            : [...state.tabs, tab],
+          tabs: (() => {
+            const nextTab = tab.closable === false ? { ...createHomeTab(), ...tab, closable: false } : tab;
+            const withoutLegacyHomeTabs =
+              nextTab.closable === false
+                ? state.tabs.filter((item) => item.closable !== false)
+                : state.tabs;
+
+            return withoutLegacyHomeTabs.some((item) => item.path === nextTab.path)
+              ? withoutLegacyHomeTabs.map((item) => (item.path === nextTab.path ? nextTab : item))
+              : [...withoutLegacyHomeTabs, nextTab];
+          })(),
         })),
       setActivePath: (path) => set({ activePath: path }),
       closeTab: (path) => {

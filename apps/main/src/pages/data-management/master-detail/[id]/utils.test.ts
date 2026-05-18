@@ -3,6 +3,7 @@ import {
   calculateSubtotal,
   normalizeOrder,
   hasOrderChanged,
+  shouldApplyOrderResult,
   containsIgnoreCase,
   buildValidationErrors,
 } from './utils';
@@ -60,6 +61,16 @@ describe('master-detail utils', () => {
 
     it('trims the keyword', () => {
       expect(containsIgnoreCase('hello', '  hello  ')).toBe(true);
+    });
+  });
+
+  describe('shouldApplyOrderResult', () => {
+    it('returns true when saved order still belongs to current route id', () => {
+      expect(shouldApplyOrderResult('1001', { id: '1001' } as OrderRecord)).toBe(true);
+    });
+
+    it('returns false when saved order belongs to an old route id', () => {
+      expect(shouldApplyOrderResult('1002', { id: '1001' } as OrderRecord)).toBe(false);
     });
   });
 

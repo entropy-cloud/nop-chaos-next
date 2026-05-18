@@ -65,6 +65,18 @@ export function shouldRecordEdgeChangeHistory(changes: EdgeChange[]): boolean {
   return changes.some((change) => change.type !== 'select');
 }
 
+export function shouldApplyFlowSaveResult(
+  activeRouteId: string,
+  activeFlowDocumentId: string | null,
+  savedFlowId: string,
+) {
+  if (activeFlowDocumentId !== savedFlowId) {
+    return false;
+  }
+
+  return activeRouteId === 'new' || activeRouteId === savedFlowId;
+}
+
 export function flowEditorTestUtils() {
   return {
     createNode,
@@ -73,5 +85,6 @@ export function flowEditorTestUtils() {
     getEdgeStyle,
     shouldRecordNodeChangeHistory,
     shouldRecordEdgeChangeHistory,
+    shouldApplyFlowSaveResult,
   };
 }
