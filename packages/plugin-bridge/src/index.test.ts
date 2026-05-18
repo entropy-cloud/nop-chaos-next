@@ -4,7 +4,6 @@ import * as React from 'react';
 import {
   getPluginBridge,
   getPluginBridgeSnapshot,
-  setPluginBridge,
   subscribePluginBridge,
   type PluginBridge,
 } from './index';
@@ -17,6 +16,7 @@ import {
   usePluginI18n,
   usePluginNotifications,
 } from './index';
+import { setPluginBridge } from './host';
 
 const hostKey = '__NOP_PLUGIN_BRIDGE__';
 const listenersKey = '__NOP_PLUGIN_BRIDGE_LISTENERS__';
@@ -130,7 +130,7 @@ describe('plugin bridge', () => {
     expect(bridge.navigate).toHaveBeenCalledWith('/plugins/management', { replace: true });
   });
 
-  it('supports selector calls on bound stores', () => {
+  it('exposes readable host store snapshots', () => {
     const user: User = {
       id: 'user-1',
       username: 'tester',
@@ -138,8 +138,8 @@ describe('plugin bridge', () => {
     };
     const bridge = createBridgeWithUser(user);
 
-    expect(bridge.stores.authStore((state) => state.user?.id)).toBe('user-1');
-    expect(bridge.stores.authStore((state) => state.isAuthenticated)).toBe(true);
+    expect(bridge.stores.authStore.getState().user?.id).toBe('user-1');
+    expect(bridge.stores.authStore.getState().isAuthenticated).toBe(true);
   });
 
   it('notifies bridge subscribers when host bridge updates', () => {
@@ -331,6 +331,26 @@ describe('plugin bridge hooks', () => {
       expect(config.themeId).toBe('ocean');
       expect(config.displayMode).toBe('dark');
     });
+
+    it('returns the host-resolved theme from the bridge snapshot', () => {
+      const bridge = {
+        ...createBridgeWithUser(),
+        getThemeConfig: () => ({ themeId: 'classic', displayMode: 'dark' as const }),
+        getSnapshot: () => ({
+          i18n: {
+            language: 'zh-CN',
+            t: (key: string) => `[${key}]`,
+          } as PluginBridge['i18n'],
+          themeConfig: { themeId: 'classic', displayMode: 'dark' as const },
+          user: null,
+          plugins: [],
+        }),
+      } satisfies PluginBridge;
+
+      setPluginBridge(bridge);
+
+      expect(usePluginThemeConfig()).toEqual({ themeId: 'classic', displayMode: 'dark' });
+    });
   });
 
   describe('usePluginUser', () => {
@@ -396,12 +416,38 @@ describe('plugin bridge hooks', () => {
       expect(i18n.t('key')).toBe('key');
     });
 
-    it('returns bridge i18n after injection', () => {
+  it('returns bridge i18n after injection', () => {
       setPluginBridge(createBridgeWithUser());
 
       const i18n = usePluginI18n();
       expect(i18n.language).toBe('zh-CN');
       expect(i18n.t('hello')).toBe('[hello]');
+    });
+
+    it('returns a fresh snapshot when language changes on the same i18n object', () => {
+      const i18n = {
+        language: 'zh-CN',
+        t: (key: string) => `[${key}]`,
+      } as PluginBridge['i18n'];
+      const bridge = {
+        ...createBridgeWithUser(),
+        i18n,
+        getSnapshot: () => ({
+          i18n,
+          themeConfig: { themeId: 'ocean', displayMode: 'dark' },
+          user: null,
+          plugins: [],
+        }),
+      } satisfies PluginBridge;
+
+      setPluginBridge(bridge);
+      const firstSnapshot = usePluginI18n();
+
+      i18n.language = 'en-US';
+
+      const secondSnapshot = usePluginI18n();
+      expect(secondSnapshot).not.toBe(firstSnapshot);
+      expect(secondSnapshot.language).toBe('en-US');
     });
   });
 
@@ -463,6 +509,14 @@ describe('plugin bridge hooks', () => {
         expect.any(Function),
         expect.any(Function),
       );
+    });
+  });
+
+  describe('root entry surface', () => {
+    it('does not expose host-only bridge setter from the plugin-facing entry', async () => {
+      const mod = await import('./index');
+
+      expect('setPluginBridge' in mod).toBe(false);
     });
   });
 });

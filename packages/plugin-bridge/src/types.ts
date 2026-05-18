@@ -18,23 +18,21 @@ export interface BridgeSnapshot {
   plugins: PluginManifest[];
 }
 
-type BoundStore<T> = {
-  (): T;
-  <U>(selector: (state: T) => U): U;
+type ReadableStore<T> = {
   getState: () => T;
   subscribe: (listener: () => void) => () => void;
 };
 
 export interface PluginBridgeStores {
-  authStore: BoundStore<{
+  authStore: ReadableStore<{
     user: User | null;
     isAuthenticated: boolean;
     token?: string;
   }>;
-  themeStore: BoundStore<{
+  themeStore: ReadableStore<{
     themeConfig: ThemeConfig;
   }>;
-  pluginStore: BoundStore<{
+  pluginStore: ReadableStore<{
     plugins: PluginManifest[];
   }>;
 }
@@ -56,7 +54,7 @@ export interface PluginBridge {
   i18n: BridgeI18n;
   /** Toast notification helpers. */
   notifications: PluginBridgeNotifications;
-  /** Access to host Zustand stores bound to the plugin. */
+  /** Access to read-only host store snapshots and subscriptions. */
   stores: PluginBridgeStores;
   /** Navigate to a different route inside the host shell. */
   navigate: (to: string, options?: PluginBridgeNavigateOptions) => void;

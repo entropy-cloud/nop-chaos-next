@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import type { LoadedExtension, ExtensionSource, MenuItem, ShellExtension } from '@nop-chaos/shared';
-import { loadExtensions } from './loadExtensions';
+import { DEFAULT_EXTENSION_TIMEOUT_MS, loadExtensions } from './loadExtensions';
 import {
   resolveShellRuntimeConfig,
   setLoadedExtensions,
@@ -179,7 +179,7 @@ describe('extension-host loadExtensions', () => {
     });
 
     expect(loaded).toHaveLength(0);
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("must export an object with a non-empty 'id'"));
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('must export a valid ShellExtension contract'));
   });
 
   it('resolves extension from async getExtension', async () => {
@@ -195,6 +195,42 @@ describe('extension-host loadExtensions', () => {
 
     expect(loaded).toHaveLength(1);
     expect(loaded[0].extension.id).toBe('async-getter');
+  });
+
+  it('times out stuck extension loads without blocking later sources forever', async () => {
+    vi.useFakeTimers();
+    const errorSpy = vi.fn();
+
+    const loadPromise = loadExtensions({
+      sources: [
+        { id: 'stuck', load: async () => new Promise(() => undefined) },
+        { id: 'ok-ext', load: async () => ({ default: { id: 'ok-ext' } }) },
+      ],
+      context: {
+        logger: { info: vi.fn(), warn: vi.fn(), error: errorSpy },
+      },
+    });
+
+    await vi.advanceTimersByTimeAsync(DEFAULT_EXTENSION_TIMEOUT_MS + 1);
+    const loaded = await loadPromise;
+
+    expect(loaded).toHaveLength(1);
+    expect(loaded[0].extension.id).toBe('ok-ext');
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('load timed out'));
+    vi.useRealTimers();
+  });
+
+  it('rejects invalid supportedLanguages contract', async () => {
+    const errorSpy = vi.fn();
+    const loaded = await loadExtensions({
+      sources: [{ id: 'bad-languages', load: async () => ({ default: { id: 'bad-languages', supportedLanguages: [{}] } as never }) }],
+      context: {
+        logger: { info: vi.fn(), warn: vi.fn(), error: errorSpy },
+      },
+    });
+
+    expect(loaded).toHaveLength(0);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('valid ShellExtension contract'));
   });
 });
 
