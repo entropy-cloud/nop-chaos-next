@@ -61,10 +61,11 @@ export function ItemsSection({
           ) : null}
         </CardTitle>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={restoreItems}>
+          <Button type="button" size="sm" variant="outline" onClick={restoreItems}>
             {t('masterDetail.detail.restoreSection')}
           </Button>
           <Button
+            type="button"
             size="sm"
             onClick={() => {
               setDraft((state) =>
@@ -160,7 +161,7 @@ export function ItemsSection({
                     <TableCell>￥{calculateSubtotal(item).toLocaleString()}</TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-2">
-                        <Button size="sm" variant="outline" onClick={() => removeItem(item.id)}>
+                        <Button type="button" size="sm" variant="outline" onClick={() => removeItem(item.id)}>
                           {t('common.delete')}
                         </Button>
                       </div>

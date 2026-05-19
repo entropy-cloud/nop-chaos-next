@@ -355,15 +355,15 @@ export default function MasterDetailDetailPage() {
         description={t('masterDetail.detail.description')}
         actions={
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={() => void detailQuery.refetch()}>
+            <Button type="button" variant="outline" onClick={() => void detailQuery.refetch()}>
               <RefreshCw className="size-4" />
               {t('common.refresh')}
             </Button>
-            <Button variant="outline" onClick={cancelAll}>
+            <Button type="button" variant="outline" onClick={cancelAll}>
               <RotateCcw className="size-4" />
               {t('masterDetail.detail.discardAll')}
             </Button>
-            <Button onClick={handleSaveAll} disabled={saveMutation.isPending}>
+            <Button type="submit" disabled={saveMutation.isPending}>
               <Save className="size-4" />
               {saveMutation.isPending ? t('common.saving') : t('masterDetail.detail.saveAll')}
             </Button>
@@ -437,6 +437,7 @@ export default function MasterDetailDetailPage() {
 
       <div className="flex justify-end">
         <Button
+          type="button"
           variant="outline"
           onClick={(event: ReactMouseEvent<HTMLButtonElement>) =>
             navigateWithDirtyGuard(event, '/data-management/master-detail')

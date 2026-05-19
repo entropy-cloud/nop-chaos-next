@@ -40,10 +40,11 @@ export function AddressesSection({
           ) : null}
         </CardTitle>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={restoreAddresses}>
+          <Button type="button" size="sm" variant="outline" onClick={restoreAddresses}>
             {t('masterDetail.detail.restoreSection')}
           </Button>
           <Button
+            type="button"
             size="sm"
             onClick={() => {
               setEditingAddress({
@@ -103,6 +104,7 @@ export function AddressesSection({
                   }}
                 />
                 <Button
+                  type="button"
                   size="sm"
                   variant="outline"
                   onClick={() => {
@@ -113,6 +115,7 @@ export function AddressesSection({
                   {t('common.edit')}
                 </Button>
                 <Button
+                  type="button"
                   size="sm"
                   variant="outline"
                   onClick={async () => {

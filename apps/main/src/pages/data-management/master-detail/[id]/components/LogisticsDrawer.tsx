@@ -48,7 +48,7 @@ export function LogisticsDrawer({
         {editingLogistics ? (
           <DrawerBody>
             <div className="space-y-4">
-              <div className="grid gap-2">
+              <div className="grid gap-2.5">
                 <Label>{t('masterDetail.detail.logisticsFields.company')}</Label>
                 <Input
                   value={editingLogistics.company}
@@ -57,7 +57,7 @@ export function LogisticsDrawer({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2.5">
                 <Label>{t('masterDetail.detail.logisticsFields.trackingNo')}</Label>
                 <Input
                   value={editingLogistics.trackingNo}
@@ -66,7 +66,7 @@ export function LogisticsDrawer({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2.5">
                 <Label>{t('masterDetail.detail.logisticsFields.shippingStatus')}</Label>
                 <Select
                   value={editingLogistics.shippingStatus}
@@ -97,7 +97,7 @@ export function LogisticsDrawer({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2.5">
                 <Label>{t('masterDetail.detail.logisticsFields.eta')}</Label>
                 <Input
                   type="date"
@@ -107,7 +107,7 @@ export function LogisticsDrawer({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2.5">
                 <Label>{t('masterDetail.detail.logisticsFields.note')}</Label>
                 <Textarea
                   value={editingLogistics.note}
@@ -130,10 +130,10 @@ export function LogisticsDrawer({
           </DrawerBody>
         ) : null}
         <DrawerFooter className="border-t bg-muted/50 pt-4 sm:justify-end">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.cancel')}
           </Button>
-          <Button onClick={saveLogistics}>{t('masterDetail.detail.saveLogistics')}</Button>
+          <Button type="button" onClick={saveLogistics}>{t('masterDetail.detail.saveLogistics')}</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

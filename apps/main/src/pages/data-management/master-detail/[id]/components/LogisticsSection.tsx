@@ -40,10 +40,11 @@ export function LogisticsSection({
           ) : null}
         </CardTitle>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={restoreLogistics}>
+          <Button type="button" size="sm" variant="outline" onClick={restoreLogistics}>
             {t('masterDetail.detail.restoreSection')}
           </Button>
           <Button
+            type="button"
             size="sm"
             onClick={() => {
               setEditingLogistics(createNewLogistics());
@@ -79,6 +80,7 @@ export function LogisticsSection({
               </div>
               <div className="flex gap-2">
                 <Button
+                  type="button"
                   size="sm"
                   variant="outline"
                   onClick={() => {
@@ -89,6 +91,7 @@ export function LogisticsSection({
                   {t('common.edit')}
                 </Button>
                 <Button
+                  type="button"
                   size="sm"
                   variant="outline"
                   onClick={async () => {

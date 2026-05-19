@@ -45,73 +45,73 @@ export function AddressDialog({
         </DialogHeader>
         {editingAddress ? (
           <DialogBody>
-            <div className="grid gap-3">
-            <div className="grid gap-2">
-              <Label>{t('masterDetail.detail.addressFields.receiver')}</Label>
-              <Input
-                value={editingAddress.receiver}
-                onChange={(event) =>
-                  setEditingAddress({ ...editingAddress, receiver: event.target.value })
-                }
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>{t('masterDetail.detail.addressFields.phone')}</Label>
-              <Input
-                value={editingAddress.phone}
-                onChange={(event) =>
-                  setEditingAddress({ ...editingAddress, phone: event.target.value })
-                }
-              />
-            </div>
-            <div className="grid gap-2 md:grid-cols-2">
-              <div className="grid gap-2">
-                <Label>{t('masterDetail.detail.addressFields.province')}</Label>
+            <div className="grid gap-3.5">
+              <div className="grid gap-2.5">
+                <Label>{t('masterDetail.detail.addressFields.receiver')}</Label>
                 <Input
-                  value={editingAddress.province}
+                  value={editingAddress.receiver}
                   onChange={(event) =>
-                    setEditingAddress({ ...editingAddress, province: event.target.value })
+                    setEditingAddress({ ...editingAddress, receiver: event.target.value })
                   }
                 />
               </div>
-              <div className="grid gap-2">
-                <Label>{t('masterDetail.detail.addressFields.city')}</Label>
+              <div className="grid gap-2.5">
+                <Label>{t('masterDetail.detail.addressFields.phone')}</Label>
                 <Input
-                  value={editingAddress.city}
+                  value={editingAddress.phone}
                   onChange={(event) =>
-                    setEditingAddress({ ...editingAddress, city: event.target.value })
+                    setEditingAddress({ ...editingAddress, phone: event.target.value })
+                  }
+                />
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="grid gap-2.5">
+                  <Label>{t('masterDetail.detail.addressFields.province')}</Label>
+                  <Input
+                    value={editingAddress.province}
+                    onChange={(event) =>
+                      setEditingAddress({ ...editingAddress, province: event.target.value })
+                    }
+                  />
+                </div>
+                <div className="grid gap-2.5">
+                  <Label>{t('masterDetail.detail.addressFields.city')}</Label>
+                  <Input
+                    value={editingAddress.city}
+                    onChange={(event) =>
+                      setEditingAddress({ ...editingAddress, city: event.target.value })
+                    }
+                  />
+                </div>
+              </div>
+              <div className="grid gap-2.5">
+                <Label>{t('masterDetail.detail.addressFields.address')}</Label>
+                <Textarea
+                  value={editingAddress.address}
+                  onChange={(event) =>
+                    setEditingAddress({ ...editingAddress, address: event.target.value })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between rounded-xl border border-[hsl(var(--border))] px-3 py-2">
+                <span className="text-sm text-muted-foreground">
+                  {t('masterDetail.detail.addressFields.default')}
+                </span>
+                <Switch
+                  checked={editingAddress.isDefault}
+                  onCheckedChange={(checked) =>
+                    setEditingAddress({ ...editingAddress, isDefault: checked })
                   }
                 />
               </div>
             </div>
-            <div className="grid gap-2">
-              <Label>{t('masterDetail.detail.addressFields.address')}</Label>
-              <Textarea
-                value={editingAddress.address}
-                onChange={(event) =>
-                  setEditingAddress({ ...editingAddress, address: event.target.value })
-                }
-              />
-            </div>
-            <div className="flex items-center justify-between rounded-xl border border-[hsl(var(--border))] px-3 py-2">
-              <span className="text-sm text-muted-foreground">
-                {t('masterDetail.detail.addressFields.default')}
-              </span>
-              <Switch
-                checked={editingAddress.isDefault}
-                onCheckedChange={(checked) =>
-                  setEditingAddress({ ...editingAddress, isDefault: checked })
-                }
-              />
-            </div>
-          </div>
           </DialogBody>
         ) : null}
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.cancel')}
           </Button>
-          <Button onClick={saveAddress}>{t('masterDetail.detail.saveAddress')}</Button>
+          <Button type="button" onClick={saveAddress}>{t('masterDetail.detail.saveAddress')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
