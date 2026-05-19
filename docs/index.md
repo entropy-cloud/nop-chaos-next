@@ -64,6 +64,10 @@ Bug fix records for non-trivial issues.
 | [36-extension-contract-half-connection-closure.md](./bugs/36-extension-contract-half-connection-closure.md) | Extension contract half-connection closure |
 | [37-runtime-state-canonicalization-fixes.md](./bugs/37-runtime-state-canonicalization-fixes.md) | Runtime state canonicalization fixes |
 | [38-ai-workbench-lifecycle-cancellation.md](./bugs/38-ai-workbench-lifecycle-cancellation.md) | AI Workbench lifecycle cancellation |
+| [39-master-detail-detail-form-button-submit-loop.md](./bugs/39-master-detail-detail-form-button-submit-loop.md) | Master detail detail confirm loop and empty dialog |
+| [40-main-tailwind-ui-content-scan-drift.md](./bugs/40-main-tailwind-ui-content-scan-drift.md) | Main Tailwind UI content scan drift |
+| [39-master-detail-detail-form-button-submit-loop.md](./bugs/39-master-detail-detail-form-button-submit-loop.md) | Master detail detail form button submit loop |
+| [40-main-tailwind-ui-content-scan-drift.md](./bugs/40-main-tailwind-ui-content-scan-drift.md) | Main Tailwind UI content scan drift |
 
 ## Testing (`testing/`)
 

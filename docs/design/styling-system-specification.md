@@ -199,13 +199,11 @@ const config: Config = {
   content: [
     './index.html',
     './src/**/*.{ts,tsx}',
-    '../../packages/ui/src/**/*.{ts,tsx}', // ← 注意：已迁移到 flux-lib/ui
+    '../../flux-lib/ui/src/**/*.{ts,tsx}',
     '../../packages/core/src/**/*.{ts,tsx}',
   ],
 };
 ```
-
-> **已知问题**：应用级 content 路径仍指向 `packages/ui`，实际组件已迁移到 `flux-lib/ui`。但由于 `tailwind.css` 中通过 `@source '../../../../flux-lib/ui'` 补充了扫描路径，不影响实际构建。建议在下次重构时统一修正。
 
 ### 3.4 首屏资源加载合同
 
@@ -218,8 +216,8 @@ const config: Config = {
 ```css
 /* apps/main/src/styles/tailwind.css */
 @import 'tailwindcss';
-@config '../../../../tailwind.config.ts';
-@source '../../../../flux-lib/ui'; /* 补充扫描 flux-lib/ui */
+@config '../../tailwind.config.ts';
+@source '../../../../flux-lib/ui'; /* 补充扫描共享 UI 源码 */
 ```
 
 ### 3.3 自定义工具类
