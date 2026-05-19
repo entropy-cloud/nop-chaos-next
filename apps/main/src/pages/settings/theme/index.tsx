@@ -30,12 +30,12 @@ export default function SettingsThemePage() {
                   aria-label={t(theme.labelKey)}
                   aria-pressed={active}
                   key={theme.id}
-                  className={`h-auto justify-start rounded-lg border p-4 text-left transition ${active ? 'border-transparent bg-[color-mix(in_hsl,hsl(var(--primary))_12%,transparent)] text-foreground shadow-sm' : 'border-[hsl(var(--border))] bg-surface-secondary text-foreground hover:border-[hsl(var(--primary))]'}`}
+                  className={`h-auto flex-col items-start whitespace-normal rounded-lg border p-4 text-left transition ${active ? 'border-transparent bg-[color-mix(in_hsl,hsl(var(--primary))_12%,transparent)] text-foreground shadow-sm' : 'border-[hsl(var(--border))] bg-surface-secondary text-foreground hover:border-[hsl(var(--primary))]'}`}
                   onClick={() => setThemeId(theme.id)}
                 >
-                  <div className="font-medium">{t(theme.labelKey)}</div>
+                  <div className="min-w-0 font-medium">{t(theme.labelKey)}</div>
                   {theme.descriptionKey ? (
-                    <div className="meta-text mt-2">{t(theme.descriptionKey)}</div>
+                    <div className="meta-text mt-2 min-w-0 text-balance">{t(theme.descriptionKey)}</div>
                   ) : null}
                 </Toggle>
               );

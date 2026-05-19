@@ -25,7 +25,7 @@ export function NodeInspector({ selectedNode, nodes, updateNodeData }: NodeInspe
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
+      <div className="grid gap-2.5">
         <Label>{t('flowEditor.editor.nodeFields.name')}</Label>
         <Input
           value={selectedNode.data.label}
@@ -37,7 +37,7 @@ export function NodeInspector({ selectedNode, nodes, updateNodeData }: NodeInspe
           }
         />
       </div>
-      <div className="space-y-2">
+      <div className="grid gap-2.5">
         <Label>{t('flowEditor.editor.nodeFields.description')}</Label>
         <Textarea
           value={selectedNode.data.description}
@@ -49,7 +49,7 @@ export function NodeInspector({ selectedNode, nodes, updateNodeData }: NodeInspe
           }
         />
       </div>
-      <div className="space-y-2">
+      <div className="grid gap-2.5">
         <Label>{t('flowEditor.editor.nodeFields.type')}</Label>
         <Select
           value={selectedNode.data.kind}
@@ -92,7 +92,7 @@ export function NodeInspector({ selectedNode, nodes, updateNodeData }: NodeInspe
         </Select>
       </div>
       {Object.entries(selectedNode.data.config).map(([key, value]) => (
-        <div key={key} className="space-y-2">
+        <div key={key} className="grid gap-2.5">
           <Label>{key}</Label>
           <Input
             value={value}

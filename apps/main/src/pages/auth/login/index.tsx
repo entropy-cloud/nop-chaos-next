@@ -152,8 +152,8 @@ export default function LoginPage() {
                 </div>
                 </FieldContent>
               </Field>
-              <label className="block space-y-2">
-                <span className="text-sm font-medium text-foreground">{t('auth.language')}</span>
+              <div className="grid gap-2.5">
+                <FieldLabel>{t('auth.language')}</FieldLabel>
                 <Select
                   value={i18n.language}
                   onValueChange={(value) => void i18n.changeLanguage(value ?? undefined)}
@@ -169,7 +169,7 @@ export default function LoginPage() {
                     ))}
                   </SelectContent>
                 </Select>
-              </label>
+              </div>
               <Button className="w-full justify-center" disabled={submitting} type="submit">
                 {submitting ? t('common.loading') : t('auth.login')}
                 <ArrowRight className="size-4" />

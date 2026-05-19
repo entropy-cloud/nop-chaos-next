@@ -146,63 +146,63 @@ export default function PluginsManagementPage() {
           <DialogBody>
             <form
               id="plugin-config-form"
-            className="space-y-4"
-            onSubmit={(event) => {
-              event.preventDefault();
-              toast.success(t('plugins.configureSaved'));
-              setConfigId(null);
-            }}
-          >
-            {configPlugin?.configSchema?.map((field) => (
-              <div key={field.key} className="space-y-2">
-                <Label>{field.label}</Label>
-                <Input
-                  type={field.type === 'number' ? 'number' : 'text'}
-                  value={String(configPlugin.settings?.[field.key] ?? field.defaultValue ?? '')}
-                  onChange={(event) =>
-                    updatePlugin(configPlugin.id, (current) => ({
-                      ...current,
-                      settings: {
-                        ...current.settings,
-                        [field.key]:
-                          field.type === 'number' && event.target.value.trim()
-                            ? Number(event.target.value)
-                            : event.target.value,
-                      },
-                    }))
-                  }
-                />
-                {field.type === 'select' && field.options?.length ? (
-                  <div className="meta-text flex flex-wrap gap-2">
-                    {field.options.map((option) => {
-                      const active =
-                        String(configPlugin.settings?.[field.key] ?? field.defaultValue ?? '') ===
-                        option;
-                      return (
-                        <Toggle
-                          aria-label={`${field.label}: ${option}`}
-                          aria-pressed={active}
-                          key={option}
-                          className={`rounded-full border px-3 py-1 ${active ? 'border-transparent bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))] hover:text-white' : 'border-[hsl(var(--border))]'}`}
-                          onClick={() =>
-                            updatePlugin(configPlugin.id, (current) => ({
-                              ...current,
-                              settings: {
-                                ...current.settings,
-                                [field.key]: option,
-                              },
-                            }))
-                          }
-                        >
-                          {option}
-                        </Toggle>
-                      );
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </form>
+              className="space-y-4"
+              onSubmit={(event) => {
+                event.preventDefault();
+                toast.success(t('plugins.configureSaved'));
+                setConfigId(null);
+              }}
+            >
+              {configPlugin?.configSchema?.map((field) => (
+                <div key={field.key} className="grid gap-2.5">
+                  <Label>{field.label}</Label>
+                  <Input
+                    type={field.type === 'number' ? 'number' : 'text'}
+                    value={String(configPlugin.settings?.[field.key] ?? field.defaultValue ?? '')}
+                    onChange={(event) =>
+                      updatePlugin(configPlugin.id, (current) => ({
+                        ...current,
+                        settings: {
+                          ...current.settings,
+                          [field.key]:
+                            field.type === 'number' && event.target.value.trim()
+                              ? Number(event.target.value)
+                              : event.target.value,
+                        },
+                      }))
+                    }
+                  />
+                  {field.type === 'select' && field.options?.length ? (
+                    <div className="meta-text flex flex-wrap gap-2">
+                      {field.options.map((option) => {
+                        const active =
+                          String(configPlugin.settings?.[field.key] ?? field.defaultValue ?? '') ===
+                          option;
+                        return (
+                          <Toggle
+                            aria-label={`${field.label}: ${option}`}
+                            aria-pressed={active}
+                            key={option}
+                            className={`rounded-full border px-3 py-1 ${active ? 'border-transparent bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))] hover:text-white' : 'border-[hsl(var(--border))]'}`}
+                            onClick={() =>
+                              updatePlugin(configPlugin.id, (current) => ({
+                                ...current,
+                                settings: {
+                                  ...current.settings,
+                                  [field.key]: option,
+                                },
+                              }))
+                            }
+                          >
+                            {option}
+                          </Toggle>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </form>
           </DialogBody>
           <DialogFooter>
             <Button form="plugin-config-form" type="submit">

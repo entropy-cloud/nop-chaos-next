@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '@nop-chaos/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../../components/common/PageHeader';
 import { useLayoutStore } from '../../../store/layoutStore';
@@ -39,8 +39,8 @@ export default function SettingsLayoutPage() {
             {sidebarCollapsed ? t('settings.sidebarCollapsed') : t('settings.sidebarExpanded')}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="space-y-2 text-sm">
-              <span className="font-medium text-foreground">{t('settings.sidebarWidth')}</span>
+            <div className="grid gap-2.5 text-sm">
+              <Label>{t('settings.sidebarWidth')}</Label>
               <Input
                 min={14}
                 max={28}
@@ -49,11 +49,9 @@ export default function SettingsLayoutPage() {
                 value={sidebarWidthRem}
                 onChange={(event) => applyNumberInput(event.target.value, setSidebarWidthRem)}
               />
-            </label>
-            <label className="space-y-2 text-sm">
-              <span className="font-medium text-foreground">
-                {t('settings.sidebarCollapsedWidth')}
-              </span>
+            </div>
+            <div className="grid gap-2.5 text-sm">
+              <Label>{t('settings.sidebarCollapsedWidth')}</Label>
               <Input
                 min={4}
                 max={8}
@@ -64,7 +62,7 @@ export default function SettingsLayoutPage() {
                   applyNumberInput(event.target.value, setSidebarCollapsedWidthRem)
                 }
               />
-            </label>
+            </div>
           </div>
           <div className="flex flex-wrap gap-3">
             <Button onClick={toggleSidebar}>{t('settings.toggleSidebar')}</Button>

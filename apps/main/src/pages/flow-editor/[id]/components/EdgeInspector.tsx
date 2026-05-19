@@ -22,7 +22,7 @@ export function EdgeInspector({ selectedEdge, updateEdgeData }: EdgeInspectorPro
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
+      <div className="grid gap-2.5">
         <Label>{t('flowEditor.editor.edgeFields.label')}</Label>
         <Input
           value={selectedEdge.label?.toString() ?? ''}
@@ -31,7 +31,7 @@ export function EdgeInspector({ selectedEdge, updateEdgeData }: EdgeInspectorPro
           }
         />
       </div>
-      <div className="space-y-2">
+      <div className="grid gap-2.5">
         <Label>{t('flowEditor.editor.edgeFields.condition')}</Label>
         <Textarea
           value={selectedEdge.data?.condition ?? ''}
@@ -43,7 +43,7 @@ export function EdgeInspector({ selectedEdge, updateEdgeData }: EdgeInspectorPro
           }
         />
       </div>
-      <div className="space-y-2">
+      <div className="grid gap-2.5">
         <Label>{t('flowEditor.editor.edgeFields.style')}</Label>
         <Select
           value={selectedEdge.data?.lineStyle ?? 'solid'}
