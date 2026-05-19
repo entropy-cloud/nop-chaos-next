@@ -1,11 +1,44 @@
 import { expect, test } from '@playwright/test';
 import { login } from './support/auth';
 
+function failOnUnexpectedNativeDialog(page: import('@playwright/test').Page) {
+  const dialogs: Array<{ type: string; message: string }> = [];
+
+  page.on('dialog', async (dialog) => {
+    dialogs.push({ type: dialog.type(), message: dialog.message() });
+    await dialog.dismiss();
+  });
+
+  return async () => {
+    expect(dialogs).toEqual([]);
+  };
+}
+
 async function navigateToDetail(page: import('@playwright/test').Page) {
   await login(page, { username: 'admin', defaultPassword: '123456' });
   await page.getByRole('button', { name: 'Master Detail' }).click();
   await page.locator('main tbody tr').first().getByRole('button', { name: 'View' }).click();
   await expect(page).toHaveURL(/\/data-management\/master-detail\/1001$/);
+}
+
+function getLogisticsCard(page: import('@playwright/test').Page) {
+  return page
+    .locator('[data-slot="card"]')
+    .filter({ has: page.getByText(/Logistics|物流/i) })
+    .first();
+}
+
+async function openDeleteLogisticsConfirm(page: import('@playwright/test').Page) {
+  const logisticsCard = getLogisticsCard(page);
+
+  await expect(logisticsCard).toContainText('SF Express');
+  await logisticsCard.getByRole('button', { name: /Delete|删除/i }).click();
+
+  const confirmDialog = page.locator('[role="alertdialog"][data-open]').first();
+  await expect(confirmDialog).toBeVisible();
+  await expect(confirmDialog).toContainText(/Delete this logistics record\?|删除.*物流/i);
+
+  return { logisticsCard, confirmDialog };
 }
 
 test('address dialog has padding between content and edges', async ({ page }) => {
@@ -119,4 +152,46 @@ test('logistics drawer date input is functional', async ({ page }) => {
 
   await dateInput.fill('2025-12-31');
   await expect(dateInput).toHaveValue('2025-12-31');
+});
+
+test('canceling logistics deletion allows reopening confirm', async ({ page }) => {
+  const assertNoNativeDialogs = failOnUnexpectedNativeDialog(page);
+  await navigateToDetail(page);
+
+  const { logisticsCard, confirmDialog } = await openDeleteLogisticsConfirm(page);
+
+  await confirmDialog.getByRole('button', { name: /Cancel|取消/i }).click();
+  await expect(page.locator('[role="alertdialog"][data-open]')).toHaveCount(0);
+  await expect(logisticsCard).toContainText('SF Express');
+
+  await logisticsCard.getByRole('button', { name: /Delete|删除/i }).click();
+  await expect(confirmDialog).toBeVisible();
+
+  await confirmDialog.getByRole('button', { name: /Cancel|取消/i }).click();
+  await expect(page.locator('[role="alertdialog"][data-open]')).toHaveCount(0);
+  await assertNoNativeDialogs();
+});
+
+test('confirming logistics deletion removes the record without leftover overlay', async ({ page }) => {
+  const assertNoNativeDialogs = failOnUnexpectedNativeDialog(page);
+  await navigateToDetail(page);
+
+  const { logisticsCard, confirmDialog } = await openDeleteLogisticsConfirm(page);
+
+  await confirmDialog.getByRole('button', { name: /Confirm|确认/i }).click();
+  await expect(page.locator('[role="alertdialog"][data-open]')).toHaveCount(0);
+  await expect(logisticsCard).not.toContainText('SF Express');
+  await expect(page.locator('[role="alertdialog"][data-open]')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: /^Confirm$/ })).toHaveCount(0);
+
+  const backToListButton = page.getByRole('button', { name: /Back to list|返回列表/i });
+  await backToListButton.click();
+
+  const leaveConfirmDialog = page.locator('[role="alertdialog"][data-open]').first();
+  await expect(leaveConfirmDialog).toBeVisible();
+  await expect(leaveConfirmDialog).toContainText(/leave|discard|未保存|离开/i);
+
+  await leaveConfirmDialog.getByRole('button', { name: /Cancel|取消/i }).click();
+  await expect(page.locator('[role="alertdialog"][data-open]')).toHaveCount(0);
+  await assertNoNativeDialogs();
 });
