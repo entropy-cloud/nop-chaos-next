@@ -1,6 +1,35 @@
 import { normalizeThemeId, type DisplayMode, type ThemeConfig } from '@nop-chaos/shared';
 import { resolveThemeConfig } from '../config/themeResolution';
 
+const HOST_THEME_VARIABLES = [
+  'primary',
+  'primary-dark',
+  'primary-light',
+  'primary-bg',
+  'primary-foreground',
+  'secondary',
+  'secondary-surface',
+  'secondary-surface-hover',
+  'secondary-foreground',
+  'success',
+  'success-bg',
+  'danger',
+  'danger-bg',
+  'warning',
+  'warning-bg',
+  'background',
+  'foreground',
+  'card',
+  'card-foreground',
+  'muted',
+  'muted-foreground',
+  'accent',
+  'accent-foreground',
+  'border',
+  'input',
+  'ring',
+] as const;
+
 export function resolveDisplayMode(mode: DisplayMode): 'light' | 'dark' {
   if (mode === 'system') {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -25,6 +54,10 @@ export function applyThemeToDocument(themeConfig: ThemeConfig): void {
   root.dataset.theme = resolvedThemeId;
   root.dataset.mode = resolvedMode;
   root.classList.toggle('dark', resolvedMode === 'dark');
+
+  for (const variable of HOST_THEME_VARIABLES) {
+    root.style.setProperty(`--${variable}`, `var(--host-${variable})`);
+  }
 }
 
 export function subscribeToSystemDisplayMode(themeConfig: ThemeConfig, onChange?: () => void) {

@@ -6,7 +6,7 @@ const config: Config = {
   content: [
     './index.html',
     './src/**/*.{ts,tsx}',
-    '../../packages/ui/src/**/*.{ts,tsx}',
+    '../../flux-lib/ui/src/**/*.{ts,tsx}',
     '../../packages/core/src/**/*.{ts,tsx}',
   ],
 };

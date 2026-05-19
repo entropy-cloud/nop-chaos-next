@@ -32,6 +32,10 @@ describe('themeCss', () => {
     expect(document.documentElement.dataset.theme).toBe('glass');
     expect(document.documentElement.dataset.mode).toBe('dark');
     expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(document.documentElement.style.getPropertyValue('--secondary')).toBe(
+      'var(--host-secondary)',
+    );
+    expect(document.documentElement.style.getPropertyValue('--primary')).toBe('var(--host-primary)');
   });
 
   it('falls back to default theme when theme not registered', () => {

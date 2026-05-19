@@ -13,6 +13,20 @@ function readRepoFile(...segments: string[]) {
 }
 
 describe('theme and styling contracts', () => {
+  it('uses the main app Tailwind config from the CSS entrypoint', () => {
+    const tailwindEntry = readRepoFile('apps', 'main', 'src', 'styles', 'tailwind.css');
+
+    expect(tailwindEntry).toContain("@config '../../tailwind.config.ts';");
+    expect(tailwindEntry).not.toContain("@config '../../../../tailwind.config.ts';");
+  });
+
+  it('scans the canonical @nop-chaos/ui source for Tailwind classes', () => {
+    const mainTailwindConfig = readRepoFile('apps', 'main', 'tailwind.config.ts');
+
+    expect(mainTailwindConfig).toContain("'../../flux-lib/ui/src/**/*.{ts,tsx}'");
+    expect(mainTailwindConfig).not.toContain("'../../packages/ui/src/**/*.{ts,tsx}'");
+  });
+
   it('keeps AMIS bridge scoped to AMIS-owned variables', () => {
     const themeBridgeCss = readRepoFile('apps', 'main', 'src', 'styles', 'amis-theme-bridge.css');
     const amisFixCss = readRepoFile('apps', 'main', 'src', 'styles', 'amis-fix.css');
