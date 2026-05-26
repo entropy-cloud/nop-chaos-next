@@ -245,6 +245,7 @@ export default defineConfig(({ mode }) => {
     : undefined;
 
   return {
+    base: './',
     resolve: {
       tsconfigPaths: true,
       dedupe: ['react', 'react-dom', 'echarts'],
