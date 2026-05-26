@@ -26,6 +26,7 @@
     "@nop-chaos/flux": "file:..\\..\\..\\nop-chaos-flux\\dist-packages\\nop-chaos-flux-0.1.0.tgz",
     "@nop-chaos/plugin-bridge": "workspace:*",
     "@nop-chaos/shared": "workspace:*",
+    "@nop-chaos/theme-tokens": "workspace:*",
     "@nop-chaos/ui": "workspace:*",
     "@tanstack/react-query": "^5.96.1",
     "@xyflow/react": "^12.10.2",

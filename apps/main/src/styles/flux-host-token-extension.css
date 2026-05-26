@@ -1,0 +1,115 @@
+:root[data-theme='classic'][data-mode='light'] {
+  --host-primary: 217 89% 53%;
+  --host-primary-dark: 217 89% 45%;
+  --host-primary-light: 217 89% 63%;
+  --host-primary-bg: 217 89% 96%;
+  --host-primary-foreground: 0 0% 100%;
+  --host-secondary: 210 40% 96%;
+  --host-secondary-surface: 217 89% 96%;
+  --host-secondary-surface-hover: 217 89% 93%;
+  --host-secondary-foreground: 222 84% 5%;
+  --host-success: 160 84% 39%;
+  --host-success-bg: 160 84% 95%;
+  --host-danger: 0 84% 60%;
+  --host-danger-bg: 0 84% 95%;
+  --host-warning: 38 92% 50%;
+  --host-warning-bg: 38 92% 95%;
+  --host-background: 0 0% 100%;
+  --host-foreground: 222 84% 5%;
+  --host-card: 0 0% 100%;
+  --host-card-foreground: 222 84% 5%;
+  --host-muted: 210 40% 96%;
+  --host-muted-foreground: 215 19% 35%;
+  --host-accent: 217 89% 96%;
+  --host-accent-foreground: 217 89% 35%;
+  --host-border: 214 32% 91%;
+  --host-input: 214 32% 91%;
+  --host-ring: 217 89% 53%;
+}
+
+:root[data-theme='classic'][data-mode='dark'] {
+  --host-primary: 217 89% 63%;
+  --host-primary-dark: 217 89% 55%;
+  --host-primary-light: 217 89% 73%;
+  --host-primary-bg: 217 89% 20%;
+  --host-primary-foreground: 0 0% 100%;
+  --host-secondary: 217 33% 17%;
+  --host-secondary-surface: 217 30% 20%;
+  --host-secondary-surface-hover: 217 30% 24%;
+  --host-secondary-foreground: 210 40% 98%;
+  --host-success: 160 70% 50%;
+  --host-success-bg: 160 30% 20%;
+  --host-danger: 0 70% 50%;
+  --host-danger-bg: 0 30% 20%;
+  --host-warning: 38 82% 60%;
+  --host-warning-bg: 38 30% 20%;
+  --host-background: 222 84% 5%;
+  --host-foreground: 210 40% 98%;
+  --host-card: 222 47% 11%;
+  --host-card-foreground: 210 40% 98%;
+  --host-muted: 217 33% 18%;
+  --host-muted-foreground: 215 25% 75%;
+  --host-accent: 217 30% 20%;
+  --host-accent-foreground: 215 35% 92%;
+  --host-border: 217 33% 18%;
+  --host-input: 217 33% 18%;
+  --host-ring: 217 89% 63%;
+}
+
+:root[data-theme='glass'][data-mode='light'] {
+  --host-primary: 172 76% 40%;
+  --host-primary-dark: 172 76% 30%;
+  --host-primary-light: 172 76% 60%;
+  --host-primary-bg: 172 76% 96%;
+  --host-primary-foreground: 0 0% 100%;
+  --host-secondary: 210 40% 96%;
+  --host-secondary-surface: 172 76% 96%;
+  --host-secondary-surface-hover: 172 76% 92%;
+  --host-secondary-foreground: 222 84% 5%;
+  --host-success: 160 84% 39%;
+  --host-success-bg: 160 84% 95%;
+  --host-danger: 0 84% 60%;
+  --host-danger-bg: 0 84% 95%;
+  --host-warning: 38 92% 50%;
+  --host-warning-bg: 38 92% 95%;
+  --host-background: 0 0% 100%;
+  --host-foreground: 222 84% 5%;
+  --host-card: 0 0% 100%;
+  --host-card-foreground: 222 84% 5%;
+  --host-muted: 210 40% 96%;
+  --host-muted-foreground: 215 19% 35%;
+  --host-accent: 172 76% 96%;
+  --host-accent-foreground: 172 76% 28%;
+  --host-border: 214 32% 91%;
+  --host-input: 214 32% 91%;
+  --host-ring: 172 76% 40%;
+}
+
+:root[data-theme='glass'][data-mode='dark'] {
+  --host-primary: 172 76% 50%;
+  --host-primary-dark: 172 76% 40%;
+  --host-primary-light: 172 76% 60%;
+  --host-primary-bg: 172 30% 20%;
+  --host-primary-foreground: 0 0% 100%;
+  --host-secondary: 217 33% 17%;
+  --host-secondary-surface: 172 30% 20%;
+  --host-secondary-surface-hover: 172 30% 24%;
+  --host-secondary-foreground: 210 40% 98%;
+  --host-success: 160 70% 50%;
+  --host-success-bg: 160 30% 20%;
+  --host-danger: 0 70% 50%;
+  --host-danger-bg: 0 30% 20%;
+  --host-warning: 38 82% 60%;
+  --host-warning-bg: 38 30% 20%;
+  --host-background: 222 84% 5%;
+  --host-foreground: 210 40% 98%;
+  --host-card: 222 47% 11%;
+  --host-card-foreground: 210 40% 98%;
+  --host-muted: 217 33% 18%;
+  --host-muted-foreground: 215 25% 75%;
+  --host-accent: 172 30% 20%;
+  --host-accent-foreground: 215 35% 92%;
+  --host-border: 217 33% 18%;
+  --host-input: 217 33% 18%;
+  --host-ring: 172 76% 50%;
+}

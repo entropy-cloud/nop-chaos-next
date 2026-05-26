@@ -15,16 +15,33 @@ function readRepoFile(...segments: string[]) {
 describe('theme and styling contracts', () => {
   it('uses the main app Tailwind config from the CSS entrypoint', () => {
     const tailwindEntry = readRepoFile('apps', 'main', 'src', 'styles', 'tailwind.css');
+    const mainEntry = readRepoFile('apps', 'main', 'src', 'main.tsx');
 
     expect(tailwindEntry).toContain("@config '../../tailwind.config.ts';");
     expect(tailwindEntry).not.toContain("@config '../../../../tailwind.config.ts';");
+    expect(mainEntry).toContain("import '../../../packages/theme-tokens/src/styles.css';");
+    expect(mainEntry).toContain("import './styles/flux-host-token-extension.css';");
+    expect(mainEntry.indexOf("../../../packages/theme-tokens/src/styles.css")).toBeLessThan(
+      mainEntry.indexOf("./styles/flux-host-token-extension.css"),
+    );
   });
 
   it('scans the canonical @nop-chaos/ui source for Tailwind classes', () => {
     const mainTailwindConfig = readRepoFile('apps', 'main', 'tailwind.config.ts');
+    const rootTailwindConfig = readRepoFile('tailwind.config.ts');
+    const hostTailwindExtension = readRepoFile(
+      'apps',
+      'main',
+      'src',
+      'styles',
+      'fluxHostTailwindExtension.ts',
+    );
 
     expect(mainTailwindConfig).toContain("'../../flux-lib/ui/src/**/*.{ts,tsx}'");
     expect(mainTailwindConfig).not.toContain("'../../packages/ui/src/**/*.{ts,tsx}'");
+    expect(rootTailwindConfig).toContain('createNopTailwindPreset');
+    expect(rootTailwindConfig).toContain('fluxHostTokenExtension.tailwindThemeExtension');
+    expect(hostTailwindExtension).toContain('defineHostTokenExtension');
   });
 
   it('keeps AMIS bridge scoped to AMIS-owned variables', () => {

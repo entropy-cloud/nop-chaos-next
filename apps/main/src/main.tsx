@@ -11,6 +11,7 @@ import { bootstrapExtensions } from './extensions/bootstrap';
 import './config/i18n';
 import './styles/tailwind.css';
 import '../../../packages/theme-tokens/src/styles.css';
+import './styles/flux-host-token-extension.css';
 import '@nop-chaos/ui/styles.css';
 import './styles/index.css';
 

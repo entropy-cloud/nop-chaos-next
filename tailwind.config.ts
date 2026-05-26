@@ -1,8 +1,9 @@
 import type { Config } from 'tailwindcss';
-import { nopTailwindPreset } from './packages/tailwind-preset/src';
+import { createNopTailwindPreset } from './packages/tailwind-preset/src';
+import { fluxHostTokenExtension } from './apps/main/src/styles/fluxHostTailwindExtension';
 
 const config: Config = {
-  presets: [nopTailwindPreset],
+  presets: [createNopTailwindPreset(fluxHostTokenExtension.tailwindThemeExtension)],
   content: [
     './apps/main/index.html',
     './apps/main/src/**/*.{ts,tsx}',

@@ -1,0 +1,46 @@
+import { defineHostTokenExtension } from '@nop-chaos/theme-tokens';
+
+export const fluxHostTokenExtension = defineHostTokenExtension({
+  cssFile: './src/styles/flux-host-token-extension.css',
+  tokens: {
+    hostPrimary: '--host-primary',
+    hostPrimaryDark: '--host-primary-dark',
+    hostPrimaryLight: '--host-primary-light',
+    hostPrimaryBg: '--host-primary-bg',
+    hostPrimaryForeground: '--host-primary-foreground',
+    hostSecondary: '--host-secondary',
+    hostSecondarySurface: '--host-secondary-surface',
+    hostSecondarySurfaceHover: '--host-secondary-surface-hover',
+    hostSecondaryForeground: '--host-secondary-foreground',
+    hostSuccess: '--host-success',
+    hostSuccessBg: '--host-success-bg',
+    hostDanger: '--host-danger',
+    hostDangerBg: '--host-danger-bg',
+    hostWarning: '--host-warning',
+    hostWarningBg: '--host-warning-bg',
+    hostBackground: '--host-background',
+    hostForeground: '--host-foreground',
+    hostCard: '--host-card',
+    hostCardForeground: '--host-card-foreground',
+    hostMuted: '--host-muted',
+    hostMutedForeground: '--host-muted-foreground',
+    hostAccent: '--host-accent',
+    hostAccentForeground: '--host-accent-foreground',
+    hostBorder: '--host-border',
+    hostInput: '--host-input',
+    hostRing: '--host-ring',
+  },
+  tailwindThemeExtension: {
+    colors: {
+      host: {
+        primary: 'hsl(var(--host-primary))',
+        foreground: 'hsl(var(--host-foreground))',
+        background: 'hsl(var(--host-background))',
+        card: 'hsl(var(--host-card))',
+        muted: 'hsl(var(--host-muted))',
+        accent: 'hsl(var(--host-accent))',
+        border: 'hsl(var(--host-border))',
+      },
+    },
+  },
+});

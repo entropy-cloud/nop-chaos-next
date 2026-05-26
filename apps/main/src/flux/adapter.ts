@@ -7,6 +7,8 @@ interface CreateMainFluxEnvOptions {
   navigate: (to: string | number, options?: { replace?: boolean }) => void;
 }
 
+type FluxNotifyLevel = 'info' | 'success' | 'warning' | 'error';
+
 export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxRendererEnv {
   return {
     fetcher: async <T,>(api: FluxApiRequest, ctx: FluxApiRequestContext) => {
@@ -26,7 +28,7 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
         raw: response,
       };
     },
-    notify: (level, message) => {
+    notify: (level: FluxNotifyLevel, message: string) => {
       if (level === 'success') {
         toast.success(message);
         return;
@@ -45,6 +47,6 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
       toast(message);
     },
     navigate,
-    confirm: async (message) => confirmInApp(message),
+    confirm: async (message: string) => confirmInApp(message),
   };
 }
