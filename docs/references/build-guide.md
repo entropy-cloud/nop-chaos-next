@@ -135,6 +135,7 @@ pnpm dev:main     # Main app only
 |---------|-------------|
 | `pnpm install` | Install all workspace dependencies |
 | `pnpm sync:flux` | Sync UI packages from `../nop-chaos-flux` |
+| `pnpm rebuild:amis-flux:build` | Repack AMIS, repack Flux, sync Flux packages, then build this repo |
 | `pnpm dev` | Start dev server (all packages) |
 | `pnpm dev:main` | Start main app dev server only |
 | `pnpm build` | Build all packages (includes AMIS pre-build check) |
@@ -155,7 +156,26 @@ pnpm dev:main     # Main app only
 
 ### nop-chaos-flux (sibling repo)
 
-No build step required. `pnpm sync:flux` reads source files directly from the sibling repo.
+Two flows exist for Flux integration:
+
+- `pnpm sync:flux` in `nop-chaos-next` syncs `packages/ui`, `packages/theme-tokens`, and `packages/tailwind-preset` from the sibling repo, applies the runtime-only package policy, and rebuilds the synced workspace packages.
+- `pnpm pack:flux-bundle` in `nop-chaos-flux` rebuilds and packs the `@nop-chaos/flux` tarball consumed by `apps/main`.
+
+The canonical sync policy now lives in `docs/references/flux-sync-spec.md`.
+
+For a full local refresh across both sibling repos, use the root command in `nop-chaos-next`:
+
+```bash
+pnpm rebuild:amis-flux:build
+```
+
+This runs, in order:
+
+1. `npm run pack:nop-chaos` in `../amis-react19`
+2. `pnpm --filter @nop-chaos/ui build` in `../nop-chaos-flux`
+3. `pnpm pack:flux-bundle` in `../nop-chaos-flux`
+4. `pnpm sync:flux` in `nop-chaos-next`
+5. `pnpm build` in `nop-chaos-next`
 
 ### Guardrails and examples
 
@@ -212,6 +232,9 @@ When you need to modify Flux UI components:
 
 # 2. Sync updated packages into this workspace
 pnpm sync:flux
+
+# 3. When the Flux tarball is also involved, rebuild everything end-to-end
+pnpm rebuild:amis-flux:build
 ```
 
 Sync specific packages only:
@@ -227,6 +250,15 @@ Override the default Flux repo path with `FLUX_ROOT`:
 ```bash
 FLUX_ROOT=/custom/path/to/nop-chaos-flux pnpm sync:flux
 ```
+
+`pnpm sync:flux` is not a raw copy anymore. It now:
+
+1. Replaces those packages with the upstream sibling sources
+2. Removes synced test files plus accidental source artifacts such as `src/**/*.d.ts` and `src/**/*.d.ts.map`
+3. Applies explicit runtime-only `package.json` policy (`scripts.test = vitest run --passWithNoTests` for the synced packages)
+4. Runs `pnpm install` and rebuilds the synced workspace packages
+
+Important: this is a runtime-oriented sync, not a full upstream mirror. Test sources are intentionally removed during sync. No generic downstream source patch replay is part of the live contract. See `docs/references/flux-sync-spec.md` for the governing contract, allowed downstream drift, and dependency metadata policy.
 
 ---
 

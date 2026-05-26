@@ -173,10 +173,13 @@ npm run pack:nop-chaos
 cd ../nop-chaos-next
 pnpm install
 pnpm sync:flux          # 从 ../nop-chaos-flux 同步 UI 包
+pnpm rebuild:amis-flux:build  # 重新构建 AMIS + Flux + 同步 Flux + 构建当前仓库
 pnpm dev
 ```
 
 `pnpm sync:flux` 将 `ui`、`theme-tokens`、`tailwind-preset` 从兄弟仓库复制到本 workspace 并刷新安装。
+
+`pnpm rebuild:amis-flux:build` 会依次执行：重新打包 `amis-react19`、重新构建并打包 `nop-chaos-flux`、同步 Flux 源码包到当前仓库、最后构建当前项目。
 
 本地访问：`http://localhost:5173`
 

@@ -30,9 +30,10 @@
 ```css
 /* apps/main/src/main.tsx 中的导入顺序 */
 import './styles/tailwind.css'                    /* ① Tailwind 基础 + 配置 */
-import '../../../packages/theme-tokens/src/styles.css' /* ② 主题 Token 定义 */
-import '@nop-chaos/ui/styles.css'                 /* ③ UI 组件基础样式 */
-import './styles/index.css'                       /* ④ 应用级覆盖 */
+import '../../../packages/theme-tokens/src/styles.css' /* ② shared base token 定义 */
+import './styles/flux-host-token-extension.css'   /* ③ host token extension */
+import '@nop-chaos/ui/styles.css'                 /* ④ UI 组件基础样式 */
+import './styles/index.css'                       /* ⑤ 应用级覆盖 */
 ```
 
 ---
@@ -41,7 +42,7 @@ import './styles/index.css'                       /* ④ 应用级覆盖 */
 
 ### 2.1 主题 Token 结构
 
-主题 Token 定义在 `packages/theme-tokens/src/styles.css`，通过 CSS 自定义属性 + `data-theme` / `data-mode` 属性选择器实现切换。
+shared base token 定义在 `packages/theme-tokens/src/styles.css`，host token extension 定义在 `apps/main/src/styles/flux-host-token-extension.css`。两者都通过 CSS 自定义属性 + `data-theme` / `data-mode` 属性选择器实现切换。
 
 #### 2.1.1 通用 Token（所有主题共享）
 
@@ -144,7 +145,7 @@ function applyThemeToDocument(config: ThemeConfig) {
 
 ### 2.3 扩展新主题
 
-1. 在 `packages/theme-tokens/src/styles.css` 中添加 `:root[data-theme='new-theme'][data-mode='light/dark']` 块
+1. 在 host 范围内添加 `apps/main/src/styles/flux-host-token-extension.css` 或扩展包自己的主题 CSS 文件，而不是修改 synced `packages/theme-tokens/src/styles.css`
 2. 在 `apps/main/src/config/themeRegistry.ts` 中注册新主题
 3. 可选：扩展包（如 extension-demo）可通过 `registerThemes()` API 注入主题，并加载独立的 CSS Token 文件
 
@@ -191,7 +192,18 @@ apps/main/tailwind.config.ts            ← 应用级配置
 }
 ```
 
-#### 3.1.2 应用级配置（`apps/main/tailwind.config.ts`）
+#### 3.1.2 根配置与 host extension（`tailwind.config.ts`）
+
+```typescript
+import { createNopTailwindPreset } from './packages/tailwind-preset/src';
+import { fluxHostTokenExtension } from './apps/main/src/styles/fluxHostTailwindExtension';
+
+const config: Config = {
+  presets: [createNopTailwindPreset(fluxHostTokenExtension.tailwindThemeExtension)],
+};
+```
+
+#### 3.1.3 应用级配置（`apps/main/tailwind.config.ts`）
 
 ```typescript
 const config: Config = {
@@ -486,11 +498,13 @@ focus-visible:ring-offset-background
 ### 9.1 CSS 文件职责
 
 ```
-packages/theme-tokens/src/styles.css      ← 主题 Token 定义（所有主题、所有模式）
-packages/tailwind-preset/src/index.ts     ← Tailwind 共享预设
+packages/theme-tokens/src/styles.css      ← shared base token 定义
+packages/tailwind-preset/src/index.ts     ← Tailwind 共享预设与 host extension factory
 flux-lib/ui/src/styles/base.css           ← UI 组件基础层（border-color、字体、body）
 flux-lib/ui/src/lib/utils.ts              ← cn() 工具函数
 apps/main/src/styles/tailwind.css         ← Tailwind 入口（@import + @config + @source）
+apps/main/src/styles/flux-host-token-extension.css ← host token extension
+apps/main/src/styles/fluxHostTailwindExtension.ts ← host Tailwind extension wiring
 apps/main/src/styles/index.css            ← 应用级工具类和覆盖
 apps/main/src/styles/amis-theme-bridge.css ← Amis 主题映射
 apps/main/src/styles/amis-fix.css          ← Amis 组件修复

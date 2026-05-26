@@ -6,7 +6,11 @@ Development log entries are organized by date — one file per day.
 
 ```
 docs/logs/
-├── index.md          ← this file (writing guide + index)
+├── index.md                ← this file (daily log writing guide + index)
+├── flux-sync/              ← Flux source sync history
+│   ├── index.md
+│   └── 2026/
+│       └── 05-26.md
 ├── 2026/
 │   ├── 05-12.md
 │   ├── 05-11.md
@@ -16,6 +20,8 @@ docs/logs/
 ```
 
 **Convention**: `docs/logs/{year}/{month}-{day}.md`
+
+Flux sync history uses a dedicated convention: `docs/logs/flux-sync/{year}/{month}-{day}.md`
 
 ## Writing Guide
 
@@ -61,7 +67,12 @@ When adding a new log entry for today:
 
 ## Index (Reverse Chronological)
 
+### Flux Sync
+
+- [flux-sync/index.md](flux-sync/index.md) — Script-generated sync baseline records for `scripts/sync-flux-lib.sh`
+
 ### 2026-05
 
+- [05-26](2026/05-26.md) — Added one-command AMIS+Flux rebuild flow and hardened Flux sync with downstream patch reapply
 - [05-18](2026/05-18.md) — Plan 27 executed: extension contract closure, runtime state coherence fixes, and AI Workbench lifecycle hardening
 - [05-12](2026/05-12.md) — Plan 04 executed: Turborepo, ESLint rules, Prettier/lint-staged, knip/jscpd, Vitest workspace, check scripts, docs restructuring, AGENTS.md update

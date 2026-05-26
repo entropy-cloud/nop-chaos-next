@@ -28,6 +28,7 @@ Reference manuals, glossaries, and lookup material.
 | Document                                                                            | Description                    |
 | ----------------------------------------------------------------------------------- | ------------------------------ |
 | [build-guide.md](./references/build-guide.md)                                       | Full build and setup guide     |
+| [flux-sync-spec.md](./references/flux-sync-spec.md)                                 | Flux sync contract and policy  |
 | [mock-data.md](./references/mock-data.md)                                           | Mock data description          |
 | [style-interaction-guidelines.md](./references/style-interaction-guidelines.md)     | Style and interaction rules    |
 | [icon-naming-and-rendering.md](./references/icon-naming-and-rendering.md)           | Icon system                    |
@@ -82,9 +83,10 @@ Manual diagnosis and manual test issue records.
 
 Development log entries organized by date.
 
-| Document                    | Description                 |
-| --------------------------- | --------------------------- |
-| [index.md](./logs/index.md) | Log writing guide and index |
+| Document                                      | Description                           |
+| --------------------------------------------- | ------------------------------------- |
+| [index.md](./logs/index.md)                   | Daily log writing guide and index     |
+| [flux-sync/index.md](./logs/flux-sync/index.md) | Flux source sync history and baselines |
 
 ## Plans (`plans/`)
 
@@ -102,6 +104,7 @@ External reference material and design inputs.
 
 - **Pages and features**: Start with `design/` documents (01-06 range)
 - **Setup and build**: `references/build-guide.md` for full build instructions
+- **Flux sync policy**: `references/flux-sync-spec.md`
 - **Plugin development**: `examples/plugin-dev-guide.md` with `design/plugin-system.md` as reference
 - **Rendering engines**: `design/amis-flux-rendering-engine-integration.md`, `design/amis-theme-bridge.md`
 - **Backend integration**: `design/backend-integration.md`

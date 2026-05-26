@@ -173,10 +173,13 @@ This produces `dist-packages/*.tgz` tarballs that `nop-chaos-next` consumes.
 cd ../nop-chaos-next
 pnpm install
 pnpm sync:flux          # sync UI packages from ../nop-chaos-flux
+pnpm rebuild:amis-flux:build  # rebuild AMIS + Flux, sync Flux, then build this repo
 pnpm dev
 ```
 
 `pnpm sync:flux` copies `ui`, `theme-tokens`, and `tailwind-preset` from the sibling Flux repo into this workspace and refreshes the install.
+
+`pnpm rebuild:amis-flux:build` repacks `amis-react19`, rebuilds and packs `nop-chaos-flux`, syncs the Flux source packages into this repo, and then builds the current workspace.
 
 Local playground: `http://localhost:5173`
 
