@@ -162,8 +162,11 @@ Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run t
 ## React Patterns
 
 - Use function components only.
+- React 19 + React Compiler are the workspace baseline.
 - Prefer route-level lazy loading for larger pages.
-- Use `useMemo` and `useEffect` intentionally, not mechanically.
+- Prefer plain render logic first. Do **not** add `useCallback` or `useMemo` by default.
+- Prefer render-time derivation over `useEffect` + `setState` mirrors. Use `useEffect` only for external synchronization.
+- `useEffectEvent`, `startTransition`, and `useDeferredValue` are not mandatory syntax migrations; use them only when they solve a concrete problem.
 - Keep app-global state in Zustand stores under `apps/main/src/store`.
 - Keep async server-state in React Query for ordinary React pages.
 - Prefer narrow hooks over spreading raw store usage everywhere.
