@@ -21,11 +21,16 @@ const inputGroupAddonVariants = cva("flex h-auto cursor-text items-center justif
     },
 });
 function InputGroupAddon({ className, align = 'inline-start', ...props }) {
-    return (_jsx("div", { role: "group", "data-slot": "input-group-addon", "data-align": align, className: cn(inputGroupAddonVariants({ align }), className), onClick: (e) => {
+    return (_jsx("div", { role: "group", tabIndex: 0, "data-slot": "input-group-addon", "data-align": align, className: cn(inputGroupAddonVariants({ align }), className), onClick: (e) => {
             if (e.target.closest('button')) {
                 return;
             }
             e.currentTarget.parentElement?.querySelector('input')?.focus();
+        }, onKeyDown: (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.currentTarget.parentElement?.querySelector('input')?.focus();
+            }
         }, ...props }));
 }
 const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm shadow-none', {

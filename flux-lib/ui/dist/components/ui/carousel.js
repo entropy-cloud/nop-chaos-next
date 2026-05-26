@@ -32,7 +32,7 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, label, cl
     const scrollNext = React.useCallback(() => {
         api?.scrollNext();
     }, [api]);
-    const handleKeyDown = React.useCallback((event) => {
+    const handleKeyDown = (event) => {
         if (event.key === 'ArrowLeft') {
             event.preventDefault();
             scrollPrev();
@@ -41,7 +41,7 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, label, cl
             event.preventDefault();
             scrollNext();
         }
-    }, [scrollPrev, scrollNext]);
+    };
     React.useEffect(() => {
         if (!api || !setApi)
             return;
@@ -54,6 +54,7 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, label, cl
         api.on('reInit', onSelect);
         api.on('select', onSelect);
         return () => {
+            api?.off('reInit', onSelect);
             api?.off('select', onSelect);
         };
     }, [api, onSelect]);

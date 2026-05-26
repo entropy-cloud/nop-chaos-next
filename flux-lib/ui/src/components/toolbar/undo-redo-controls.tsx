@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Undo2Icon, Redo2Icon } from 'lucide-react';
-import { t } from '../../lib/i18n.js';
 import { Button } from '../ui/button.js';
 import { cn } from '../../lib/utils.js';
 
@@ -27,7 +26,7 @@ function UndoRedoControls({
         variant="ghost"
         size="icon-xs"
         disabled={disabled || !canUndo}
-        aria-label={t('flux.common.undo')}
+        aria-label="Undo"
         onClick={onUndo}
       >
         <Undo2Icon />
@@ -36,7 +35,7 @@ function UndoRedoControls({
         variant="ghost"
         size="icon-xs"
         disabled={disabled || !canRedo}
-        aria-label={t('flux.common.redo')}
+        aria-label="Redo"
         onClick={onRedo}
       >
         <Redo2Icon />

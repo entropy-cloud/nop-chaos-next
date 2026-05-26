@@ -1,6 +1,5 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useMemo } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils.js';
 import { Label } from './label.js';
@@ -45,7 +44,7 @@ function FieldSeparator({ children, className, ...props }) {
     return (_jsxs("div", { "data-slot": "field-separator", "data-content": !!children, className: cn('relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2', className), ...props, children: [_jsx(Separator, { className: "absolute inset-0 top-1/2" }), children && (_jsx("span", { className: "relative mx-auto block w-fit bg-background px-2 text-muted-foreground", "data-slot": "field-separator-content", children: children }))] }));
 }
 function FieldError({ className, children, errors, ...props }) {
-    const content = useMemo(() => {
+    const content = (() => {
         if (children) {
             return children;
         }
@@ -60,7 +59,7 @@ function FieldError({ className, children, errors, ...props }) {
                 const errorKey = error?.message ?? `error-${index}`;
                 return error?.message ? _jsx("li", { children: error.message }, errorKey) : null;
             }) }));
-    }, [children, errors]);
+    })();
     if (!content) {
         return null;
     }

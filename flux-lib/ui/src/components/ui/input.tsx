@@ -6,13 +6,9 @@ type InputProps = Omit<React.ComponentProps<'input'>, 'size'> & {
   size?: 'default' | 'sm';
 };
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
-  { className, type, size = 'default', ...props },
-  ref,
-) {
+function Input({ className, type, size = 'default', ...props }: InputProps) {
   return (
     <input
-      ref={ref}
       type={type}
       data-slot="input"
       data-size={size}
@@ -25,6 +21,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
       {...props}
     />
   );
-});
+}
 
 export { Input, type InputProps };

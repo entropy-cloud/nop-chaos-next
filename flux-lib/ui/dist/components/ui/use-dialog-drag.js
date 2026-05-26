@@ -30,18 +30,11 @@ export function useDialogDrag(options = {}, forwardedRef) {
             el.style.transform = `${baseTransform} translate(${offset.x}px, ${offset.y}px)`;
         }
     }, [baseTransform]);
-    const handlePointerMove = React.useCallback((e) => {
-        const dragState = dragStateRef.current;
-        const el = internalRef.current;
-        if (!dragState || !el) {
-            return;
-        }
-        const rawOffset = {
-            x: dragState.initialOffset.x + (e.clientX - dragState.startX),
-            y: dragState.initialOffset.y + (e.clientY - dragState.startY),
-        };
+    const clampOffset = React.useCallback((el, rawOffset) => {
+        const previousTransform = el.style.transform;
         el.style.transform = `${baseTransform} translate(${rawOffset.x}px, ${rawOffset.y}px)`;
         const rect = el.getBoundingClientRect();
+        el.style.transform = previousTransform;
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const minVisible = 30;
@@ -59,10 +52,22 @@ export function useDialogDrag(options = {}, forwardedRef) {
         else if (rect.bottom > vh - minVisible) {
             clampedY = rawOffset.y - (rect.bottom - (vh - minVisible));
         }
-        const nextOffset = { x: clampedX, y: clampedY };
+        return { x: clampedX, y: clampedY };
+    }, [baseTransform]);
+    const handlePointerMove = React.useCallback((e) => {
+        const dragState = dragStateRef.current;
+        const el = internalRef.current;
+        if (!dragState || !el) {
+            return;
+        }
+        const rawOffset = {
+            x: dragState.initialOffset.x + (e.clientX - dragState.startX),
+            y: dragState.initialOffset.y + (e.clientY - dragState.startY),
+        };
+        const nextOffset = clampOffset(el, rawOffset);
         setOffset(nextOffset);
         applyTransform(el, nextOffset);
-    }, [applyTransform, baseTransform, setOffset]);
+    }, [applyTransform, clampOffset, setOffset]);
     const stopDrag = React.useCallback((e) => {
         const el = internalRef.current;
         if (el) {
@@ -132,6 +137,19 @@ export function useDialogDrag(options = {}, forwardedRef) {
             applyTransform(internalRef.current, { x: 0, y: 0 });
         }
     }, [applyTransform, setOffset]);
+    const moveBy = React.useCallback((deltaX, deltaY) => {
+        const el = internalRef.current;
+        if (!el) {
+            return;
+        }
+        const currentOffset = getOffset();
+        const nextOffset = clampOffset(el, {
+            x: currentOffset.x + deltaX,
+            y: currentOffset.y + deltaY,
+        });
+        setOffset(nextOffset);
+        applyTransform(el, nextOffset);
+    }, [applyTransform, clampOffset, getOffset, setOffset]);
     React.useEffect(() => {
         return () => {
             const el = internalRef.current;
@@ -143,5 +161,5 @@ export function useDialogDrag(options = {}, forwardedRef) {
             }
         };
     }, [handlePointerMove, stopDrag]);
-    return { contentRef, handlePointerDown, resetPosition };
+    return { contentRef, handlePointerDown, resetPosition, moveBy };
 }

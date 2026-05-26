@@ -1,31 +1,40 @@
-/**
- * @nop-chaos/theme-tokens
- *
- * This package is CSS-only. Its primary artifact is `styles.css`, which defines
- * all design tokens as CSS custom properties. The `exports` map in package.json
- * exposes `./styles.css` for direct CSS import.
- *
- * The JS entry exists solely to satisfy TypeScript's module resolution and to
- * provide token name constants for JS/TS consumers that need to reference token
- * names programmatically (e.g., dynamic style applications, test assertions).
- */
-
-export const TOKEN_NAMES = {
-  RADIUS_SM: '--radius-sm',
-  RADIUS_MD: '--radius-md',
-  RADIUS_LG: '--radius-lg',
-  RADIUS_XL: '--radius-xl',
-  RADIUS: '--radius',
-  ICON_SM: '--icon-sm',
-  ICON_MD: '--icon-md',
-  ICON_LG: '--icon-lg',
-  ICON_XL: '--icon-xl',
-  TRANSITION_FAST: '--transition-fast',
-  TRANSITION_BASE: '--transition-base',
-  TRANSITION_SLOW: '--transition-slow',
-  SPACE_PAGE_BODY: '--space-page-body',
-  SPACE_SECTION_GAP: '--space-section-gap',
-  SPACE_FORM_ITEM_GAP: '--space-form-item-gap',
+export const BASE_TOKEN_NAMES = {
+  BACKGROUND: '--background',
+  FOREGROUND: '--foreground',
+  CARD: '--card',
+  CARD_FOREGROUND: '--card-foreground',
+  POPOVER: '--popover',
+  POPOVER_FOREGROUND: '--popover-foreground',
+  MUTED: '--muted',
+  MUTED_FOREGROUND: '--muted-foreground',
+  ACCENT: '--accent',
+  ACCENT_FOREGROUND: '--accent-foreground',
+  BORDER: '--border',
+  INPUT: '--input',
+  RING: '--ring',
+  PRIMARY: '--primary',
+  PRIMARY_FOREGROUND: '--primary-foreground',
+  SECONDARY: '--secondary',
+  SECONDARY_FOREGROUND: '--secondary-foreground',
+  SUCCESS: '--success',
+  WARNING: '--warning',
+  DANGER: '--danger',
+  SURFACE_PRIMARY: '--surface-primary',
+  SURFACE_SECONDARY: '--surface-secondary',
+  SURFACE_GHOST: '--surface-ghost',
+  SURFACE_HIGHLIGHT: '--surface-highlight',
+  SURFACE_HOVER: '--surface-hover',
+  SURFACE_OVERLAY: '--surface-overlay',
 } as const;
 
-export type TokenName = (typeof TOKEN_NAMES)[keyof typeof TOKEN_NAMES];
+export type BaseTokenName = (typeof BASE_TOKEN_NAMES)[keyof typeof BASE_TOKEN_NAMES];
+
+export interface HostTokenExtension {
+  tokens?: Record<string, `--${string}`>;
+  cssFile?: string;
+  tailwindThemeExtension?: Record<string, unknown>;
+}
+
+export function defineHostTokenExtension<T extends HostTokenExtension>(extension: T): T {
+  return extension;
+}

@@ -34,4 +34,4 @@ function SheetTitle({ className, ...props }) {
 function SheetDescription({ className, ...props }) {
     return (_jsx(SheetPrimitive.Description, { "data-slot": "sheet-description", className: cn('text-sm text-muted-foreground', className), ...props }));
 }
-export { Sheet, SheetTrigger, SheetClose, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, };
+export { Sheet, SheetTrigger, SheetClose, SheetOverlay, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, };

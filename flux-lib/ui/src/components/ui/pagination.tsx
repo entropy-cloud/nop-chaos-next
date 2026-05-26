@@ -8,8 +8,7 @@ import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-re
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
     <nav
-      role="navigation"
-      aria-label={t('flux.pagination.label')}
+      aria-label="pagination"
       data-slot="pagination"
       className={cn('mx-auto flex w-full justify-center', className)}
       {...props}
@@ -62,7 +61,7 @@ function PaginationPrevious({
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
   return (
     <PaginationLink
-      aria-label={t('flux.pagination.goToPrevious')}
+      aria-label="Go to previous page"
       size="default"
       className={cn('pl-1.5!', className)}
       {...props}
@@ -80,7 +79,7 @@ function PaginationNext({
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
   return (
     <PaginationLink
-      aria-label={t('flux.pagination.goToNext')}
+      aria-label="Go to next page"
       size="default"
       className={cn('pr-1.5!', className)}
       {...props}
