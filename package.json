@@ -35,7 +35,8 @@
     "sync:amis:build": "bash scripts/sync-amis.sh --build",
     "sync:site": "bash scripts/sync-site.sh",
     "pack:amis:deps": "node scripts/ensure-amis-file-deps-built.mjs",
-    "sync:flux": "bash scripts/sync-flux-lib.sh"
+    "sync:flux": "bash scripts/sync-flux-lib.sh",
+    "rebuild:amis-flux:build": "bash scripts/rebuild-amis-flux-and-build.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
