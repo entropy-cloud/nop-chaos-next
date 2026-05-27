@@ -27,6 +27,7 @@ export type {
   ShellExtension,
   LoadedExtension,
   LoadExtensionsOptions,
+  ExtensionManifest,
 } from './types/extension';
 
 export type { MenuItem, MenuResponse } from './types/menu';

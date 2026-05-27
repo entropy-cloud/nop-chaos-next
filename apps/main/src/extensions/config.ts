@@ -86,6 +86,10 @@ export function getExtensionSources(): ExtensionSource[] {
   const runtimeSources = getWindowExtensionSources()
 
   if (runtimeSources.length > 0) {
+    console.info(
+      `[extensions] Found ${runtimeSources.length} runtime extension(s):`,
+      runtimeSources.map((s) => s.id).join(', ')
+    )
     return runtimeSources
   }
 

@@ -467,6 +467,219 @@ export function getMainRuntimeOverrideAliases(rootDir = repoRoot) {
   return aliases;
 }
 
+function includesAny(id, segments) {
+  return segments.some((segment) => id.includes(segment));
+}
+
+function matchesMainAmisRenderer(normalizedFilePath, rendererPath) {
+  return includesAny(normalizedFilePath, [
+    `/packages/amis/src/${rendererPath}.tsx`,
+    `/packages/amis/esm/${rendererPath}.js`,
+    `/packages/amis/lib/${rendererPath}.js`,
+    `/amis/src/${rendererPath}.tsx`,
+    `/amis/esm/${rendererPath}.js`,
+    `/amis/lib/${rendererPath}.js`,
+  ]);
+}
+
+function getNodeModulePackageName(filePath) {
+  const normalizedFilePath = normalizePath(filePath);
+  const matches = [
+    ...normalizedFilePath.matchAll(/\/node_modules\/(?:\.pnpm\/[^/]+\/node_modules\/)?((?:@[^/]+\/)?[^/]+)/g),
+  ];
+  const packageName = matches.at(-1)?.[1];
+
+  return packageName || undefined;
+}
+
+function getMainPathBasedPackageChunkName(filePath) {
+  const normalizedFilePath = normalizePath(filePath);
+
+  if (includesAny(normalizedFilePath, ['/flux-lib/ui/', '/node_modules/@nop-chaos/ui/'])) {
+    return 'pkg-ui';
+  }
+
+  if (includesAny(normalizedFilePath, ['/packages/shared/', '/node_modules/@nop-chaos/shared/'])) {
+    return 'pkg-shared';
+  }
+
+  if (includesAny(normalizedFilePath, ['/packages/core/', '/node_modules/@nop-chaos/core/'])) {
+    return 'pkg-core';
+  }
+
+  if (includesAny(normalizedFilePath, ['/packages/plugin-bridge/', '/node_modules/@nop-chaos/plugin-bridge/'])) {
+    return 'pkg-plugin-bridge';
+  }
+
+  if (includesAny(normalizedFilePath, ['/node_modules/amis-core/'])) {
+    return 'vendor-amis-core';
+  }
+
+  if (includesAny(normalizedFilePath, ['/packages/amis-core/', '/packages/amis-react/'])) {
+    return 'vendor-amis-bridge';
+  }
+
+  if (matchesMainAmisRenderer(normalizedFilePath, 'renderers/Chart')) {
+    return 'vendor-amis-chart';
+  }
+
+  if (matchesMainAmisRenderer(normalizedFilePath, 'renderers/OfficeViewer')) {
+    return 'vendor-amis-office-viewer';
+  }
+
+  if (matchesMainAmisRenderer(normalizedFilePath, 'renderers/PdfViewer')) {
+    return 'vendor-amis-pdf-viewer';
+  }
+
+  if (matchesMainAmisRenderer(normalizedFilePath, 'renderers/Form/InputRichText')) {
+    return 'vendor-amis-rich-text';
+  }
+
+  if (matchesMainAmisRenderer(normalizedFilePath, 'renderers/Json')) {
+    return 'vendor-amis-json';
+  }
+
+  if (matchesMainAmisRenderer(normalizedFilePath, 'renderers/AMIS')) {
+    return 'vendor-amis-renderer';
+  }
+
+  if (includesAny(normalizedFilePath, ['/packages/office-viewer/', '/node_modules/office-viewer/'])) {
+    return 'vendor-office-viewer';
+  }
+
+  return undefined;
+}
+
+function getMainHostRuntimeChunkName(filePath) {
+  const normalizedFilePath = normalizePath(filePath);
+
+  if (includesAny(normalizedFilePath, ['/src/main.tsx', '/src/App.tsx'])) {
+    return 'host-entry';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/router/AmisRouteEntry.tsx'])) {
+    return 'host-amis-route-entry';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/router/FluxRouteEntry.tsx'])) {
+    return 'host-flux-route-entry';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/flux/'])) {
+    return 'host-flux-runtime';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/amis/init.ts', '/src/amis/xuiComponents.ts'])) {
+    return 'host-amis-bootstrap';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/amis/adapter.ts', '/src/amis/providers.ts'])) {
+    return 'host-amis-adapter';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/amis/testSchema.ts'])) {
+    return 'host-amis-preview';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/amis/AmisRouteRenderer'])) {
+    return 'host-amis-route-runtime';
+  }
+
+  return 'host-runtime';
+}
+
+export function getMainChunkGroupName(filePath, context = createMainPackageContext(repoRoot)) {
+  const normalizedFilePath = normalizePath(filePath);
+
+  if (includesAny(normalizedFilePath, ['/src/flux/'])) {
+    return 'host-flux-runtime';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/config/', '/src/services/', '/src/store/'])) {
+    return 'host-app-state';
+  }
+
+  if (normalizedFilePath.includes('/src/router/AppShell')) {
+    return 'shell-core';
+  }
+
+  if (
+    includesAny(normalizedFilePath, [
+      '/src/pages/help/',
+      '/src/pages/settings/',
+      '/src/pages/plugins/',
+      '/src/pages/data-management/',
+    ])
+  ) {
+    return 'page-secondary';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/pages/dashboard/', '/src/components/common/MetricCard'])) {
+    return 'page-dashboard';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/pages/flow-editor/'])) {
+    return 'page-flow-editor';
+  }
+
+  if (includesAny(normalizedFilePath, ['/src/pages/ai-workbench/'])) {
+    return 'page-ai-workbench';
+  }
+
+  const pathBasedPackageChunkName = getMainPathBasedPackageChunkName(normalizedFilePath);
+
+  if (pathBasedPackageChunkName) {
+    return pathBasedPackageChunkName;
+  }
+
+  const linkedNodeModulePackageName = getNodeModulePackageName(normalizedFilePath);
+
+  if (linkedNodeModulePackageName?.startsWith('@nop-chaos/')) {
+    return getPackageChunkName(linkedNodeModulePackageName);
+  }
+
+  const packageEntry = context.resolvePackageEntryByFile(filePath);
+
+  if (packageEntry && packageEntry.name !== MAIN_APP_NAME) {
+    return getPackageChunkName(packageEntry.name);
+  }
+
+  if (
+    includesAny(normalizedFilePath, [
+      '/src/main.tsx',
+      '/src/App.tsx',
+      '/src/amis/',
+      '/src/components/common/',
+      '/src/components/plugin/',
+      '/src/components/layout/',
+      '/src/components/auth/',
+      '/src/extensions/',
+      '/src/hooks/',
+      '/src/lib/',
+      '/src/pages/auth/',
+      '/src/pages/errors/',
+      '/src/plugins/',
+      '/src/router/AppRoutes',
+      '/src/router/RouteRenderer',
+      '/src/router/pageRegistry',
+    ])
+  ) {
+    return getMainHostRuntimeChunkName(normalizedFilePath);
+  }
+
+  if (!normalizedFilePath.includes('node_modules')) {
+    return undefined;
+  }
+
+  const nodeModulePackageName = getNodeModulePackageName(normalizedFilePath);
+
+  if (!nodeModulePackageName) {
+    return 'vendor-misc';
+  }
+
+  return getPackageChunkName(nodeModulePackageName);
+}
+
 function toChunkName(prefix, packageName) {
   return `${prefix}-${packageName.replace(/^@/, '').replace(/\//g, '-').replace(/\./g, '-')}`;
 }

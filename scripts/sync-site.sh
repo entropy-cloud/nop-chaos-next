@@ -23,7 +23,7 @@ cp -rf "$SOURCE" "$TARGET"
 
 echo "Gzipping JS/CSS files larger than 3KB..."
 find "$TARGET" -type f \( -name "*.js" -o -name "*.css" \) -size +3k | while read -r file; do
-    gzip -k -9 "$file"
+    gzip -n -k -9 "$file"
     rm "$file"
 done
 

@@ -79,3 +79,9 @@
 - 只要继续通过外部 `file:` / tarball / linked package 引入 React 相关渲染器，就必须把 `react` / `react-dom` 视为宿主单例依赖，不能回退成子包 `dependencies`。
 - `resolve.dedupe + alias` 不是这次修复的全部，它是对正确依赖声明的构建层保护网。去掉它之前，需要先证明所有外部渲染包都不会从独立依赖根解析 React。
 - `mobx` / `mobx-react` / `mobx-state-tree` / `echarts` 当前虽不是这次 crash 的根因，但已经确认会在 `amis-react19` 链路中解析出独立副本。未来若宿主开始直接传递这些库的实例、model、observable、主题或注册器，应重新评估是否要升级为宿主统一共享依赖。
+
+## Documentation Placement
+
+- 通用依赖治理分析方法见 `docs/skills/main-bundle-dependency-governance.md`
+- 当前项目的 bundle 依赖规范见 `docs/design/main-bundle-dependency-spec.md`
+- 本文档只保留这次运行时分裂问题的事实记录

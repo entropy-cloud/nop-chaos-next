@@ -3,6 +3,7 @@ export interface MainPackageEntry {
 }
 
 export interface MainPackageContext {
+  rootDir: string;
   resolvePackageEntryByFile(filePath: string): MainPackageEntry | null;
 }
 
@@ -19,5 +20,10 @@ export declare function getMainRuntimeOverrideAliases(rootDir?: string): Array<{
   find: string | RegExp;
   replacement: string;
 }>;
+
+export declare function getMainChunkGroupName(
+  filePath: string,
+  context?: MainPackageContext,
+): string | undefined;
 
 export declare function getPackageChunkName(packageName: string): string;

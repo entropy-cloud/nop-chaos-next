@@ -116,7 +116,7 @@ Targets: `docs/design/`, `packages/extension-host/src/runtime.ts`
 Exit Criteria:
 
 - [x] `packages/extension-host/src/runtime.ts` 包含 ShellRuntimeConfig 关联注释
-- [x] exports 策略已文档化（`docs/design/package-exports-strategy.md`）
+- [x] exports 策略已文档化（`docs/design/package-exports-spec.md`）
 - [x] `pnpm typecheck` 通过
 - [x] 相关 `docs/design/` 已更新
 - [x] `docs/logs/` 对应日期条目已更新

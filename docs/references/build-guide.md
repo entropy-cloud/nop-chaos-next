@@ -376,7 +376,7 @@ The enforcement strategy has two layers:
 1. **Node-level**: `check-main-external-runtime-deps.mjs` detects duplicate resolutions and fails the build if unmanaged.
 2. **Bundler-level**: `vite.config.ts` uses `resolve.alias` + `resolve.dedupe` to force all imports through a single canonical copy.
 
-See [main-bundle-dependency-strategy.md](../design/main-bundle-dependency-strategy.md) for full details.
+See the generic method in [main-bundle-dependency-governance.md](../skills/main-bundle-dependency-governance.md) and the project spec in [main-bundle-dependency-spec.md](../design/main-bundle-dependency-spec.md).
 
 ### Remote plugin bundle honesty
 

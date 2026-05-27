@@ -1,371 +1,248 @@
-# apps/main 拆包依赖治理 Skill
+# Bundle Dependency Governance Skill
 
-> 目标：让 `apps/main` 的代码分割建立在可验证的依赖图之上，而不是继续靠手工猜测 `manualChunks`。本 skill 定义源码包依赖层级、chunk 分层策略、构建后校验流程，以及外部 `AMIS file:` 依赖的前置要求。
+> 通用分析策略。用于任何前端应用的 bundle / chunk / dependency 治理，不绑定本仓库的具体包名、目录结构或 chunk 名。
 
----
+## 1. Purpose
 
-## 1. 适用场景
+当你需要分析以下问题时，优先使用这份方法论：
 
-在以下任务中应优先使用本 skill：
+- 懒加载看起来存在，但真实下载边界不正确
+- 大型依赖修改后，影响面比预期更大
+- `vendor -> host`、`host -> page`、`page -> page` 一类反向依赖开始出现
+- 某些共享运行时出现多实例解析风险
+- chunk 规则越来越多，但仍然无法稳定解释构建结果
 
-- 调整 `apps/main` 的 `vite.config.ts` chunk 切分规则
-- 分析 `page -> page`、`vendor -> host`、`workspace -> host` 这类反向依赖
-- 排查 `React.lazy` 看起来已经用了，但延迟加载没有真正生效的问题
-- 细化大依赖的场景拆分，例如 `flow designer`、`code editor`、`dashboard charts`、`AMIS renderer` 的按需加载
-- 新增或迁移 `apps/main` 依赖的 workspace 包、外部 file 包、渲染引擎包
-- 验证 `AMIS`、`Flux`、宿主框架共享依赖之间是否形成了错误的 chunk 耦合
+这份文档回答的是“如何分析”。
+具体到当前仓库的“规则是什么”，应写在 `docs/design/`。
 
-不适用于：
+## 2. Core Model
 
-- 纯页面 UI 微调
-- 与构建拆包无关的业务逻辑修改
+不要把 bundle 优化当成“继续写更多 chunk 规则”。
 
----
+更可靠的顺序是：
 
-## 2. 核心问题模型
+1. 先确认源码依赖边界是否正确
+2. 再确认构建产物边界是否映射了源码边界
+3. 最后才微调 chunk 分桶和按场景减载
 
-`apps/main` 的延迟加载失效，通常不是因为少写了 `lazy()`，而是因为**chunk 边界与源码依赖边界不一致**。
+典型错误顺序是：
 
-典型坏味道：
+1. 看到包大
+2. 直接改 `manualChunks`
+3. 不验证真实依赖图
+4. 最终得到更多 facade、更多 preload、更多误判
 
-1. 页面 chunk 被别的页面 chunk 复用。
-2. `vendor` chunk 反向依赖 `host` chunk。
-3. 底层 workspace 包没有被识别成独立基础层，结果被吸进某个页面或宿主运行时 chunk。
-4. 外部 `file:` 包没有完整构建产物，导致 Vite 在构建时解析到半成品目录。
-5. 启动期共享模块注册代码静态 import 了按场景才需要的大库，导致“页面虽然拆开了，但 host 还是提前把依赖拉进来”。
+## 3. Analysis Order
 
-本仓库里最典型的一类问题是：
+### 3.1 Source Graph First
 
-- `@nop-chaos/ui` 实际来自 `flux-lib/ui`
-- 如果 chunk 识别逻辑只覆盖 `/packages/`，就会漏掉 `flux-lib/`
-- 漏识别后，`ui` 代码会被谁先 import 谁先吞掉
-- 一旦 `ui` 或共用组件被吞进页面 chunk，后续页面只能反向 import 这个页面 chunk
-- 结果就是“逻辑上懒加载了，实际上共享运行时仍被页面块提前带起”
+先看源码依赖图，而不是先看构建哈希名。
 
----
+优先确认：
 
-## 3. 依赖治理原则
+- 是否存在跨层源码依赖
+- 是否有共享模块被放进页面私有目录
+- 是否有 linked/file/tarball 依赖绕开了既有包识别规则
+- 是否存在跨包深层导入
 
-### 3.1 先治理源码依赖图，再治理 chunk 图
+如果源码边界本身已经错了，任何 chunk 规则都只是补丁。
 
-顺序不能反过来。
+### 3.2 Output Graph Second
 
-先检查：
+源码边界确认后，再看构建产物图。
 
-- workspace 包之间的依赖方向是否正确
-- `apps/main/src` 是否把共用代码放进了页面目录或页面私有 chunk
-- 是否存在跨包 `src/` 深层导入
-- 外部 file 依赖是否具备可消费的 `esm` / `lib` 产物
+重点不是“变了多少文件”，而是：
 
-再检查：
+- 哪些 chunk 真正依赖了目标 chunk
+- 依赖是静态 import、dynamic import，还是 preload map
+- 哪些改动只是 hash 传播，哪些是新建了真实依赖边
 
-- 构建产物中的 chunk import 图是否仍然违反层级
+### 3.3 Measurement Third
 
-### 3.2 chunk 分层必须映射真实层级
+体积和网络测量放在第三步。
 
-推荐层级：
+测量可以回答：
 
-1. `runtime`
-2. `bridge`
-3. `vendor`
-4. `workspace`
-5. `host`
-6. `page`
-7. `facade` / `entry`
+- 下载是否变小
+- 首屏是否更快
+- 哪些大块仍然存在
 
-允许高层依赖低层，不允许低层依赖高层。
+但测量本身不能证明依赖边界是正确的。
 
-等价地说：
+### 3.4 Use Existing Tools First
 
-- `page -> host/vendor/workspace/runtime` 可以接受
-- `page -> bridge/host/vendor/workspace/runtime` 可以接受
-- `host -> page` 不可接受
-- `vendor -> host/page` 不可接受
-- `vendor -> bridge` 在当前 `AMIS` 宿主桥接架构下允许
-- `page -> page` 也应视为违规，除非只是 1 层 facade 指向真实页面实现
+优先直接使用仓库内现有分析工具，而不是再写一份额外“策略文档”去描述它们。
 
-### 3.3 页面 chunk 只放页面私有代码
+典型顺序：
 
-页面目录下如果 import 了真正通用的模块，例如：
+1. `node scripts/analyze-main-package-graph.mjs --check`
+2. `node scripts/ensure-amis-file-deps-built.mjs`
+3. `node scripts/check-main-external-runtime-deps.mjs --check`
+4. `pnpm --filter @nop-chaos/main build:analyze`
+5. `node scripts/analyze-main-chunk-graph.mjs --check`
 
-- `src/components/common/*`
-- `src/config/*`
-- `src/hooks/*`
-- `src/lib/*`
-- `src/components/plugin/*`
-- `src/services/*`
-- `src/store/*`
+如果需要看可视化或体积：
 
-这些模块通常应该进 `host` 共享层，而不是留在首个命中的页面 chunk 里。
+- 看 `apps/main/dist/stats.html`
+- 用 `scripts/analyze-main-chunks.py`
+- 在浏览器里看 Network / Lighthouse / WebPageTest
 
-判定规则：
+原则：
 
-- 被多个页面复用的，优先进入 `host` 共享 chunk
-- 只被某个页面目录独占使用的，才保留在对应 `page-*` chunk
+- 核心分析结论优先来自脚本工具
+- 文档只说明如何用工具，不再重复保存与工具等价的“纸面策略副本”
 
-### 3.4 workspace 包识别不能只看 `packages/`
+## 4. Stable Heuristics
 
-本仓库至少有四类工作区根：
+### 4.1 Prefer Family Rules Over File-by-File Rules
 
-- `apps/*`
-- `packages/*`
-- `examples/*`
-- `flux-lib/*`
+优先沉淀“包族”或“目录族”规则，而不是单文件例外。
 
-只扫描 `/packages/` 会把 `@nop-chaos/ui` 误判为普通源码文件，从而破坏 chunk 层级。
+更稳的规则：
 
----
+- 某类共享基础包始终进入稳定基础层
+- 某类桥接运行时始终进入 bridge 层
+- 某类页面目录始终进入对应 page 层
 
-## 4. 当前落地实现
+更脆弱的规则：
 
-### 4.1 共享工具
+- 某次构建里为了绕过一个 chunk 名而新增的单文件特判
 
-统一策略放在：`scripts/main-bundle-utils.mjs`
+### 4.2 Prefer Path/Package-Derived Rules
 
-用途：
+如果一个结论可以从以下信息稳定推出，应优先固化为工具函数或分析器规则：
 
-- 枚举 workspace 包
-- 识别 `apps/main` 的外部 `file:` 依赖包
-- 从文件路径反查其所属包
-- 生成包到 chunk 的稳定映射
-- 检查外部 `AMIS` 包是否已经构建出所需产物
+- 文件路径
+- 包名
+- chunk 名前缀
+- 可遍历依赖图
 
-### 4.2 源码依赖图分析
+如果一个结论只能靠人工记忆某次实验结果，就不应直接进工具函数。
 
-脚本：`scripts/analyze-main-package-graph.mjs`
+### 4.3 Distinguish Real Dependency From Hash Propagation
 
-职责：
+以下现象要分开看：
 
-- 扫描 workspace 包源码 import/export/dynamic import
-- 输出包依赖图和分层
-- 检测 workspace 循环依赖
-- 检测跨包 `src/` 深层导入
-- 检测“源码已经 import 了某包，但 `package.json` 未声明依赖”
+- 真实新增依赖边
+- 既有 importers 因 hash 变更而被连带改名
+- preload / mapDeps 元数据跟随变动
 
-关键命令：
+文件变化数量本身不是依赖治理结论。
+
+### 4.4 Treat Shared Runtime Separately
+
+`react`、`react-dom`、router、i18n、state container、chart runtime 这类共享运行时应单独审视。
+
+问题不只是体积，还有：
+
+- 多实例运行时崩溃
+- context / hook / store 边界失真
+- host 与插件或外部渲染器之间的实例不一致
+
+## 5. Violation Patterns
+
+优先关注这些模式：
+
+- `page-used-as-shared-runtime`
+- `reverse-layer-import`
+- chunk cycle
+- external runtime duplicate resolution
+
+含义分别是：
+
+- 页面块被当公共运行时复用
+- 低层 chunk 反向依赖高层 chunk
+- 两个或多个块形成真实静态循环
+- 宿主与外部依赖解析到不同物理运行时实例
+
+## 6. Refactoring Rules
+
+当一次分析得到稳定经验后，应分两层沉淀：
+
+1. 方法层：放进 `docs/skills/`
+2. 项目规则层：放进 `docs/design/`
+
+判断标准：
+
+- 对多个项目都成立的方法，进 `skills`
+- 只对当前项目目录、包边界、命名约定成立的规则，进 `design`
+
+## 7. Deliverables
+
+一次完整的 dependency/bundle 治理，至少应交付：
+
+- 问题模型
+- 真实依赖图证据
+- 规则调整或代码边界调整
+- 构建验证
+- 必要的测量结论
+- 文档沉淀
+
+## 8. Tool Usage Checklist
+
+### 8.1 Source Dependency Issues
+
+先跑：
 
 ```bash
 node scripts/analyze-main-package-graph.mjs --check
 ```
 
-如果失败，先修源码依赖边界，再讨论 chunk 规则。
+适用于：
 
-### 4.3 构建产物 chunk 图分析
+- workspace 层级漂移
+- 跨包深层导入
+- 未声明依赖
+- 包循环依赖
 
-脚本：`scripts/analyze-main-chunk-graph.mjs`
+### 8.2 External Runtime Split Risk
 
-职责：
-
-- 直接读取 `apps/main/dist/assets/*.js`
-- 解析压缩产物中的静态 import、re-export、dynamic import
-- 构建 chunk import 图
-- 检测 chunk 环
-- 检测层级反向依赖
-- 检测 `page` 被其他非 facade chunk 当作共享运行时复用
-
-当前实现还会把 `host-amis-*` 识别为独立 `bridge` 层，而不是普通 `host` 层。这样分析器可以正确表达当前架构：
-
-- `host-amis-adapter-*`
-- `host-amis-route-runtime-*`
-- `host-amis-bootstrap-*`
-- `host-amis-preview-*`
-
-这些 chunk 本质上是 `AMIS` 宿主桥接与运行时边界，不应误报为普通 `vendor -> host` 反向依赖。
-
-关键命令：
+先跑：
 
 ```bash
-node scripts/analyze-main-chunk-graph.mjs --check
+node scripts/check-main-external-runtime-deps.mjs --check
 ```
 
-这里的 `page-used-as-shared-runtime` 是最高优先级信号之一。
+适用于：
 
-### 4.4 apps/main build 集成
+- `react` / `react-dom` / `echarts` / `i18next` 等共享运行时是否多实例分裂
 
-`apps/main/package.json` 已将以下流程接入 `build` 与 `build:analyze`：
+### 8.3 Chunk Boundary Issues
 
-1. `node ../../scripts/ensure-amis-file-deps-built.mjs`
-2. `tsc` / `vite build`
-3. `pnpm analyze:imports`
-4. `pnpm analyze:chunks`
-
-结论：
-
-- 只要 `build` 成功，就说明源码依赖图和 chunk 图都通过了当前规则
-- 以后改 chunk 规则不能只看 `vite build` 是否通过，还必须看两个分析脚本是否通过
-
----
-
-## 5. 外部 AMIS file 依赖策略
-
-### 5.1 问题本质
-
-`apps/main` 当前依赖：
-
-- `amis`
-- `amis-core`
-- `amis-ui`
-- `amis-formula`
-
-它们来自仓库外部的 `file:` 路径：`C:/can/nop/amis-react19/packages/*`
-
-这类依赖只有在外部仓库已经产出可消费的 `esm/` 与相关静态资源时，当前仓库的 Vite 构建才稳定。
-
-### 5.2 当前前置要求
-
-脚本：`scripts/ensure-amis-file-deps-built.mjs`
-
-会检查至少这些产物：
-
-- `amis/esm/index.js`
-- `amis/lib/themes/cxd.css`
-- `amis-core/esm/index.js`
-- `amis-ui/esm/index.js`
-- `amis-formula/esm/index.js`
-
-若缺失，会尝试调用外部 `amis-react19` 的 workspace build。
-
-### 5.3 失败时怎么处理
-
-如果这个脚本失败，不要继续调 `manualChunks`。
-
-先处理外部仓库：
-
-1. 确认 `C:/can/nop/amis-react19` 已安装自己的依赖
-2. 确认它能单独运行 workspace build
-3. 若外部仓库脚本依赖 `rimraf`、`cross-env` 等命令，先保证外部仓库自身构建可用
-
-这属于**上游依赖未就绪**，不是本仓库 chunk 规则问题。
-
----
-
-## 6. 修改 chunk 规则的操作步骤
-
-### 步骤 1：先读现状
-
-至少阅读：
-
-- `apps/main/vite.config.ts`
-- `scripts/main-bundle-utils.mjs`
-- `scripts/analyze-main-package-graph.mjs`
-- `scripts/analyze-main-chunk-graph.mjs`
-
-### 步骤 2：跑源码依赖图
+先跑：
 
 ```bash
-node scripts/analyze-main-package-graph.mjs --check
-```
-
-如果这里失败：
-
-- 优先修依赖声明
-- 优先修跨包深层导入
-- 优先修 workspace 循环依赖
-
-### 步骤 3：跑构建与 chunk 图
-
-```bash
-pnpm --filter @nop-chaos/main build
-```
-
-或调试时：
-
-```bash
-pnpm --filter @nop-chaos/main build:analyze
-node scripts/analyze-main-chunk-graph.mjs
-```
-
-### 步骤 4：看违规类型再改
-
-#### `page-used-as-shared-runtime`
-
-优先怀疑：
-
-- 共享组件落在页面目录附近
-- `manualChunks` 没覆盖共用目录
-- 页面 chunk 先吞掉了公共模块
-- `src/components/plugin/*`、`src/lib/*` 这类 app-local 共享模块没有被提升到 host 层
-
-处理方式：
-
-- 把公共目录收进 `host-*` 共享 chunk
-- 不要把通用组件继续留在 `page-*`
-
-#### `reverse-layer-import`
-
-优先怀疑：
-
-- workspace 包漏识别
-- `vendor` / `workspace` 被错误归进 host/page
-- 共享依赖先被高层 chunk 吞掉
-- 分析脚本把桥接 runtime 误判成普通 `host` 层
-
-处理方式：
-
-- 在包级别固定 chunk 名
-- 减少“按文件路径零散判断”的漏网情况
-
-#### chunk cycle
-
-先区分：
-
-- 是 facade 层正常一跳
-- 还是实质性共享代码互相牵扯
-
-后者必须拆。
-
----
-
-## 7. 对 `manualChunks` 的具体要求
-
-1. 先判定“是否属于某个已知包”，再判定“是否属于某个页面目录”。
-2. `@nop-chaos/ui`、`@nop-chaos/shared`、`@nop-chaos/core`、`@nop-chaos/plugin-bridge` 这类稳定底层包必须有稳定 chunk 名。
-3. `@nop-chaos/amis-core`、`@nop-chaos/amis-react` 应固定到 AMIS bridge 层，不要散落进 host/page。
-4. 对 `src/components/common` 这类多页面复用代码，优先固定到 host 共享层。
-5. 对 `src/components/plugin`、`src/lib` 这类被多个页面命中的 app-local 共享模块，也优先固定到 host 共享层。
-6. 页面 chunk 只负责页面私有模块，不负责“看起来离页面近”的公共模块。
-7. 如果一个规则只是为了掩盖某次构建的偶然结果，而不是反映稳定依赖边界，不要加。
-
----
-
-## 8. 交付标准
-
-一次有效的拆包治理改动，至少应满足：
-
-1. `pnpm --filter @nop-chaos/main build` 通过。
-2. `node scripts/analyze-main-package-graph.mjs --check` 通过。
-3. `node scripts/analyze-main-chunk-graph.mjs --check` 通过。
-4. 没有 `page-used-as-shared-runtime`。
-5. 没有 workspace 循环依赖。
-6. 文档已更新：
-   `docs/logs/{year}/{month}-{day}.md`
-7. 若策略本身发生变化，设计文档也应更新。
-
----
-
-## 9. 本次仓库已确认的经验结论
-
-1. `lazy()` 只决定加载时机，不决定 chunk 边界是否正确。
-2. `flux-lib/ui` 也是 workspace 包，不能只按 `/packages/` 识别。
-3. 现有产物里出现 `page -> page` 共享时，优先检查 `src/components/common/*` 是否被 page chunk 吞掉。
-4. `src/components/plugin/*` 与 `src/lib/*` 也是已经验证过的 app-local 共享模块来源；若留在 `page-*`，会真实触发 `page-used-as-shared-runtime`。
-5. `host-amis-*` 在当前仓库应视为 `bridge` 层，而不是普通 `host`；否则会把 AMIS 宿主桥接关系误诊成 `vendor -> host`。
-6. 外部 `AMIS file:` 依赖如果没有先构建出 `esm` / `lib`，本仓库 `build` 失败属于环境前置条件未满足，不应误归因到 chunk 规则。
-7. 做“按场景减包”时，先检查静态全量引入点，而不是先改 `manualChunks`。当前最典型的诊断入口包括：
-   - `apps/main/src/plugins/sharedModules.ts`：启动期共享注册会静态引入 `lucide-react`、`recharts`、`sonner` 等库
-   - `packages/core/src/utils/iconMap.tsx`：因低代码引擎需要按 icon 名称解析 Lucide 组件，当前采用 `import * as LucideIcons from 'lucide-react'`
-8. 对 `lucide-react` 的优化不能脱离业务前提。若低代码引擎必须支持“按名称动态取任意 Lucide 图标”，则应优先隔离到低代码场景懒加载，而不是简单删除整库导入。
-9. 现有旧版产物分析脚本如果不能识别压缩后的 `import{...}from` 语法，分析结论不可信。
-
----
-
-## 10. 推荐执行顺序
-
-```bash
-node scripts/analyze-main-package-graph.mjs --check
-node scripts/ensure-amis-file-deps-built.mjs
 pnpm --filter @nop-chaos/main build:analyze
 node scripts/analyze-main-chunk-graph.mjs --check
 ```
 
-如果第 2 步失败，先修外部 `amis-react19` 构建环境，再继续。
+适用于：
+
+- `page-used-as-shared-runtime`
+- `reverse-layer-import`
+- chunk cycles
+- 依赖隔离是否真实成立
+
+### 8.4 Measurement and Visualization
+
+如果结构已经基本正确，再看：
+
+- `apps/main/dist/stats.html`
+- `scripts/analyze-main-chunks.py`
+- 浏览器 Network / Lighthouse / WebPageTest
+
+### 8.5 Interpretation Rule
+
+- 先信脚本构建出的依赖图
+- 再看可视化和体积
+- 最后才根据这些结论决定是否需要新增稳定工具函数或项目规则
+
+## 9. Anti-Patterns
+
+避免以下做法：
+
+- 只根据文件改名数量判断影响面
+- 只看 visualizer treemap，不看 import 图
+- 用更多临时 `manualChunks` 规则掩盖源码边界错误
+- 把项目特定结论直接写成“通用方法”
+- 把通用方法散落在 bug 记录或每日日志里

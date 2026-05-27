@@ -10,21 +10,9 @@ import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry';
 
 const IFRAME_SANDBOX_ALLOWLIST = 'allow-scripts allow-same-origin allow-forms allow-popups';
 
-const AmisRouteRenderer = lazy(async () => {
-  const [{ ensureAmisRuntime }, module] = await Promise.all([
-    import('../amis/init'),
-    import('../amis/AmisRouteRenderer'),
-  ]);
-  await ensureAmisRuntime();
-  return { default: module.AmisRouteRenderer };
-});
+const AmisRouteEntry = lazy(() => import('./AmisRouteEntry').then((module) => ({ default: module.AmisRouteEntry })));
 
-const FluxRouteRenderer = lazy(async () => {
-  const { ensureFluxRuntime } = await import('../flux/init');
-  await ensureFluxRuntime();
-  const module = await import('../flux/FluxRouteRenderer');
-  return { default: module.FluxRouteRenderer };
-});
+const FluxRouteEntry = lazy(() => import('./FluxRouteEntry').then((module) => ({ default: module.FluxRouteEntry })));
 
 interface RouteRendererProps {
   item: MenuItem;
@@ -95,7 +83,7 @@ export function RouteRenderer({ item }: RouteRendererProps) {
     if (item.pageType === 'amis' && item.schemaPath) {
       return (
         <Suspense fallback={loadingView}>
-          <AmisRouteRenderer key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
+          <AmisRouteEntry key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
         </Suspense>
       );
     }
@@ -103,7 +91,7 @@ export function RouteRenderer({ item }: RouteRendererProps) {
     if (item.pageType === 'flux' && item.schemaPath) {
       return (
         <Suspense fallback={loadingView}>
-          <FluxRouteRenderer key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
+          <FluxRouteEntry key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
         </Suspense>
       );
     }

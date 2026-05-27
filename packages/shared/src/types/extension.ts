@@ -178,3 +178,12 @@ export interface LoadExtensionsOptions {
   sources: ExtensionSource[];
   context: ExtensionSetupContext;
 }
+
+export interface ExtensionManifest {
+  id: string;
+  name: string;
+  version?: string;
+  description?: string;
+  entry: string;
+  styleAssets?: string[];
+}

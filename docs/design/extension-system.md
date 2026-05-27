@@ -332,6 +332,91 @@ VITE_DEMO_EXTENSION_ALIAS_PATH=../external-extension/src/index.ts
 - 插件页面继续输出 `*.system.js`
 - Source 列表来自静态配置或后端
 
+### 7.4 Extension Manifest（`extension.json`）
+
+每个 extension 的构建产物根目录包含一个 `extension.json` 清单文件，供服务端发现和加载扩展。
+
+#### 7.4.1 清单格式
+
+```json
+{
+  "id": "example-extension-demo",
+  "name": "Harbor Operations Suite",
+  "version": "0.0.1",
+  "entry": "./assets/index-COw24fxy.js",
+  "styleAssets": ["./assets/index-3Z9nCm1K.css"]
+}
+```
+
+| 字段         | 类型       | 必填 | 说明                                   |
+| ------------ | ---------- | ---- | -------------------------------------- |
+| `id`         | `string`   | 是   | Extension 唯一标识                     |
+| `name`       | `string`   | 是   | 显示名称                               |
+| `version`    | `string`   | 否   | 语义版本                               |
+| `description`| `string`   | 否   | 描述                                   |
+| `entry`      | `string`   | 是   | 相对于 extension 根目录的 JS 入口路径  |
+| `styleAssets`| `string[]` | 否   | 相对于 extension 根目录的 CSS 文件路径 |
+
+类型定义：`ExtensionManifest`（`packages/shared/src/types/extension.ts`）
+
+#### 7.4.2 部署目录结构
+
+```
+META-INF/resources/
+  index.html                                    ← 宿主 HTML
+  assets/                                       ← 宿主资源
+  extension/
+    {extension-name}/
+      extension.json                            ← 扩展清单
+      assets/                                   ← 扩展资源
+```
+
+#### 7.4.3 服务端集成合同（Java / `IndexHtmlProvider`）
+
+Java 后端通过以下步骤实现 extension 注入：
+
+1. **扫描** `extension/*/extension.json`，读取每个扩展的清单
+2. **构建** `window.__NOP_EXTENSIONS__` 数组，每项为 `{ id, entry }` 对象
+   - `entry` 应拼接为相对于宿主根的完整路径，如 `./extension/{name}/{manifest.entry}`
+3. **替换** 宿主 HTML 中的 `<!--NOP_EXTENSIONS_INJECT-->` 注释为生成的 `<script>` 标签
+
+示例注入结果：
+
+```html
+<div id="root"></div>
+<script>
+  window.__NOP_EXTENSIONS__ = [
+    { "id": "example-extension-demo", "entry": "./extension/extension-demo/assets/index-COw24fxy.js" }
+  ];
+</script>
+<script type="module" crossorigin src="./assets/index-CaxDBImy.js"></script>
+```
+
+#### 7.4.4 宿主发现优先级
+
+宿主通过 `apps/main/src/extensions/config.ts` 中的 `getExtensionSources()` 发现扩展：
+
+1. **最高优先级**：`window.__NOP_EXTENSIONS__`（服务端注入）— 支持多扩展数组
+2. **次优先级**：环境变量 `VITE_DEMO_EXTENSION_ENTRY`（运行时入口路径）
+3. **开发模式**：`VITE_DEMO_EXTENSION_ALIAS_PATH`（构建时 alias 路径）
+4. **回退**：`VITE_ENABLE_DEMO_EXTENSION=true`（内置 demo 扩展）
+
+`window.__NOP_EXTENSIONS__` 是生产环境的标准路径，支持多个扩展同时加载。
+
+#### 7.4.5 清单生成
+
+每个扩展的 Vite 构建自动生成 `extension.json`。扩展需配置 `extensionManifestPlugin`（见 `examples/extension-demo/vite.config.ts`）：
+
+```ts
+extensionManifestPlugin({
+  id: 'example-extension-demo',
+  name: 'Harbor Operations Suite',
+  version: '0.0.1',
+})
+```
+
+构建后自动在 `dist/` 目录下生成包含正确哈希文件名的 `extension.json`。
+
 ---
 
 ## 8. 错误处理
@@ -360,9 +445,12 @@ VITE_DEMO_EXTENSION_ALIAS_PATH=../external-extension/src/index.ts
 | 文件                                         | 用途           |
 | -------------------------------------------- | -------------- |
 | `packages/shared/src/types/extension.ts`     | 类型定义       |
+| `apps/main/src/extensions/config.ts`         | 扩展发现逻辑   |
 | `apps/main/src/extensions/loadExtensions.ts` | 加载逻辑       |
 | `apps/main/src/extensions/bootstrap.ts`      | 启动引导       |
 | `apps/main/src/extensions/runtime.ts`        | 运行时配置     |
 | `apps/main/src/components/layout/SidebarUserMenu.tsx` | shell 外链消费 |
 | `apps/main/src/store/pluginStore.ts`         | extension plugin 合并后的宿主清单 |
 | `apps/main/src/extensions/demo/index.ts`     | 示例 extension |
+| `examples/extension-demo/vite.config.ts`     | 扩展构建配置（含 manifest 生成插件） |
+| `scripts/sync-extension-demo.sh`             | 扩展产物同步脚本 |

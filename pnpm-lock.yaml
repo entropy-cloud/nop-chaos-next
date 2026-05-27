@@ -234,7 +234,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/extension-host
       '@nop-chaos/flux':
-        specifier: file:..\..\..\nop-chaos-flux\dist-packages\nop-chaos-flux-0.1.0.tgz
+        specifier: file:../../../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz
         version: file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(i18next@26.0.5(typescript@6.0.2))(lucide-react@1.8.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2))(react@19.2.5)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(redux@5.0.1))(zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5)))
       '@nop-chaos/plugin-bridge':
         specifier: workspace:*
@@ -1100,7 +1100,7 @@ packages:
     engines: {node: '>= 8'}
 
   '@nop-chaos/flux@file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz':
-    resolution: {integrity: sha512-2ijBqR6JQ+ThNQJWyUZ/llVtD7G927uyaA9rjQqzL6LWdavwcp6GyI/upYyB9UKAKsL//UQPs/HdRbW1GHItMA==, tarball: file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz}
+    resolution: {integrity: sha512-x1oiihZ4bFEgKRWeYUAlEA55ckPjvG4LyOaOjAjJH4QVaPHAtyRLWwstfTKABZCDjPJdAzNqHW+Ntim70JiRZg==, tarball: file:../nop-chaos-flux/dist-packages/nop-chaos-flux-0.1.0.tgz}
     version: 0.1.0
     peerDependencies:
       '@nop-chaos/ui': '*'
@@ -2233,7 +2233,7 @@ packages:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
 
   amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz:
-    resolution: {integrity: sha512-U+lUnZjdxz5vSISM6LQcMkmZDzh7DIt/qoo+TEwPwMV6ryvMU+kpi1qMao7gxQY4d+pE76c59AyQsgkP4SlbmA==, tarball: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz}
+    resolution: {integrity: sha512-lhUb06kxrYny/wBFk7zxihgg+6pg/HyFMxptAr/vb572goH/FY5gP6nNfAMbrORNI53f6tPRlTNTq2fmzNQJcg==, tarball: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-formula: '*'
@@ -2254,7 +2254,7 @@ packages:
       react-dom: '>=16.8.6'
 
   amis@file:../amis-react19/dist-packages/amis-6.13.1.tgz:
-    resolution: {integrity: sha512-NX+ORKHn0D8wUd1RTXQiCA7UuX0ALrZlLPEL9qnhnuZNLhxAUGBNRvql3PAYaJJrC5LNLWCfFscQm+Hbezr3lg==, tarball: file:../amis-react19/dist-packages/amis-6.13.1.tgz}
+    resolution: {integrity: sha512-jao388QPbxddxlfaQsnEbLB8EtZCG3LJlCH3gXYL81NiWJrlCbj8pGfVyWbM9bo2fq/ZGxzSALW5wRswcqLjDg==, tarball: file:../amis-react19/dist-packages/amis-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-core: '*'

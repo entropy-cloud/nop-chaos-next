@@ -39,8 +39,14 @@
 - `scripts/analyze-main-package-graph.mjs`
 - `scripts/analyze-main-chunk-graph.mjs`
 - `scripts/ensure-amis-file-deps-built.mjs`
-- `docs/design/main-bundle-dependency-strategy.md`
+- `docs/design/main-bundle-dependency-spec.md`
 - `docs/skills/main-bundle-dependency-governance.md`
+
+## Documentation Placement
+
+- 通用分析方法现在统一放在 `docs/skills/main-bundle-dependency-governance.md`
+- 当前仓库的项目级规则放在 `docs/design/main-bundle-dependency-spec.md`
+- 本文档只保留问题、根因和修复记录
 
 ## Notes For Future Refactors
 

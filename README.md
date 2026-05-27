@@ -157,29 +157,23 @@ git clone <本仓库地址>
   nop-chaos-next/      # 本仓库
 ```
 
-### 2. 构建 AMIS 包
-
-```bash
-cd amis-react19
-npm install
-npm run pack:nop-chaos
-```
-
-此命令在 `dist-packages/` 下生成 `*.tgz` 包，供 nop-chaos-next 使用。
-
-### 3. 安装、同步、运行
+### 2. 安装与运行
 
 ```bash
 cd ../nop-chaos-next
 pnpm install
-pnpm sync:flux          # 从 ../nop-chaos-flux 同步 UI 包
-pnpm rebuild:amis-flux:build  # 重新构建 AMIS + Flux + 同步 Flux + 构建当前仓库
+pnpm site
+pnpm site:local
 pnpm dev
 ```
 
-`pnpm sync:flux` 将 `ui`、`theme-tokens`、`tailwind-preset` 从兄弟仓库复制到本 workspace 并刷新安装。
+`pnpm install` 安装当前仓库依赖。
 
-`pnpm rebuild:amis-flux:build` 会依次执行：重新打包 `amis-react19`、重新构建并打包 `nop-chaos-flux`、同步 Flux 源码包到当前仓库、最后构建当前项目。
+`pnpm site` 会重新打包 AMIS 和 Flux、刷新当前仓库依赖、再构建当前平台（包含 host、extension demo）并同步到 `../nop-entropy/nop-frontend-support/nop-web-site/src/main/resources/META-INF/resources/`。
+
+`pnpm site:local` 只构建当前仓库并同步到 site，不会重新打包上游 AMIS 和 Flux。
+
+`pnpm dev` 启动本地开发环境。
 
 本地访问：`http://localhost:5173`
 
