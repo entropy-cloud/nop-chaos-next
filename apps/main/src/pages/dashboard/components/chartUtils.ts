@@ -6,6 +6,11 @@ export const pieColors = [
   'hsl(var(--secondary))',
 ];
 
+export const chartInitialDimension = {
+  width: 320,
+  height: 200,
+} as const;
+
 export function chartTooltipStyle() {
   return {
     borderRadius: 18,

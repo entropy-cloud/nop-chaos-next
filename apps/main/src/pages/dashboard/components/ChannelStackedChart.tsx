@@ -3,7 +3,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import type { DashboardChannelPoint } from '../../../services/mockApi';
-import { chartTooltipStyle } from './chartUtils';
+import { chartInitialDimension, chartTooltipStyle } from './chartUtils';
 
 interface ChannelStackedChartProps {
   stacked: DashboardChannelPoint[];
@@ -51,7 +51,7 @@ export function ChannelStackedChart({ stacked }: ChannelStackedChartProps) {
         </div>
       </CardHeader>
       <CardContent className="h-[21rem]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" initialDimension={chartInitialDimension}>
           <BarChart data={stacked ?? []}>
             <CartesianGrid stroke="hsl(var(--border))" vertical={false} />
             <XAxis dataKey="label" tickLine={false} axisLine={false} />

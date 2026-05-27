@@ -2,7 +2,7 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recha
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import type { DashboardCategoryPoint } from '../../../services/mockApi';
-import { chartTooltipStyle, pieColors } from './chartUtils';
+import { chartInitialDimension, chartTooltipStyle, pieColors } from './chartUtils';
 
 interface CategoryPieChartProps {
   categories: DashboardCategoryPoint[];
@@ -18,7 +18,7 @@ export function CategoryPieChart({ categories }: CategoryPieChartProps) {
         <CardTitle className="mt-3">{t('dashboard.categoryTitle')}</CardTitle>
       </CardHeader>
       <CardContent className="h-[22rem]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" initialDimension={chartInitialDimension}>
           <PieChart>
             <Pie
               data={categories ?? []}

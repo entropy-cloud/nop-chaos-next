@@ -12,7 +12,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import type { DashboardSeriesPoint } from '../../../services/mockApi';
-import { chartTooltipStyle } from './chartUtils';
+import { chartInitialDimension, chartTooltipStyle } from './chartUtils';
 
 interface TrendAreaChartProps {
   trend: DashboardSeriesPoint[];
@@ -58,7 +58,7 @@ export function TrendAreaChart({ trend }: TrendAreaChartProps) {
         </div>
       </CardHeader>
       <CardContent className="h-[23rem]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" initialDimension={chartInitialDimension}>
           <AreaChart data={filteredTrend}>
             <defs>
               <linearGradient id="requestsFill" x1="0" x2="0" y1="0" y2="1">

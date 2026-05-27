@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { ChartColumnBig } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { DashboardSeriesPoint } from '../../../services/mockApi';
-import { chartTooltipStyle } from './chartUtils';
+import { chartInitialDimension, chartTooltipStyle } from './chartUtils';
 
 interface ComposedChartCardProps {
   combo: DashboardSeriesPoint[];
@@ -37,7 +37,7 @@ export function ComposedChartCard({ combo }: ComposedChartCardProps) {
         </div>
       </CardHeader>
       <CardContent className="h-[22rem]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" initialDimension={chartInitialDimension}>
           <ComposedChart data={combo ?? []}>
             <CartesianGrid stroke="hsl(var(--border))" vertical={false} />
             <XAxis dataKey="label" tickLine={false} axisLine={false} />

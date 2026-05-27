@@ -10,7 +10,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import type { DashboardRadarPoint } from '../../../services/mockApi';
-import { chartTooltipStyle } from './chartUtils';
+import { chartInitialDimension, chartTooltipStyle } from './chartUtils';
 
 interface PerformanceRadarChartProps {
   radar: DashboardRadarPoint[];
@@ -28,7 +28,7 @@ export function PerformanceRadarChart({ radar }: PerformanceRadarChartProps) {
         <CardTitle className="mt-3">{t('dashboard.radarTitle')}</CardTitle>
       </CardHeader>
       <CardContent className="h-[21rem]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" initialDimension={chartInitialDimension}>
           <RadarChart data={radar ?? []} outerRadius="72%">
             <PolarGrid stroke="hsl(var(--border))" />
             <PolarAngleAxis dataKey="metric" />
