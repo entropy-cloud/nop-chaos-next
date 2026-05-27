@@ -118,6 +118,23 @@ describe('defaultArgBuilders', () => {
       const data = { obj: { key: 'val' } };
       expect(defaultArgBuilders.Map!(data, { name: 'obj', type: 'Map' }, opts)).toEqual({ key: 'val' });
     });
+
+    it('wraps non-data-root fields into data for save-style operations', () => {
+      const data = {
+        id: 'dept-1',
+        deptName: 'Platform',
+        parentId: 'root',
+        __super: { ignored: true },
+        '@tmp': 'ignored',
+        v_trace: 'ignored',
+      };
+
+      expect(defaultArgBuilders.Map!(data, { name: 'data', type: 'Map' }, opts)).toEqual({
+        id: 'dept-1',
+        deptName: 'Platform',
+        parentId: 'root',
+      });
+    });
   });
 
   describe('argStringList', () => {
@@ -349,6 +366,23 @@ describe('buildGraphQLVariables', () => {
     const args: ArgumentDefinition[] = [{ name: 'data', type: 'CustomType' }];
     const result = buildGraphQLVariables({ data: { raw: true } }, args, opts);
     expect(result).toEqual({ data: { raw: true } });
+  });
+
+  it('packs top-level form fields into variables.data for save-style mutations', () => {
+    const args: ArgumentDefinition[] = [{ name: 'data', type: 'Map' }];
+    const result = buildGraphQLVariables(
+      { id: 'dept-1', deptName: 'Platform', parentId: 'root', __typename: 'Dept' },
+      args,
+      opts,
+    );
+
+    expect(result).toEqual({
+      data: {
+        id: 'dept-1',
+        deptName: 'Platform',
+        parentId: 'root',
+      },
+    });
   });
 });
 

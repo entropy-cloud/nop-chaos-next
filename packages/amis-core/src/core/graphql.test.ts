@@ -83,4 +83,28 @@ describe('transformGraphQLRequest', () => {
     expect(payload.query).toContain('NopAuthDept__findList(query:$query){');
     expect(payload.query).toContain('{\nid,deptName,parentId\n}');
   });
+
+  it('packs top-level form fields into variables.data for save mutation', () => {
+    const transformed = transformGraphQLRequest({
+      url: '@mutation:NopAuthDept__save/id,deptName,parentId',
+      data: {
+        id: 'dept-1',
+        deptName: 'Platform',
+        parentId: 'root',
+        __typename: 'NopAuthDept',
+      },
+    });
+
+    expect(transformed?.request.url).toBe('/graphql');
+    expect(transformed?.request.method).toBe('post');
+    expect(transformed?.request.data).toMatchObject({
+      variables: {
+        data: {
+          id: 'dept-1',
+          deptName: 'Platform',
+          parentId: 'root',
+        },
+      },
+    });
+  });
 });

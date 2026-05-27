@@ -81,6 +81,10 @@ function argFloat(data: Record<string, unknown>, arg: ArgumentDefinition) {
 }
 
 function argMap(data: Record<string, unknown>, arg: ArgumentDefinition) {
+  if (arg.name === 'data' && !(arg.name in data)) {
+    return _argDataMap(data);
+  }
+
   return data[arg.name];
 }
 
