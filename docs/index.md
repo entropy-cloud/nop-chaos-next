@@ -123,6 +123,7 @@ Bug fix records for non-trivial issues.
 | [38-ai-workbench-lifecycle-cancellation.md](./bugs/38-ai-workbench-lifecycle-cancellation.md) | AI Workbench lifecycle cancellation |
 | [39-master-detail-detail-form-button-submit-loop.md](./bugs/39-master-detail-detail-form-button-submit-loop.md) | Master detail detail confirm loop and empty dialog |
 | [40-main-tailwind-ui-content-scan-drift.md](./bugs/40-main-tailwind-ui-content-scan-drift.md) | Main Tailwind UI content scan drift |
+| [41-graphql-save-mutation-missing-data-wrapper.md](./bugs/41-graphql-save-mutation-missing-data-wrapper.md) | GraphQL save/update missing data wrapper |
 
 ## Testing (`testing/`)
 

@@ -130,7 +130,21 @@
 
 ---
 
-## 8. 联调检查清单
+## 8. GraphQL CRUD Mutation 变量合同
+
+真实后端联调下，常见 CRUD schema 会把表单字段直接提交为顶层值，然后通过 `@mutation:Entity__save` / `@mutation:Entity__update` 进入 GraphQL 适配层。
+
+当前基线要求：
+
+- 对 `save` / `update` / `saveOrUpdate` / `upsert` / `copyForNew` 等声明为 `data: Map` 的操作，前端必须最终生成 `variables.data`
+- 如果 schema 未显式传入 `{ data: ... }`，GraphQL 适配层需要把顶层表单字段自动包装进 `data`
+- 运行时特殊字段（如 `__*`、`@*`、`v_*`）不能被混入 `variables.data`
+
+这是当前 `packages/amis-core/src/core/graphqlArgs.ts` 与真实后端 CRUD 页面之间的提交合同。
+
+---
+
+## 9. 联调检查清单
 
 推荐先验证：
 
