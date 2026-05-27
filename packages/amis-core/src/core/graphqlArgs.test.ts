@@ -119,21 +119,8 @@ describe('defaultArgBuilders', () => {
       expect(defaultArgBuilders.Map!(data, { name: 'obj', type: 'Map' }, opts)).toEqual({ key: 'val' });
     });
 
-    it('wraps non-data-root fields into data for save-style operations', () => {
-      const data = {
-        id: 'dept-1',
-        deptName: 'Platform',
-        parentId: 'root',
-        __super: { ignored: true },
-        '@tmp': 'ignored',
-        v_trace: 'ignored',
-      };
-
-      expect(defaultArgBuilders.Map!(data, { name: 'data', type: 'Map' }, opts)).toEqual({
-        id: 'dept-1',
-        deptName: 'Platform',
-        parentId: 'root',
-      });
+    it('returns undefined for missing key', () => {
+      expect(defaultArgBuilders.Map!({}, { name: 'missing', type: 'Map' }, opts)).toBeUndefined();
     });
   });
 
@@ -369,7 +356,7 @@ describe('buildGraphQLVariables', () => {
   });
 
   it('packs top-level form fields into variables.data for save-style mutations', () => {
-    const args: ArgumentDefinition[] = [{ name: 'data', type: 'Map' }];
+    const args = operationRegistry.save.arguments;
     const result = buildGraphQLVariables(
       { id: 'dept-1', deptName: 'Platform', parentId: 'root', __typename: 'Dept' },
       args,
@@ -434,19 +421,27 @@ describe('getOperationName', () => {
 });
 
 describe('operationRegistry', () => {
-  it('contains get operation with String id', () => {
-    expect(operationRegistry.get.arguments).toContainEqual({ name: 'id', type: 'String' });
+  it('contains get operation with String id and explicit builders', () => {
+    const arg = operationRegistry.get.arguments;
+    expect(arg).toContainEqual(expect.objectContaining({ name: 'id', type: 'String' }));
+    expect(arg).toContainEqual(expect.objectContaining({ name: 'ignoreUnknown', type: 'Boolean' }));
+    expect(arg.every((a) => typeof a.builder === 'function')).toBe(true);
   });
 
-  it('contains findPage operation with QueryBeanInput', () => {
-    expect(operationRegistry.findPage.arguments).toEqual([{ name: 'query', type: 'QueryBeanInput' }]);
+  it('contains findPage operation with QueryBeanInput and explicit builder', () => {
+    const arg = operationRegistry.findPage.arguments;
+    expect(arg).toEqual([expect.objectContaining({ name: 'query', type: 'QueryBeanInput' })]);
+    expect(typeof arg[0].builder).toBe('function');
   });
 
-  it('contains batchDelete operation', () => {
-    expect(operationRegistry.batchDelete.arguments).toEqual([{ name: 'ids', type: '[String]' }]);
+  it('contains batchDelete operation with explicit builder', () => {
+    const arg = operationRegistry.batchDelete.arguments;
+    expect(arg).toEqual([expect.objectContaining({ name: 'ids', type: '[String]' })]);
+    expect(typeof arg[0].builder).toBe('function');
   });
 
-  it('contains batchModify with two args', () => {
+  it('contains batchModify with two args and explicit builders', () => {
     expect(operationRegistry.batchModify.arguments).toHaveLength(2);
+    expect(operationRegistry.batchModify.arguments.every((a) => typeof a.builder === 'function')).toBe(true);
   });
 });

@@ -81,10 +81,6 @@ function argFloat(data: Record<string, unknown>, arg: ArgumentDefinition) {
 }
 
 function argMap(data: Record<string, unknown>, arg: ArgumentDefinition) {
-  if (arg.name === 'data' && !(arg.name in data)) {
-    return _argDataMap(data);
-  }
-
   return data[arg.name];
 }
 
@@ -128,7 +124,11 @@ function argQuery(
   return query;
 }
 
-function _argDataMap(data: Record<string, unknown>) {
+function argDataMap(
+  data: Record<string, unknown>,
+  _arg?: ArgumentDefinition,
+  _options?: AmisRequestOptions,
+) {
   const nextValue: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(data)) {
@@ -239,47 +239,47 @@ export interface OperationDefinition {
 export const operationRegistry: Record<string, OperationDefinition> = {
   get: {
     arguments: [
-      { name: 'id', type: 'String' },
-      { name: 'ignoreUnknown', type: 'Boolean' },
+      { name: 'id', type: 'String', builder: argString },
+      { name: 'ignoreUnknown', type: 'Boolean', builder: argBoolean },
     ],
   },
   findPage: {
-    arguments: [{ name: 'query', type: 'QueryBeanInput' }],
+    arguments: [{ name: 'query', type: 'QueryBeanInput', builder: argQuery }],
   },
   findList: {
-    arguments: [{ name: 'query', type: 'QueryBeanInput' }],
+    arguments: [{ name: 'query', type: 'QueryBeanInput', builder: argQuery }],
   },
   findFirst: {
-    arguments: [{ name: 'query', type: 'QueryBeanInput' }],
+    arguments: [{ name: 'query', type: 'QueryBeanInput', builder: argQuery }],
   },
   update: {
-    arguments: [{ name: 'data', type: 'Map' }],
+    arguments: [{ name: 'data', type: 'Map', builder: argDataMap }],
   },
   save: {
-    arguments: [{ name: 'data', type: 'Map' }],
+    arguments: [{ name: 'data', type: 'Map', builder: argDataMap }],
   },
   saveOrUpdate: {
-    arguments: [{ name: 'data', type: 'Map' }],
+    arguments: [{ name: 'data', type: 'Map', builder: argDataMap }],
   },
   upsert: {
-    arguments: [{ name: 'data', type: 'Map' }],
+    arguments: [{ name: 'data', type: 'Map', builder: argDataMap }],
   },
   copyForNew: {
-    arguments: [{ name: 'data', type: 'Map' }],
+    arguments: [{ name: 'data', type: 'Map', builder: argDataMap }],
   },
   delete: {
-    arguments: [{ name: 'id', type: 'String' }],
+    arguments: [{ name: 'id', type: 'String', builder: argString }],
   },
   batchGet: {
-    arguments: [{ name: 'ids', type: '[String]' }],
+    arguments: [{ name: 'ids', type: '[String]', builder: argStringList }],
   },
   batchDelete: {
-    arguments: [{ name: 'ids', type: '[String]' }],
+    arguments: [{ name: 'ids', type: '[String]', builder: argStringList }],
   },
   batchModify: {
     arguments: [
-      { name: 'data', type: '[Map]' },
-      { name: 'delIds', type: '[String]' },
+      { name: 'data', type: '[Map]', builder: argMapList },
+      { name: 'delIds', type: '[String]', builder: argStringList },
     ],
   },
 };
