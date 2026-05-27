@@ -9,6 +9,12 @@ import type { MenuResponse } from '@nop-chaos/shared';
 import { AppRoutes } from './AppRoutes';
 import * as homePath from '../config/homePath';
 
+const { activeMenuState } = vi.hoisted(() => ({
+  activeMenuState: {
+    value: null as MenuResponse | null,
+  },
+}));
+
 const mockGetSystemPage = vi.fn();
 const authState = {
   isAuthenticated: true,
@@ -49,13 +55,45 @@ const menuResponse: MenuResponse = {
   ],
 };
 
+const duplicatePathMenuResponse: MenuResponse = {
+  home: '/flow-editor',
+  items: [
+    {
+      id: 'flow-editor',
+      title: 'Flow Editor',
+      path: '/flow-editor',
+      icon: 'git-branch',
+      pageType: 'builtin',
+      componentId: 'flow-editor',
+      children: [
+        {
+          id: 'flow-editor-list',
+          title: 'Flow Library',
+          path: '/flow-editor',
+          icon: 'list',
+          pageType: 'builtin',
+          componentId: 'flow-editor',
+        },
+        {
+          id: 'flow-editor-edit',
+          title: 'Flow Editor Edit',
+          path: '/flow-editor/:id',
+          icon: 'edit',
+          pageType: 'builtin',
+          componentId: 'flow-editor-edit',
+        },
+      ],
+    },
+  ],
+};
+
 vi.mock('../hooks/useAuth', () => ({
   useAuth: () => authState,
 }));
 
 vi.mock('../hooks/useMenuConfig', () => ({
   useMenuConfigQuery: () => ({
-    data: menuResponse,
+    data: activeMenuState.value,
     isSuccess: true,
     isError: false,
   }),
@@ -92,6 +130,7 @@ describe('AppRoutes permission layering', () => {
     authState.isAuthenticated = true;
     authState.user = { roles: ['viewer'] };
     authState.bootstrapStatus = 'ready';
+    activeMenuState.value = menuResponse;
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
@@ -193,5 +232,30 @@ describe('AppRoutes permission layering', () => {
 
     expect(container.textContent).toContain('Custom login page');
     expect(mockGetSystemPage).toHaveBeenCalledWith('login');
+  });
+
+  it('prefers leaf routes when parent and child share the same path', async () => {
+    activeMenuState.value = duplicatePathMenuResponse;
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+    try {
+      await act(async () => {
+        root.render(
+          <QueryClientProvider client={queryClient}>
+            <MemoryRouter initialEntries={['/flow-editor']}>
+              <AppRoutes />
+            </MemoryRouter>
+          </QueryClientProvider>,
+        );
+      });
+
+      expect(container.textContent).toContain('Allowed route: /flow-editor');
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[dedupeRoutesByPath] Duplicate route path "flow-editor" - keeping more specific route "flow-editor-list", discarding route "flow-editor"',
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 });

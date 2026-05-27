@@ -26,22 +26,46 @@ function normalizePath(path: string): string {
   return path.replace(/^\//, '');
 }
 
+function getRouteSpecificity(item: ReturnType<typeof flattenMenus>[number]) {
+  return {
+    segmentCount: normalizePath(item.path).split('/').filter(Boolean).length,
+    isLeaf: item.children?.length ? 0 : 1,
+  };
+}
+
 function dedupeRoutesByPath(items: ReturnType<typeof flattenMenus>) {
-  const seenPaths = new Set<string>();
+  const routeByPath = new Map<string, ReturnType<typeof flattenMenus>[number]>();
 
-  return items.filter((item) => {
+  for (const item of items) {
     const normalized = normalizePath(item.path);
+    const existing = routeByPath.get(normalized);
 
-    if (seenPaths.has(normalized)) {
-      console.warn(
-        `[dedupeRoutesByPath] Duplicate route path "${normalized}" - keeping first registration, discarding route "${item.id}"`,
-      );
-      return false;
+    if (!existing) {
+      routeByPath.set(normalized, item);
+      continue;
     }
 
-    seenPaths.add(normalized);
-    return true;
-  });
+    const currentSpecificity = getRouteSpecificity(item);
+    const existingSpecificity = getRouteSpecificity(existing);
+    const shouldReplaceExisting =
+      currentSpecificity.isLeaf > existingSpecificity.isLeaf ||
+      (currentSpecificity.isLeaf === existingSpecificity.isLeaf &&
+        currentSpecificity.segmentCount >= existingSpecificity.segmentCount);
+
+    if (shouldReplaceExisting) {
+      console.warn(
+        `[dedupeRoutesByPath] Duplicate route path "${normalized}" - keeping more specific route "${item.id}", discarding route "${existing.id}"`,
+      );
+      routeByPath.set(normalized, item);
+      continue;
+    }
+
+    console.warn(
+      `[dedupeRoutesByPath] Duplicate route path "${normalized}" - keeping more specific route "${existing.id}", discarding route "${item.id}"`,
+    );
+  }
+
+  return items.filter((item) => routeByPath.get(normalizePath(item.path))?.id === item.id);
 }
 
 function resolveAccessibleHomePath(home: string | undefined, routeItems: ReturnType<typeof flattenMenus>) {
