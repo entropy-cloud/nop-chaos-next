@@ -1,6 +1,7 @@
 import { lazy } from 'react';
+import type { ComponentProps } from 'react';
 
-export const AmisRouteEntry = lazy(async () => {
+const LazyAmisRouteRenderer = lazy(async () => {
   const [{ ensureAmisRuntime }, module] = await Promise.all([
     import('../amis/init'),
     import('../amis/AmisRouteRenderer'),
@@ -8,3 +9,7 @@ export const AmisRouteEntry = lazy(async () => {
   await ensureAmisRuntime();
   return { default: module.AmisRouteRenderer };
 });
+
+export function AmisRouteEntry(props: ComponentProps<typeof LazyAmisRouteRenderer>) {
+  return <LazyAmisRouteRenderer {...props} />;
+}
