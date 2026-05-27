@@ -2233,7 +2233,7 @@ packages:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
 
   amis-core@file:../amis-react19/dist-packages/amis-core-6.13.1.tgz:
-    resolution: {integrity: sha512-aPxYKPiSZ+7cPifHbXjR8X8igvsxr5r6JBI7aa1YDPxRW1+ZT8l0gW/tmgLZndnDbRc+z5Fe5z/S/Te2GQKdow==, tarball: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz}
+    resolution: {integrity: sha512-zhv2i5VX6MZWQsRncH59b6ZdhmZN4Mwp/BboO6fgR/C4GR46+3piujwF0gqsq9ycQdaVHV7Xbu9J0kxaAPDhbw==, tarball: file:../amis-react19/dist-packages/amis-core-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-formula: '*'
@@ -2245,7 +2245,7 @@ packages:
     version: 6.13.1
 
   amis-ui@file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz:
-    resolution: {integrity: sha512-AVnnasTlvlAUPFjssWbD8bOAQXSNhiKxrutyDfAMkxSvDHY7ZdYLPlOqQgNcn64hHwZ6DapHH+ODKRU6zwQ7cw==, tarball: file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz}
+    resolution: {integrity: sha512-6sW9RzwEJxLbeGYUzliC3gcqFFl8315XG7WCGLYFn/rmmwBb/dJNSxSdd+VQR+u3RqCfDMShn9JpK4FttZfIBA==, tarball: file:../amis-react19/dist-packages/amis-ui-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-core: '*'
@@ -2254,7 +2254,7 @@ packages:
       react-dom: '>=16.8.6'
 
   amis@file:../amis-react19/dist-packages/amis-6.13.1.tgz:
-    resolution: {integrity: sha512-IEjVNcUPQWAs+zeU0o/EW+7lHQ2AXuXQELjxWGoW4Pi9yj3wobJflAtGefEJAknaKpG1pS/ukVtlZMeRT/RrXQ==, tarball: file:../amis-react19/dist-packages/amis-6.13.1.tgz}
+    resolution: {integrity: sha512-RlWBJljUt9blPWm5mfBdXKbR2pjL9WwmD9zg08Ph7Ripi8mAuYyVtPV1UsA3bQ7Hjouq71iJMhkefTM2MuY3Fg==, tarball: file:../amis-react19/dist-packages/amis-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-core: '*'
