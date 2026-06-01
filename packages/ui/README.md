@@ -2,8 +2,8 @@
 
 This package lives at **`flux-lib/ui/`** (not under `packages/`).
 
-It is synced from [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) via `pnpm sync:flux`.
+It is synced from [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) via `pnpm sync:flux:src` when you want to refresh the in-repo Flux source baseline.
 
 - **Source location:** `flux-lib/ui/`
 - **TS path alias:** `"@nop-chaos/ui": ["flux-lib/ui/src/index.ts"]` (defined in `tsconfig.base.json`)
-- **Sync command:** `pnpm sync:flux ui`
+- **Sync command:** `pnpm sync:flux:src`
