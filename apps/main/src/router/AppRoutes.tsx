@@ -1,6 +1,7 @@
 import { Suspense, createElement, lazy, useEffect, useMemo } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { filterMenusByRoles, flattenMenus, sortMenus } from '@nop-chaos/shared';
+import { mergeRouteOnlySystemMenus } from '../config/systemMenus';
 import { getCurrentHomePath, setCurrentHomePath } from '../config/homePath';
 import { useAuth } from '../hooks/useAuth';
 import { useMenuConfigQuery } from '../hooks/useMenuConfig';
@@ -91,13 +92,21 @@ export function AppRoutes() {
   const accessibleRouteItems = useMemo(
     () =>
       dedupeRoutesByPath(
-        flattenMenus(filterMenusByRoles(sortMenus(menuQuery.data?.items ?? []), user?.roles ?? [])),
+        flattenMenus(
+          filterMenusByRoles(
+            sortMenus(mergeRouteOnlySystemMenus(menuQuery.data ?? { items: [] }).items),
+            user?.roles ?? [],
+          ),
+        ),
       ),
-    [menuQuery.data?.items, user?.roles],
+    [menuQuery.data, user?.roles],
   );
   const routeItems = useMemo(
-    () => dedupeRoutesByPath(flattenMenus(sortMenus(menuQuery.data?.items ?? []))),
-    [menuQuery.data?.items],
+    () =>
+      dedupeRoutesByPath(
+        flattenMenus(sortMenus(mergeRouteOnlySystemMenus(menuQuery.data ?? { items: [] }).items)),
+      ),
+    [menuQuery.data],
   );
   const homePath = useMemo(
     () =>

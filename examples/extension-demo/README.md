@@ -10,7 +10,7 @@
 - 用 extension 自己的 React 页面完整替换登录页
 - 用 extension 自己的 React 页面完整替换 404 页
 - 注册一份额外 shell 样式 `shell.css`
-- 注册一个 builtin component 页面 `Extension Harbor Page`
+- 注册一个 builtin component 页面 `Extension Harbor Page`，并把入口加入左下角用户菜单
 - 页面样式通过独立 `component-page.css` 演示 Tailwind 共享编译
 - 注册 `settings.*` 相关 i18n 文案
 
@@ -81,7 +81,7 @@ pnpm dev:extensions
 - 访问不存在的路由时，`/404` 显示 Harbor 自定义整页 404 页面
 - 语言切换中出现 `fr-FR`
 - 主题设置中出现 `harbor`
-- 菜单中出现 `Extension Harbor Page`
+- 左下角用户菜单中出现 `Extension Harbor Page`；左侧主导航仍以后端菜单配置为准
 - 页面使用 extension 自己编译的 Tailwind 增量 CSS，同时复用宿主 token 和 `@nop-chaos/ui/base.css`
 
 ## 生产构建

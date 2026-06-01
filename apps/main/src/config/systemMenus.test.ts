@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { setLoadedExtensions } from '@nop-chaos/extension-host';
-import { mergeBuiltinSystemMenus } from './systemMenus';
+import { mergeBuiltinSystemMenus, mergeRouteOnlySystemMenus } from './systemMenus';
 
 describe('mergeBuiltinSystemMenus', () => {
   afterEach(() => {
     setLoadedExtensions([]);
   });
 
-  it('keeps builtin system pages available when extensions override menus', () => {
+  it('keeps backend menu items unchanged when extensions declare deprecated menu overrides', () => {
     setLoadedExtensions([
       {
         source: {
@@ -46,14 +46,12 @@ describe('mergeBuiltinSystemMenus', () => {
     });
 
     expect(result.home).toBe('/extensions/dms/issuer');
-    expect(result.items.some((item) => item.path === '/settings')).toBe(true);
-    expect(result.items.some((item) => item.path === '/help')).toBe(true);
+    expect(result.items.some((item) => item.path === '/settings')).toBe(false);
+    expect(result.items.some((item) => item.path === '/help')).toBe(false);
     expect(result.items.some((item) => item.path === '/extensions/dms/issuer')).toBe(true);
-    expect(result.items.find((item) => item.path === '/settings')?.hideInMenu).toBe(true);
-    expect(result.items.find((item) => item.path === '/help')?.hideInMenu).toBe(true);
   });
 
-  it('uses /dashboard as home when no extension home and menu home not in paths', () => {
+  it('uses default home as home when no route exists', () => {
     const result = mergeBuiltinSystemMenus({
       home: '/nonexistent',
       items: [],
@@ -62,7 +60,7 @@ describe('mergeBuiltinSystemMenus', () => {
     expect(result.home).toBe('/dashboard');
   });
 
-  it('uses extension default home path when available', () => {
+  it('uses extension default home path only when it is backend-provided', () => {
     setLoadedExtensions([
       {
         source: {
@@ -81,7 +79,15 @@ describe('mergeBuiltinSystemMenus', () => {
 
     const result = mergeBuiltinSystemMenus({
       home: '/nonexistent',
-      items: [],
+      items: [
+        {
+          id: 'dashboard',
+          title: 'Dashboard',
+          path: '/dashboard',
+          pageType: 'builtin',
+          componentId: 'dashboard',
+        },
+      ],
     });
 
     expect(result.home).toBe('/dashboard');
@@ -90,13 +96,21 @@ describe('mergeBuiltinSystemMenus', () => {
   it('prefers menu home when it exists in available paths', () => {
     const result = mergeBuiltinSystemMenus({
       home: '/dashboard',
-      items: [],
+      items: [
+        {
+          id: 'dashboard',
+          title: 'Dashboard',
+          path: '/dashboard',
+          pageType: 'builtin',
+          componentId: 'dashboard',
+        },
+      ],
     });
 
     expect(result.home).toBe('/dashboard');
   });
 
-  it('falls back to first item path when menu home not available with override', () => {
+  it('falls back to first backend item path when menu home is unavailable', () => {
     setLoadedExtensions([
       {
         source: {
@@ -137,7 +151,7 @@ describe('mergeBuiltinSystemMenus', () => {
     expect(result.home).toBe('/ext/page');
   });
 
-  it('merges existing items with builtin system menus', () => {
+  it('does not merge builtin system menus into backend navigation', () => {
     const result = mergeBuiltinSystemMenus({
       home: '/',
       items: [
@@ -154,6 +168,26 @@ describe('mergeBuiltinSystemMenus', () => {
 
     const dashboard = result.items.find((item) => item.id === 'dashboard');
     expect(dashboard?.titleKey).toBe('Custom Dashboard');
-    expect(result.items.some((item) => item.path === '/settings')).toBe(true);
+    expect(result.items.some((item) => item.path === '/settings')).toBe(false);
+  });
+
+  it('adds route-only user menu pages for routing without changing backend navigation', () => {
+    const result = mergeRouteOnlySystemMenus({
+      home: '/orders',
+      items: [
+        {
+          id: 'orders',
+          title: 'Orders',
+          path: '/orders',
+          pageType: 'builtin',
+          componentId: 'orders',
+        },
+      ],
+    });
+
+    const settings = result.items.find((item) => item.id === 'settings');
+    expect(settings?.path).toBe('/settings');
+    expect(settings?.hideInMenu).toBe(true);
+    expect(result.items.some((item) => item.id === 'orders')).toBe(true);
   });
 });

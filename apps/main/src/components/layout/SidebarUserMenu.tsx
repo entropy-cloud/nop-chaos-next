@@ -1,6 +1,5 @@
-import { Languages, LogOut, MoreHorizontal, PanelsTopLeft, Palette, Settings2 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { renderIcon } from '@nop-chaos/core';
+import { resolveExtensionUserMenuItems, type ShellUserMenuItem } from '@nop-chaos/extension-host';
 import {
   Avatar,
   AvatarFallback,
@@ -13,6 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@nop-chaos/ui';
+import { LogOut, MoreHorizontal, PanelsTopLeft } from 'lucide-react';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { defaultSidebarUserMenuItems } from '../../config/sidebarUserMenu';
 import { useAuth } from '../../hooks/useAuth';
 import { useShellConfig } from '../../hooks/useShellConfig';
 
@@ -46,11 +50,59 @@ export function SidebarUserMenu({
     onActionComplete?.();
   };
 
-  const shellLinks = [
-    shell.helpUrl ? { key: 'help', label: t('menu.help'), href: shell.helpUrl } : null,
-    shell.aboutUrl ? { key: 'about', label: t('common.about', { defaultValue: 'About' }), href: shell.aboutUrl } : null,
-    shell.supportUrl ? { key: 'support', label: t('common.support', { defaultValue: 'Support' }), href: shell.supportUrl } : null,
-  ].filter((item): item is { key: string; label: string; href: string } => Boolean(item));
+  const resolvedItems = useMemo(
+    () =>
+      resolveExtensionUserMenuItems([
+        ...defaultSidebarUserMenuItems,
+        ...(shell.helpUrl
+          ? [
+              {
+                id: 'shell-help-link',
+                titleKey: 'menu.help',
+                href: shell.helpUrl,
+                sort: 100,
+              } satisfies ShellUserMenuItem,
+            ]
+          : []),
+        ...(shell.aboutUrl
+          ? [
+              {
+                id: 'shell-about-link',
+                titleKey: 'common.about',
+                title: t('common.about', { defaultValue: 'About' }),
+                href: shell.aboutUrl,
+                sort: 110,
+              } satisfies ShellUserMenuItem,
+            ]
+          : []),
+        ...(shell.supportUrl
+          ? [
+              {
+                id: 'shell-support-link',
+                titleKey: 'common.support',
+                title: t('common.support', { defaultValue: 'Support' }),
+                href: shell.supportUrl,
+                sort: 120,
+              } satisfies ShellUserMenuItem,
+            ]
+          : []),
+      ]).sort((left, right) => (left.sort ?? 0) - (right.sort ?? 0)),
+    [shell.aboutUrl, shell.helpUrl, shell.supportUrl, t],
+  );
+
+  const handleItemClick = (item: ShellUserMenuItem) => {
+    const href = item.href ?? item.externalUrl;
+
+    if (href) {
+      window.open(href, '_blank', 'noopener,noreferrer');
+      onActionComplete?.();
+      return;
+    }
+
+    if (item.path) {
+      handleNavigate(item.path);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -96,40 +148,22 @@ export function SidebarUserMenu({
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          data-testid="sidebar-user-menu-settings"
-          onClick={() => handleNavigate('/settings')}
-        >
-          <Settings2 className="size-4" />
-          {t('settings.title')}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          data-testid="sidebar-user-menu-theme"
-          onClick={() => handleNavigate('/settings/theme')}
-        >
-          <Palette className="size-4" />
-          {t('settings.themeTitle')}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          data-testid="sidebar-user-menu-language"
-          onClick={() => handleNavigate('/settings/language')}
-        >
-          <Languages className="size-4" />
-          {t('settings.languageTitle')}
-        </DropdownMenuItem>
-        {shellLinks.length ? <DropdownMenuSeparator /> : null}
-        {shellLinks.map((link) => (
-          <DropdownMenuItem
-            key={link.key}
-            data-testid={`sidebar-user-menu-${link.key}`}
-            onClick={() => {
-              window.open(link.href, '_blank', 'noopener,noreferrer');
-              onActionComplete?.();
-            }}
-          >
-            {link.label}
-          </DropdownMenuItem>
-        ))}
+        {resolvedItems.map((item) => {
+          const label = item.titleKey
+            ? t(item.titleKey, { defaultValue: item.title ?? item.id })
+            : (item.title ?? item.id);
+
+          return (
+            <DropdownMenuItem
+              key={item.id}
+              data-testid={`sidebar-user-menu-${item.id}`}
+              onClick={() => handleItemClick(item)}
+            >
+              {item.icon ? renderIcon(item.icon, { className: 'size-4' }) : null}
+              {label}
+            </DropdownMenuItem>
+          );
+        })}
         {onToggleSidebar ? (
           <>
             <DropdownMenuSeparator />

@@ -128,8 +128,8 @@ function createPackageJson(packageName) {
       '@nop-chaos/theme-tokens': 'workspace:*',
       '@nop-chaos/ui': 'workspace:*',
       '@vitejs/plugin-react': '^6.0.1',
-      react: '^18.3.1',
-      'react-dom': '^18.3.1',
+      react: '^19.0.0',
+      'react-dom': '^19.0.0',
       tailwindcss: '^4.2.1',
       typescript: '^5.9.3',
       vite: '^8.0.0',
@@ -138,7 +138,7 @@ function createPackageJson(packageName) {
       '@nop-chaos/plugin-bridge': 'workspace:*',
       '@nop-chaos/shared': 'workspace:*',
       '@nop-chaos/ui': 'workspace:*',
-      react: '^18.3.1',
+      react: '^19.0.0',
     },
   });
 }

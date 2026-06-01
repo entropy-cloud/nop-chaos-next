@@ -5,8 +5,8 @@
  *
  * One-command environment setup for new developers. Automates:
  *   1. Clone missing brother repos (amis-react19, nop-chaos-flux)
- *   2. Build AMIS packages
- *   3. Sync Flux UI packages
+ *   2. Import tgz artifacts into local libs/
+ *   3. Sync optional Flux source packages
  *   4. Install workspace dependencies
  *
  * Usage:
@@ -14,7 +14,7 @@
  */
 
 import { execSync } from 'child_process'
-import { existsSync, readFileSync } from 'fs'
+import { existsSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -57,18 +57,12 @@ function checkRepo(dir, name, repoUrl) {
 }
 
 function ensureTarballs(amisDir) {
-  const distPkgs = path.join(amisDir, 'dist-packages')
-  if (
-    existsSync(distPkgs) &&
-    existsSync(path.join(distPkgs, 'amis-6.13.1.tgz'))
-  ) {
-    log('AMIS tarballs already built')
-    return true
-  }
-  log('Building AMIS packages (this may take a while) ...')
-  run('npm install', { cwd: amisDir })
-  run('npm run pack:nop-chaos', { cwd: amisDir })
-  return existsSync(path.join(distPkgs, 'amis-6.13.1.tgz'))
+  log('Importing AMIS tarballs into libs/ ...')
+  run('bash scripts/import-amis-to-libs.sh', {
+    cwd: REPO_ROOT,
+    env: { ...process.env, AMIS_ROOT: amisDir },
+  })
+  return existsSync(path.join(REPO_ROOT, 'libs', 'amis-6.13.1.tgz'))
 }
 
 function syncFlux(fluxDir) {
@@ -76,8 +70,16 @@ function syncFlux(fluxDir) {
     warn('Flux packages not found — skipping sync')
     return false
   }
-  log('Syncing Flux packages ...')
-  run(`bash scripts/sync-flux-lib.sh`, { cwd: REPO_ROOT })
+  log('Importing Flux tarball into libs/ ...')
+  run('bash scripts/import-flux-to-libs.sh', {
+    cwd: REPO_ROOT,
+    env: { ...process.env, FLUX_ROOT: fluxDir },
+  })
+  log('Syncing Flux source packages ...')
+  run('bash scripts/sync-flux-lib.sh', {
+    cwd: REPO_ROOT,
+    env: { ...process.env, FLUX_ROOT: fluxDir },
+  })
   return true
 }
 
@@ -104,7 +106,7 @@ function main() {
     process.exit(1)
   }
 
-  // Step 2: Build AMIS tarballs
+  // Step 2: Import AMIS tgz artifacts into libs/
   const tarballsOk = ensureTarballs(AMIS_DIR)
 
   if (!tarballsOk) {
@@ -112,10 +114,11 @@ function main() {
     process.exit(1)
   }
 
-  // Step 3: Sync Flux packages
+  // Step 3: Import Flux tgz artifact and sync Flux source packages
   syncFlux(FLUX_DIR)
 
-  // Step 4: Install dependencies
+  // Step 4: Refresh file deps and install dependencies
+  run('bash scripts/refresh-libs-deps.sh', { cwd: REPO_ROOT })
   installDeps()
 
   console.log('')

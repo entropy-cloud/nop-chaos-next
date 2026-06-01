@@ -73,6 +73,7 @@ When adding a new log entry for today:
 
 ### 2026-05
 
+- [05-29](2026/05-29.md) — Backend-owned navigation menus and extension user-menu delta customization
 - [05-26](2026/05-26.md) — Added one-command AMIS+Flux rebuild flow and hardened Flux sync with downstream patch reapply
 - [05-18](2026/05-18.md) — Plan 27 executed: extension contract closure, runtime state coherence fixes, and AI Workbench lifecycle hardening
 - [05-12](2026/05-12.md) — Plan 04 executed: Turborepo, ESLint rules, Prettier/lint-staged, knip/jscpd, Vitest workspace, check scripts, docs restructuring, AGENTS.md update

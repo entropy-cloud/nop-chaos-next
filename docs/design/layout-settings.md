@@ -18,7 +18,7 @@
 
 | 配置项   | 范围        | 步进    | 默认值 |
 | -------- | ----------- | ------- | ------ |
-| 展开宽度 | 14 - 28 rem | 1 rem   | 18 rem |
+| 展开宽度 | 14 - 28 rem | 1 rem   | 16 rem |
 | 折叠宽度 | 4 - 8 rem   | 0.5 rem | 5 rem  |
 
 **操作按钮**：
@@ -32,7 +32,7 @@
 
 | 环境变量                       | 说明                  | 默认值 |
 | ------------------------------ | --------------------- | ------ |
-| `VITE_SIDEBAR_WIDTH`           | 侧边栏展开宽度（rem） | 18     |
+| `VITE_SIDEBAR_WIDTH`           | 侧边栏展开宽度（rem） | 16     |
 | `VITE_SIDEBAR_COLLAPSED_WIDTH` | 侧边栏折叠宽度（rem） | 5      |
 
 > 注意：当前项目未在 `.env` 文件中定义这些变量，代码使用默认值。如需自定义，可在 `apps/main/.env` 中添加。
@@ -107,3 +107,4 @@
 
 - layout settings 页面的侧边栏宽度输入是 immediate-apply 配置，不存在单独保存按钮
 - 数字输入清空时不应把宽度写成 `0`；只有可解析数字才会提交到 store
+- 实际优先级为：用户在 layout settings 中的持久化修改 > extension `shell.sidebarWidthRem` / `shell.sidebarCollapsedWidthRem` > 宿主内建默认值 / 环境变量默认值

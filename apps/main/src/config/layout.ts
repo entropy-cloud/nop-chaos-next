@@ -1,4 +1,4 @@
-const DEFAULT_SIDEBAR_WIDTH_REM = 18;
+const DEFAULT_SIDEBAR_WIDTH_REM = 16;
 const DEFAULT_SIDEBAR_COLLAPSED_WIDTH_REM = 5;
 
 function parseSidebarWidth(value: string | undefined, fallback: number) {

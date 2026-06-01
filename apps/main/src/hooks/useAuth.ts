@@ -16,8 +16,9 @@ function getAuthOwnershipKey() {
 
 export async function restoreAuthSession() {
   const state = useAuthStore.getState();
+  const accessToken = state.tokens?.accessToken ?? state.token;
 
-  if (!state.token) {
+  if (!accessToken) {
     state.setBootstrapStatus('anonymous');
     return;
   }
@@ -27,7 +28,7 @@ export async function restoreAuthSession() {
 
   try {
     state.setBootstrapStatus('pending');
-    const currentUser = await fetchCurrentUser();
+    const currentUser = await fetchCurrentUser(accessToken);
     const nextState = useAuthStore.getState();
 
     if (authBootstrapState.activeRequestId !== requestId || getAuthOwnershipKey() !== ownershipKey) {
@@ -36,8 +37,8 @@ export async function restoreAuthSession() {
 
     nextState.setSession({
       user: currentUser,
-      token: nextState.token ?? state.token,
-      tokens: nextState.tokens,
+      token: nextState.tokens?.accessToken ?? nextState.token ?? accessToken,
+      tokens: nextState.tokens ?? state.tokens,
     });
   } catch (error: unknown) {
     const nextState = useAuthStore.getState();

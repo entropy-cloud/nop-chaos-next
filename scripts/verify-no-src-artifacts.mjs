@@ -10,13 +10,6 @@ const ARTIFACT_EXTENSIONS = ['.d.ts', '.js', '.js.map'];
 
 const SOURCE_DTS_EXCEPTIONS = ['vite-env.d.ts'];
 
-function isInSourceDir(relativePath) {
-  const normalized = relativePath.replace(/\\/g, '/');
-  return SOURCE_DTS_DIRS.some(
-    (dir) => normalized.includes(`/${dir}/`) || normalized.startsWith(`${dir}/`),
-  );
-}
-
 async function scanForArtifacts(dir, relativePath = '') {
   const artifacts = [];
   const entries = await readdir(dir, { withFileTypes: true });

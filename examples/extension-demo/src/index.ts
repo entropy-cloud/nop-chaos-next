@@ -46,6 +46,8 @@ const extension: ShellExtension = {
   },
   shell: {
     defaultHomePath: '/examples/extension-harbor',
+    sidebarWidthRem: 15,
+    sidebarCollapsedWidthRem: 4.5,
   },
   systemPages: {
     login: 'extension-harbor-login',
@@ -90,7 +92,7 @@ const extension: ShellExtension = {
       component: ExtensionNotFoundPage,
     },
   ],
-  menus: [
+  userMenuItems: [
     {
       id: 'extension-demo-harbor',
       titleKey: 'extensionDemo.builtin.title',

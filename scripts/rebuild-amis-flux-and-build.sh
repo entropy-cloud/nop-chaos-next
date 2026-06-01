@@ -14,7 +14,7 @@ die() {
 
 [[ -f "$REPO_ROOT/package.json" ]] || die "nop-chaos-next package.json missing at $REPO_ROOT"
 
-info "Repacking upstream projects and refreshing dependencies"
+info "Importing upstream artifacts and refreshing dependencies"
 (cd "$REPO_ROOT" && bash scripts/repack-upstreams-and-refresh.sh)
 
 info "Building nop-chaos-next"

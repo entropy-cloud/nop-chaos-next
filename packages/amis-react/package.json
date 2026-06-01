@@ -8,10 +8,10 @@
   "dependencies": {
     "@nop-chaos/amis-core": "workspace:*",
     "@nop-chaos/ui": "workspace:*",
-    "amis": "file:../../../amis-react19/dist-packages/amis-6.13.1.tgz",
-    "amis-core": "file:../../../amis-react19/dist-packages/amis-core-6.13.1.tgz",
-    "amis-formula": "file:../../../amis-react19/dist-packages/amis-formula-6.13.1.tgz",
-    "amis-ui": "file:../../../amis-react19/dist-packages/amis-ui-6.13.1.tgz"
+    "amis": "file:..\\..\\libs\\amis-6.13.1.tgz",
+    "amis-core": "file:..\\..\\libs\\amis-core-6.13.1.tgz",
+    "amis-formula": "file:..\\..\\libs\\amis-formula-6.13.1.tgz",
+    "amis-ui": "file:..\\..\\libs\\amis-ui-6.13.1.tgz"
   },
   "peerDependencies": {
     "lucide-react": "^1.7.0",

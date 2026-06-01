@@ -2,6 +2,7 @@ export { loadExtensions } from './loadExtensions'
 export {
   resolveShellRuntimeConfig,
   mergeExtensionMenus,
+  resolveExtensionUserMenuItems,
   setLoadedExtensions,
   getLoadedExtensions,
   setShellRuntimeConfig,
@@ -14,5 +15,6 @@ export {
 export type {
   ShellRuntimeConfig,
   ShellBrandingRuntimeConfig,
-  ShellLoginUiRuntimeConfig
+  ShellLoginUiRuntimeConfig,
+  ShellUserMenuItem
 } from './runtime'

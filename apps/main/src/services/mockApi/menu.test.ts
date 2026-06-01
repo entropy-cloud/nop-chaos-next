@@ -22,7 +22,7 @@ describe('fetchMenuConfig', () => {
     vi.unstubAllGlobals();
   });
 
-  it('returns overridden extension menus with arbitrary icon strings', async () => {
+  it('returns backend-owned menu config without extension menu overrides', async () => {
     vi.stubEnv('VITE_ENABLE_MOCK', 'true');
     requestMock.mockResolvedValue({
       status: 200,
@@ -72,11 +72,11 @@ describe('fetchMenuConfig', () => {
     await vi.runAllTimersAsync();
 
     await expect(resultPromise).resolves.toMatchObject({
-      home: '/extensions/dms/issuer',
+      home: '/dashboard',
       items: [
         {
-          id: 'dms-issuer',
-          icon: 'credit-card',
+          id: 'dashboard',
+          icon: 'layout-dashboard',
         },
       ],
     });

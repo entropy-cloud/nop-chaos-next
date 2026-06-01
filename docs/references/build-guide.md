@@ -17,24 +17,19 @@
 
 ## 2. Directory Layout
 
-`nop-chaos-next` depends on two sibling repositories at the same parent level:
+`nop-chaos-next` can consume prepacked upstream tarballs from its own `libs/` directory and only needs sibling repositories when you want to refresh those baselines:
 
 ```
 <parent>/
-  amis-react19/          # AMIS fork (npm workspaces)
-    dist-packages/       # tgz output of pack:nop-chaos
+  nop-chaos-next/        # This repo (pnpm workspaces)
+    apps/main/
+    libs/
       amis-6.13.1.tgz
       amis-core-6.13.1.tgz
       amis-formula-6.13.1.tgz
       amis-ui-6.13.1.tgz
       office-viewer-0.3.14.tgz
-  nop-chaos-flux/        # Flux UI packages (pnpm workspaces)
-    packages/
-      ui/                # @nop-chaos/ui components
-      theme-tokens/      # @nop-chaos/theme-tokens
-      tailwind-preset/   # @nop-chaos/tailwind-preset
-  nop-chaos-next/        # This repo (pnpm workspaces)
-    apps/main/
+      nop-chaos-flux-0.1.0.tgz
     packages/
     flux-lib/ui/         # synced from nop-chaos-flux
     ...
@@ -42,10 +37,15 @@
 
 | Sibling repo | Integration method | What it provides |
 |-------------|-------------------|------------------|
-| `amis-react19` | `file:*.tgz` in package.json | AMIS renderer (React 19 fork) |
-| `nop-chaos-flux` | Source sync via `pnpm sync:flux` | UI components, theme tokens, Tailwind preset |
+| `amis-react19` | Imported into `libs/*.tgz` via `pnpm import:amis` | AMIS renderer (React 19 fork) |
+| `nop-chaos-flux` | Imported into `libs/*.tgz` via `pnpm import:flux`; optional source sync via `pnpm sync:flux:src` | Flux bundle plus source baselines for `flux-lib/ui`, `packages/theme-tokens`, and `packages/tailwind-preset` |
 
-Without the tgz files from amis-react19, `pnpm install` will fail. Without the Flux sync, `@nop-chaos/ui` and related packages will be missing.
+Without the tgz files in `libs/`, `pnpm install` / `pnpm build` will fail. `flux-lib` remains in-repo so local customization does not require the sibling Flux repo after the baseline is synced.
+
+Repository rule:
+
+- `libs/*.tgz` is committed repository state, not an ignored local cache
+- refreshing those tarballs is explicit via the import scripts, not an implicit build side effect
 
 ---
 
@@ -61,19 +61,21 @@ git clone https://gitee.com/canonical-entropy/nop-chaos-flux.git
 git clone <nop-chaos-next-repo-url>
 ```
 
-### Step 2: Build and pack amis-react19
+### Step 2: Import upstream tarballs into `libs/`
 
 ```bash
-cd amis-react19
+cd nop-chaos-next
 
-# Install dependencies (npm workspaces, not pnpm)
-npm install
+# Import AMIS tarballs into libs/
+pnpm import:amis
 
-# Build and pack all AMIS packages into dist-packages/*.tgz
-npm run pack:nop-chaos
+# Import Flux tarball into libs/
+pnpm import:flux
 ```
 
-`pack:nop-chaos` runs these steps in order:
+These commands build upstream packages from the sibling repos and copy the resulting tgz files into this repo's `libs/` directory.
+
+Those copied `libs/*.tgz` files are expected to remain in git so other developers and CI can build this repo without first cloning sibling upstream repos.
 
 1. Clean `dist-packages/`
 2. Build `amis-formula` -> pack -> `amis-formula-6.13.1.tgz`
@@ -84,22 +86,20 @@ npm run pack:nop-chaos
 
 All steps run with `SKIP_SDK_BUILD=1` to skip SDK generation.
 
-### Step 3: Install, sync Flux packages, and build
+### Step 3: Install, optionally sync Flux source baselines, and build
 
 ```bash
-cd ../nop-chaos-next
-
-# Install dependencies (resolves tgz files from sibling amis-react19)
+# Install dependencies (resolves tgz files from repo-local libs/)
 pnpm install
 
-# Sync UI packages from sibling nop-chaos-flux
-pnpm sync:flux
+# Optional: refresh Flux source baselines for flux-lib/ui and related packages
+pnpm sync:flux:src
 
 # Build all packages
 pnpm build
 ```
 
-`pnpm sync:flux` copies three packages from `../nop-chaos-flux/packages/`:
+`pnpm sync:flux:src` copies three packages from `../nop-chaos-flux/packages/`:
 
 | Source | Destination |
 |--------|------------|
@@ -107,7 +107,7 @@ pnpm build
 | `packages/theme-tokens/` | `packages/theme-tokens/` |
 | `packages/tailwind-preset/` | `packages/tailwind-preset/` |
 
-It also strips upstream test files and refreshes the workspace install.
+It also strips upstream test files and refreshes the workspace install, but it is no longer a prerequisite for ordinary `pnpm install` / `pnpm build` once the repo already contains the desired `flux-lib` baseline.
 
 `pnpm build` for `apps/main` runs the full pipeline:
 
@@ -134,7 +134,11 @@ pnpm dev:main     # Main app only
 | Command | Description |
 |---------|-------------|
 | `pnpm install` | Install all workspace dependencies |
-| `pnpm sync:flux` | Sync UI packages from `../nop-chaos-flux` |
+| `pnpm import:amis` | Build and copy AMIS tgz files into `libs/` |
+| `pnpm import:flux` | Build and copy Flux tgz file into `libs/` |
+| `pnpm import:upstreams` | Import both AMIS and Flux tgz artifacts into `libs/` |
+| `pnpm refresh:libs` | Refresh lockfile/install from `libs/*.tgz` |
+| `pnpm sync:flux:src` | Sync UI packages from `../nop-chaos-flux` |
 | `pnpm rebuild:amis-flux:build` | Repack AMIS, repack Flux, sync Flux packages, then build this repo |
 | `pnpm dev` | Start dev server (all packages) |
 | `pnpm dev:main` | Start main app dev server only |
@@ -143,8 +147,8 @@ pnpm dev:main     # Main app only
 | `pnpm lint` | ESLint + source artifact check |
 | `pnpm test` | Unit tests (Vitest) |
 | `pnpm test:e2e` | E2E tests (Playwright) |
-| `pnpm pack:amis:deps` | Manually trigger AMIS tgz build |
-| `pnpm clean:dist-packages` | Clean amis-react19/dist-packages/ |
+| `pnpm pack:amis:deps` | Check that required tgz files exist in `libs/` |
+| `pnpm clean:dist-packages` | Clean repo-local `libs/` tgz cache |
 
 ### amis-react19 (sibling repo)
 
@@ -158,8 +162,8 @@ pnpm dev:main     # Main app only
 
 Two flows exist for Flux integration:
 
-- `pnpm sync:flux` in `nop-chaos-next` syncs `packages/ui`, `packages/theme-tokens`, and `packages/tailwind-preset` from the sibling repo, applies the runtime-only package policy, and rebuilds the synced workspace packages.
-- `pnpm pack:flux-bundle` in `nop-chaos-flux` rebuilds and packs the `@nop-chaos/flux` tarball consumed by `apps/main`.
+- `pnpm import:flux` in `nop-chaos-next` rebuilds and copies the `@nop-chaos/flux` tarball into `libs/`.
+- `pnpm sync:flux:src` in `nop-chaos-next` syncs `packages/ui`, `packages/theme-tokens`, and `packages/tailwind-preset` from the sibling repo when you want to refresh the in-repo source baseline.
 
 The canonical sync policy now lives in `docs/references/flux-sync-spec.md`.
 
@@ -171,11 +175,11 @@ pnpm rebuild:amis-flux:build
 
 This runs, in order:
 
-1. `npm run pack:nop-chaos` in `../amis-react19`
-2. `pnpm --filter @nop-chaos/ui build` in `../nop-chaos-flux`
-3. `pnpm pack:flux-bundle` in `../nop-chaos-flux`
-4. `pnpm sync:flux` in `nop-chaos-next`
-5. `pnpm build` in `nop-chaos-next`
+1. `pnpm import:amis`
+2. `pnpm import:flux`
+3. `pnpm sync:flux:src`
+4. `pnpm refresh:libs`
+5. `pnpm build`
 
 ### Guardrails and examples
 
@@ -191,33 +195,29 @@ This runs, in order:
 
 When you need to modify AMIS source code and iterate:
 
-### Option A: Hot-sync (recommended for quick iterations)
+### Option A: Re-import tgz into `libs/` (recommended baseline flow)
 
-Build in amis-react19, then sync built files directly into nop-chaos-next's node_modules:
+Build in amis-react19, then import the rebuilt tgz files into `libs/`:
 
 ```bash
 # From nop-chaos-next
-bash scripts/sync-amis.sh --build            # Build all, then sync
-bash scripts/sync-amis.sh --build amis-ui    # Build & sync specific package
-bash scripts/sync-amis.sh                    # Sync only (no build)
+pnpm import:amis
+pnpm refresh:libs
 ```
 
-`sync-amis.sh` copies `lib/` and `esm/` from amis-react19 source into the pnpm store's resolved package locations, and clears the Vite pre-bundle cache.
+`pnpm import:amis` runs `pack:nop-chaos` in the sibling repo and copies the resulting tgz files into `libs/`.
 
 Override the default amis-react19 path with `AMIS_ROOT`:
 
 ```bash
-AMIS_ROOT=/custom/path/to/amis-react19 bash scripts/sync-amis.sh --build
+AMIS_ROOT=/custom/path/to/amis-react19 pnpm import:amis
 ```
 
-### Option B: Full tgz rebuild (for final verification)
+### Option B: Full tgz rebuild plus refresh
 
 ```bash
-# In amis-react19
-npm run pack:nop-chaos
-
-# In nop-chaos-next
-pnpm install
+pnpm import:amis
+pnpm refresh:libs
 pnpm build
 ```
 
@@ -230,10 +230,14 @@ When you need to modify Flux UI components:
 ```bash
 # 1. Make changes in ../nop-chaos-flux/packages/ui/
 
-# 2. Sync updated packages into this workspace
-pnpm sync:flux
+# 2. If runtime bundle changed, re-import the Flux tgz into libs/
+pnpm import:flux
+pnpm refresh:libs
 
-# 3. When the Flux tarball is also involved, rebuild everything end-to-end
+# 3. If you also want to refresh the in-repo source baseline
+pnpm sync:flux:src
+
+# 4. When both tgz baseline and source baseline are involved, rebuild everything end-to-end
 pnpm rebuild:amis-flux:build
 ```
 
@@ -248,10 +252,10 @@ bash scripts/sync-flux-lib.sh ui tailwind-preset     # sync multiple
 Override the default Flux repo path with `FLUX_ROOT`:
 
 ```bash
-FLUX_ROOT=/custom/path/to/nop-chaos-flux pnpm sync:flux
+FLUX_ROOT=/custom/path/to/nop-chaos-flux pnpm sync:flux:src
 ```
 
-`pnpm sync:flux` is not a raw copy anymore. It now:
+`pnpm sync:flux:src` is not a raw copy anymore. It now:
 
 1. Replaces those packages with the upstream sibling sources
 2. Removes synced test files plus accidental source artifacts such as `src/**/*.d.ts` and `src/**/*.d.ts.map`
@@ -267,26 +271,30 @@ Important: this is a runtime-oriented sync, not a full upstream mirror. Test sou
 A minimal CI pipeline:
 
 ```bash
-# 1. Clone all three repos side by side
-git clone https://gitee.com/canonical-entropy/amis-react19.git
-git clone https://gitee.com/canonical-entropy/nop-chaos-flux.git
+# 1. Clone this repo
 git clone <nop-chaos-next-repo-url>
 
-# 2. Build AMIS packages
-cd amis-react19
-npm install
-npm run pack:nop-chaos
+# 2. Optionally clone sibling repos when you need to refresh upstream baselines
+git clone https://gitee.com/canonical-entropy/amis-react19.git
+git clone https://gitee.com/canonical-entropy/nop-chaos-flux.git
 
-# 3. Install, sync, build, and verify nop-chaos-next
-cd ../nop-chaos-next
+# 3. Import upstream tgz artifacts into libs/
+cd nop-chaos-next
+pnpm import:amis
+pnpm import:flux
+pnpm refresh:libs
+
+# 4. Optional: refresh Flux source baselines
+pnpm sync:flux:src
+
+# 5. Install, build, and verify nop-chaos-next
 pnpm install
-pnpm sync:flux
 pnpm typecheck
 pnpm build
 pnpm lint
 pnpm test
 
-# 4. E2E tests (starts its own preview server)
+# 6. E2E tests (starts its own preview server)
 pnpm test:e2e
 ```
 
@@ -296,14 +304,16 @@ pnpm test:e2e
 
 ### `pnpm install` fails with tgz not found
 
-**Cause**: `amis-react19/dist-packages/*.tgz` does not exist.
+**Cause**: required files under `libs/*.tgz` are missing.
 
 **Fix**:
 ```bash
-cd ../amis-react19 && npm install && npm run pack:nop-chaos
+pnpm import:amis
+pnpm import:flux
+pnpm refresh:libs
 ```
 
-### `pnpm sync:flux` fails or packages not found
+### `pnpm sync:flux:src` fails or packages not found
 
 **Cause**: `nop-chaos-flux` is not cloned alongside this repo, or the source packages are missing.
 
@@ -312,18 +322,17 @@ cd ../amis-react19 && npm install && npm run pack:nop-chaos
 cd /path/to/parent
 git clone https://gitee.com/canonical-entropy/nop-chaos-flux.git
 cd nop-chaos-next
-pnpm sync:flux
+pnpm sync:flux:src
 ```
 
-### `ensure-amis-file-deps-built` auto-triggers but fails
+### `ensure-amis-file-deps-built` fails
 
-**Cause**: amis-react19 dependencies not installed or build fails.
+**Cause**: required AMIS tgz files are not present in `libs/`.
 
-**Fix**: Check `amis-react19` builds successfully standalone:
+**Fix**:
 ```bash
-cd amis-react19
-npm install
-npm run pack:nop-chaos
+pnpm import:amis
+pnpm refresh:libs
 ```
 
 ### `check-main-external-runtime-deps` reports violations
@@ -342,7 +351,7 @@ npm run pack:nop-chaos
 
 **Cause**: Script requires bash (Git Bash, WSL, etc.).
 
-**Fix**: Use Git Bash or WSL. Alternatively, rebuild tgz: `cd ../amis-react19 && npm run pack:nop-chaos`.
+**Fix**: Use Git Bash or WSL. Alternatively, import the tarballs into `libs/`: `pnpm import:amis`.
 
 ---
 

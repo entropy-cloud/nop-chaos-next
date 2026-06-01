@@ -11,7 +11,7 @@ Extension 是宿主应用的扩展机制，用于注入：
 - 品牌配置（名称、logo、标题等）
 - 主题和样式资源
 - 语言和 i18n 资源
-- 菜单扩展
+- 左下角用户菜单扩展
 - 内置页面注册
 - 插件清单声明
 - 认证配置
@@ -48,7 +48,9 @@ interface ShellExtension {
   styles?: ExtensionStyleAsset[];
   builtinPages?: ExtensionBuiltinPage[];
   plugins?: PluginManifest[];
-  menus?: MenuItem[];
+  menus?: MenuItem[]; // deprecated: 主导航菜单由后端 SiteMap 决定
+  overrideMenus?: boolean; // deprecated
+  userMenuItems?: ExtensionUserMenuItem[];
   auth?: ExtensionAuthConfig;
 
   // 初始化钩子
@@ -93,6 +95,8 @@ interface ExtensionShellConfig {
   helpUrl?: string;
   aboutUrl?: string;
   supportUrl?: string;
+  sidebarWidthRem?: number; // 宿主左侧主菜单展开宽度默认值
+  sidebarCollapsedWidthRem?: number; // 宿主左侧主菜单折叠宽度默认值
 }
 ```
 
@@ -101,6 +105,7 @@ interface ExtensionShellConfig {
 - `helpUrl`：显示在侧栏用户菜单的 Help 项
 - `aboutUrl`：显示在侧栏用户菜单的 About 项
 - `supportUrl`：显示在侧栏用户菜单的 Support 项
+- `sidebarWidthRem` / `sidebarCollapsedWidthRem`：为宿主左侧主菜单提供 extension 级默认宽度；只有在用户尚未通过 layout settings 手动修改对应宽度时才会生效
 
 主应用消费点位于 `apps/main/src/components/layout/SidebarUserMenu.tsx`，点击后通过 `window.open(url, '_blank', 'noopener,noreferrer')` 打开外链。
 
@@ -166,6 +171,7 @@ Extension 模块本身仍支持三种导出方式：
 - `bootstrapExtensions()` 在宿主首次渲染前完成，且 `initializeI18n()` 会在 extension 定义落地后才执行；因此 extension 的 auth config、default language、supported languages、theme 和 builtin page 注册不会再晚于首次 i18n 初始化或首次页面渲染。
 - 语言注册优先使用 `supportedLanguages`；`languages` 仅保留为兼容旧 manifest 的 deprecated alias。bootstrap 会先 `resetLanguages()` 回到 host 默认语言表，再按 extension 顺序执行 `registerLanguages(...)`，因此多个 extension 会叠加语言能力，而不是由最后一个 extension 覆盖前面的注册结果。
 - `plugins` 不再是“类型存在但 host 忽略”的半连接字段。`apps/main/src/extensions/bootstrap.ts` 会把 extension 提供的 plugin manifests 合并进 `apps/main/src/store/pluginStore.ts`，因此插件管理页和 plugin bridge 快照都能观察到同一份扩展后的插件清单。
+- 主导航菜单现在完全以后端 `SiteMapApi__getSiteMap` / mock menu response 为准。extension 不再通过 `menus` / `overrideMenus` 合并或替换左侧主导航；这些字段仅保留为 deprecated 兼容输入。extension 如需暴露入口，应注册 `builtinPages` / `systemPages` 保证路由存在，再通过 `userMenuItems` 定制左下角用户弹出菜单。
 - `systemPages.login` 和 `systemPages.notFound` 现在都会被 `apps/main/src/router/AppRoutes.tsx` 消费；extension 可以在不改动宿主 URL 结构的前提下覆盖登录页和 shell fallback 页面。
 
 ### 3.3 Runtime 配置
@@ -229,9 +235,36 @@ getSystemPageComponentId(page: keyof ExtensionSystemPagesConfig): string | undef
 | 字段类型                     | 归并策略            |
 | ---------------------------- | ------------------- |
 | 标量字段（name, logoUrl 等） | 后者覆盖            |
-| 数组字段（menus, plugins）   | 合并                |
+| 数组字段（plugins）          | 合并                |
 | i18n 资源                    | 按语言合并          |
 | builtinPages                 | 按 componentId 覆盖 |
+
+`userMenuItems` 使用类似 Nop Delta 的同名节点合并语义：
+
+- `override` 不写或为 `merge`：按 `id` 合并字段；不存在则新增
+- `override: 'replace'`：按 `id` 整体替换该菜单项
+- `override: 'remove'`：按 `id` 删除该菜单项
+
+示例：
+
+```ts
+userMenuItems: [
+  {
+    id: 'settings-theme',
+    titleKey: 'settings.themeTitle',
+    path: '/settings/theme',
+  },
+  {
+    id: 'help-guide',
+    override: 'remove',
+  },
+  {
+    id: 'vendor-docs',
+    title: 'Vendor Docs',
+    href: 'https://example.com/docs',
+  },
+];
+```
 
 兼容性：如果 `branding` 未提供，回退到 `app` 字段。
 
@@ -280,7 +313,7 @@ systemPages: {
 - 应用品牌信息
 - 主题和样式资源
 - 语言与 i18n 资源
-- 菜单扩展
+- 左下角用户菜单扩展
 - 插件清单声明
 - 默认首页路径
 - Help / About / Support 外链

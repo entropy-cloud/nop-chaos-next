@@ -30,18 +30,18 @@ vi.mock('../router/pageRegistry', () => ({
   registerBuiltinPages: (...args: unknown[]) => registerBuiltinPagesMock(...args),
 }));
 
-vi.mock('../store/pluginStore', async () => {
-  const actual = await vi.importActual<typeof import('../store/pluginStore')>('../store/pluginStore');
-  return {
-    ...actual,
-    usePluginStore: {
-      getState: () => ({
-        plugins: getPluginsStateMock(),
-        setPlugins: setPluginsMock,
-      }),
-    },
-  };
-});
+vi.mock('../store/pluginStore', () => ({
+  mergePluginManifests: (currentPlugins: unknown[], extensionPlugins: unknown[]) => [
+    ...currentPlugins,
+    ...extensionPlugins,
+  ],
+  usePluginStore: {
+    getState: () => ({
+      plugins: getPluginsStateMock(),
+      setPlugins: setPluginsMock,
+    }),
+  },
+}));
 
 vi.mock('@nop-chaos/extension-host', () => ({
   loadExtensions: vi.fn(),
@@ -70,6 +70,7 @@ vi.mock('./config', () => ({
 
 describe('bootstrapExtensions extension contract', () => {
   beforeEach(() => {
+    vi.resetModules();
     registerLanguagesMock.mockReset();
     resetLanguagesMock.mockReset();
     setDefaultLanguageMock.mockReset();

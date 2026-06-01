@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { ExtensionModule, ExtensionSource, LoadedExtension } from '@nop-chaos/shared'
-import { loadExtensions, getShellRuntimeConfig, getSystemPageComponentId, mergeExtensionMenus, resolveShellRuntimeConfig, setShellRuntimeConfig } from '@nop-chaos/extension-host'
+import { loadExtensions, getShellRuntimeConfig, getSystemPageComponentId, resolveExtensionUserMenuItems, resolveShellRuntimeConfig, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import { getLanguageOptions } from '../config/i18n/languages'
 import { mergeBuiltinSystemMenus } from '../config/systemMenus'
 import { getThemeRegistry } from '../config/themeRegistry'
@@ -321,12 +321,11 @@ describe('bootstrapExtensions', () => {
     expect(getSystemPage('dashboard')).toBe(getBuiltinPage('extension-harbor-page'))
     expect(getSystemPageComponentId('dashboard')).toBe('extension-harbor-page')
     expect(
-      mergeExtensionMenus({
-        home: '/dashboard',
-        items: []
-      }).items.some((item) => item.componentId === 'extension-harbor-page' && item.path === '/examples/extension-harbor')
+      resolveExtensionUserMenuItems([]).some(
+        (item) => item.componentId === 'extension-harbor-page' && item.path === '/examples/extension-harbor'
+      )
     ).toBe(true)
-    expect(mergeBuiltinSystemMenus({ home: '/missing', items: mergeExtensionMenus({ home: '/dashboard', items: [] }).items }).home).toBe('/examples/extension-harbor')
+    expect(mergeBuiltinSystemMenus({ home: '/missing', items: [] }).home).toBe('/dashboard')
     expect(getShellRuntimeConfig().branding.name).toBe('Harbor Operations Suite')
     expect((globalThis as typeof globalThis & { document?: { title?: string } }).document?.title).toBe('Harbor Operations Suite')
     expect(appendedNodes.length).toBeGreaterThan(0)

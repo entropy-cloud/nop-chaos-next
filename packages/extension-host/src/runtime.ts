@@ -1,6 +1,7 @@
 import type {
   ExtensionLoginUiFeature,
   ExtensionSystemPagesConfig,
+  ExtensionUserMenuItem,
   LoadedExtension,
   MenuResponse
 } from '@nop-chaos/shared'
@@ -52,8 +53,14 @@ export interface ShellRuntimeConfig {
     helpUrl?: string
     aboutUrl?: string
     supportUrl?: string
+    sidebarWidthRem?: number
+    sidebarCollapsedWidthRem?: number
   }
   systemPages: ExtensionSystemPagesConfig
+}
+
+export type ShellUserMenuItem = Omit<ExtensionUserMenuItem, 'children' | 'override'> & {
+  children?: ShellUserMenuItem[]
 }
 
 const defaultLoginFeatures: ExtensionLoginUiFeature[] = [
@@ -204,36 +211,97 @@ export function getSystemPageComponentId(page: keyof ExtensionSystemPagesConfig)
   return shellRuntimeConfig.systemPages[page]
 }
 
-export function mergeExtensionMenus(menuResponse: MenuResponse): MenuResponse {
-  const sorted = [...loadedExtensions].sort((a, b) => (a.extension.order ?? 0) - (b.extension.order ?? 0))
+function cloneUserMenuItem(item: ShellUserMenuItem): ShellUserMenuItem {
+  return {
+    ...item,
+    children: item.children?.map(cloneUserMenuItem)
+  }
+}
 
-  let items = [...menuResponse.items]
-  let home = menuResponse.home
+function mergeUserMenuItem(
+  existingItem: ShellUserMenuItem,
+  deltaItem: ExtensionUserMenuItem
+): ShellUserMenuItem | null {
+  const { override, children, ...deltaFields } = deltaItem
 
-  for (const { extension } of sorted) {
-    const extMenus = extension.menus ?? []
-
-    if (extMenus.length === 0) {
-      continue
-    }
-
-    if (extension.overrideMenus) {
-      items = [...extMenus]
-      home = extMenus[0]?.path ?? home
-      continue
-    }
-
-    items = [...items, ...extMenus]
-    home = home ?? extMenus[0]?.path ?? '/'
+  if (override === 'remove') {
+    return null
   }
 
-  return validateMenuResponse({
-    ...menuResponse,
-    items,
-    home
-  })
+  const nextItem =
+    override === 'replace'
+      ? { ...deltaFields }
+      : {
+          ...existingItem,
+          ...deltaFields
+        }
+
+  if (children !== undefined) {
+    const nextChildren = applyUserMenuDelta(
+      override === 'replace' ? [] : (existingItem.children ?? []),
+      children
+    )
+    nextItem.children = nextChildren.length ? nextChildren : undefined
+  } else if (override === 'replace') {
+    nextItem.children = undefined
+  } else {
+    nextItem.children = existingItem.children?.map(cloneUserMenuItem)
+  }
+
+  return nextItem
+}
+
+function applyUserMenuDelta(
+  baseItems: ShellUserMenuItem[],
+  deltaItems: ExtensionUserMenuItem[]
+): ShellUserMenuItem[] {
+  const nextItems = baseItems.map(cloneUserMenuItem)
+
+  for (const deltaItem of deltaItems) {
+    const existingIndex = nextItems.findIndex((item) => item.id === deltaItem.id)
+
+    if (existingIndex < 0) {
+      if (deltaItem.override !== 'remove') {
+        const { override: _override, children, ...fields } = deltaItem
+        const nextChildren = children ? applyUserMenuDelta([], children) : []
+        nextItems.push({
+          ...fields,
+          children: nextChildren.length ? nextChildren : undefined
+        })
+      }
+      continue
+    }
+
+    const mergedItem = mergeUserMenuItem(nextItems[existingIndex], deltaItem)
+
+    if (!mergedItem) {
+      nextItems.splice(existingIndex, 1)
+      continue
+    }
+
+    nextItems[existingIndex] = mergedItem
+  }
+
+  return nextItems
+}
+
+export function resolveExtensionUserMenuItems(baseItems: ShellUserMenuItem[]): ShellUserMenuItem[] {
+  const sorted = [...loadedExtensions].sort((a, b) => (a.extension.order ?? 0) - (b.extension.order ?? 0))
+  let items = baseItems.map(cloneUserMenuItem)
+
+  for (const { extension } of sorted) {
+    if (extension.userMenuItems?.length) {
+      items = applyUserMenuDelta(items, extension.userMenuItems)
+    }
+  }
+
+  return items
+}
+
+export function mergeExtensionMenus(menuResponse: MenuResponse): MenuResponse {
+  return validateMenuResponse(menuResponse)
 }
 
 export function hasMenuOverride(): boolean {
-  return loadedExtensions.some((item) => item.extension.overrideMenus)
+  return false
 }

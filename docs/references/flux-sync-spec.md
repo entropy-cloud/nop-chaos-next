@@ -23,12 +23,12 @@ Current sync scope includes only these source packages:
 
 This source sync is separate from the Flux runtime bundle flow:
 
-- `apps/main` consumes `@nop-chaos/flux` from the tarball built in `../nop-chaos-flux/dist-packages/`
+- `apps/main` consumes `@nop-chaos/flux` from the tarball copied into `libs/nop-chaos-flux-0.1.0.tgz`
 - `@nop-chaos/ui`, `@nop-chaos/theme-tokens`, and `@nop-chaos/tailwind-preset` are synced from source
 
 ## Runtime-Only Sync Rule
 
-`pnpm sync:flux` is a runtime-oriented source sync, not a full upstream mirror.
+`pnpm sync:flux:src` is a runtime-oriented source sync, not a full upstream mirror.
 
 The downstream sync keeps:
 
@@ -160,7 +160,7 @@ Current assessment:
 
 ## Sync Output Rules
 
-`pnpm sync:flux` currently does all of the following:
+`pnpm sync:flux:src` currently does all of the following:
 
 1. replace the target package with upstream source
 2. remove runtime-excluded files (`src/**/*.test.*`, `src/**/__tests__`, synced source artifacts such as `src/**/*.d.ts` / `src/**/*.d.ts.map`, caches, and `dist`)
@@ -204,7 +204,7 @@ When reviewing drift between upstream and downstream:
 
 1. Make shared-library changes in `../nop-chaos-flux`
 2. Run the relevant upstream verification there
-3. Run `pnpm sync:flux` in `nop-chaos-next`
+3. Run `pnpm sync:flux:src` in `nop-chaos-next`
 4. Verify downstream integration with `pnpm typecheck`, `pnpm build`, and `pnpm lint`
 5. If a downstream residual remains, document why it is downstream-owned and why it does not belong upstream
 

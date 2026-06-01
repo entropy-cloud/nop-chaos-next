@@ -14,10 +14,12 @@ import { AppBrand } from '../components/layout/AppBrand';
 import { MobileTopBar } from '../components/layout/MobileTopBar';
 import { OfflineBanner } from '../components/layout/OfflineBanner';
 import { SidebarUserMenu } from '../components/layout/SidebarUserMenu';
+import { mergeRouteOnlySystemMenus } from '../config/systemMenus';
 import { getCurrentHomePath } from '../config/homePath';
 import { toRem } from '../config/layout';
 import { useAuth } from '../hooks/useAuth';
 import { useMenuConfigQuery } from '../hooks/useMenuConfig';
+import { useShellConfig } from '../hooks/useShellConfig';
 import { useTabManagement } from '../hooks/useTabManagement';
 import { logoutRequest } from '../services/authApi';
 import { confirmInApp } from '../services/confirm';
@@ -47,6 +49,7 @@ export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, token, logout } = useAuth();
+  const shellConfig = useShellConfig();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const shellRef = useRef<HTMLDivElement | null>(null);
   const sidebarCollapsed = useLayoutStore((state) => state.sidebarCollapsed);
@@ -56,6 +59,7 @@ export function AppShell() {
   const workspaceFullscreen = useLayoutStore((state) => state.workspaceFullscreen);
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
   const toggleMenuGroup = useLayoutStore((state) => state.toggleMenuGroup);
+  const syncSidebarDefaults = useLayoutStore((state) => state.syncSidebarDefaults);
   const setWorkspaceFullscreen = useLayoutStore((state) => state.setWorkspaceFullscreen);
   const registerTab = useTabStore((state) => state.openTab);
   const syncActivePath = useTabStore((state) => state.setActivePath);
@@ -69,9 +73,16 @@ export function AppShell() {
     return localizeMenus(filtered, t);
   }, [menuQuery.data?.items, t, user?.roles]);
 
+  const routeItems = useMemo(() => {
+    const routeMenuResponse = mergeRouteOnlySystemMenus(menuQuery.data ?? { items: [] });
+    const sorted = sortMenus(routeMenuResponse.items);
+    const filtered = filterMenusByRoles(sorted, user?.roles ?? []);
+    return localizeMenus(filtered, t);
+  }, [menuQuery.data, t, user?.roles]);
+
   const currentMenu = useMemo(
-    () => findMenuItemByPath(menuItems, location.pathname),
-    [location.pathname, menuItems],
+    () => findMenuItemByPath(routeItems, location.pathname),
+    [location.pathname, routeItems],
   );
 
   useEffect(() => {
@@ -90,6 +101,13 @@ export function AppShell() {
   useEffect(() => {
     syncActivePath(location.pathname);
   }, [location.pathname, syncActivePath]);
+
+  useEffect(() => {
+    syncSidebarDefaults({
+      sidebarWidthRem: shellConfig.shell.sidebarWidthRem,
+      sidebarCollapsedWidthRem: shellConfig.shell.sidebarCollapsedWidthRem,
+    });
+  }, [shellConfig.shell.sidebarCollapsedWidthRem, shellConfig.shell.sidebarWidthRem, syncSidebarDefaults]);
 
   useEffect(() => {
     const syncFullscreenState = () => {
@@ -260,6 +278,7 @@ export function AppShell() {
             title={currentMenu?.title ?? t('common.loading')}
             onToggleSidebar={() => setMobileSidebarOpen((value) => !value)}
             onLogout={() => void handleLogout()}
+            onUserMenuActionComplete={() => setMobileSidebarOpen(false)}
           />
         }
         mobileSidebar={

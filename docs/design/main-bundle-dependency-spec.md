@@ -33,6 +33,8 @@
 - `office-viewer`
 - `@nop-chaos/flux`
 
+当前这些外部 tarball 依赖统一从仓库内 `libs/*.tgz` 解析，而不是直接依赖 sibling repo 路径；这样 `pnpm install` / `pnpm build` 不再要求 `../amis-react19` 或 `../nop-chaos-flux` 在场。更新上游基线时，再通过导入脚本刷新 `libs/`。
+
 说明：
 
 - `@nop-chaos/ui` 实际来源于 `flux-lib/ui`，但在规划层仍属于稳定基础 workspace 包

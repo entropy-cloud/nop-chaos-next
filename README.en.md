@@ -132,14 +132,19 @@ The project provides complete business page templates:
 
 ### 1. Clone with sibling repos
 
-This project depends on two sibling repositories:
+This project supports two layers of dependency flow:
+
+- normal `install/build/site` uses repo-local `libs/*.tgz`
+- sibling repos are only needed when you want to refresh upstream baselines
+
+The sibling repos used for baseline refresh are:
 
 | Sibling repo | Purpose | Integration |
 |-------------|---------|-------------|
-| [amis-react19](https://gitee.com/canonical-entropy/amis-react19) | AMIS React 19 fork | `file:*.tgz` dependencies |
-| [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) | Flux UI/theme packages | Source sync via `pnpm sync:flux` |
+| [amis-react19](https://gitee.com/canonical-entropy/amis-react19) | AMIS React 19 fork | Imported into `libs/*.tgz` via `pnpm import:amis` |
+| [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) | Flux UI/theme packages | Tarball imported via `pnpm import:flux`; optional source sync via `pnpm sync:flux:src` |
 
-All three repos must be cloned under the same parent directory:
+If you want to refresh upstream baselines, all three repos should be cloned under the same parent directory:
 
 ```bash
 cd /path/to/parent
@@ -152,34 +157,36 @@ Expected layout:
 
 ```
 <parent>/
-  amis-react19/        # AMIS fork (required)
-  nop-chaos-flux/      # Flux UI packages (required)
+  amis-react19/        # AMIS fork (needed only for baseline refresh)
+  nop-chaos-flux/      # Flux UI packages (needed only for baseline refresh)
   nop-chaos-next/      # This repo
 ```
 
-### 2. Build AMIS packages
+### 2. Import upstream artifacts into `libs/`
 
 ```bash
-cd amis-react19
-npm install
-npm run pack:nop-chaos
+cd nop-chaos-next
+pnpm import:amis
+pnpm import:flux
+pnpm refresh:libs
 ```
 
-This produces `dist-packages/*.tgz` tarballs that `nop-chaos-next` consumes.
+This populates repo-local `libs/*.tgz`, which `nop-chaos-next` consumes during normal install/build.
 
-### 3. Install, sync, and run
+### 3. Optional Flux source sync, then install and run
 
 ```bash
-cd ../nop-chaos-next
+pnpm sync:flux:src      # optional: refresh flux-lib/theme tokens/tailwind source baseline
 pnpm install
-pnpm sync:flux          # sync UI packages from ../nop-chaos-flux
-pnpm rebuild:amis-flux:build  # rebuild AMIS + Flux, sync Flux, then build this repo
+pnpm build
 pnpm dev
 ```
 
-`pnpm sync:flux` copies `ui`, `theme-tokens`, and `tailwind-preset` from the sibling Flux repo into this workspace and refreshes the install.
+`pnpm sync:flux:src` copies `ui`, `theme-tokens`, and `tailwind-preset` from the sibling Flux repo into this workspace and refreshes the install. It is optional and only needed when you want to refresh the in-repo Flux source baseline.
 
-`pnpm rebuild:amis-flux:build` repacks `amis-react19`, rebuilds and packs `nop-chaos-flux`, syncs the Flux source packages into this repo, and then builds the current workspace.
+`libs/*.tgz` is committed repository state so this repo can install and build without requiring sibling repos to be present.
+
+`pnpm rebuild:amis-flux:build` still performs the full upstream refresh flow, but ordinary `pnpm install` / `pnpm build` only depend on `libs/*.tgz`.
 
 Local playground: `http://localhost:5173`
 

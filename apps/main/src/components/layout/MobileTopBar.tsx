@@ -6,9 +6,10 @@ interface MobileTopBarProps {
   title: string;
   onToggleSidebar: () => void;
   onLogout: () => void;
+  onUserMenuActionComplete?: () => void;
 }
 
-export function MobileTopBar({ title, onToggleSidebar, onLogout }: MobileTopBarProps) {
+export function MobileTopBar({ title, onToggleSidebar, onLogout, onUserMenuActionComplete }: MobileTopBarProps) {
   return (
     <div className="border-b border-[hsl(var(--border))] bg-[var(--app-topbar-bg)]/90 backdrop-blur-2xl lg:hidden">
       <div className="flex h-14 items-center gap-3 px-4">
@@ -19,7 +20,7 @@ export function MobileTopBar({ title, onToggleSidebar, onLogout }: MobileTopBarP
           <div className="truncate text-sm font-medium text-foreground">{title}</div>
         </div>
         <div className="shrink-0">
-          <SidebarUserMenu collapsed onLogout={onLogout} />
+          <SidebarUserMenu collapsed onLogout={onLogout} onActionComplete={onUserMenuActionComplete} />
         </div>
       </div>
     </div>

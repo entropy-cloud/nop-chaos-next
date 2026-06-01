@@ -9,7 +9,7 @@ test('can start from login and enter dashboard', async ({ page }) => {
 
   if (variant === 'harbor') {
     await expect(page).toHaveURL(/#\/dashboard$/);
-    await expect(page.locator('aside')).toContainText('Extension Harbor Page');
+    await expect(page.locator('aside')).not.toContainText('Extension Harbor Page');
     expect(pageErrors, `Unexpected page errors after login: ${pageErrors.join('; ')}`).toHaveLength(0);
     return;
   }

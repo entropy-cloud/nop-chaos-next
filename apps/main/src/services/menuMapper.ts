@@ -1,6 +1,5 @@
 import type { MenuItem, MenuResponse } from '@nop-chaos/shared';
 import { validateMenuResponse } from '@nop-chaos/shared';
-import { mergeExtensionMenus } from '@nop-chaos/extension-host';
 
 export interface LegacySiteMapResource {
   id: string;
@@ -210,10 +209,8 @@ function mapLegacyResource(resource: LegacySiteMapResource): MenuItem {
 export function mapLegacySiteMapToMenuResponse(payload: LegacySiteMapResponse): MenuResponse {
   const items = getSiteMapResources(payload).map(mapLegacyResource);
 
-  return mergeExtensionMenus(
-    validateMenuResponse({
-      home: findLeafHomePath(items) ?? '/',
-      items,
-    }),
-  );
+  return validateMenuResponse({
+    home: findLeafHomePath(items) ?? '/',
+    items,
+  });
 }

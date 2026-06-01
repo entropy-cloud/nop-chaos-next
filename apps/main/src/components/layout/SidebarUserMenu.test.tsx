@@ -54,6 +54,14 @@ vi.mock('@nop-chaos/ui', () => ({
   ),
 }));
 
+vi.mock('@nop-chaos/core', () => ({
+  renderIcon: (name?: string) => (name ? <span data-icon={name} /> : null),
+}));
+
+vi.mock('@nop-chaos/extension-host', () => ({
+  resolveExtensionUserMenuItems: (items: unknown[]) => items,
+}));
+
 describe('SidebarUserMenu shell links', () => {
   let container: HTMLDivElement;
   let root: ReturnType<typeof createRoot>;
@@ -75,12 +83,12 @@ describe('SidebarUserMenu shell links', () => {
     vi.unstubAllGlobals();
   });
 
-  it('opens help, about, and support links from the user menu', async () => {
+  it('opens shell links from the user menu', async () => {
     await act(async () => {
       root.render(<SidebarUserMenu onLogout={() => undefined} />);
     });
 
-    for (const key of ['help', 'about', 'support']) {
+    for (const key of ['shell-help-link', 'shell-about-link', 'shell-support-link']) {
       await act(async () => {
         container
           .querySelector(`[data-testid="sidebar-user-menu-${key}"]`)

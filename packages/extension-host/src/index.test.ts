@@ -6,6 +6,7 @@ import {
   setLoadedExtensions,
   getLoadedExtensions,
   mergeExtensionMenus,
+  resolveExtensionUserMenuItems,
   hasMenuOverride,
   setShellRuntimeConfig,
   getShellRuntimeConfig,
@@ -278,7 +279,7 @@ describe('extension-host runtime', () => {
     expect(config.branding.documentTitle).toBe('Custom');
   });
 
-  it('merges extension menus without override', () => {
+  it('keeps backend menus unchanged instead of merging extension menus', () => {
     setLoadedExtensions([
       {
         source: makeSource('test'),
@@ -290,11 +291,12 @@ describe('extension-host runtime', () => {
     ]);
 
     const result = mergeExtensionMenus({ home: '/', items: [makeMenuItem({ id: 'home', path: '/home', title: 'Home' })] });
-    expect(result.items).toHaveLength(2);
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].id).toBe('home');
     expect(hasMenuOverride()).toBe(false);
   });
 
-  it('handles menu override', () => {
+  it('ignores deprecated menu override for backend-owned menus', () => {
     setLoadedExtensions([
       {
         source: makeSource('test'),
@@ -308,8 +310,8 @@ describe('extension-host runtime', () => {
 
     const result = mergeExtensionMenus({ home: '/', items: [makeMenuItem({ id: 'home', path: '/home', title: 'Home' })] });
     expect(result.items).toHaveLength(1);
-    expect(result.items[0].id).toBe('ext-only');
-    expect(hasMenuOverride()).toBe(true);
+    expect(result.items[0].id).toBe('home');
+    expect(hasMenuOverride()).toBe(false);
   });
 
   it('resolves shell runtime config with legacy app fields', () => {
@@ -358,7 +360,13 @@ describe('extension-host runtime', () => {
         source: makeSource('shell-ext'),
         extension: {
           id: 'shell-ext',
-          shell: { defaultHomePath: '/dashboard', helpUrl: '/help', aboutUrl: '/about' },
+          shell: {
+            defaultHomePath: '/dashboard',
+            helpUrl: '/help',
+            aboutUrl: '/about',
+            sidebarWidthRem: 15,
+            sidebarCollapsedWidthRem: 4.5,
+          },
         },
       },
     ];
@@ -367,6 +375,8 @@ describe('extension-host runtime', () => {
     expect(config.shell.defaultHomePath).toBe('/dashboard');
     expect(config.shell.helpUrl).toBe('/help');
     expect(config.shell.aboutUrl).toBe('/about');
+    expect(config.shell.sidebarWidthRem).toBe(15);
+    expect(config.shell.sidebarCollapsedWidthRem).toBe(4.5);
   });
 
   it('resolves shell runtime config with systemPages', () => {
@@ -440,7 +450,7 @@ describe('extension-host runtime', () => {
     expect(getSystemPageComponentId('dashboard')).toBeUndefined();
   });
 
-  it('merges menus with append mode by default', () => {
+  it('does not append extension menus by default', () => {
     setLoadedExtensions([
       {
         source: makeSource('append'),
@@ -456,11 +466,11 @@ describe('extension-host runtime', () => {
       items: [makeMenuItem({ id: 'orig', path: '/orig', title: 'Orig' })],
     });
 
-    expect(result.items).toHaveLength(2);
+    expect(result.items).toHaveLength(1);
     expect(result.home).toBe('/orig');
   });
 
-  it('sets home from first extension menu when home is undefined', () => {
+  it('does not set home from extension menus', () => {
     setLoadedExtensions([
       {
         source: makeSource('append'),
@@ -476,7 +486,7 @@ describe('extension-host runtime', () => {
       items: [makeMenuItem({ id: 'orig', path: '/orig', title: 'Orig' })],
     });
 
-    expect(result.home).toBe('/new');
+    expect(result.home).toBeUndefined();
   });
 
   it('skips extensions with empty menus array', () => {
@@ -495,7 +505,7 @@ describe('extension-host runtime', () => {
     expect(result.items).toHaveLength(1);
   });
 
-  it('overrideMenus replaces items and sets home from first item', () => {
+  it('does not replace backend menus when overrideMenus is set', () => {
     setLoadedExtensions([
       {
         source: makeSource('override'),
@@ -515,8 +525,45 @@ describe('extension-host runtime', () => {
       items: [makeMenuItem({ id: 'old', path: '/old', title: 'Old' })],
     });
 
-    expect(result.items).toHaveLength(2);
-    expect(result.home).toBe('/ov1');
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].id).toBe('old');
+    expect(result.home).toBe('/old');
+  });
+
+  it('applies extension user menu delta by id', () => {
+    setLoadedExtensions([
+      {
+        source: makeSource('first'),
+        extension: {
+          id: 'first',
+          userMenuItems: [
+            { id: 'theme', title: 'Theme Settings', path: '/settings/theme' },
+            { id: 'help', override: 'remove' },
+          ],
+        },
+      },
+      {
+        source: makeSource('second'),
+        extension: {
+          id: 'second',
+          order: 10,
+          userMenuItems: [{ id: 'theme', title: 'Visual Theme', override: 'replace', href: '/docs/theme' }],
+        },
+      },
+    ]);
+
+    const result = resolveExtensionUserMenuItems([
+      { id: 'settings', title: 'Settings', path: '/settings' },
+      { id: 'help', title: 'Help', path: '/help' },
+    ]);
+
+    expect(result.map((item) => item.id)).toEqual(['settings', 'theme']);
+    const themeItem = result.find((item) => item.id === 'theme');
+    expect(themeItem).toMatchObject({
+      title: 'Visual Theme',
+      href: '/docs/theme',
+    });
+    expect(themeItem).not.toHaveProperty('path');
   });
 
   it('mergeExtensionMenus handles extensions without menus', () => {

@@ -74,6 +74,29 @@ export interface ExtensionShellConfig {
   helpUrl?: string;
   aboutUrl?: string;
   supportUrl?: string;
+  sidebarWidthRem?: number;
+  sidebarCollapsedWidthRem?: number;
+}
+
+export type ExtensionDeltaOverride = 'merge' | 'replace' | 'remove';
+
+export interface ExtensionUserMenuItem {
+  id: string;
+  title?: string;
+  titleKey?: string;
+  icon?: string;
+  path?: string;
+  href?: string;
+  externalUrl?: string;
+  pageType?: MenuItem['pageType'];
+  componentId?: string;
+  pluginUrl?: string;
+  schemaPath?: string;
+  frameSrc?: string;
+  roles?: string[];
+  sort?: number;
+  children?: ExtensionUserMenuItem[];
+  override?: ExtensionDeltaOverride;
 }
 
 export interface ExtensionSystemPagesConfig {
@@ -159,10 +182,12 @@ export interface ShellExtension {
   builtinPages?: ExtensionBuiltinPage[];
   /** Remote plugin manifests to register. */
   plugins?: PluginManifest[];
-  /** Menu items to add to the sidebar. */
+  /** Deprecated: host navigation menus are backend-owned. Use backend site map data instead. */
   menus?: MenuItem[];
-  /** When true, replaces the entire menu tree instead of merging. */
+  /** Deprecated: host navigation menus are backend-owned. */
   overrideMenus?: boolean;
+  /** Delta customizations for the left-bottom sidebar user menu. */
+  userMenuItems?: ExtensionUserMenuItem[];
   /** Authentication configuration (token storage, refresh). */
   auth?: ExtensionAuthConfig;
   /** Lifecycle hook called after the extension is loaded. */

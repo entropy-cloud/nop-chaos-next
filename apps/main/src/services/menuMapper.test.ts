@@ -5,10 +5,6 @@ vi.mock('@nop-chaos/shared', () => ({
   validateMenuResponse: (v: unknown) => v,
 }));
 
-vi.mock('@nop-chaos/extension-host', () => ({
-  mergeExtensionMenus: (v: unknown) => v,
-}));
-
 describe('mapLegacySiteMapToMenuResponse', () => {
   let mapLegacySiteMapToMenuResponse: typeof import('./menuMapper').mapLegacySiteMapToMenuResponse;
 

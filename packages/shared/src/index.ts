@@ -15,6 +15,8 @@ export type {
   ExtensionLoginUiFeature,
   ExtensionLoginUiConfig,
   ExtensionShellConfig,
+  ExtensionDeltaOverride,
+  ExtensionUserMenuItem,
   ExtensionSystemPagesConfig,
   TokenStorageType,
   ExtensionAuthConfig,

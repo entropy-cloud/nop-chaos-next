@@ -5,7 +5,13 @@ vi.mock('@nop-chaos/extension-host', () => ({
   getShellRuntimeConfig: () => ({
     branding: { name: 'Test', shortName: 'T' },
     loginUi: { features: [] },
-    shell: { helpUrl: '/help', aboutUrl: '/about', supportUrl: '/support' },
+    shell: {
+      helpUrl: '/help',
+      aboutUrl: '/about',
+      supportUrl: '/support',
+      sidebarWidthRem: 15,
+      sidebarCollapsedWidthRem: 4.5,
+    },
     systemPages: {},
   }),
 }));
@@ -29,5 +35,6 @@ describe('useShellConfig', () => {
     const config = useShellConfig();
     expect(config.branding.name).toBe('Test');
     expect(config.shell.helpUrl).toBe('/help');
+    expect(config.shell.sidebarWidthRem).toBe(15);
   });
 });

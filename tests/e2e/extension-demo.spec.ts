@@ -14,5 +14,5 @@ test('extension demo alias mode loads Harbor login and builtin page', async ({ p
   await page.goto('/#/examples/extension-harbor');
   await expect(page.getByText('Extension Builtin Page')).toBeVisible();
   await expect(page.getByText('How it works')).toBeVisible();
-  await expect(page.locator('aside')).toContainText('Extension Harbor Page');
+  await expect(page.locator('aside')).not.toContainText('Extension Harbor Page');
 });

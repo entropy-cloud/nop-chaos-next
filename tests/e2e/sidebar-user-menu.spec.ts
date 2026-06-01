@@ -27,7 +27,7 @@ test('sidebar user menu navigates to theme settings', async ({ page }) => {
   await sidebarTrigger(page).click();
   const menuContent = page.locator('[data-slot="dropdown-menu-content"]');
   await expect(menuContent).toBeVisible();
-  await page.locator('[data-testid="sidebar-user-menu-theme"]').click();
+  await page.locator('[data-testid="sidebar-user-menu-settings-theme"]').click();
   await expect(page).toHaveURL(/\/settings\/theme$/);
 });
 
@@ -36,7 +36,7 @@ test('sidebar user menu navigates to language settings', async ({ page }) => {
   await sidebarTrigger(page).click();
   const menuContent = page.locator('[data-slot="dropdown-menu-content"]');
   await expect(menuContent).toBeVisible();
-  await page.locator('[data-testid="sidebar-user-menu-language"]').click();
+  await page.locator('[data-testid="sidebar-user-menu-settings-language"]').click();
   await expect(page).toHaveURL(/\/settings\/language$/);
 });
 

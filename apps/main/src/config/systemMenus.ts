@@ -1,8 +1,12 @@
 import { flattenMenus, type MenuItem, type MenuResponse } from '@nop-chaos/shared';
-import { getExtensionDefaultHomePath, hasMenuOverride } from '@nop-chaos/extension-host';
+import { getExtensionDefaultHomePath, resolveExtensionUserMenuItems } from '@nop-chaos/extension-host';
 import { getDefaultHomePath, setCurrentHomePath } from './homePath';
+import {
+  defaultSidebarUserMenuItems,
+  type SidebarUserRouteMenuItem,
+} from './sidebarUserMenu';
 
-const builtinSystemMenuItems: MenuItem[] = [
+export const routeOnlySystemMenuItems: MenuItem[] = [
   {
     id: 'dashboard',
     titleKey: 'menu.dashboard',
@@ -87,18 +91,52 @@ const builtinSystemMenuItems: MenuItem[] = [
   },
 ];
 
-function cloneMenuItem(item: MenuItem): MenuItem {
-  return {
-    ...item,
-    children: item.children?.map(cloneMenuItem),
+function userMenuItemToRouteItems(item: SidebarUserRouteMenuItem): MenuItem[] {
+  const childItems = item.children?.flatMap(userMenuItemToRouteItems) ?? [];
+
+  if (!item.path || !item.pageType) {
+    return childItems;
+  }
+
+  const title = item.title;
+  const titleKey = item.titleKey;
+
+  if (!title && !titleKey) {
+    return childItems;
+  }
+
+  const baseItem = {
+    id: `user-menu:${item.id}`,
+    title,
+    titleKey,
+    path: item.path,
+    icon: item.icon,
+    pageType: item.pageType,
+    componentId: item.componentId,
+    pluginUrl: item.pluginUrl,
+    schemaPath: item.schemaPath,
+    frameSrc: item.frameSrc,
+    externalUrl: item.externalUrl,
+    roles: item.roles,
+    sort: item.sort,
+    hideInMenu: true,
   };
+
+  return [baseItem as MenuItem, ...childItems];
 }
 
-function hideMenuItem(item: MenuItem): MenuItem {
+function getRouteOnlyUserMenuItems(existingItems: MenuItem[]) {
+  const existingPaths = new Set(flattenMenus(existingItems).map((item) => item.path));
+
+  return resolveExtensionUserMenuItems(defaultSidebarUserMenuItems)
+    .flatMap(userMenuItemToRouteItems)
+    .filter((item) => !existingPaths.has(item.path));
+}
+
+export function cloneRouteMenuItem(item: MenuItem): MenuItem {
   return {
     ...item,
-    hideInMenu: true,
-    children: item.children?.map(hideMenuItem),
+    children: item.children?.map(cloneRouteMenuItem),
   };
 }
 
@@ -107,10 +145,12 @@ function isSameMenuItem(left: MenuItem, right: MenuItem) {
 }
 
 function mergeMenuItem(existingItem: MenuItem, builtinItem: MenuItem): MenuItem {
+  const children = mergeMenuItems(existingItem.children, builtinItem.children);
+
   return {
     ...builtinItem,
     ...existingItem,
-    children: mergeMenuItems(existingItem.children, builtinItem.children),
+    children,
   };
 }
 
@@ -118,7 +158,7 @@ function mergeMenuItems(
   existingItems: MenuItem[] | undefined,
   builtinItems: MenuItem[] | undefined,
 ) {
-  const nextItems = (existingItems ?? []).map(cloneMenuItem);
+  const nextItems = (existingItems ?? []).map(cloneRouteMenuItem);
 
   for (const builtinItem of builtinItems ?? []) {
     const existingIndex = nextItems.findIndex((item) => isSameMenuItem(item, builtinItem));
@@ -128,45 +168,32 @@ function mergeMenuItems(
       continue;
     }
 
-    nextItems.push(cloneMenuItem(builtinItem));
+    nextItems.push(cloneRouteMenuItem(builtinItem));
   }
 
   return nextItems.length > 0 ? nextItems : undefined;
 }
 
+function markRouteOnly(item: MenuItem): MenuItem {
+  return {
+    ...item,
+    hideInMenu: true,
+    children: item.children?.map(markRouteOnly),
+  };
+}
+
 export function mergeBuiltinSystemMenus(menuResponse: MenuResponse): MenuResponse {
-  // System pages (settings, help, etc.) should always be available,
-  // even when overrideMenus is true. They are accessed from the user menu,
-  // not from the sidebar navigation.
-  if (hasMenuOverride()) {
-    const items =
-      mergeMenuItems(menuResponse.items, builtinSystemMenuItems.map(hideMenuItem)) ?? [];
-    const availablePaths = new Set(flattenMenus(items).map((item) => item.path));
-    const homeCandidate =
-      menuResponse.home && availablePaths.has(menuResponse.home)
-        ? menuResponse.home
-        : (menuResponse.items[0]?.path ?? '/');
+  const items = menuResponse.items.map(cloneRouteMenuItem);
 
-    const merged = {
-      ...menuResponse,
-      home: homeCandidate,
-      items,
-    };
-
-    setCurrentHomePath(merged.home);
-    return merged;
-  }
-
-  const items = mergeMenuItems(menuResponse.items, builtinSystemMenuItems) ?? [];
-
-  const availablePaths = new Set(flattenMenus(items).map((item) => item.path));
+  const availableItems = flattenMenus(items);
+  const availablePaths = new Set(availableItems.map((item) => item.path));
   const extensionHome = getExtensionDefaultHomePath();
   const homeCandidate =
     menuResponse.home && availablePaths.has(menuResponse.home)
       ? menuResponse.home
       : extensionHome && availablePaths.has(extensionHome)
         ? extensionHome
-        : getDefaultHomePath();
+        : (availableItems[0]?.path ?? getDefaultHomePath());
 
   const merged = {
     ...menuResponse,
@@ -176,4 +203,13 @@ export function mergeBuiltinSystemMenus(menuResponse: MenuResponse): MenuRespons
 
   setCurrentHomePath(merged.home);
   return merged;
+}
+
+export function mergeRouteOnlySystemMenus(menuResponse: MenuResponse): MenuResponse {
+  const systemItems = mergeMenuItems(menuResponse.items, routeOnlySystemMenuItems.map(markRouteOnly)) ?? [];
+
+  return {
+    ...menuResponse,
+    items: mergeMenuItems(systemItems, getRouteOnlyUserMenuItems(systemItems)) ?? [],
+  };
 }

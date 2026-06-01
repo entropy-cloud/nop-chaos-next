@@ -76,11 +76,23 @@ describe('useAuthBootstrap logic (store-level)', () => {
 
     await restoreAuthSession();
 
-    expect(mockFetchCurrentUser).toHaveBeenCalledWith();
+    expect(mockFetchCurrentUser).toHaveBeenCalledWith('valid-token');
     const state = useAuthStore.getState();
     expect(state.user?.username).toBe('bootuser');
     expect(state.isAuthenticated).toBe(true);
     expect(state.bootstrapStatus).toBe('ready');
+  });
+
+  it('prefers stored tokens.accessToken during session restore', async () => {
+    mockFetchCurrentUser.mockResolvedValue({ id: 'u1', username: 'bootuser', roles: ['admin'] });
+    useAuthStore.setState({
+      token: 'stale-token',
+      tokens: { accessToken: 'managed-token', refreshToken: 'refresh-token' },
+    });
+
+    await restoreAuthSession();
+
+    expect(mockFetchCurrentUser).toHaveBeenCalledWith('managed-token');
   });
 
   it('calls logout and sets error when fetchCurrentUser fails', async () => {

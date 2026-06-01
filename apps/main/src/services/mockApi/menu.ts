@@ -1,5 +1,4 @@
 import { validateMenuResponse, type MenuResponse } from '@nop-chaos/shared';
-import { mergeExtensionMenus } from '@nop-chaos/extension-host';
 import { mainHttpClient } from '../http';
 import { wait } from './shared';
 
@@ -16,5 +15,5 @@ export async function fetchMenuConfig(): Promise<MenuResponse> {
     throw new Error(`Failed to load menu config: ${response.status}`);
   }
 
-  return wait(mergeExtensionMenus(validateMenuResponse(response.data)), 260);
+  return wait(validateMenuResponse(response.data), 260);
 }
