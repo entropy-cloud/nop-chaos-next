@@ -288,3 +288,13 @@ pnpm dev:extensions
 MIT — 详见 [LICENSE](LICENSE)。
 
 基于 [Baidu AMIS](https://github.com/baidu/amis) 构建，已迁移到 React 19。
+
+## 作者微信和微信讨论群
+
+![](https://gitee.com/canonical-entropy/nop-entropy/raw/master/wechat-group.png)
+
+添加微信时请注明：加入Nop平台群
+
+## 微信公众号
+
+![](https://gitee.com/canonical-entropy/nop-entropy/raw/master/wechat-public-account.jpg)
