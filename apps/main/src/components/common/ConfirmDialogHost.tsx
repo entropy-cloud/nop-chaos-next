@@ -22,7 +22,7 @@ export function ConfirmDialogHost() {
 
   return (
     <AlertDialog open onOpenChange={(open) => !open && resolveConfirm(false)}>
-      <AlertDialogContent key={request.id}>
+      <AlertDialogContent key={request.id} className={request.options.className}>
         <AlertDialogHeader>
           <AlertDialogTitle>
             {request.options.title ?? t('common.confirm', { defaultValue: 'Confirm' })}

@@ -3,6 +3,7 @@ interface ConfirmOptions {
   confirmText?: string;
   cancelText?: string;
   destructive?: boolean;
+  className?: string;
 }
 
 interface ConfirmRequest {

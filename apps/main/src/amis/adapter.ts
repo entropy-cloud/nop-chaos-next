@@ -87,7 +87,7 @@ export function createMainAmisAdapter({
     alert: async (message) => {
       toast(message);
     },
-    confirm: async (message, title) => confirmInApp(message, { title }),
+    confirm: async (message, title) => confirmInApp(message, { title, className: 'amis-confirm-dialog' }),
     logout: () => {
       clearManagedTokens();
       useAuthStore.getState().logout();

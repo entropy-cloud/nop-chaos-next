@@ -114,5 +114,65 @@ export const testAmisSchema = {
         },
       ],
     },
+    {
+      type: 'table',
+      source: '$rows',
+      items: [
+        {
+          id: '1',
+          name: 'Alpha release verification',
+          owner: 'Iris Chen',
+        },
+        {
+          id: '2',
+          name: 'Beta environment smoke run',
+          owner: 'Noah Kim',
+        },
+      ],
+      columns: [
+        {
+          name: 'name',
+          label: 'Name',
+        },
+        {
+          name: 'owner',
+          label: 'Owner',
+        },
+        {
+          type: 'operation',
+          label: 'Actions',
+          buttons: [
+            {
+              type: 'button',
+              label: 'View',
+              level: 'link',
+              actionType: 'dialog',
+              dialog: {
+                title: 'Record details',
+                body: 'Viewing ${name}',
+              },
+            },
+            {
+              type: 'dropdown-button',
+              label: 'More',
+              level: 'link',
+              hideCaret: false,
+              buttons: [
+                {
+                  type: 'button',
+                  label: 'Delete',
+                  actionType: 'ajax',
+                  confirmText: 'Confirm delete ${name}?',
+                  api: {
+                    method: 'post',
+                    url: '/api/mock/amis-preview/delete/${id}',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 } as const;
