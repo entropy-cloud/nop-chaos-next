@@ -212,4 +212,4 @@ When reviewing drift between upstream and downstream:
 
 - `docs/references/build-guide.md`
 - `docs/logs/flux-sync/index.md`
-- `docs/analys/2026-05-26-flux-upstream-delta-analysis.md`
+- `docs/analysis/2026-05-26-flux-upstream-delta-analysis.md`

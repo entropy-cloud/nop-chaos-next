@@ -7,6 +7,7 @@
 - Primary host app: `apps/main`.
 - Remote demo plugin: `examples/plugin-demo`.
 - Shared packages: `packages/shared`, `packages/ui`, `packages/core`, `packages/plugin-bridge`.
+- AMIS framework reference: `amis-guide/` (repo-root sibling of `docs/`).
 
 ### Extension Project Boundary
 
@@ -26,6 +27,8 @@
 - `packages/plugin-bridge`: host-to-plugin bridge state and hooks.
 - `tests/e2e`: Playwright tests.
 - `docs`: project documentation.
+- `amis-guide/`: AMIS (百度低代码 JSON-to-React 框架) 开发参考，面向 AI 的精简指南。查 AMIS 组件字段、表达式、API、事件、设计模式时先看这里。包含 `README.md`(架构与类型索引)、`01-quickstart.md`(常用代码段)、`02-reference.md`(核心机制)、`amis-types/*.d.ts`(组件 TypeScript 接口，字段知识源)、`design-patterns/`(业务场景 cookbook)。
+- `extensions/`（仓库根）: 本地联调外部业务 extension 的预留目录。其中的子目录是独立项目，不纳入本仓库版本控制（见 `.gitignore` 的 `/extensions/*` 规则，仅保留 `.gitkeep`）。注意区分：宿主源码目录 `apps/main/src/extensions/` 是版本化代码，**不得**被 gitignore 覆盖；同仓管理的示例 extension 放在 `examples/`（用 `pnpm generate:extension` 生成）。
 
 ## Package Manager
 

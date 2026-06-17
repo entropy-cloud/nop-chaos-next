@@ -64,6 +64,24 @@ Rule:
 - `docs/plans/` 是执行契约，不是最终设计
 - 关闭后，稳定结论应回流到 `docs/design/`，不是永远停留在 plan 中
 
+### What is the reference for AMIS framework knowledge (component fields, expressions, events, patterns)?
+
+Primary source:
+
+- `amis-guide/` (repo-root sibling of `docs/`)
+
+Routing:
+
+- 组件字段（type → 接口）：`amis-guide/amis-types/*.d.ts`（字段知识源），入口 `amis-guide/amis-types/index.ts`
+- 常用骨架代码：`amis-guide/01-quickstart.md`
+- 跨组件机制（表达式 / API / 事件 / 数据流）：`amis-guide/02-reference.md`
+- 业务场景完整解法：`amis-guide/design-patterns/`
+
+Rule:
+
+- `amis-guide/` 描述上游 AMIS 框架本身的用法，是外部框架知识
+- 本仓库如何集成 AMIS（主题桥接、渲染引擎、按需加载）属于本仓库设计，记录在 `docs/design/`（如 `amis-theme-bridge.md`、`amis-flux-rendering-engine-integration.md`）
+
 ### What actually happened during execution?
 
 Primary source:

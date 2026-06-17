@@ -71,6 +71,10 @@ When adding a new log entry for today:
 
 - [flux-sync/index.md](flux-sync/index.md) — Script-generated sync baseline records for `scripts/sync-flux-lib.sh`
 
+### 2026-06
+
+- [06-17](2026/06-17.md) — Moved `amis-guide/` AMIS framework reference into repo root and updated indexes
+
 ### 2026-05
 
 - [05-29](2026/05-29.md) — Backend-owned navigation menus and extension user-menu delta customization

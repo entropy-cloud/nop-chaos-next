@@ -29,12 +29,12 @@ NOP Chaos Next 是基于 AMIS 的前端应用框架，提供完整的扩展系�
 
 ## 与 NOP Chaos Flux 的关系
 
-| 维度         | NOP Chaos Flux                      | NOP Chaos Next               |
-| ------------ | ----------------------------------- | ---------------------------- |
-| **定位**     | 低代码 Runtime 和渲染框架           | 前端应用框架和脚手架         |
-| **核心能力** | 七个 primitives 构建的 runtime      | Extension 系统 + Plugin 系统 |
-| **渲染层**   | 自研 renderer 架构                  | 基于 AMIS（React 19 迁移版） |
-| **使用场景** | 平台团队构建低代码基础设施          | 业务团队构建企业级应用       |
+| 维度         | NOP Chaos Flux                 | NOP Chaos Next               |
+| ------------ | ------------------------------ | ---------------------------- |
+| **定位**     | 低代码 Runtime 和渲染框架      | 前端应用框架和脚手架         |
+| **核心能力** | 七个 primitives 构建的 runtime | Extension 系统 + Plugin 系统 |
+| **渲染层**   | 自研 renderer 架构             | 基于 AMIS（React 19 迁移版） |
+| **使用场景** | 平台团队构建低代码基础设施     | 业务团队构建企业级应用       |
 
 - **Flux** = "如何从 JSON 生成 UI"（底层 runtime）
 - **Next** = "如何构建可扩展的业务应用"（应用框架）
@@ -73,7 +73,8 @@ nop-chaos-next/
 │   └── extension-demo/     # Extension 示例
 ├── tests/e2e/              # E2E 测试
 ├── scripts/                # 构建、分析、同步脚本
-└── docs/                   # 文档
+├── docs/                   # 文档
+└── amis-guide/             # AMIS 低代码框架开发参考（面向 AI 的精简指南）
 ```
 
 ## 核心特性
@@ -124,11 +125,11 @@ Plugin 适用于业务页面、工作台、管理界面等需要独立开发和�
 
 ### 前置条件
 
-| 工具    | 版本    |
-| ------- | ------- |
-| Node.js | 20+     |
-| pnpm    | 10.0.0  |
-| Git     | 任意    |
+| 工具    | 版本   |
+| ------- | ------ |
+| Node.js | 20+    |
+| pnpm    | 10.0.0 |
+| Git     | 任意   |
 
 ### 1. 克隆仓库及兄弟仓库
 
@@ -139,10 +140,10 @@ Plugin 适用于业务页面、工作台、管理界面等需要独立开发和�
 
 用于刷新基线的兄弟仓库如下：
 
-| 兄弟仓库 | 用途 | 集成方式 |
-|---------|------|---------|
-| [amis-react19](https://gitee.com/canonical-entropy/amis-react19) | AMIS React 19 分支 | 通过 `pnpm import:amis` 导入到 `libs/*.tgz` |
-| [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) | Flux UI/主题包 | 通过 `pnpm import:flux` 导入 tgz；通过 `pnpm sync:flux:src` 可选刷新 `flux-lib` 源码基线 |
+| 兄弟仓库                                                             | 用途               | 集成方式                                                                                 |
+| -------------------------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
+| [amis-react19](https://gitee.com/canonical-entropy/amis-react19)     | AMIS React 19 分支 | 通过 `pnpm import:amis` 导入到 `libs/*.tgz`                                              |
+| [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) | Flux UI/主题包     | 通过 `pnpm import:flux` 导入 tgz；通过 `pnpm sync:flux:src` 可选刷新 `flux-lib` 源码基线 |
 
 如果你要刷新上游基线，三个仓库需要克隆到同一父目录下：
 

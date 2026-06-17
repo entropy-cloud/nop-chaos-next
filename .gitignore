@@ -4,7 +4,11 @@ dist/
 .idea/
 .vite/
 .turbo/
-extensions/
+# 根目录的 extensions/ 用于本地联调外部业务 extension（独立项目，不纳入版本控制）。
+# 用 /extensions/* 锚定根目录，避免误伤 apps/main/src/extensions/ 等源码目录；
+# 仅保留 .gitkeep 以维持目录结构。
+/extensions/*
+!/extensions/.gitkeep
 coverage/
 playwright-report/
 test-results/

@@ -19,16 +19,17 @@ This `docs/` tree is the durable memory and routing surface for `nop-chaos-next`
 
 ## Read This First
 
-| If you need to... | Read this first | Then read |
-| --- | --- | --- |
-| Understand document ownership and precedence | `docs/source-of-truth-and-precedence.md` | the relevant owner doc |
-| Understand the current stable project baseline | `docs/design/index.md` | the relevant file in `docs/design/` |
-| Analyze dependency or bundle issues | `docs/skills/README.md` | `docs/skills/main-bundle-dependency-governance.md`, then the related scripts |
-| Start or review non-trivial execution | `docs/plans/00-plan-authoring-and-execution-guide.md` | the active plan and latest log entry |
-| Review recent implementation history | `docs/logs/index.md` | the latest dated log file |
-| Look up a past subtle regression | `docs/bugs/00-bug-fix-note-writing-guide.md` | the relevant file in `docs/bugs/` |
-| Check build and setup workflow | `docs/references/build-guide.md` | the relevant design/spec file |
-| Record or review testing notes | `docs/testing/index.md` | the relevant dated testing note |
+| If you need to...                                               | Read this first                                       | Then read                                                                    |
+| --------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Understand document ownership and precedence                    | `docs/source-of-truth-and-precedence.md`              | the relevant owner doc                                                       |
+| Understand the current stable project baseline                  | `docs/design/index.md`                                | the relevant file in `docs/design/`                                          |
+| Analyze dependency or bundle issues                             | `docs/skills/README.md`                               | `docs/skills/main-bundle-dependency-governance.md`, then the related scripts |
+| Start or review non-trivial execution                           | `docs/plans/00-plan-authoring-and-execution-guide.md` | the active plan and latest log entry                                         |
+| Review recent implementation history                            | `docs/logs/index.md`                                  | the latest dated log file                                                    |
+| Look up a past subtle regression                                | `docs/bugs/00-bug-fix-note-writing-guide.md`          | the relevant file in `docs/bugs/`                                            |
+| Check build and setup workflow                                  | `docs/references/build-guide.md`                      | the relevant design/spec file                                                |
+| Record or review testing notes                                  | `docs/testing/index.md`                               | the relevant dated testing note                                              |
+| Look up AMIS component fields, expressions, events, or patterns | `../amis-guide/README.md`                             | the relevant file under `../amis-guide/`                                     |
 
 ## Directory Roles
 
@@ -42,51 +43,55 @@ This `docs/` tree is the durable memory and routing surface for `nop-chaos-next`
 - `docs/examples/` - how-to and example docs
 - `docs/input/` - raw external input material
 
+## Sibling References (outside `docs/`)
+
+- `../amis-guide/` - AMIS (JSON-to-React 低代码框架) 面向 AI 的精简开发参考。组件字段查 `amis-guide/amis-types/*.d.ts`（字段知识源），常用代码段看 `amis-guide/01-quickstart.md`，跨组件机制（表达式/API/事件/数据流）看 `amis-guide/02-reference.md`，业务场景解法看 `amis-guide/design-patterns/`。入口为 `amis-guide/README.md`。
+
 ## Design (`design/`)
 
 Feature and page design documents. See [`design/index.md`](./design/index.md) for directory purpose and authoring rules.
 
-| Document                                                                    | Description                  |
-| --------------------------------------------------------------------------- | ---------------------------- |
-| [dashboard.md](./design/dashboard.md)                                       | Dashboard page design        |
-| [ai-workbench.md](./design/ai-workbench.md)                                 | AI workbench design          |
-| [flow-editor.md](./design/flow-editor.md)                                   | Flow editor design           |
-| [master-detail.md](./design/master-detail.md)                               | Master-detail CRUD design    |
-| [plugin-system.md](./design/plugin-system.md)                               | Plugin management page       |
-| [layout-settings.md](./design/layout-settings.md)                           | Layout settings design       |
-| [extension-system.md](./design/extension-system.md)                         | Extension system             |
-| [backend-integration.md](./design/backend-integration.md)                   | Backend integration guide    |
-| [amis-theme-bridge.md](./design/amis-theme-bridge.md)                       | AMIS theme bridge            |
+| Document                                                                                        | Description                            |
+| ----------------------------------------------------------------------------------------------- | -------------------------------------- |
+| [dashboard.md](./design/dashboard.md)                                                           | Dashboard page design                  |
+| [ai-workbench.md](./design/ai-workbench.md)                                                     | AI workbench design                    |
+| [flow-editor.md](./design/flow-editor.md)                                                       | Flow editor design                     |
+| [master-detail.md](./design/master-detail.md)                                                   | Master-detail CRUD design              |
+| [plugin-system.md](./design/plugin-system.md)                                                   | Plugin management page                 |
+| [layout-settings.md](./design/layout-settings.md)                                               | Layout settings design                 |
+| [extension-system.md](./design/extension-system.md)                                             | Extension system                       |
+| [backend-integration.md](./design/backend-integration.md)                                       | Backend integration guide              |
+| [amis-theme-bridge.md](./design/amis-theme-bridge.md)                                           | AMIS theme bridge                      |
 | [amis-flux-rendering-engine-integration.md](./design/amis-flux-rendering-engine-integration.md) | AMIS/Flux rendering engine integration |
-| [icon-system.md](./design/icon-system.md)                                   | Icon system design           |
-| [submit-concurrency-guard.md](./design/submit-concurrency-guard.md)         | Submit concurrency guard spec |
-| [index.md](./design/index.md)                                                       | Design docs purpose and rules |
-| [main-bundle-dependency-spec.md](./design/main-bundle-dependency-spec.md)         | Main app dependency spec |
-| [package-exports-spec.md](./design/package-exports-spec.md)                       | Package exports spec |
-| [styling-system-specification.md](./design/styling-system-specification.md) | Styling system specification |
+| [icon-system.md](./design/icon-system.md)                                                       | Icon system design                     |
+| [submit-concurrency-guard.md](./design/submit-concurrency-guard.md)                             | Submit concurrency guard spec          |
+| [index.md](./design/index.md)                                                                   | Design docs purpose and rules          |
+| [main-bundle-dependency-spec.md](./design/main-bundle-dependency-spec.md)                       | Main app dependency spec               |
+| [package-exports-spec.md](./design/package-exports-spec.md)                                     | Package exports spec                   |
+| [styling-system-specification.md](./design/styling-system-specification.md)                     | Styling system specification           |
 
 ## References (`references/`)
 
 Reference manuals, glossaries, and lookup material.
 
-| Document                                                                            | Description                    |
-| ----------------------------------------------------------------------------------- | ------------------------------ |
-| [build-guide.md](./references/build-guide.md)                                       | Full build and setup guide     |
-| [flux-sync-spec.md](./references/flux-sync-spec.md)                                 | Flux sync contract and policy  |
-| [mock-data.md](./references/mock-data.md)                                           | Mock data description          |
-| [style-interaction-guidelines.md](./references/style-interaction-guidelines.md)     | Style and interaction rules    |
-| [icon-naming-and-rendering.md](./references/icon-naming-and-rendering.md)           | Icon system                    |
-| [extension-ui-patterns.md](./references/extension-ui-patterns.md)                   | Extension UI patterns          |
+| Document                                                                        | Description                   |
+| ------------------------------------------------------------------------------- | ----------------------------- |
+| [build-guide.md](./references/build-guide.md)                                   | Full build and setup guide    |
+| [flux-sync-spec.md](./references/flux-sync-spec.md)                             | Flux sync contract and policy |
+| [mock-data.md](./references/mock-data.md)                                       | Mock data description         |
+| [style-interaction-guidelines.md](./references/style-interaction-guidelines.md) | Style and interaction rules   |
+| [icon-naming-and-rendering.md](./references/icon-naming-and-rendering.md)       | Icon system                   |
+| [extension-ui-patterns.md](./references/extension-ui-patterns.md)               | Extension UI patterns         |
 
 ## Skills (`skills/`)
 
 Reusable analysis and execution methods.
 
-| Document                                                                                  | Description                         |
-| ----------------------------------------------------------------------------------------- | ----------------------------------- |
-| [README.md](./skills/README.md)                                                           | Skills purpose and index            |
-| [index-routing-audit-prompt.md](./skills/index-routing-audit-prompt.md)                  | Docs routing audit prompt           |
-| [main-bundle-dependency-governance.md](./skills/main-bundle-dependency-governance.md)    | Generic bundle dependency analysis  |
+| Document                                                                              | Description                        |
+| ------------------------------------------------------------------------------------- | ---------------------------------- |
+| [README.md](./skills/README.md)                                                       | Skills purpose and index           |
+| [index-routing-audit-prompt.md](./skills/index-routing-audit-prompt.md)               | Docs routing audit prompt          |
+| [main-bundle-dependency-governance.md](./skills/main-bundle-dependency-governance.md) | Generic bundle dependency analysis |
 
 ## Examples (`examples/`)
 
@@ -101,46 +106,46 @@ Usage examples and how-to guides.
 
 Bug fix records for non-trivial issues.
 
-| Document                                                                    | Description                |
-| --------------------------------------------------------------------------- | -------------------------- |
-| [00-bug-fix-note-writing-guide.md](./bugs/00-bug-fix-note-writing-guide.md) | Bug fix note writing guide |
-| [12-amis-helper-css-conflict.md](./bugs/12-amis-helper-css-conflict.md)     | AMIS CSS conflict handling |
-| [23-doc-code-consistency-audit.md](./bugs/23-doc-code-consistency-audit.md) | Doc-code consistency audit |
-| [24-main-bundle-chunk-boundary-regression.md](./bugs/24-main-bundle-chunk-boundary-regression.md) | Main bundle chunk boundary regression |
-| [25-amis-file-dependency-runtime-split.md](./bugs/25-amis-file-dependency-runtime-split.md) | AMIS file dependency runtime split |
-| [26-flux-tarball-runtime-require-mismatch.md](./bugs/26-flux-tarball-runtime-require-mismatch.md) | Flux tarball runtime require mismatch |
-| [27-main-i18n-initialization-menu-title-fallback.md](./bugs/27-main-i18n-initialization-menu-title-fallback.md) | Main i18n initialization menu title fallback |
-| [28-core-i18next-singleton-split.md](./bugs/28-core-i18next-singleton-split.md) | Core i18next singleton split |
-| [29-flux-react-i18next-default-instance-pollution.md](./bugs/29-flux-react-i18next-default-instance-pollution.md) | Flux react-i18next default instance pollution |
-| [30-amis-global-css-baseline-drift.md](./bugs/30-amis-global-css-baseline-drift.md) | AMIS global CSS baseline drift |
-| [31-e2e-mock-menu-config-missing-dynamic-route.md](./bugs/31-e2e-mock-menu-config-missing-dynamic-route.md) | E2E mock menu config missing dynamic route |
-| [32-plugin-bridge-unstable-snapshot-loop.md](./bugs/32-plugin-bridge-unstable-snapshot-loop.md) | Plugin bridge unstable snapshot render loop |
-| [33-dialog-padding-and-drawer-select-broken.md](./bugs/33-dialog-padding-and-drawer-select-broken.md) | Dialog padding and drawer select broken |
-| [34-master-detail-query-sync-effect-loop.md](./bugs/34-master-detail-query-sync-effect-loop.md) | Master detail query sync effect loop |
-| [35-auth-managed-token-sync-and-shared-refresh-lock.md](./bugs/35-auth-managed-token-sync-and-shared-refresh-lock.md) | Auth managed token sync and shared refresh lock |
-| [36-extension-contract-half-connection-closure.md](./bugs/36-extension-contract-half-connection-closure.md) | Extension contract half-connection closure |
-| [37-runtime-state-canonicalization-fixes.md](./bugs/37-runtime-state-canonicalization-fixes.md) | Runtime state canonicalization fixes |
-| [38-ai-workbench-lifecycle-cancellation.md](./bugs/38-ai-workbench-lifecycle-cancellation.md) | AI Workbench lifecycle cancellation |
-| [39-master-detail-detail-form-button-submit-loop.md](./bugs/39-master-detail-detail-form-button-submit-loop.md) | Master detail detail confirm loop and empty dialog |
-| [40-main-tailwind-ui-content-scan-drift.md](./bugs/40-main-tailwind-ui-content-scan-drift.md) | Main Tailwind UI content scan drift |
-| [41-graphql-save-mutation-missing-data-wrapper.md](./bugs/41-graphql-save-mutation-missing-data-wrapper.md) | GraphQL save/update missing data wrapper |
+| Document                                                                                                              | Description                                        |
+| --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| [00-bug-fix-note-writing-guide.md](./bugs/00-bug-fix-note-writing-guide.md)                                           | Bug fix note writing guide                         |
+| [12-amis-helper-css-conflict.md](./bugs/12-amis-helper-css-conflict.md)                                               | AMIS CSS conflict handling                         |
+| [23-doc-code-consistency-audit.md](./bugs/23-doc-code-consistency-audit.md)                                           | Doc-code consistency audit                         |
+| [24-main-bundle-chunk-boundary-regression.md](./bugs/24-main-bundle-chunk-boundary-regression.md)                     | Main bundle chunk boundary regression              |
+| [25-amis-file-dependency-runtime-split.md](./bugs/25-amis-file-dependency-runtime-split.md)                           | AMIS file dependency runtime split                 |
+| [26-flux-tarball-runtime-require-mismatch.md](./bugs/26-flux-tarball-runtime-require-mismatch.md)                     | Flux tarball runtime require mismatch              |
+| [27-main-i18n-initialization-menu-title-fallback.md](./bugs/27-main-i18n-initialization-menu-title-fallback.md)       | Main i18n initialization menu title fallback       |
+| [28-core-i18next-singleton-split.md](./bugs/28-core-i18next-singleton-split.md)                                       | Core i18next singleton split                       |
+| [29-flux-react-i18next-default-instance-pollution.md](./bugs/29-flux-react-i18next-default-instance-pollution.md)     | Flux react-i18next default instance pollution      |
+| [30-amis-global-css-baseline-drift.md](./bugs/30-amis-global-css-baseline-drift.md)                                   | AMIS global CSS baseline drift                     |
+| [31-e2e-mock-menu-config-missing-dynamic-route.md](./bugs/31-e2e-mock-menu-config-missing-dynamic-route.md)           | E2E mock menu config missing dynamic route         |
+| [32-plugin-bridge-unstable-snapshot-loop.md](./bugs/32-plugin-bridge-unstable-snapshot-loop.md)                       | Plugin bridge unstable snapshot render loop        |
+| [33-dialog-padding-and-drawer-select-broken.md](./bugs/33-dialog-padding-and-drawer-select-broken.md)                 | Dialog padding and drawer select broken            |
+| [34-master-detail-query-sync-effect-loop.md](./bugs/34-master-detail-query-sync-effect-loop.md)                       | Master detail query sync effect loop               |
+| [35-auth-managed-token-sync-and-shared-refresh-lock.md](./bugs/35-auth-managed-token-sync-and-shared-refresh-lock.md) | Auth managed token sync and shared refresh lock    |
+| [36-extension-contract-half-connection-closure.md](./bugs/36-extension-contract-half-connection-closure.md)           | Extension contract half-connection closure         |
+| [37-runtime-state-canonicalization-fixes.md](./bugs/37-runtime-state-canonicalization-fixes.md)                       | Runtime state canonicalization fixes               |
+| [38-ai-workbench-lifecycle-cancellation.md](./bugs/38-ai-workbench-lifecycle-cancellation.md)                         | AI Workbench lifecycle cancellation                |
+| [39-master-detail-detail-form-button-submit-loop.md](./bugs/39-master-detail-detail-form-button-submit-loop.md)       | Master detail detail confirm loop and empty dialog |
+| [40-main-tailwind-ui-content-scan-drift.md](./bugs/40-main-tailwind-ui-content-scan-drift.md)                         | Main Tailwind UI content scan drift                |
+| [41-graphql-save-mutation-missing-data-wrapper.md](./bugs/41-graphql-save-mutation-missing-data-wrapper.md)           | GraphQL save/update missing data wrapper           |
 
 ## Testing (`testing/`)
 
 Manual diagnosis and manual test issue records.
 
-| Document                                                                          | Description                  |
-| --------------------------------------------------------------------------------- | ---------------------------- |
-| [index.md](./testing/index.md)                                                    | Manual test issue index      |
-| [00-testing-issue-writing-guide.md](./testing/00-testing-issue-writing-guide.md) | Manual test issue guide      |
+| Document                                                                         | Description             |
+| -------------------------------------------------------------------------------- | ----------------------- |
+| [index.md](./testing/index.md)                                                   | Manual test issue index |
+| [00-testing-issue-writing-guide.md](./testing/00-testing-issue-writing-guide.md) | Manual test issue guide |
 
 ## Logs (`logs/`)
 
 Development log entries organized by date.
 
-| Document                                      | Description                           |
-| --------------------------------------------- | ------------------------------------- |
-| [index.md](./logs/index.md)                   | Daily log writing guide and index     |
+| Document                                        | Description                            |
+| ----------------------------------------------- | -------------------------------------- |
+| [index.md](./logs/index.md)                     | Daily log writing guide and index      |
 | [flux-sync/index.md](./logs/flux-sync/index.md) | Flux source sync history and baselines |
 
 ## Plans (`plans/`)
@@ -163,6 +168,7 @@ External reference material and design inputs.
 - **Flux sync policy**: `references/flux-sync-spec.md`
 - **Plugin development**: `examples/plugin-dev-guide.md` with `design/plugin-system.md` as reference
 - **Rendering engines**: `design/amis-flux-rendering-engine-integration.md`, `design/amis-theme-bridge.md`
+- **AMIS framework reference**: `../amis-guide/README.md` for framework knowledge; fields in `../amis-guide/amis-types/`, patterns in `../amis-guide/design-patterns/`
 - **Bundle dependency optimization**: `skills/README.md`, `skills/main-bundle-dependency-governance.md`, `design/main-bundle-dependency-spec.md`
 - **Backend integration**: `design/backend-integration.md`
 - **Extension system**: `design/extension-system.md`, `examples/extension-generator.md`
