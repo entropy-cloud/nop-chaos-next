@@ -1,0 +1,21 @@
+{
+  "x:extends": "../_partials/crud-page.json",
+  "title": "角色管理",
+  "body": [
+    {
+      "type": "crud",
+      "id": "role-crud",
+      "source": [
+        { "id": 1, "name": "管理员", "code": "admin", "description": "拥有所有权限" },
+        { "id": 2, "name": "编辑者", "code": "editor", "description": "可编辑内容" },
+        { "id": 3, "name": "访客", "code": "viewer", "description": "只读访问" }
+      ],
+      "columns": [
+        { "name": "id", "label": "ID" },
+        { "name": "name", "label": "名称" },
+        { "name": "code", "label": "编码" },
+        { "name": "description", "label": "描述" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "x:extends": "../_partials/crud-page.json",
+  "title": "用户管理",
+  "body": [
+    {
+      "type": "crud",
+      "id": "user-crud",
+      "source": [
+        {
+          "id": 1,
+          "name": "张三",
+          "email": "zhangsan@example.com",
+          "role": "admin",
+          "status": "active"
+        },
+        {
+          "id": 2,
+          "name": "李四",
+          "email": "lisi@example.com",
+          "role": "editor",
+          "status": "active"
+        },
+        {
+          "id": 3,
+          "name": "王五",
+          "email": "wangwu@example.com",
+          "role": "viewer",
+          "status": "disabled"
+        },
+        {
+          "id": 4,
+          "name": "赵六",
+          "email": "zhaoliu@example.com",
+          "role": "editor",
+          "status": "active"
+        },
+        {
+          "id": 5,
+          "name": "孙七",
+          "email": "sunqi@example.com",
+          "role": "viewer",
+          "status": "active"
+        }
+      ],
+      "columns": [
+        { "name": "id", "label": "ID" },
+        { "name": "name", "label": "姓名" },
+        { "name": "email", "label": "邮箱" },
+        { "name": "role", "label": "角色" },
+        { "name": "status", "label": "状态" }
+      ]
+    }
+  ]
+}

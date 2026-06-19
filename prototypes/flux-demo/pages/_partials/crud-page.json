@@ -1,0 +1,19 @@
+{
+  "type": "page",
+  "body": [
+    {
+      "type": "crud",
+      "id": "main-crud",
+      "rowKey": "id",
+      "selection": {},
+      "autoClearSelectionOnRefresh": true,
+      "footerToolbar": [
+        {
+          "type": "text",
+          "text": "共 ${count} 条"
+        }
+      ],
+      "columns": []
+    }
+  ]
+}

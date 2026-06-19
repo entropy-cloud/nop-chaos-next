@@ -12,7 +12,7 @@
           "title": "用户管理",
           "path": "/system/users",
           "icon": "users",
-          "pageType": "amis",
+          "pageType": "flux",
           "schemaPath": "./system/users.json",
           "sort": 110
         },
@@ -21,7 +21,7 @@
           "title": "角色管理",
           "path": "/system/roles",
           "icon": "shield",
-          "pageType": "amis",
+          "pageType": "flux",
           "schemaPath": "./system/roles.json",
           "sort": 120
         }
@@ -39,7 +39,7 @@
           "title": "文章管理",
           "path": "/content/articles",
           "icon": "file-text",
-          "pageType": "amis",
+          "pageType": "flux",
           "schemaPath": "./content/articles.json",
           "sort": 210
         }

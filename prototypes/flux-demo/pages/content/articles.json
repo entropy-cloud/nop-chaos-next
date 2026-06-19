@@ -1,0 +1,40 @@
+{
+  "x:extends": "../_partials/crud-page.json",
+  "title": "文章管理",
+  "body": [
+    {
+      "type": "crud",
+      "id": "article-crud",
+      "source": [
+        {
+          "id": 1,
+          "title": "Flux 入门指南",
+          "category": "技术",
+          "status": "published",
+          "createdAt": "2025-06-01"
+        },
+        {
+          "id": 2,
+          "title": "产品迭代计划",
+          "category": "产品",
+          "status": "draft",
+          "createdAt": "2025-06-05"
+        },
+        {
+          "id": 3,
+          "title": "运营数据分析",
+          "category": "运营",
+          "status": "published",
+          "createdAt": "2025-06-10"
+        }
+      ],
+      "columns": [
+        { "name": "id", "label": "ID" },
+        { "name": "title", "label": "标题" },
+        { "name": "category", "label": "分类" },
+        { "name": "status", "label": "状态" },
+        { "name": "createdAt", "label": "创建时间" }
+      ]
+    }
+  ]
+}

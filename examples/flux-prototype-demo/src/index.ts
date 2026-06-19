@@ -1,6 +1,31 @@
-import type { ShellExtension, MenuResponse } from '@nop-chaos/shared';
+import type { ShellExtension, MenuResponse, MenuItem } from '@nop-chaos/shared';
 
 const MENU_URL = '/api/prototype/menu.json';
+
+function toSchemaUrl(schemaPath: string | undefined): string {
+  const cleaned = schemaPath?.replace(/^\.\//, '') ?? '';
+  return `/api/prototype/pages/${cleaned}`;
+}
+
+function mapMenuItem(item: MenuItem): MenuItem {
+  const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+
+  if (hasChildren) {
+    return {
+      ...item,
+      id: `flux-proto-${item.id}`,
+      pageType: 'builtin',
+      children: item.children!.map(mapMenuItem),
+    };
+  }
+
+  return {
+    ...item,
+    id: `flux-proto-${item.id}`,
+    pageType: 'flux',
+    schemaPath: toSchemaUrl(item.schemaPath),
+  };
+}
 
 export async function getExtension(): Promise<ShellExtension> {
   let menuResponse: MenuResponse | null = null;
@@ -14,15 +39,7 @@ export async function getExtension(): Promise<ShellExtension> {
     // prototype server not available
   }
 
-  const userMenuItems = (menuResponse?.items ?? []).map((item) => ({
-    id: `flux-proto-${item.id}`,
-    title: item.title,
-    path: item.path,
-    icon: item.icon,
-    pageType: 'flux' as const,
-    schemaPath: `/api/prototype/pages/${item.schemaPath?.replace(/^\.\//, '') ?? ''}`,
-    sort: item.sort ?? 500,
-  }));
+  const userMenuItems = (menuResponse?.items ?? []).map(mapMenuItem);
 
   const extension: ShellExtension = {
     id: 'example-flux-prototype',

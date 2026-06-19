@@ -73,6 +73,7 @@ When adding a new log entry for today:
 
 ### 2026-06
 
+- [06-19](2026/06-19.md) — Fixed AMIS schemaPath double-prefix bug; fixed Flux nested menu handling; created `prototypes/flux-demo/` data and Flux e2e test; both demos now have complete data and e2e coverage
 - [06-17](2026/06-17.md) — Moved `amis-guide/` AMIS framework reference into repo root; added AMIS/Flux JSON prototyping demo design; **Plan 31 implemented** (delta-merge, vite plugin, two demo extensions, host integration)
 
 ### 2026-05

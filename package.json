@@ -30,6 +30,7 @@
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:amis-prototype": "playwright test --config=playwright.amis-prototype.config.ts tests/e2e/amis-prototype.spec.ts",
+    "test:e2e:flux-prototype": "playwright test --config=playwright.flux-prototype.config.ts tests/e2e/flux-prototype.spec.ts",
     "check:react19": "node scripts/check-react19-legacy-apis.mjs",
     "audit:knip": "knip --config knip.json",
     "check:duplicates": "jscpd packages/ apps/ examples/ --config .jscpd.json",
