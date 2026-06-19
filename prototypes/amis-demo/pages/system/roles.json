@@ -1,0 +1,105 @@
+{
+  "x:extends": "../_partials/crud-page.json",
+  "title": "角色管理",
+  "body": {
+    "api": {
+      "method": "get",
+      "url": "/api/mock/roles"
+    },
+    "headerToolbar": [
+      {
+        "type": "button",
+        "label": "新增角色",
+        "level": "primary",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "新增角色",
+          "body": {
+            "type": "form",
+            "api": {
+              "method": "post",
+              "url": "/api/mock/roles"
+            },
+            "body": [
+              {
+                "type": "input-text",
+                "name": "name",
+                "label": "角色名称",
+                "required": true
+              },
+              {
+                "type": "input-text",
+                "name": "code",
+                "label": "角色编码",
+                "required": true
+              },
+              {
+                "type": "textarea",
+                "name": "description",
+                "label": "描述"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "columns": [
+      { "name": "id", "label": "ID", "width": 60 },
+      { "name": "name", "label": "角色名称" },
+      { "name": "code", "label": "角色编码" },
+      { "name": "description", "label": "描述" },
+      {
+        "type": "operation",
+        "label": "操作",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "编辑",
+            "level": "link",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑角色",
+              "body": {
+                "type": "form",
+                "api": {
+                  "method": "put",
+                  "url": "/api/mock/roles/${id}"
+                },
+                "body": [
+                  {
+                    "type": "input-text",
+                    "name": "name",
+                    "label": "角色名称",
+                    "required": true
+                  },
+                  {
+                    "type": "input-text",
+                    "name": "code",
+                    "label": "角色编码",
+                    "required": true
+                  },
+                  {
+                    "type": "textarea",
+                    "name": "description",
+                    "label": "描述"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "level": "link",
+            "confirmText": "确认删除该角色？",
+            "actionType": "ajax",
+            "api": {
+              "method": "delete",
+              "url": "/api/mock/roles/${id}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

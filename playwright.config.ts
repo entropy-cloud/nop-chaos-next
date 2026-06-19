@@ -50,7 +50,15 @@ function loadMockEnv() {
 }
 
 const webServerEnv = loadMockEnv();
-webServerEnv.VITE_MOCK_MEMORY_ONLY = 'true';
+
+const isPrototypeMode = appMode.endsWith('-prototype');
+if (!isPrototypeMode) {
+  webServerEnv.VITE_MOCK_MEMORY_ONLY = 'true';
+}
+
+const serverCommand = isPrototypeMode
+  ? `pnpm --filter @nop-chaos/main exec vite dev --mode ${appMode} --host 127.0.0.1 --port 4175 --strictPort`
+  : `pnpm --filter @nop-chaos/main exec vite build --mode ${appMode} && pnpm --filter @nop-chaos/main exec vite preview --mode ${appMode} --host 127.0.0.1 --port 4175 --strictPort`;
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -79,7 +87,7 @@ export default defineConfig({
   webServer: useExternalServer
     ? undefined
     : {
-        command: `pnpm --filter @nop-chaos/main exec vite build --mode ${appMode} && pnpm --filter @nop-chaos/main exec vite preview --mode ${appMode} --host 127.0.0.1 --port 4175 --strictPort`,
+        command: serverCommand,
         url: 'http://127.0.0.1:4175',
         env: webServerEnv,
         reuseExistingServer: false,

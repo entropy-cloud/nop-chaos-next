@@ -18,12 +18,22 @@ const mainPackageContext = createMainPackageContext(repoRoot);
 const mainExternalPackageAliases = getMainExternalPackageAliases(repoRoot);
 const mainRuntimeOverrideAliases = getMainRuntimeOverrideAliases(repoRoot);
 
-export default defineConfig(({ mode }) => {
+async function importPrototypePlugin(dir: string) {
+  const { prototypeServerPlugin } = await import('@nop-chaos/vite-plugin-prototype-server');
+  return prototypeServerPlugin({ dir });
+}
+
+const configFn: import('vite').UserConfigFn = async ({ mode }) => {
   const analyze = mode === 'analyze';
   const env = loadEnv(mode, appRoot, '');
   const extensionAliasPath = env.VITE_DEMO_EXTENSION_ALIAS_PATH;
   const aliasedExtensionPath = extensionAliasPath
     ? resolve(appRoot, extensionAliasPath)
+    : undefined;
+  const prototypeDir = env.VITE_PROTOTYPE_DIR;
+  const prototypeExtensionEntry = env.VITE_PROTOTYPE_EXTENSION_ENTRY;
+  const prototypeExtensionResolved = prototypeExtensionEntry
+    ? resolve(appRoot, prototypeExtensionEntry)
     : undefined;
 
   return {
@@ -42,12 +52,24 @@ export default defineConfig(({ mode }) => {
               },
             ]
           : []),
+        ...(prototypeExtensionResolved
+          ? [
+              {
+                find: '@prototype-extension',
+                replacement: prototypeExtensionResolved,
+              },
+            ]
+          : []),
       ],
+    },
+    optimizeDeps: {
+      exclude: ['@nop-chaos/flux'],
     },
     plugins: [
       tailwindcss(),
       react(),
       babel({ presets: [reactCompilerPreset({ target: '19' })] }),
+      ...(prototypeDir ? [await importPrototypePlugin(prototypeDir)] : []),
       analyze
         ? visualizer({
             filename: 'dist/stats.html',
@@ -60,11 +82,17 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 4173,
       strictPort: false,
-      fs: aliasedExtensionPath
-        ? {
-            allow: [appRoot, dirname(aliasedExtensionPath)],
-          }
-        : undefined,
+      fs:
+        aliasedExtensionPath || prototypeExtensionResolved
+          ? {
+              allow: [
+                appRoot,
+                repoRoot,
+                ...(aliasedExtensionPath ? [dirname(aliasedExtensionPath)] : []),
+                ...(prototypeExtensionResolved ? [dirname(prototypeExtensionResolved)] : []),
+              ],
+            }
+          : undefined,
       proxy: {
         '/r': {
           target: 'http://localhost:8080',
@@ -113,4 +141,6 @@ export default defineConfig(({ mode }) => {
       },
     },
   };
-});
+};
+
+export default defineConfig(configFn);

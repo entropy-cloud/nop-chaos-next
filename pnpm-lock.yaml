@@ -335,6 +335,19 @@ importers:
       zustand:
         specifier: ^5.0.12
         version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5))
+    devDependencies:
+      '@nop-chaos/vite-plugin-prototype-server':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-prototype-server
+
+  examples/amis-prototype-demo:
+    devDependencies:
+      '@nop-chaos/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.2
 
   examples/extension-demo:
     devDependencies:
@@ -377,6 +390,15 @@ importers:
       vite:
         specifier: ^8.0.3
         version: 8.0.8(@types/node@25.5.2)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.8.3)
+
+  examples/flux-prototype-demo:
+    devDependencies:
+      '@nop-chaos/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.2
 
   examples/plugin-demo:
     devDependencies:
@@ -547,6 +569,8 @@ importers:
         specifier: ^6.15.1
         version: 6.15.1
 
+  packages/delta-merge: {}
+
   packages/extension-host:
     dependencies:
       '@nop-chaos/shared':
@@ -592,6 +616,16 @@ importers:
         version: 1.0.7(tailwindcss@4.2.2)
 
   packages/theme-tokens: {}
+
+  packages/vite-plugin-prototype-server:
+    dependencies:
+      '@nop-chaos/delta-merge':
+        specifier: workspace:*
+        version: link:../delta-merge
+    devDependencies:
+      vite:
+        specifier: ^8.0.0
+        version: 8.0.8(@types/node@25.5.2)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.8.3)
 
 packages:
 

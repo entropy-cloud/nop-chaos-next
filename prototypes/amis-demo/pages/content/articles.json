@@ -1,0 +1,122 @@
+{
+  "x:extends": "../_partials/crud-page.json",
+  "title": "文章管理",
+  "body": {
+    "api": {
+      "method": "get",
+      "url": "/api/mock/articles"
+    },
+    "headerToolbar": [
+      {
+        "type": "button",
+        "label": "新增文章",
+        "level": "primary",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "新增文章",
+          "body": {
+            "type": "form",
+            "api": {
+              "method": "post",
+              "url": "/api/mock/articles"
+            },
+            "body": [
+              {
+                "type": "input-text",
+                "name": "title",
+                "label": "标题",
+                "required": true
+              },
+              {
+                "type": "select",
+                "name": "category",
+                "label": "分类",
+                "options": ["技术", "产品", "运营", "其他"],
+                "value": "技术"
+              },
+              {
+                "type": "textarea",
+                "name": "content",
+                "label": "内容"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "columns": [
+      { "name": "id", "label": "ID", "width": 60 },
+      { "name": "title", "label": "标题" },
+      { "name": "category", "label": "分类" },
+      {
+        "name": "status",
+        "label": "状态",
+        "type": "mapping",
+        "map": {
+          "published": "<span class='label label-success'>已发布</span>",
+          "draft": "<span class='label label-info'>草稿</span>",
+          "archived": "<span class='label label-default'>已归档</span>"
+        }
+      },
+      { "name": "createdAt", "label": "创建时间" },
+      {
+        "type": "operation",
+        "label": "操作",
+        "buttons": [
+          {
+            "type": "button",
+            "label": "编辑",
+            "level": "link",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑文章",
+              "body": {
+                "type": "form",
+                "api": {
+                  "method": "put",
+                  "url": "/api/mock/articles/${id}"
+                },
+                "body": [
+                  {
+                    "type": "input-text",
+                    "name": "title",
+                    "label": "标题",
+                    "required": true
+                  },
+                  {
+                    "type": "select",
+                    "name": "category",
+                    "label": "分类",
+                    "options": ["技术", "产品", "运营", "其他"]
+                  },
+                  {
+                    "type": "select",
+                    "name": "status",
+                    "label": "状态",
+                    "options": ["published", "draft", "archived"]
+                  },
+                  {
+                    "type": "textarea",
+                    "name": "content",
+                    "label": "内容"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "level": "link",
+            "confirmText": "确认删除该文章？",
+            "actionType": "ajax",
+            "api": {
+              "method": "delete",
+              "url": "/api/mock/articles/${id}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

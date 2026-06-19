@@ -1,0 +1,50 @@
+{
+  "items": [
+    {
+      "id": "system",
+      "title": "系统管理",
+      "path": "/system",
+      "icon": "settings",
+      "sort": 100,
+      "children": [
+        {
+          "id": "users",
+          "title": "用户管理",
+          "path": "/system/users",
+          "icon": "users",
+          "pageType": "amis",
+          "schemaPath": "/api/prototype/pages/system/users.json",
+          "sort": 110
+        },
+        {
+          "id": "roles",
+          "title": "角色管理",
+          "path": "/system/roles",
+          "icon": "shield",
+          "pageType": "amis",
+          "schemaPath": "/api/prototype/pages/system/roles.json",
+          "sort": 120
+        }
+      ]
+    },
+    {
+      "id": "content",
+      "title": "内容管理",
+      "path": "/content",
+      "icon": "database",
+      "sort": 200,
+      "children": [
+        {
+          "id": "articles",
+          "title": "文章管理",
+          "path": "/content/articles",
+          "icon": "file-text",
+          "pageType": "amis",
+          "schemaPath": "/api/prototype/pages/content/articles.json",
+          "sort": 210
+        }
+      ]
+    }
+  ],
+  "home": "/system/users"
+}

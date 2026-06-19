@@ -1,0 +1,19 @@
+{
+  "type": "page",
+  "body": {
+    "type": "crud",
+    "syncLocation": false,
+    "headerToolbar": [
+      {
+        "type": "columns-toggler",
+        "align": "right"
+      },
+      {
+        "type": "reload",
+        "align": "right",
+        "label": "刷新"
+      }
+    ],
+    "footerToolbar": ["statistics", "pagination"]
+  }
+}

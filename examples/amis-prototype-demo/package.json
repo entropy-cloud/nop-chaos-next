@@ -1,0 +1,15 @@
+{
+  "name": "@nop-chaos/example-amis-prototype",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@nop-chaos/shared": "workspace:*",
+    "typescript": "^6.0.2"
+  }
+}

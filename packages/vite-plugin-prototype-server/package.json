@@ -1,0 +1,24 @@
+{
+  "name": "@nop-chaos/vite-plugin-prototype-server",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@nop-chaos/delta-merge": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^8.0.0"
+  }
+}

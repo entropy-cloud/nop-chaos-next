@@ -1,36 +1,51 @@
-import type { ExtensionSource } from '@nop-chaos/shared'
-import { isRelativeOrRootPath } from '@nop-chaos/shared'
+import type { ExtensionSource } from '@nop-chaos/shared';
+import { isRelativeOrRootPath } from '@nop-chaos/shared';
 
 type ExtensionHost = typeof globalThis & {
-  __NOP_EXTENSIONS__?: ExtensionSource[]
-}
+  __NOP_EXTENSIONS__?: ExtensionSource[];
+};
 
 function getConfiguredDemoExtensionSource(): ExtensionSource[] {
-  const entry = import.meta.env.VITE_DEMO_EXTENSION_ENTRY
+  const entry = import.meta.env.VITE_DEMO_EXTENSION_ENTRY;
 
   if (!entry || !isRelativeOrRootPath(entry)) {
-    return []
+    return [];
   }
 
   return [
     {
       id: 'demo-shell-extension',
-      entry
-    }
-  ]
+      entry,
+    },
+  ];
 }
 
 function getAliasedDemoExtensionSource(): ExtensionSource[] {
   if (!import.meta.env.VITE_DEMO_EXTENSION_ALIAS_PATH) {
-    return []
+    return [];
   }
 
   return [
     {
       id: 'demo-shell-extension',
-      load: () => import('@demo-extension')
-    }
-  ]
+      load: () => import('@demo-extension'),
+    },
+  ];
+}
+
+function getPrototypeExtensionSource(): ExtensionSource[] {
+  const entry = import.meta.env.VITE_PROTOTYPE_EXTENSION_ENTRY;
+
+  if (!entry) {
+    return [];
+  }
+
+  return [
+    {
+      id: 'prototype-shell-extension',
+      load: () => import('@prototype-extension'),
+    },
+  ];
 }
 
 function isExtensionSource(value: unknown): value is ExtensionSource {
@@ -40,58 +55,63 @@ function isExtensionSource(value: unknown): value is ExtensionSource {
     typeof (value as ExtensionSource).id === 'string' &&
     (typeof (value as ExtensionSource & { entry?: unknown }).entry === 'string' ||
       typeof (value as ExtensionSource & { load?: unknown }).load === 'function')
-  )
+  );
 }
 
 function getWindowExtensionSources(): ExtensionSource[] {
   if (typeof window === 'undefined') {
-    return []
+    return [];
   }
 
-  const runtimeSources = (globalThis as ExtensionHost).__NOP_EXTENSIONS__
+  const runtimeSources = (globalThis as ExtensionHost).__NOP_EXTENSIONS__;
 
   if (!Array.isArray(runtimeSources)) {
-    return []
+    return [];
   }
 
-  return runtimeSources.filter(isExtensionSource)
+  return runtimeSources.filter(isExtensionSource);
 }
 
 function getDemoExtensionSources(): ExtensionSource[] {
-  const configuredSources = getConfiguredDemoExtensionSource()
+  const configuredSources = getConfiguredDemoExtensionSource();
 
   if (configuredSources.length > 0) {
-    return configuredSources
+    return configuredSources;
   }
 
-  const aliasedSources = getAliasedDemoExtensionSource()
+  const aliasedSources = getAliasedDemoExtensionSource();
 
   if (aliasedSources.length > 0) {
-    return aliasedSources
+    return aliasedSources;
   }
 
   if (import.meta.env.VITE_ENABLE_DEMO_EXTENSION !== 'true') {
-    return []
+    return [];
   }
 
   return [
     {
       id: 'demo-shell-extension',
-      entry: './demo/index.ts'
-    }
-  ]
+      entry: './demo/index.ts',
+    },
+  ];
 }
 
 export function getExtensionSources(): ExtensionSource[] {
-  const runtimeSources = getWindowExtensionSources()
+  const runtimeSources = getWindowExtensionSources();
 
   if (runtimeSources.length > 0) {
     console.info(
       `[extensions] Found ${runtimeSources.length} runtime extension(s):`,
-      runtimeSources.map((s) => s.id).join(', ')
-    )
-    return runtimeSources
+      runtimeSources.map((s) => s.id).join(', '),
+    );
+    return runtimeSources;
   }
 
-  return getDemoExtensionSources()
+  const prototypeSources = getPrototypeExtensionSource();
+  if (prototypeSources.length > 0) {
+    return prototypeSources;
+  }
+
+  return getDemoExtensionSources();
 }

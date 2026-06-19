@@ -57,5 +57,8 @@
     "vaul": "^1.1.2",
     "yaml": "^2.8.3",
     "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@nop-chaos/vite-plugin-prototype-server": "workspace:*"
   }
 }
