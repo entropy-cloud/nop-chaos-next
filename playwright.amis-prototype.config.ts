@@ -1,11 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * Playwright config for the AMIS Prototype Demo.
- *
- * The prototype server plugin only runs in `vite dev` mode (not preview),
- * so this config starts a dev server on port 4176 instead of building + previewing.
- */
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 45_000,
@@ -17,7 +11,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://127.0.0.1:4176',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     video: 'retain-on-failure',
   },
   projects: [

@@ -1,4 +1,4 @@
-import { mergeProperty, mergeObjects, isPlainObject, deepClone } from './mergeProperty.js';
+import { mergeProperty, mergeObjects, isPlainObject } from './mergeProperty.js';
 import type { OverrideOp } from './mergeProperty.js';
 import { resolvePrototypes } from './prototype.js';
 import { cleanupXProps } from './cleanup.js';

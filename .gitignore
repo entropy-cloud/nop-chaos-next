@@ -16,6 +16,9 @@ test-results/
 .env.local
 nop-task.md
 *.tsbuildinfo
+amis-server.log
+nul
+debug-screenshot.png
 packages/*/src/**/*.js
 packages/*/src/**/*.d.ts
 packages/*/src/**/*.js.map

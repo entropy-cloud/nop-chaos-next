@@ -24,7 +24,7 @@ export default defineConfig({
   ],
   webServer: {
     command:
-      'pnpm --filter @nop-chaos/main exec vite dev --mode flux-prototype --host 127.0.0.1 --port 4177 --strictPort',
+      'pnpm --filter @nop-chaos/ui build && pnpm --filter @nop-chaos/main exec vite dev --mode flux-prototype --host 127.0.0.1 --port 4177 --strictPort',
     url: 'http://127.0.0.1:4177',
     reuseExistingServer: false,
     timeout: 120_000,
