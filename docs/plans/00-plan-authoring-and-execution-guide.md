@@ -269,7 +269,7 @@ Status Note: <<完成或关闭时填写：为什么这个 plan 可以关闭>>
 
 Closure Audit Evidence:
 
-- Reviewer / Agent: <<独立审阅者或独立子 agent>>
+- Auditor / Agent: <<独立审计者或独立子 agent>>
 - Evidence: <<task id / daily log link / findings 摘要>>
 
 Follow-up:
