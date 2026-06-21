@@ -1,6 +1,6 @@
 # 23 Flow Editor Reactive Cost Plan
 
-> Plan Status: planned
+> Plan Status: active
 > Last Reviewed: 2026-05-17
 > Source: `docs/plans/22-current-deep-audit-remediation-plan.md` deferred item `Flow Editor Reactive Cost Containment`, plus `docs/analysis/2026-05-17-deep-audit-v1/05-reactive-precision.md` findings 05-06, 05-07, 05-09 and `summary.md` retained P2 list
 > Related: `docs/plans/18-component-decomposition-plan.md`, `docs/plans/22-current-deep-audit-remediation-plan.md`

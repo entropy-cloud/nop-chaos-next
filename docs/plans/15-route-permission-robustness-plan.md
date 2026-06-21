@@ -1,6 +1,6 @@
 # 15 Route & Permission Robustness Plan
 
-> Plan Status: proposed
+> Plan Status: draft
 > Last Reviewed: 2026-05-16
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (findings 07-01, 07-02, 07-03, 07-05, 07-06)
 > Related: `docs/plans/05-deep-audit-fix-plan.md`

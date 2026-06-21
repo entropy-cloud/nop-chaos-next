@@ -1,6 +1,6 @@
 # 12 Theme Token Surface Migration Plan
 
-> Plan Status: proposed
+> Plan Status: draft
 > Last Reviewed: 2026-05-16
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (finding 09-02), independent hardcoded-color inventory
 > Related: `docs/plans/10-style-and-animation-governance-plan.md`

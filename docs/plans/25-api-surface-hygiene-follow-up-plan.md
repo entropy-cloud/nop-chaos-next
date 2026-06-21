@@ -1,6 +1,6 @@
 # 25 API Surface Hygiene Follow-Up Plan
 
-> Plan Status: planned
+> Plan Status: active
 > Last Reviewed: 2026-05-17
 > Source: `docs/plans/22-current-deep-audit-remediation-plan.md` deferred item `API Surface Low-Risk Cleanup`, plus `docs/analysis/2026-05-17-deep-audit-v1/summary.md` retained P2 item 03-04
 > Related: `docs/plans/14-type-safety-api-surface-plan.md`, `docs/plans/22-current-deep-audit-remediation-plan.md`

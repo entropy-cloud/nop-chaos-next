@@ -86,13 +86,13 @@
 
 每个 plan 顶部必须有：
 
-- `> Plan Status: proposed | planned | in progress | partially completed | completed | superseded | replaced | deferred | cancelled`
+- `> Plan Status: draft | active | completed | superseded | replaced | deferred | cancelled`
 - `> Last Reviewed: YYYY-MM-DD`
 - `> Source: <<说明>>`
 
 说明：
 
-- `proposed` 适合已经成型但还未进入正式执行的计划。
+- `draft` 适合已经成型但还未进入正式执行的计划。
 - `superseded` / `replaced` 适合历史计划或已被新计划接管的计划。
 - `deferred` 适合明确延后、不作为当前 active queue 的计划。
 
@@ -133,7 +133,7 @@
 ```md
 # NN <<计划标题>>
 
-> Plan Status: planned
+> Plan Status: active
 > Last Reviewed: YYYY-MM-DD
 > Source: <<关联 design / analysis / logs>>
 > Related: <<相关计划，可选>>

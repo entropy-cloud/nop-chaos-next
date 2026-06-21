@@ -1,6 +1,6 @@
 # 24 Coverage And Hygiene Follow-Up Plan
 
-> Plan Status: planned
+> Plan Status: active
 > Last Reviewed: 2026-05-17
 > Source: `docs/plans/22-current-deep-audit-remediation-plan.md` deferred item `Coverage And Hygiene Tail Work`, plus `docs/analysis/2026-05-17-deep-audit-v1/summary.md` retained P2 items 01-01, 12-2, 12-3, 12-6, 12-7, 12-16, 12-28, 12-29
 > Related: `docs/plans/21-state-architecture-test-coverage-plan.md`, `docs/plans/22-current-deep-audit-remediation-plan.md`

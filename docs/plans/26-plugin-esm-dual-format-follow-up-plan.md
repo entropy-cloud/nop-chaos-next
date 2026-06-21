@@ -1,6 +1,6 @@
 # 26 Plugin ESM Dual-Format Follow-Up Plan
 
-> Plan Status: planned
+> Plan Status: active
 > Last Reviewed: 2026-05-17
 > Source: `docs/plans/22-current-deep-audit-remediation-plan.md` deferred item `ESM Dual-Format Plugin Output`, plus `examples/plugin-demo/scripts/build-with-rollup.mjs` current live baseline
 > Related: `docs/plans/16-plugin-build-bridge-runtime-plan.md`, `docs/design/plugin-system.md`

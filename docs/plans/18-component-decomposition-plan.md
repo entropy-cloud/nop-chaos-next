@@ -1,6 +1,6 @@
 # 18 Component Decomposition Plan
 
-> Plan Status: proposed
+> Plan Status: draft
 > Last Reviewed: 2026-05-16
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (findings 02-01, 02-02, 02-03)
 > Related: `docs/plans/01-code-quality-improvement-plan.md`

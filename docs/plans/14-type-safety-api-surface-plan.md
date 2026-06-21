@@ -1,6 +1,6 @@
 # 14 Type Safety & API Surface Plan
 
-> Plan Status: proposed
+> Plan Status: draft
 > Last Reviewed: 2026-05-16
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (findings 03-02, 03-03, 03-06, 11-01, 11-02, 11-03, 11-06, 11-07)
 > Related: `docs/plans/01-code-quality-improvement-plan.md`
