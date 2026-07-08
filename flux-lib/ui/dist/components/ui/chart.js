@@ -98,7 +98,7 @@ function ChartTooltipContent({ active, payload, className, indicator = 'dot', hi
                                         '--color-border': indicatorColor,
                                     } }))), _jsxs("div", { className: cn('flex flex-1 justify-between leading-none', nestLabel ? 'items-end' : 'items-center'), children: [_jsxs("div", { className: "grid gap-1.5", children: [nestLabel ? tooltipLabel : null, _jsx("span", { className: "text-muted-foreground", children: itemConfig?.label ?? item.name })] }), item.value != null && (_jsx("span", { className: "font-mono font-medium text-foreground tabular-nums", children: typeof item.value === 'number'
                                                 ? item.value.toLocaleString()
-                                                : String(item.value) }))] })] })) }, key));
+                                                : String(item.value) }))] })] })) }, payloadItemKey(item)));
                 }) })] }));
 }
 const ChartLegend = RechartsPrimitive.Legend;
@@ -114,7 +114,7 @@ function ChartLegendContent({ className, hideIcon = false, payload, verticalAlig
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
             return (_jsxs("div", { className: cn('flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground'), children: [itemConfig?.icon && !hideIcon ? (_jsx(itemConfig.icon, {})) : (_jsx("div", { className: "h-2 w-2 shrink-0 rounded-[2px]", style: {
                             backgroundColor: item.color,
-                        } })), itemConfig?.label] }, item.value));
+                        } })), itemConfig?.label] }, payloadItemKey(item)));
         }) }));
 }
 function getPayloadConfigFromPayload(config, payload, key) {
@@ -134,5 +134,14 @@ function getPayloadConfigFromPayload(config, payload, key) {
         configLabelKey = payloadPayload[key];
     }
     return configLabelKey in config ? config[configLabelKey] : config[key];
+}
+// Stable, collision-resistant React key for a single chart payload item (S-6).
+// Combines the per-item identifying fields instead of a bare `item.value`/`name`
+// (which collide across series) or the array index (forbidden by the lint rule).
+function payloadItemKey(item) {
+    const parts = [item.dataKey, item.name, item.color, item.type]
+        .filter((part) => part != null && part !== '' && typeof part !== 'function')
+        .map((part) => String(part));
+    return parts.length ? parts.join('|') : 'item';
 }
 export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle, };

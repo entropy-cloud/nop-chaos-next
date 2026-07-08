@@ -112,7 +112,8 @@ function normalizeExtension(raw: unknown, source: ExtensionSource): ShellExtensi
 
 export async function loadExtensions({
   sources,
-  context
+  context,
+  profileName
 }: LoadExtensionsOptions): Promise<LoadedExtension[]> {
   const loaded: LoadedExtension[] = []
 
@@ -121,6 +122,15 @@ export async function loadExtensions({
       const mod = await withTimeout(loadExtensionModule(source), source.id, 'load')
       const raw = await withTimeout(resolveExtensionExport(mod), source.id, 'resolve')
       const extension = normalizeExtension(raw, source)
+
+      if (profileName && extension.profiles && extension.profiles.length > 0) {
+        if (!extension.profiles.includes(profileName)) {
+          context.logger.info(
+            `Skipping extension '${source.id}' because profile '${profileName}' is not in its profiles list`
+          )
+          continue
+        }
+      }
 
       if (extension.setup) {
         await withTimeout(Promise.resolve(extension.setup(context)), source.id, 'setup')

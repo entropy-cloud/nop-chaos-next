@@ -1,7 +1,11 @@
 import type { FluxApiRequest, FluxApiRequestContext, FluxRendererEnv } from '@nop-chaos/flux';
 import { toast } from '@nop-chaos/ui';
+import i18n from '../config/i18n';
+import { normalizeLanguageCode } from '../config/i18n/languages';
 import { confirmInApp } from '../services/confirm';
 import { mainHttpClient } from '../services/http';
+import { withPageCache, withDictCache } from './cache';
+import { fetchFluxPage, fetchFluxDict } from './providers';
 
 interface CreateMainFluxEnvOptions {
   navigate: (to: string | number, options?: { replace?: boolean }) => void;
@@ -48,5 +52,10 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
     },
     navigate,
     confirm: async (message: string) => confirmInApp(message),
+    locale: normalizeLanguageCode(i18n.language),
+    loadPage: (path: string, signal?: AbortSignal) =>
+      withPageCache(normalizeLanguageCode(i18n.language), path, () => fetchFluxPage(path, signal)),
+    loadDict: (name: string, signal?: AbortSignal) =>
+      withDictCache(normalizeLanguageCode(i18n.language), name, () => fetchFluxDict(name, signal)),
   };
 }

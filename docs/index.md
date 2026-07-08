@@ -53,6 +53,8 @@ Feature and page design documents. See [`design/index.md`](./design/index.md) fo
 
 | Document                                                                                        | Description                            |
 | ----------------------------------------------------------------------------------------------- | -------------------------------------- |
+| [overview.md](./design/overview.md)                                                             | 系统架构总览 — 通用壳顶层设计         |
+| [shell-profiles.md](./design/shell-profiles.md)                                                 | 多客户端形态 profile（web/mobile）    |
 | [dashboard.md](./design/dashboard.md)                                                           | Dashboard page design                  |
 | [ai-workbench.md](./design/ai-workbench.md)                                                     | AI workbench design                    |
 | [flow-editor.md](./design/flow-editor.md)                                                       | Flow editor design                     |
@@ -162,7 +164,8 @@ External reference material and design inputs.
 
 ## Reading Guide
 
-- **Pages and features**: Start with `design/` documents (01-06 range)
+- **System architecture and vision**: Start with `design/overview.md`
+- **Pages and features**: Then proceed to specific `design/` documents
 - **Docs ownership and precedence**: `source-of-truth-and-precedence.md`
 - **Setup and build**: `references/build-guide.md` for full build instructions
 - **Flux sync policy**: `references/flux-sync-spec.md`

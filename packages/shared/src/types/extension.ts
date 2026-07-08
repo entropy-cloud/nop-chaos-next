@@ -69,6 +69,25 @@ export interface ExtensionLoginUiConfig {
   showDemoHint?: boolean;
 }
 
+/**
+ * Shell chrome mode controls which shell chrome elements (sidebar, tabs bar, top bar)
+ * are rendered around the page content area.
+ *
+ * - `full`: complete shell chrome (Sidebar + TabsBar + TopBar + content area)
+ * - `chromeless`: only the content area, rendered full-screen
+ */
+export type ShellChromeMode = 'full' | 'chromeless';
+
+/**
+ * Per-profile override contributed by an extension via `ExtensionShellConfig.profiles`.
+ * Allows an extension to adjust the default `siteId` / `chromeMode` derivation for a
+ * specific profile name without changing how the profile name itself is resolved.
+ */
+export interface ShellProfileOverride {
+  siteId?: string;
+  chromeMode?: ShellChromeMode;
+}
+
 export interface ExtensionShellConfig {
   defaultHomePath?: string;
   helpUrl?: string;
@@ -76,6 +95,13 @@ export interface ExtensionShellConfig {
   supportUrl?: string;
   sidebarWidthRem?: number;
   sidebarCollapsedWidthRem?: number;
+  /**
+   * Per-profile overrides keyed by profile name. When the active profile name matches
+   * a key here, the listed fields override the default derivation
+   * (`siteId === name`, `chromeMode = name === 'web' ? 'full' : 'chromeless'`).
+   * Multiple extensions are merged in `order` ascending; later extensions win.
+   */
+  profiles?: Record<string, ShellProfileOverride>;
 }
 
 export type ExtensionDeltaOverride = 'merge' | 'replace' | 'remove';
@@ -154,6 +180,13 @@ export interface ShellExtension {
   id: string;
   /** Loading priority; lower values load first. */
   order?: number;
+  /**
+   * Restrict this extension to a specific set of shell profile names (e.g. `['mobile']`).
+   * When omitted, the extension loads under every profile. Matching is by the active
+   * profile `name` (resolved from URL / window injection). Non-matching extensions are
+   * skipped entirely: their `setup()` is not invoked and no resources are injected.
+   */
+  profiles?: string[];
   /** Application-level metadata (name, logo, home path). */
   app?: ExtensionAppConfig;
   /** Branding assets (logo, favicon, document title). */
@@ -202,6 +235,12 @@ export interface LoadedExtension {
 export interface LoadExtensionsOptions {
   sources: ExtensionSource[];
   context: ExtensionSetupContext;
+  /**
+   * Active shell profile name. When set, extensions that declare a `profiles` array
+   * not containing this value are skipped (no `setup()`, no side effects applied).
+   * Extensions without a `profiles` declaration always load.
+   */
+  profileName?: string;
 }
 
 export interface ExtensionManifest {

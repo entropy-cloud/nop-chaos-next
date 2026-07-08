@@ -130,21 +130,33 @@ The project provides complete business page templates:
 | pnpm    | 10.0.0  |
 | Git     | any     |
 
-### 1. Clone with sibling repos
+### 1. Install and run
 
-This project supports two layers of dependency flow:
+```bash
+pnpm install
+pnpm dev
+```
 
-- normal `install/build/site` uses repo-local `libs/*.tgz`
-- sibling repos are only needed when you want to refresh upstream baselines
+`libs/*.tgz` is committed repository state, so `pnpm install` works without sibling repos present.
 
-The sibling repos used for baseline refresh are:
+Local playground: `http://localhost:5173`
 
-| Sibling repo | Purpose | Integration |
-|-------------|---------|-------------|
-| [amis-react19](https://gitee.com/canonical-entropy/amis-react19) | AMIS React 19 fork | Imported into `libs/*.tgz` via `pnpm import:amis` |
-| [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) | Flux UI/theme packages | Tarball imported via `pnpm import:flux`; optional source sync via `pnpm sync:flux:src` |
+### 2. Common commands
 
-If you want to refresh upstream baselines, all three repos should be cloned under the same parent directory:
+```bash
+pnpm install          # install dependencies
+pnpm dev              # start dev server
+pnpm build            # build all packages
+pnpm typecheck        # type check
+pnpm lint             # lint
+pnpm test             # unit tests
+pnpm test:e2e         # E2E tests
+pnpm site             # build and sync to the nop-web-site deploy directory
+```
+
+### 3. Refresh upstream baselines (optional)
+
+Sibling repos are not needed for daily development. Only when you need to repack and refresh `libs/*.tgz` from upstream, clone `amis-react19` / `nop-chaos-flux` under the same parent:
 
 ```bash
 cd /path/to/parent
@@ -153,54 +165,14 @@ git clone https://gitee.com/canonical-entropy/nop-chaos-flux.git
 git clone <this-repo-url>
 ```
 
-Expected layout:
+| Scenario | Command |
+| -------- | -------- |
+| Update Flux (most common) | `pnpm rebuild:flux:build` |
+| Update AMIS + Flux together | `pnpm rebuild:amis-flux:build` |
 
-```
-<parent>/
-  amis-react19/        # AMIS fork (needed only for baseline refresh)
-  nop-chaos-flux/      # Flux UI packages (needed only for baseline refresh)
-  nop-chaos-next/      # This repo
-```
+`pnpm rebuild:flux:build` does it all in one shot: pack upstream → copy `tgz` to `libs/` → sync `ui/theme-tokens/tailwind-preset` source baseline → refresh `file` dependency cache → full `build`.
 
-### 2. Import upstream artifacts into `libs/`
-
-```bash
-cd nop-chaos-next
-pnpm import:amis
-pnpm import:flux
-pnpm refresh:libs
-```
-
-This populates repo-local `libs/*.tgz`, which `nop-chaos-next` consumes during normal install/build.
-
-### 3. Optional Flux source sync, then install and run
-
-```bash
-pnpm sync:flux:src      # optional: refresh flux-lib/theme tokens/tailwind source baseline
-pnpm install
-pnpm build
-pnpm dev
-```
-
-`pnpm sync:flux:src` copies `ui`, `theme-tokens`, and `tailwind-preset` from the sibling Flux repo into this workspace and refreshes the install. It is optional and only needed when you want to refresh the in-repo Flux source baseline.
-
-`libs/*.tgz` is committed repository state so this repo can install and build without requiring sibling repos to be present.
-
-`pnpm rebuild:amis-flux:build` still performs the full upstream refresh flow, but ordinary `pnpm install` / `pnpm build` only depend on `libs/*.tgz`.
-
-Local playground: `http://localhost:5173`
-
-For the full build guide including AMIS development workflow, CI pipeline, and troubleshooting, see the [Build Guide](docs/references/build-guide.md).
-
-### Verification commands
-
-```bash
-pnpm typecheck    # Type check
-pnpm build        # Build all packages
-pnpm lint         # Lint
-pnpm test         # Unit tests
-pnpm test:e2e     # E2E tests
-```
+For atomic commands (`import:amis`, `import:flux`, `refresh:libs`, `sync:flux:src`, etc.), AMIS development workflow, CI pipeline, and troubleshooting, see the [Build Guide](docs/references/build-guide.md).
 
 ## Extension Development
 

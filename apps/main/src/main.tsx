@@ -7,6 +7,7 @@ import { I18nextProvider } from 'react-i18next';
 import App from './App';
 import { ConfirmDialogHost } from './components/common/ConfirmDialogHost';
 import i18n from './config/i18n';
+import { resolveShellProfile } from './config/profile';
 import { bootstrapExtensions } from './extensions/bootstrap';
 import './config/i18n';
 import './styles/tailwind.css';
@@ -85,6 +86,7 @@ function renderBootstrapFallback(error: Error) {
 
 export async function bootstrap() {
   try {
+    resolveShellProfile();
     await bootstrapExtensions();
     renderApp();
   } catch (error: unknown) {

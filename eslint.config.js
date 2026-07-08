@@ -95,6 +95,7 @@ export default tseslint.config(
       'jsx-a11y/alt-text': 'error',
       'jsx-a11y/aria-role': 'error',
       'jsx-a11y/control-has-associated-label': 'error',
+      'jsx-a11y/label-has-associated-control': 'error',
       'jsx-a11y/no-static-element-interactions': 'error',
       'jsx-a11y/role-has-required-aria-props': 'error',
       '@typescript-eslint/ban-ts-comment': [

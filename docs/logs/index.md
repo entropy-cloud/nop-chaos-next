@@ -71,6 +71,11 @@ When adding a new log entry for today:
 
 - [flux-sync/index.md](flux-sync/index.md) — Script-generated sync baseline records for `scripts/sync-flux-lib.sh`
 
+### 2026-07
+
+- [07-05](2026/07-05.md) — Created `docs/design/overview.md` (generic-shell vision) and `docs/design/shell-profiles.md` (multi-client profile mechanism: web/mobile/kiosk via single build artifact)
+- [07-04](2026/07-04.md) — Corrected stale Flux runtime status in `amis-flux-rendering-engine-integration.md`: Flux is now integrated via `@nop-chaos/flux` tarball with a real `FluxRouteRenderer`, not a placeholder
+
 ### 2026-06
 
 - [06-19](2026/06-19.md) — Fixed AMIS schemaPath double-prefix bug; fixed Flux nested menu handling; created `prototypes/flux-demo/` data and Flux e2e test; both demos now have complete data and e2e coverage

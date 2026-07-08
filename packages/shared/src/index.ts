@@ -16,6 +16,8 @@ export type {
   ExtensionLoginUiConfig,
   ExtensionShellConfig,
   ExtensionDeltaOverride,
+  ShellChromeMode,
+  ShellProfileOverride,
   ExtensionUserMenuItem,
   ExtensionSystemPagesConfig,
   TokenStorageType,

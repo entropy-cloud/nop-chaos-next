@@ -16,6 +16,7 @@ import { OfflineBanner } from '../components/layout/OfflineBanner';
 import { SidebarUserMenu } from '../components/layout/SidebarUserMenu';
 import { mergeRouteOnlySystemMenus } from '../config/systemMenus';
 import { getCurrentHomePath } from '../config/homePath';
+import { getShellProfile } from '../config/profile';
 import { toRem } from '../config/layout';
 import { useAuth } from '../hooks/useAuth';
 import { useMenuConfigQuery } from '../hooks/useMenuConfig';
@@ -44,7 +45,32 @@ function LoadingView() {
   );
 }
 
+/**
+ * Chromeless shell: renders only the content area, no Sidebar / TabsBar / TopBar.
+ * Used when the resolved shell profile has `chromeMode === 'chromeless'`
+ * (e.g. mobile / kiosk profiles). See docs/design/shell-profiles.md §4.2.
+ */
+function ChromelessShell() {
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <main id="main-content" tabIndex={-1}>
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
 export function AppShell() {
+  const profile = getShellProfile();
+
+  if (profile.chromeMode === 'chromeless') {
+    return <ChromelessShell />;
+  }
+
+  return <FullShell />;
+}
+
+function FullShell() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();

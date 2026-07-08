@@ -2,6 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { cn } from '../../lib/utils.js';
 import { ChevronRightIcon, CheckIcon } from 'lucide-react';
+import { useGlobalZIndex } from '../../hooks/use-global-z-index.js';
 function DropdownMenu({ ...props }) {
     return _jsx(MenuPrimitive.Root, { "data-slot": "dropdown-menu", ...props });
 }
@@ -11,14 +12,16 @@ function DropdownMenuPortal({ ...props }) {
 function DropdownMenuTrigger({ ...props }) {
     return _jsx(MenuPrimitive.Trigger, { "data-slot": "dropdown-menu-trigger", ...props });
 }
-function DropdownMenuPositioner({ className, ...props }) {
-    return (_jsx(MenuPrimitive.Positioner, { "data-slot": "dropdown-menu-positioner", className: cn('isolate z-50 outline-none', className), ...props }));
+function DropdownMenuPositioner({ className, style, ...props }) {
+    const zIndex = useGlobalZIndex();
+    return (_jsx(MenuPrimitive.Positioner, { "data-slot": "dropdown-menu-positioner", className: cn('isolate outline-none', className), style: { zIndex, ...style }, ...props }));
 }
 function DropdownMenuPopup({ className, ...props }) {
-    return (_jsx(MenuPrimitive.Popup, { "data-slot": "dropdown-menu-popup", className: cn('z-50 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none', className), ...props }));
+    return (_jsx(MenuPrimitive.Popup, { "data-slot": "dropdown-menu-popup", className: cn('rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none', className), ...props }));
 }
 function DropdownMenuContent({ align = 'start', alignOffset = 0, side = 'bottom', sideOffset = 4, className, ...props }) {
-    return (_jsx(MenuPrimitive.Portal, { children: _jsx(MenuPrimitive.Positioner, { className: "isolate z-50 outline-none", align: align, alignOffset: alignOffset, side: side, sideOffset: sideOffset, children: _jsx(MenuPrimitive.Popup, { "data-slot": "dropdown-menu-content", className: cn('z-50 max-h-(--available-height) w-(--anchor-width) min-w-32 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 outline-none data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:overflow-hidden data-closed:fade-out-0 data-closed:zoom-out-95', className), ...props }) }) }));
+    const zIndex = useGlobalZIndex();
+    return (_jsx(MenuPrimitive.Portal, { children: _jsx(MenuPrimitive.Positioner, { className: "isolate outline-none", style: { zIndex }, align: align, alignOffset: alignOffset, side: side, sideOffset: sideOffset, children: _jsx(MenuPrimitive.Popup, { "data-slot": "dropdown-menu-content", className: cn('max-h-(--available-height) w-(--anchor-width) min-w-32 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 outline-none data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:overflow-hidden data-closed:fade-out-0 data-closed:zoom-out-95', className), ...props }) }) }));
 }
 function DropdownMenuGroup({ ...props }) {
     return _jsx(MenuPrimitive.Group, { "data-slot": "dropdown-menu-group", ...props });

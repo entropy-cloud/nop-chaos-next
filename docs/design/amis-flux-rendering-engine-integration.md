@@ -13,7 +13,7 @@
 | 页面类型模型 | `packages/shared/src/types/menu.ts` | 菜单模型已包含 `amis` 与 `flux` 两类渲染页 |
 | 路由分发 | `apps/main/src/router/RouteRenderer.tsx` | 已按 `pageType` 分发到 AMIS 或 Flux |
 | AMIS 运行时 | `packages/amis-core`、`packages/amis-react`、`apps/main/src/amis/` | 已完整集成 |
-| Flux 运行时 | `apps/main/src/flux/` | 当前是占位实现 |
+| Flux 运行时 | `apps/main/src/flux/`、`@nop-chaos/flux`（`libs/nop-chaos-flux-0.1.0.tgz`） | 已集成：核心包经 tarball 交付并在 `apps/main/package.json` 声明，`FluxRouteRenderer.tsx` 通过 `createFluxSchemaRenderer()` 实现真实 schema 获取与渲染（含 `adapter.ts` / `providers.ts` / `state.ts`）；Flux prototype e2e 已通过 |
 | Flux UI 摘取包 | `flux-lib/ui/` | 当前作为 `@nop-chaos/ui` 被主项目使用 |
 
 目标不是把 `nop-chaos-flux` 变成当前项目的子工作区，而是在保持两个项目独立编译的前提下，让 `nop-chaos-next` 能消费 Flux 渲染引擎的稳定产物。

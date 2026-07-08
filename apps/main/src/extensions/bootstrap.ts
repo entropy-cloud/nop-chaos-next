@@ -3,6 +3,7 @@ import type { ExtensionLogger, LoadedExtension } from '@nop-chaos/shared'
 import { loadExtensions, resolveShellRuntimeConfig, setLoadedExtensions, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import i18n, { initializeI18n } from '../config/i18n'
 import { registerLanguages, resetLanguages, setDefaultLanguage } from '../config/i18n/languages'
+import { getShellProfile, applyExtensionProfileOverrides } from '../config/profile'
 import { registerThemes } from '../config/themeRegistry'
 import { registerHostSharedModules } from '../plugins/sharedModules'
 import { registerBuiltinPages } from '../router/pageRegistry'
@@ -182,8 +183,11 @@ export async function bootstrapExtensions(): Promise<LoadedExtension[]> {
     sources,
     context: {
       logger
-    }
+    },
+    profileName: getShellProfile().name
   })
+
+  applyExtensionProfileOverrides(loaded)
 
   applyExtensionDefinitions(loaded)
   setLoadedExtensions(loaded)

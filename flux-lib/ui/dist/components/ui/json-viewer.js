@@ -4,8 +4,13 @@ import { JsonView, allExpanded, defaultStyles } from 'react-json-view-lite';
 import { stringify } from 'yaml';
 import { Tabs, TabsList, TabsTrigger } from './tabs.js';
 import { cn } from '../../lib/utils.js';
-function JsonViewer({ data, defaultExpand = true, className }) {
-    return (_jsx("div", { className: cn('json-viewer', className), children: _jsx(JsonView, { data: data, shouldExpandNode: defaultExpand ? allExpanded : undefined, style: defaultStyles }) }));
+function JsonViewer({ data, defaultExpand = true, expandLevel, className, }) {
+    const shouldExpandNode = typeof expandLevel === 'number'
+        ? (level) => level < expandLevel
+        : defaultExpand
+            ? allExpanded
+            : (level) => level === 0;
+    return (_jsx("div", { className: cn('json-viewer', className), children: _jsx(JsonView, { data: data, shouldExpandNode: shouldExpandNode, style: defaultStyles }) }));
 }
 function DataViewer({ data, defaultExpand = true, className }) {
     const [format, setFormat] = React.useState('json');

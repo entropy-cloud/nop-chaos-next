@@ -2,6 +2,8 @@
 
 > 本文档描述当前仓库中 host shell、remote plugin、extension builtin/system page、shared-module 前提与插件管理页的真实合同。
 
+> **上下文**：本系统是通用应用壳（详见 [overview.md](./overview.md)），插件和扩展是壳的两类扩展机制。本文档聚焦于插件加载、桥接合同和管理页面。
+
 ---
 
 ## 1. 系统分层

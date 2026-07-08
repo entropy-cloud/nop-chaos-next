@@ -159,6 +159,10 @@ export function useDialogDrag(options = {}, forwardedRef) {
                 el.removeEventListener('pointercancel', stopDrag);
                 el.removeEventListener('lostpointercapture', stopDrag);
             }
+            // Restore body selection if the component unmounts mid-drag (P1-2):
+            // stopDrag() may never run, so the body user-select lock would otherwise leak.
+            document.body.style.removeProperty('user-select');
+            document.body.style.removeProperty('-webkit-user-select');
         };
     }, [handlePointerMove, stopDrag]);
     return { contentRef, handlePointerDown, resetPosition, moveBy };

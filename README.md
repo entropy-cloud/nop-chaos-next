@@ -131,21 +131,33 @@ Plugin 适用于业务页面、工作台、管理界面等需要独立开发和�
 | pnpm    | 10.0.0 |
 | Git     | 任意   |
 
-### 1. 克隆仓库及兄弟仓库
+### 1. 安装与运行
 
-本项目支持两种层次的依赖：
+```bash
+pnpm install
+pnpm dev
+```
 
-- 日常 `install/build/site` 依赖当前仓库的 `libs/*.tgz`
-- 只有在需要刷新上游基线时，才需要 `amis-react19` 和 `nop-chaos-flux` 两个兄弟仓库
+`libs/*.tgz` 是仓库状态的一部分（随 git 提交），`pnpm install` 无需兄弟仓库在场即可完成安装和构建。
 
-用于刷新基线的兄弟仓库如下：
+本地访问：`http://localhost:5173`
 
-| 兄弟仓库                                                             | 用途               | 集成方式                                                                                 |
-| -------------------------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
-| [amis-react19](https://gitee.com/canonical-entropy/amis-react19)     | AMIS React 19 分支 | 通过 `pnpm import:amis` 导入到 `libs/*.tgz`                                              |
-| [nop-chaos-flux](https://gitee.com/canonical-entropy/nop-chaos-flux) | Flux UI/主题包     | 通过 `pnpm import:flux` 导入 tgz；通过 `pnpm sync:flux:src` 可选刷新 `flux-lib` 源码基线 |
+### 2. 常用命令
 
-如果你要刷新上游基线，三个仓库需要克隆到同一父目录下：
+```bash
+pnpm install          # 安装依赖
+pnpm dev              # 启动开发服务器
+pnpm build            # 构建所有包
+pnpm typecheck        # 类型检查
+pnpm lint             # 代码检查
+pnpm test             # 单元测试
+pnpm test:e2e         # E2E 测试
+pnpm site             # 构建并同步到 nop-web-site 部署目录
+```
+
+### 3. 刷新上游基线（可选）
+
+日常开发无需兄弟仓库。仅当需要从上游重新打包并刷新 `libs/*.tgz` 时，才需把 `amis-react19` / `nop-chaos-flux` 克隆到同一父目录：
 
 ```bash
 cd /path/to/parent
@@ -154,63 +166,14 @@ git clone https://gitee.com/canonical-entropy/nop-chaos-flux.git
 git clone <本仓库地址>
 ```
 
-目录布局：
+| 场景                 | 命令                          |
+| -------------------- | ----------------------------- |
+| 更新 Flux（最常用）  | `pnpm rebuild:flux:build`     |
+| 同时更新 AMIS + Flux | `pnpm rebuild:amis-flux:build` |
 
-```
-<parent>/
-  amis-react19/        # AMIS 分支（仅刷新基线时需要）
-  nop-chaos-flux/      # Flux UI 包（仅刷新基线时需要）
-  nop-chaos-next/      # 本仓库
-```
+`pnpm rebuild:flux:build` 一次性完成：上游打包 → 拷贝 `tgz` 到 `libs/` → 同步 `ui/theme-tokens/tailwind-preset` 源码基线 → 刷新 `file` 依赖缓存 → 全量 `build`。
 
-### 2. 安装与运行
-
-```bash
-cd ../nop-chaos-next
-
-# 首次准备或需要刷新上游基线时执行
-pnpm import:amis
-pnpm import:flux
-pnpm refresh:libs
-
-# 仅当需要刷新 flux-lib / theme-tokens / tailwind-preset 的源码基线时执行
-pnpm sync:flux:src
-
-pnpm install
-pnpm site
-pnpm site:local
-pnpm dev
-```
-
-`pnpm import:amis` / `pnpm import:flux` 会把上游打包产物复制到当前仓库 `libs/`。
-
-`libs/*.tgz` 是仓库状态的一部分，需要随 git 提交；这样当前仓库才能在没有 sibling repo 的情况下单独安装和构建。
-
-`pnpm refresh:libs` 会从 `libs/*.tgz` 刷新 lockfile 和安装结果。
-
-`pnpm sync:flux:src` 会把 `../nop-chaos-flux` 的 `ui`、`theme-tokens`、`tailwind-preset` 同步到当前仓库，用于局部定制前的基线更新；不是日常构建前置步骤。
-
-`pnpm install` 安装当前仓库依赖。只要 `libs/*.tgz` 已经准备好，就不要求兄弟仓库在场。
-
-`pnpm site` 会直接构建当前平台（包含 host、extension demo）并同步到 `../nop-entropy/nop-frontend-support/nop-web-site/src/main/resources/META-INF/resources/`。
-
-`pnpm site:local` 与 `pnpm site` 相同，都是本地 build 后同步 site。
-
-`pnpm dev` 启动本地开发环境。
-
-本地访问：`http://localhost:5173`
-
-完整的构建指南（包括 AMIS 开发工作流、CI 流水线、常见问题）请参考 [构建指南](docs/references/build-guide.md)。
-
-### 验证命令
-
-```bash
-pnpm typecheck    # 类型检查
-pnpm build        # 构建所有包
-pnpm lint         # 代码检查
-pnpm test         # 单元测试
-pnpm test:e2e     # E2E 测试
-```
+原子命令（`import:amis`、`import:flux`、`refresh:libs`、`sync:flux:src` 等）、AMIS 开发工作流、CI 流水线与常见问题，详见 [构建指南](docs/references/build-guide.md)。
 
 ## Extension 开发
 

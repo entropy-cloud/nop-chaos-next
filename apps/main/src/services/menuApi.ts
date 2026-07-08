@@ -1,5 +1,6 @@
 import { mergeBuiltinSystemMenus } from '../config/systemMenus';
 import { isMockEnabled, isPrototypeMode } from '../config/env';
+import { getShellProfile } from '../config/profile';
 import type { MenuItem, MenuResponse } from '@nop-chaos/shared';
 import { ajaxFetch } from './http';
 import { mapLegacySiteMapToMenuResponse, type LegacySiteMapResponse } from './menuMapper';
@@ -56,7 +57,7 @@ export async function fetchMenuConfig(): Promise<MenuResponse> {
         }
       : undefined,
     data: {
-      siteId: 'main',
+      siteId: getShellProfile().siteId,
     },
   });
 
