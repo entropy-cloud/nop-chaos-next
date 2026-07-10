@@ -17,7 +17,7 @@ import type { LoadedExtension, ShellChromeMode, ShellProfileOverride } from '@no
  * `ExtensionShellConfig.profiles` (see `applyExtensionProfileOverrides`).
  */
 
-export const DEFAULT_PROFILE_NAME = 'web';
+export const DEFAULT_PROFILE_NAME = 'main';
 const PROFILE_QUERY_PARAM = 'profile';
 const WINDOW_PROFILE_KEY = '__NOP_SHELL_PROFILE__';
 const WINDOW_PROFILE_LOCKED_KEY = '__NOP_SHELL_PROFILE_LOCKED__';

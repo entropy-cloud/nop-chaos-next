@@ -9,14 +9,29 @@ type ServerResponse = import('node:http').ServerResponse;
 export interface PrototypeServerOptions {
   dir: string;
   prefix?: string;
+  extensionEntry?: string;
 }
+
+const EXTENSIONS_INJECT_MARKER = '<!--NOP_EXTENSIONS_INJECT-->';
 
 export function prototypeServerPlugin(options: PrototypeServerOptions): Plugin {
   const prefix = options.prefix ?? '/api/prototype';
   const dir = resolve(options.dir);
+  const extensionEntry = options.extensionEntry ? resolve(options.extensionEntry) : undefined;
 
   return {
     name: '@nop-chaos/prototype-server',
+    transformIndexHtml(html: string) {
+      if (!extensionEntry) {
+        return html;
+      }
+
+      const fsEntry = `/@fs${extensionEntry}`;
+      const sources = [{ id: 'prototype-shell-extension', entry: fsEntry }];
+      const inject = `<script>window.__NOP_EXTENSIONS__ = ${JSON.stringify(sources)};</script>`;
+
+      return html.replace(EXTENSIONS_INJECT_MARKER, inject);
+    },
     async configureServer(server: ViteDevServer) {
       const loader = async (path: string): Promise<unknown> => {
         if (!existsSync(path)) return null;

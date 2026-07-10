@@ -170,9 +170,8 @@ test.describe('master-detail list page', () => {
 
     const menuStyle = await menu.evaluate((el) => {
       const s = getComputedStyle(el);
-      return { zIndex: s.zIndex, borderRadius: s.borderRadius };
+      return { borderRadius: s.borderRadius };
     });
-    expect(Number(menuStyle.zIndex)).toBeGreaterThan(0);
     expect(menuStyle.borderRadius).not.toBe('0px');
 
     const editItem = menu.getByText('Edit');

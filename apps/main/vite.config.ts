@@ -18,9 +18,9 @@ const mainPackageContext = createMainPackageContext(repoRoot);
 const mainExternalPackageAliases = getMainExternalPackageAliases(repoRoot);
 const mainRuntimeOverrideAliases = getMainRuntimeOverrideAliases(repoRoot);
 
-async function importPrototypePlugin(dir: string) {
+async function importPrototypePlugin(dir: string, extensionEntry?: string) {
   const { prototypeServerPlugin } = await import('@nop-chaos/vite-plugin-prototype-server');
-  return prototypeServerPlugin({ dir });
+  return prototypeServerPlugin({ dir, extensionEntry });
 }
 
 const configFn: import('vite').UserConfigFn = async ({ mode }) => {
@@ -52,14 +52,6 @@ const configFn: import('vite').UserConfigFn = async ({ mode }) => {
               },
             ]
           : []),
-        ...(prototypeExtensionResolved
-          ? [
-              {
-                find: '@prototype-extension',
-                replacement: prototypeExtensionResolved,
-              },
-            ]
-          : []),
       ],
     },
     optimizeDeps: {
@@ -69,7 +61,7 @@ const configFn: import('vite').UserConfigFn = async ({ mode }) => {
       tailwindcss(),
       react(),
       babel({ presets: [reactCompilerPreset({ target: '19' })] }),
-      ...(prototypeDir ? [await importPrototypePlugin(prototypeDir)] : []),
+      ...(prototypeDir ? [await importPrototypePlugin(prototypeDir, prototypeExtensionResolved)] : []),
       analyze
         ? visualizer({
             filename: 'dist/stats.html',

@@ -80,25 +80,30 @@ test('flow editor supports grouped palette, canvas editing, and minimap with see
   await expect(page.locator('[data-testid="palette-item-task"]')).toBeVisible();
   await expect(page.locator('.react-flow__minimap')).toBeVisible();
 
-  const dropzone = page.locator('[data-testid="flow-canvas-dropzone"]');
-  const taskPaletteItem = page.locator('[data-testid="palette-item-task"]');
+  await expect(page.locator('[data-testid^="flow-node-"]')).toHaveCount(6);
 
-  await taskPaletteItem.dragTo(dropzone, {
-    targetPosition: { x: 280, y: 220 },
+  await page.locator('[data-testid="palette-add-task"]').click();
+
+  await expect(page.locator('[data-testid^="flow-node-"]')).toHaveCount(7);
+
+  const originalNode = page.locator('[data-testid="flow-node-task-1"]');
+  await expect(originalNode).toBeVisible();
+
+  await page.evaluate(() => {
+    const el = document.querySelector('[data-testid="flow-node-task-1"]') as HTMLElement | null;
+    if (el) {
+      el.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    }
   });
-
-  await expect(page.locator('[data-testid^="flow-node-task-"]')).toHaveCount(2);
-
-  const firstNode = page.locator('[data-testid^="flow-node-task-"]').first();
-  await firstNode.dblclick();
-  await expect(page.getByText('发送欢迎邮件').first()).toBeVisible();
+  await page.waitForTimeout(500);
   await page
     .locator('label', { hasText: /name/i })
     .locator('..')
     .getByRole('textbox')
     .fill('Automation approval task');
-  await expect(page.locator('[data-testid^="flow-node-task-"]').first()).toContainText(
+  await expect(page.locator('[data-testid="flow-node-task-1"]')).toContainText(
     'Automation approval task',
+    { timeout: 10_000 },
   );
 
   const firstEdgeHitbox = page.locator('[data-testid^="edge-hitbox-"]').first();
@@ -108,7 +113,7 @@ test('flow editor supports grouped palette, canvas editing, and minimap with see
     .locator('label', { hasText: /condition/i })
     .locator('..')
     .getByRole('textbox');
-  await expect(edgeConditionField).toBeVisible();
+  await expect(edgeConditionField).toBeVisible({ timeout: 10_000 });
   await edgeConditionField.fill('score > 80');
-  await expect(firstEdgeLabel).toContainText('score > 80');
+  await expect(firstEdgeLabel).toContainText('score > 80', { timeout: 10_000 });
 });

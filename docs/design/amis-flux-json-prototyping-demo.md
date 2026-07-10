@@ -330,17 +330,22 @@ VITE_PROTOTYPE_DIR=../prototypes/my-prototype-2
 interface PrototypeServerOptions {
   dir: string; // VITE_PROTOTYPE_DIR 的解析值
   prefix?: string; // 路由前缀，默认 '/api/prototype'
+  extensionEntry?: string; // VITE_PROTOTYPE_EXTENSION_ENTRY 的解析绝对路径
 }
 
 // 注册虚拟路由
 // 1. GET {prefix}/menu.json → 返回 {dir}/menu.json
 // 2. GET {prefix}/pages/:file → 返回 {dir}/pages/{file}（含 x:extends 解析）
 // 3. WebSocket HMR: 监听 {dir}/ 下的 JSON 变化
+// 4. transformIndexHtml：当 extensionEntry 存在时，替换 index.html 中的
+//    <!--NOP_EXTENSIONS_INJECT--> 占位符为注入 window.__NOP_EXTENSIONS__ 的 <script>
 ```
 
 返回页面 JSON 前，使用 `@nop-chaos/delta-merge` 递归解析 `x:extends`，合并后返回纯 JSON（不含 `x:*` 属性）。
 
-该 plugin 在 `apps/main/vite.config.ts` 条件引入（仅在 `VITE_PROTOTYPE_DIR` 设置时启用）。
+该 plugin 在 `apps/main/vite.config.ts` 条件引入（仅在 `VITE_PROTOTYPE_DIR` 设置时启用）。`extensionEntry` 由 `VITE_PROTOTYPE_EXTENSION_ENTRY` 解析得到，传入 plugin 后通过 `transformIndexHtml` 注入到 `window.__NOP_EXTENSIONS__`（宿主 `getExtensionSources()` 的最高优先级路径，见 [extension-system.md](./extension-system.md#744-宿主发现优先级)）。注入的 `entry` 使用 Vite `/@fs/` URL 指向 `examples/` 下的源码入口，在 `server.fs.allow` 范围内被 dev server 转换服务。
+
+> **解耦约束**：prototype extension 的加载逻辑**不**出现在宿主默认构建路径中。`apps/main/src/extensions/config.ts` 不包含任何对 `examples/amis-prototype-demo` / `flux-prototype-demo` 的静态 import，默认 `pnpm dev:main` 对 prototype 零引用；prototype 模式仅通过上述运行时注入激活。
 
 ---
 

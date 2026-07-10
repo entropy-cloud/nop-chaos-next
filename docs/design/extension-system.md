@@ -438,6 +438,8 @@ Java 后端通过以下步骤实现 extension 注入：
 
 `window.__NOP_EXTENSIONS__` 是生产环境的标准路径，支持多个扩展同时加载。
 
+> **Prototype dev 模式**也走优先级 1：`vite-plugin-prototype-server` 在 `--mode amis-prototype` / `flux-prototype` 下通过 `transformIndexHtml` 注入 `window.__NOP_EXTENSIONS__`（`entry` 为指向 `examples/` 源码的 `/@fs/` URL）。宿主 `config.ts` 不含 prototype 专用静态 import，默认 `pnpm dev:main` 对 prototype 零引用。详见 [amis-flux-json-prototyping-demo.md](./amis-flux-json-prototyping-demo.md)。
+
 #### 7.4.5 清单生成
 
 每个扩展的 Vite 构建自动生成 `extension.json`。扩展需配置 `extensionManifestPlugin`（见 `examples/extension-demo/vite.config.ts`）：

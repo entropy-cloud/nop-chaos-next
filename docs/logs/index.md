@@ -73,6 +73,7 @@ When adding a new log entry for today:
 
 ### 2026-07
 
+- [07-10](2026/07-10.md) — Decoupled prototype extension from main default build path: removed static `import('@prototype-extension')` from `config.ts`; prototype-server plugin now injects `window.__NOP_EXTENSIONS__` via `transformIndexHtml` (`/@fs/` entry). Fixes default `pnpm dev:main` resolution error.
 - [07-05](2026/07-05.md) — Created `docs/design/overview.md` (generic-shell vision) and `docs/design/shell-profiles.md` (multi-client profile mechanism: web/mobile/kiosk via single build artifact)
 - [07-04](2026/07-04.md) — Corrected stale Flux runtime status in `amis-flux-rendering-engine-integration.md`: Flux is now integrated via `@nop-chaos/flux` tarball with a real `FluxRouteRenderer`, not a placeholder
 

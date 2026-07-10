@@ -33,21 +33,6 @@ function getAliasedDemoExtensionSource(): ExtensionSource[] {
   ];
 }
 
-function getPrototypeExtensionSource(): ExtensionSource[] {
-  const entry = import.meta.env.VITE_PROTOTYPE_EXTENSION_ENTRY;
-
-  if (!entry) {
-    return [];
-  }
-
-  return [
-    {
-      id: 'prototype-shell-extension',
-      load: () => import('@prototype-extension'),
-    },
-  ];
-}
-
 function isExtensionSource(value: unknown): value is ExtensionSource {
   return (
     typeof value === 'object' &&
@@ -106,11 +91,6 @@ export function getExtensionSources(): ExtensionSource[] {
       runtimeSources.map((s) => s.id).join(', '),
     );
     return runtimeSources;
-  }
-
-  const prototypeSources = getPrototypeExtensionSource();
-  if (prototypeSources.length > 0) {
-    return prototypeSources;
   }
 
   return getDemoExtensionSources();

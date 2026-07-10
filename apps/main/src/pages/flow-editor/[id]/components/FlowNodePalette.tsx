@@ -63,7 +63,7 @@ export function FlowNodePalette({ onPaletteDragStart, onAddNode }: FlowNodePalet
                             {t(meta.labelKey)}
                           </span>
                         </button>
-                        <Button size="icon-sm" variant="ghost" onClick={() => onAddNode(kind)}>
+                        <Button size="icon-sm" variant="ghost" data-testid={`palette-add-${kind}`} onClick={() => onAddNode(kind)}>
                           <Plus aria-hidden="true" className="size-4" />
                         </Button>
                       </div>
