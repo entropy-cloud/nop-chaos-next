@@ -105,12 +105,15 @@ export function useDialogDrag(options = {}, forwardedRef) {
         }
     }, [applyTransform, getOffset]);
     const handlePointerDown = React.useCallback((e) => {
-        const target = e.target;
-        if (!target.closest('[data-slot="dialog-header"]')) {
-            return;
-        }
         const el = internalRef.current;
         if (!el) {
+            return;
+        }
+        if (!el.contains(e.target)) {
+            return;
+        }
+        const target = e.target;
+        if (!target.closest('[data-slot="dialog-header"]')) {
             return;
         }
         e.preventDefault();
