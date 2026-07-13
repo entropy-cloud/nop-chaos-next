@@ -47,8 +47,15 @@ info "Importing Flux tarball into libs/ (pack @nop-chaos/flux bundle)"
 info "Syncing Flux workspace packages (ui, theme-tokens, tailwind-preset)"
 (cd "$REPO_ROOT" && FLUX_ROOT="$FLUX_ROOT" bash scripts/sync-flux-lib.sh)
 
-# 3. 刷新 flux 的 file 依赖（tgz 文件名固定，必须强制 pnpm 重新解析并重新解包）
-info "Refreshing @nop-chaos/flux file dependency from libs/"
+# 3. 清除 pnpm store 中的旧缓存及 node_modules 中的旧解包，强制 pnpm 重新解析
+info "Clearing pnpm store cache for @nop-chaos/flux"
+STORE_DIR="$(cd "$REPO_ROOT" && pnpm store path)"
+rm -rf "$STORE_DIR/file+libs+nop-chaos-flux-0.1.0.tgz"
+rm -rf "$REPO_ROOT/apps/main/node_modules/@nop-chaos/flux"
+rm -rf "$REPO_ROOT/node_modules/.pnpm/@nop-chaos+flux@file+libs+nop-chaos-flux-0.1.0.tgz"*
+
+# 4. 重新安装（会重新拷贝 tarball 到 store 并解包）
+info "Reinstalling @nop-chaos/flux from libs/"
 (cd "$REPO_ROOT/apps/main" && pnpm add "@nop-chaos/flux@file:../../libs/nop-chaos-flux-0.1.0.tgz" --save-exact)
 
 success "Done"
