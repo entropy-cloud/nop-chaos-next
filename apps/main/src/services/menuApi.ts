@@ -37,29 +37,34 @@ async function fetchPrototypeMenuConfig(): Promise<MenuResponse> {
 }
 
 export async function fetchMenuConfig(): Promise<MenuResponse> {
-  if (isPrototypeMode()) {
-    return mergeBuiltinSystemMenus(await fetchPrototypeMenuConfig());
+  try {
+    if (isPrototypeMode()) {
+      return mergeBuiltinSystemMenus(await fetchPrototypeMenuConfig());
+    }
+
+    if (isMockEnabled()) {
+      return mergeBuiltinSystemMenus(await fetchMockMenuConfig());
+    }
+
+    const token = useAuthStore.getState().token;
+
+    const payload = await ajaxFetch<LegacySiteMapResponse>('/r/SiteMapApi__getSiteMap', {
+      method: 'POST',
+      withAuth: false,
+      headers: token
+        ? {
+            'x-access-token': token,
+            authorization: `Bearer ${token}`,
+          }
+        : undefined,
+      data: {
+        siteId: getShellProfile().siteId,
+      },
+    });
+
+    return mergeBuiltinSystemMenus(mapLegacySiteMapToMenuResponse(payload));
+  } catch (error) {
+    console.error('[fetchMenuConfig]', error);
+    throw error;
   }
-
-  if (isMockEnabled()) {
-    return mergeBuiltinSystemMenus(await fetchMockMenuConfig());
-  }
-
-  const token = useAuthStore.getState().token;
-
-  const payload = await ajaxFetch<LegacySiteMapResponse>('/r/SiteMapApi__getSiteMap', {
-    method: 'POST',
-    withAuth: false,
-    headers: token
-      ? {
-          'x-access-token': token,
-          authorization: `Bearer ${token}`,
-        }
-      : undefined,
-    data: {
-      siteId: getShellProfile().siteId,
-    },
-  });
-
-  return mergeBuiltinSystemMenus(mapLegacySiteMapToMenuResponse(payload));
 }

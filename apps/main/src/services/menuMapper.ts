@@ -109,8 +109,8 @@ function toBuiltinComponentId(resource: LegacySiteMapResource, path: string) {
   return normalizedPath.replace(/\//g, '-');
 }
 
-function toIcon(icon?: string): string | undefined {
-  return icon;
+function toIcon(icon?: string | null): string | undefined {
+  return icon ?? undefined;
 }
 
 function extractRoles(resource: LegacySiteMapResource) {
@@ -183,7 +183,7 @@ function mapLegacyResource(resource: LegacySiteMapResource): MenuItem {
 
   return {
     id: resource.id,
-    title: resource.displayName,
+    title: resource.displayName ?? undefined,
     path,
     icon: toIcon(resource.icon),
     pageType,
@@ -200,7 +200,7 @@ function mapLegacyResource(resource: LegacySiteMapResource): MenuItem {
     frameSrc: pageType === 'iframe' ? resource.url : undefined,
     externalUrl: pageType === 'external' ? resource.url : undefined,
     sort: typeof resource.meta?.sort === 'number' ? resource.meta.sort : undefined,
-    hideInMenu: resource.hidden,
+    hideInMenu: resource.hidden ?? undefined,
     roles,
     children: resource.children?.map(mapLegacyResource),
   };

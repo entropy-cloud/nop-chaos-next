@@ -374,5 +374,26 @@ describe('mapLegacySiteMapToMenuResponse', () => {
       });
       expect(result.items[0].sort).toBeUndefined();
     });
+
+    it('converts null icon to undefined', () => {
+      const result = mapLegacySiteMapToMenuResponse({
+        resources: [{ id: 'x', icon: null as unknown as string | undefined }],
+      });
+      expect(result.items[0].icon).toBeUndefined();
+    });
+
+    it('converts null displayName to undefined title', () => {
+      const result = mapLegacySiteMapToMenuResponse({
+        resources: [{ id: 'x', displayName: null as unknown as string | undefined }],
+      });
+      expect(result.items[0].title).toBeUndefined();
+    });
+
+    it('converts null hidden to undefined hideInMenu', () => {
+      const result = mapLegacySiteMapToMenuResponse({
+        resources: [{ id: 'x', hidden: null as unknown as boolean | undefined }],
+      });
+      expect(result.items[0].hideInMenu).toBeUndefined();
+    });
   });
 });
