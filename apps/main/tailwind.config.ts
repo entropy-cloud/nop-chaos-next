@@ -8,6 +8,7 @@ const config: Config = {
     './src/**/*.{ts,tsx}',
     '../../flux-lib/ui/src/**/*.{ts,tsx}',
     '../../packages/core/src/**/*.{ts,tsx}',
+    './node_modules/@nop-chaos/flux/dist/**/*.{js,css}',
   ],
 };
 

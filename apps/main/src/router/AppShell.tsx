@@ -354,7 +354,7 @@ function FullShell() {
           <div className="theme-blob blob-b" />
           <div className="theme-blob blob-c" />
         </div>
-        {menuQuery.isLoading ? <LoadingView /> : <Outlet />}
+        {menuQuery.isLoading ? <LoadingView /> : <div className="animate-fade-in-up" key={location.pathname}><Outlet /></div>}
       </MainLayout>
     </div>
   );

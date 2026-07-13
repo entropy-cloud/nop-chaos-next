@@ -21,12 +21,11 @@ const fluxEnabledSiteMapResponse = {
         id: 'flux-demo',
         displayName: 'Flux Demo',
         routePath: '/flux-demo',
-        component: 'flux-demo',
+        component: 'FLUX',
         hidden: false,
         meta: {
           sort: 7,
-          pageType: 'flux',
-          schemaPath: 'mock://flux-demo',
+          schemaPath: '/data/flux-demo.json',
         },
       },
       {
@@ -59,7 +58,7 @@ const fluxEnabledMenuResponse = {
       path: '/flux-demo',
       icon: 'sparkles',
       pageType: 'flux',
-      schemaPath: 'mock://flux-demo',
+      schemaPath: '/data/flux-demo.json',
       sort: 7,
     },
     {
@@ -141,7 +140,7 @@ test('english translations persist after visiting Flux Demo and logging out', as
 
   await page.locator('aside').getByRole('button', { name: 'Flux Demo' }).click();
   await expect(page).toHaveURL(/#\/flux-demo$/);
-  await expect(page.getByRole('main')).toContainText('Current Flux schemaPath: mock://flux-demo');
+  await expect(page.getByRole('main')).toContainText('Current Flux schemaPath: /data/flux-demo.json');
 
   await page.locator('aside').getByRole('button', { name: 'Dashboard' }).click();
   await expect(page).toHaveURL(/#\/dashboard$/);

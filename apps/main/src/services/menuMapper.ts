@@ -68,21 +68,20 @@ function normalizeComponentKey(component?: string) {
 
 function toPageType(resource: LegacySiteMapResource): MenuItem['pageType'] {
   const componentKey = normalizeComponentKey(resource.component);
-  const metaPageType = typeof resource.meta?.pageType === 'string' ? resource.meta.pageType : undefined;
 
   if (componentKey === 'plugin' && resource.url) {
     return 'plugin';
   }
 
-  if (metaPageType === 'flux') {
+  if (componentKey === 'FLUX') {
     return 'flux';
   }
 
-  if (resource.component === 'AMIS') {
+  if (componentKey === 'AMIS') {
     return 'amis';
   }
 
-  if (resource.component === 'IFRAME') {
+  if (componentKey === 'IFRAME') {
     return resource.target === 'external' ? 'external' : 'iframe';
   }
 

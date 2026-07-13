@@ -1,4 +1,6 @@
 import { registerMainXuiComponents } from './xuiComponents';
+import { registerMainVueFormItem } from './vueFormItemRegister';
+import { registerMainVueRenderer } from './vueRendererRegister';
 
 let didInitAmisRuntime = false;
 let amisRuntimeInitPromise: Promise<void> | null = null;
@@ -20,6 +22,8 @@ export function ensureAmisRuntime(): Promise<void> {
   amisRuntimeInitPromise = loadAmisStyles()
     .then(() => {
       registerMainXuiComponents();
+      registerMainVueFormItem();
+      registerMainVueRenderer();
       didInitAmisRuntime = true;
     })
     .catch((error: unknown) => {

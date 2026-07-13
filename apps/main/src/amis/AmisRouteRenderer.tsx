@@ -23,5 +23,5 @@ export function AmisRouteRenderer({ schemaPath, title }: AmisRouteRendererProps)
     [location.pathname, navigate],
   );
 
-  return <AmisPageRoute key={schemaPath} adapter={adapter} schemaPath={schemaPath} title={title} />;
+  return <AmisPageRoute adapter={adapter} schemaPath={schemaPath} title={title} />;
 }

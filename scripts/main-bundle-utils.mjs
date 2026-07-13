@@ -569,7 +569,16 @@ function getMainHostRuntimeChunkName(filePath) {
     return 'host-flux-runtime';
   }
 
-  if (includesAny(normalizedFilePath, ['/src/amis/init.ts', '/src/amis/xuiComponents.ts'])) {
+  if (
+    includesAny(normalizedFilePath, [
+      '/src/amis/init.ts',
+      '/src/amis/xuiComponents.ts',
+      '/src/amis/vueFormItemRegister.ts',
+      '/src/amis/vueRendererRegister.ts',
+      '/src/amis/components/IconPicker.tsx',
+      '/src/amis/components/IconCellRenderer.tsx',
+    ])
+  ) {
     return 'host-amis-bootstrap';
   }
 

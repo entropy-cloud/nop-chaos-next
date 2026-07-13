@@ -108,7 +108,7 @@
       "path": "/amis/preview",
       "icon": "workflow",
       "pageType": "amis",
-      "schemaPath": "mock://preview",
+      "schemaPath": "/data/amis-preview.json",
       "sort": 6
     },
     {
@@ -117,7 +117,7 @@
       "path": "/flux-demo",
       "icon": "sparkles",
       "pageType": "flux",
-      "schemaPath": "mock://flux-demo",
+      "schemaPath": "/data/flux-demo.json",
       "sort": 7
     },
     {

@@ -113,7 +113,7 @@ const defaultSiteMapResponse = {
         routePath: '/amis/preview',
         component: 'AMIS',
         hidden: false,
-        url: 'mock://preview',
+        url: '/data/amis-preview.json',
         meta: { sort: 6 },
       },
       {
@@ -279,7 +279,7 @@ const defaultMenuResponse = {
       path: '/amis/preview',
       icon: 'workflow',
       pageType: 'amis',
-      schemaPath: 'mock://preview',
+      schemaPath: '/data/amis-preview.json',
       sort: 6,
     },
     {

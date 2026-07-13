@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import type { MenuItem } from '@nop-chaos/shared';
 import { ErrorBoundary, PluginSlot, usePermissionGuard } from '@nop-chaos/core';
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
@@ -7,12 +7,10 @@ import { useAuth } from '../hooks/useAuth';
 import { ensurePluginSharedModules } from '../plugins/sharedModules';
 import { usePluginStore } from '../store/pluginStore';
 import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry';
+import { AmisRouteEntry } from './AmisRouteEntry';
+import { FluxRouteEntry } from './FluxRouteEntry';
 
 const IFRAME_SANDBOX_ALLOWLIST = 'allow-scripts allow-same-origin allow-forms allow-popups';
-
-const AmisRouteEntry = lazy(() => import('./AmisRouteEntry').then((module) => ({ default: module.AmisRouteEntry })));
-
-const FluxRouteEntry = lazy(() => import('./FluxRouteEntry').then((module) => ({ default: module.FluxRouteEntry })));
 
 interface RouteRendererProps {
   item: MenuItem;
@@ -83,7 +81,7 @@ export function RouteRenderer({ item }: RouteRendererProps) {
     if (item.pageType === 'amis' && item.schemaPath) {
       return (
         <Suspense fallback={loadingView}>
-          <AmisRouteEntry key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
+          <AmisRouteEntry schemaPath={item.schemaPath} title={title} />
         </Suspense>
       );
     }
@@ -91,7 +89,7 @@ export function RouteRenderer({ item }: RouteRendererProps) {
     if (item.pageType === 'flux' && item.schemaPath) {
       return (
         <Suspense fallback={loadingView}>
-          <FluxRouteEntry key={item.schemaPath} schemaPath={item.schemaPath} title={title} />
+          <FluxRouteEntry schemaPath={item.schemaPath} title={title} />
         </Suspense>
       );
     }

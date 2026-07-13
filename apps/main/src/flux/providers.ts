@@ -18,29 +18,13 @@ interface DictBean {
   options: DictOption[];
 }
 
-async function getDemoSchema(signal?: AbortSignal) {
-  if (signal?.aborted) {
-    throw signal.reason instanceof Error ? signal.reason : new Error('Flux schema request aborted');
-  }
-
-  const module = await import('./testSchema');
-
-  if (signal?.aborted) {
-    throw signal.reason instanceof Error ? signal.reason : new Error('Flux schema request aborted');
-  }
-
-  return module.testFluxSchemaInput;
-}
-
 export async function fetchFluxPage(
   schemaPath: string,
   signal?: AbortSignal,
 ): Promise<FluxSchema> {
   let value: unknown;
 
-  if (schemaPath === 'mock://flux-demo') {
-    value = await getDemoSchema(signal);
-  } else if (
+  if (
     isMockEnabled() ||
     schemaPath.startsWith('/mock') ||
     schemaPath.endsWith('.json')
@@ -56,7 +40,7 @@ export async function fetchFluxPage(
     );
   }
 
-  return value as FluxSchema; // safety: validated above
+  return value as FluxSchema;
 }
 
 const MOCK_DICTS: Record<string, DictOption[]> = {

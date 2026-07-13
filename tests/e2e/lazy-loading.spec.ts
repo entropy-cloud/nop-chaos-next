@@ -19,19 +19,18 @@ const fluxEnabledSiteMapResponse = {
         routePath: '/amis/preview',
         component: 'AMIS',
         hidden: false,
-        url: 'mock://preview',
+        url: '/data/amis-preview.json',
         meta: { sort: 6 },
       },
       {
         id: 'flux-demo',
         displayName: 'Flux Demo',
         routePath: '/flux-demo',
-        component: 'flux-demo',
+        component: 'FLUX',
         hidden: false,
         meta: {
           sort: 7,
-          pageType: 'flux',
-          schemaPath: 'mock://flux-demo',
+          schemaPath: '/data/flux-demo.json',
         },
       },
     ],
@@ -56,7 +55,7 @@ const fluxEnabledMenuResponse = {
       path: '/amis/preview',
       icon: 'workflow',
       pageType: 'amis',
-      schemaPath: 'mock://preview',
+      schemaPath: '/data/amis-preview.json',
       sort: 6,
     },
     {
@@ -65,7 +64,7 @@ const fluxEnabledMenuResponse = {
       path: '/flux-demo',
       icon: 'sparkles',
       pageType: 'flux',
-      schemaPath: 'mock://flux-demo',
+      schemaPath: '/data/flux-demo.json',
       sort: 7,
     },
   ],
@@ -241,7 +240,7 @@ test.describe('Flux lazy loading optimization', () => {
     expect(initialFluxChunks).toHaveLength(0);
 
     await openMenuRoute(page, 'Flux Demo', /\/flux-demo$/);
-    await expect(page.getByRole('main')).toContainText('Current Flux schemaPath: mock://flux-demo');
+    await expect(page.getByRole('main')).toContainText('Current Flux schemaPath: /data/flux-demo.json');
     await expect(page.getByRole('main')).toContainText('Flux JSON CRUD Demo');
     await expect(page.getByRole('main')).toContainText('Query: none');
     await expect(page.getByRole('main')).toContainText('Alice');

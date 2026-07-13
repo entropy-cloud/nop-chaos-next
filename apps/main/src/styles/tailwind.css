@@ -1,3 +1,4 @@
 @import 'tailwindcss';
 @config '../../tailwind.config.ts';
 @source '../../../../flux-lib/ui';
+@source '../../node_modules/@nop-chaos/flux/dist';

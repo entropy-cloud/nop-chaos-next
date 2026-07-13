@@ -3,17 +3,8 @@ import { isMockEnabled } from '../config/env';
 import { fetchDictOptions } from '../services/dictApi';
 import { fetchAmisPage } from '../services/pageApi';
 
-async function getPreviewSchema() {
-  const module = await import('./testSchema');
-  return module.testAmisSchema;
-}
-
 export const mainAmisPageProvider: AmisPageProvider = {
   async getPage(schemaPath) {
-    if (schemaPath === 'mock://preview') {
-      return getPreviewSchema();
-    }
-
     return fetchAmisPage(schemaPath);
   },
 };

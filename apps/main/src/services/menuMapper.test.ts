@@ -63,9 +63,9 @@ describe('mapLegacySiteMapToMenuResponse', () => {
       expect(result.items[0].pageType).toBe('builtin');
     });
 
-    it('returns flux when meta.pageType is "flux"', () => {
+    it('returns flux when component is "FLUX"', () => {
       const result = mapLegacySiteMapToMenuResponse({
-        resources: [{ id: 'f1', meta: { pageType: 'flux', schemaPath: '/schema.json' } }],
+        resources: [{ id: 'f1', component: 'FLUX', meta: { schemaPath: '/schema.json' } }],
       });
       expect(result.items[0].pageType).toBe('flux');
       expect(result.items[0].schemaPath).toBe('/schema.json');
@@ -73,7 +73,7 @@ describe('mapLegacySiteMapToMenuResponse', () => {
 
     it('returns flux and uses url as schemaPath when meta.schemaPath is absent', () => {
       const result = mapLegacySiteMapToMenuResponse({
-        resources: [{ id: 'f2', url: '/my-flux', meta: { pageType: 'flux' } }],
+        resources: [{ id: 'f2', component: 'FLUX', url: '/my-flux' }],
       });
       expect(result.items[0].pageType).toBe('flux');
       expect(result.items[0].schemaPath).toBe('/my-flux');
