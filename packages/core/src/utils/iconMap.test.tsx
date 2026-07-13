@@ -76,6 +76,46 @@ describe('resolveIcon', () => {
   });
 });
 
+describe('ant-design icon name mapping', () => {
+  it('maps ant-design home variants to a lucide svg', () => {
+    for (const name of ['ant-design:home-outlined', 'ant-design:home-filled', 'ant-design:home-twotone']) {
+      const markup = renderToStaticMarkup(renderIcon(name));
+
+      expect(markup).toContain('<svg');
+    }
+  });
+
+  it('maps common ant-design icons through the name map', () => {
+    const cases: Array<[string, string]> = [
+      ['ant-design:setting-outlined', 'settings'],
+      ['ant-design:robot-outlined', 'bot'],
+      ['ant-design:warning-outlined', 'triangle-alert'],
+      ['ant-design:dashboard-outlined', 'gauge'],
+      ['ant-design:user-outlined', 'user'],
+    ];
+
+    for (const [name] of cases) {
+      const markup = renderToStaticMarkup(renderIcon(name));
+
+      expect(markup).toContain('<svg');
+    }
+  });
+
+  it('strips the ant-design variant suffix before resolving', () => {
+    const outlined = renderToStaticMarkup(renderIcon('ant-design:bell-outlined'));
+    const filled = renderToStaticMarkup(renderIcon('ant-design:bell-filled'));
+
+    expect(outlined).toContain('<svg');
+    expect(filled).toContain('<svg');
+  });
+
+  it('falls back gracefully for ant-design names without a lucide match', () => {
+    const markup = renderToStaticMarkup(renderIcon('ant-design:alibaba-outlined'));
+
+    expect(markup).toContain('fa');
+  });
+});
+
 describe('getIconByName', () => {
   it('renders Lucide icon for known kebab-case name', () => {
     const Icon = getIconByName('globe');
