@@ -5,10 +5,10 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils.js';
 import { Separator } from './separator.js';
 function ItemGroup({ className, ...props }) {
-    return (_jsx("div", { role: "list", "data-slot": "item-group", className: cn('group/item-group flex w-full flex-col gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2', className), ...props }));
+    return (_jsx("div", { role: "list", "data-slot": "item-group", className: cn('nop-item ', 'group/item-group flex w-full flex-col gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2', className), ...props }));
 }
 function ItemSeparator({ className, ...props }) {
-    return (_jsx(Separator, { "data-slot": "item-separator", orientation: "horizontal", className: cn('my-2', className), ...props }));
+    return (_jsx(Separator, { "data-slot": "item-separator", orientation: "horizontal", className: cn('nop-item ', 'my-2', className), ...props }));
 }
 const itemVariants = cva('group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted', {
     variants: {
@@ -55,24 +55,24 @@ const itemMediaVariants = cva('flex shrink-0 items-center justify-center gap-2 g
     },
 });
 function ItemMedia({ className, variant = 'default', ...props }) {
-    return (_jsx("div", { "data-slot": "item-media", "data-variant": variant, className: cn(itemMediaVariants({ variant, className })), ...props }));
+    return (_jsx("div", { "data-slot": "item-media", "data-variant": variant, className: cn('nop-item ', itemMediaVariants({ variant, className })), ...props }));
 }
 function ItemContent({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "item-content", className: cn('flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&+[data-slot=item-content]]:flex-none', className), ...props }));
+    return (_jsx("div", { "data-slot": "item-content", className: cn('nop-item ', 'flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&+[data-slot=item-content]]:flex-none', className), ...props }));
 }
 function ItemTitle({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "item-title", className: cn('font-heading line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4', className), ...props }));
+    return (_jsx("div", { "data-slot": "item-title", className: cn('nop-item ', 'font-heading line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4', className), ...props }));
 }
 function ItemDescription({ className, ...props }) {
-    return (_jsx("p", { "data-slot": "item-description", className: cn('line-clamp-2 text-left text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary', className), ...props }));
+    return (_jsx("p", { "data-slot": "item-description", className: cn('nop-item ', 'line-clamp-2 text-left text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary', className), ...props }));
 }
 function ItemActions({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "item-actions", className: cn('flex items-center gap-2', className), ...props }));
+    return (_jsx("div", { "data-slot": "item-actions", className: cn('nop-item ', 'flex items-center gap-2', className), ...props }));
 }
 function ItemHeader({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "item-header", className: cn('flex basis-full items-center justify-between gap-2', className), ...props }));
+    return (_jsx("div", { "data-slot": "item-header", className: cn('nop-item ', 'flex basis-full items-center justify-between gap-2', className), ...props }));
 }
 function ItemFooter({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "item-footer", className: cn('flex basis-full items-center justify-between gap-2', className), ...props }));
+    return (_jsx("div", { "data-slot": "item-footer", className: cn('nop-item ', 'flex basis-full items-center justify-between gap-2', className), ...props }));
 }
 export { Item, ItemMedia, ItemContent, ItemActions, ItemGroup, ItemSeparator, ItemTitle, ItemDescription, ItemHeader, ItemFooter, };

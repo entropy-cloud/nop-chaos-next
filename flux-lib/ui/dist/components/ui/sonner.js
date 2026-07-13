@@ -16,7 +16,7 @@ const defaultToastOptions = {
     },
 };
 const Toaster = ({ ...props }) => {
-    return (_jsx(Sonner, { ...props, theme: props.theme ?? 'light', className: cn('toaster group', props.className), icons: props.icons ?? defaultIcons, style: {
+    return (_jsx(Sonner, { ...props, theme: props.theme ?? 'light', className: cn('nop-toaster toaster group', props.className), icons: props.icons ?? defaultIcons, style: {
             '--normal-bg': 'hsl(var(--popover, var(--card)))',
             '--normal-text': 'hsl(var(--popover-foreground, var(--card-foreground)))',
             '--normal-border': 'hsl(var(--border))',

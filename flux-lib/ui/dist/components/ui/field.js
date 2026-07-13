@@ -5,13 +5,13 @@ import { cn } from '../../lib/utils.js';
 import { Label } from './label.js';
 import { Separator } from './separator.js';
 function FieldSet({ className, ...props }) {
-    return (_jsx("fieldset", { "data-slot": "field-set", className: cn('flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3', className), ...props }));
+    return (_jsx("fieldset", { "data-slot": "field-set", className: cn('nop-field-ui ', 'flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3', className), ...props }));
 }
 function FieldLegend({ className, variant = 'legend', ...props }) {
-    return (_jsx("legend", { "data-slot": "field-legend", "data-variant": variant, className: cn('mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base', className), ...props }));
+    return (_jsx("legend", { "data-slot": "field-legend", "data-variant": variant, className: cn('nop-field-ui ', 'mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base', className), ...props }));
 }
 function FieldGroup({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "field-group", className: cn('group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4', className), ...props }));
+    return (_jsx("div", { "data-slot": "field-group", className: cn('nop-field-ui ', 'group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4', className), ...props }));
 }
 const fieldVariants = cva('group/field flex w-full gap-2 data-[invalid=true]:text-destructive', {
     variants: {
@@ -26,22 +26,22 @@ const fieldVariants = cva('group/field flex w-full gap-2 data-[invalid=true]:tex
     },
 });
 function Field({ className, orientation = 'vertical', ...props }) {
-    return (_jsx("div", { role: "group", "data-slot": "field", "data-orientation": orientation, className: cn(fieldVariants({ orientation }), className), ...props }));
+    return (_jsx("div", { role: "group", "data-slot": "field", "data-orientation": orientation, className: cn('nop-field-ui ', fieldVariants({ orientation }), className), ...props }));
 }
 function FieldContent({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "field-content", className: cn('group/field-content flex flex-1 flex-col gap-0.5 leading-snug', className), ...props }));
+    return (_jsx("div", { "data-slot": "field-content", className: cn('nop-field-ui ', 'group/field-content flex flex-1 flex-col gap-0.5 leading-snug', className), ...props }));
 }
 function FieldLabel({ className, ...props }) {
-    return (_jsx(Label, { "data-slot": "field-label", className: cn('group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10', 'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col', className), ...props }));
+    return (_jsx(Label, { "data-slot": "field-label", className: cn('nop-field-ui ', 'group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10', 'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col', className), ...props }));
 }
 function FieldTitle({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "field-title", className: cn('flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50', className), ...props }));
+    return (_jsx("div", { "data-slot": "field-title", className: cn('nop-field-ui ', 'flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50', className), ...props }));
 }
 function FieldDescription({ className, ...props }) {
-    return (_jsx("p", { "data-slot": "field-description", className: cn('text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5', 'last:mt-0 nth-last-2:-mt-1', '[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary', className), ...props }));
+    return (_jsx("p", { "data-slot": "field-description", className: cn('nop-field-ui ', 'text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5', 'last:mt-0 nth-last-2:-mt-1', '[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary', className), ...props }));
 }
 function FieldSeparator({ children, className, ...props }) {
-    return (_jsxs("div", { "data-slot": "field-separator", "data-content": !!children, className: cn('relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2', className), ...props, children: [_jsx(Separator, { className: "absolute inset-0 top-1/2" }), children && (_jsx("span", { className: "relative mx-auto block w-fit bg-background px-2 text-muted-foreground", "data-slot": "field-separator-content", children: children }))] }));
+    return (_jsxs("div", { "data-slot": "field-separator", "data-content": !!children, className: cn('nop-field-ui ', 'relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2', className), ...props, children: [_jsx(Separator, { className: "absolute inset-0 top-1/2" }), children && (_jsx("span", { className: "relative mx-auto block w-fit bg-background px-2 text-muted-foreground", "data-slot": "field-separator-content", children: children }))] }));
 }
 function FieldError({ className, children, errors, ...props }) {
     const content = (() => {
@@ -63,6 +63,6 @@ function FieldError({ className, children, errors, ...props }) {
     if (!content) {
         return null;
     }
-    return (_jsx("div", { role: "alert", "data-slot": "field-error", className: cn('text-sm font-normal text-destructive', className), ...props, children: content }));
+    return (_jsx("div", { role: "alert", "data-slot": "field-error", className: cn('nop-field-ui ', 'text-sm font-normal text-destructive', className), ...props, children: content }));
 }
 export { Field, FieldLabel, FieldDescription, FieldError, FieldGroup, FieldLegend, FieldSeparator, FieldSet, FieldContent, FieldTitle, };

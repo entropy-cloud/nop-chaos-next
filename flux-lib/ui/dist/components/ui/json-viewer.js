@@ -10,7 +10,7 @@ function JsonViewer({ data, defaultExpand = true, expandLevel, className, }) {
         : defaultExpand
             ? allExpanded
             : (level) => level === 0;
-    return (_jsx("div", { className: cn('json-viewer', className), children: _jsx(JsonView, { data: data, shouldExpandNode: shouldExpandNode, style: defaultStyles }) }));
+    return (_jsx("div", { className: cn('nop-json-viewer json-viewer', className), children: _jsx(JsonView, { data: data, shouldExpandNode: shouldExpandNode, style: defaultStyles }) }));
 }
 function DataViewer({ data, defaultExpand = true, className }) {
     const [format, setFormat] = React.useState('json');

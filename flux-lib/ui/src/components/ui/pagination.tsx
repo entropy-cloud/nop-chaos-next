@@ -3,14 +3,14 @@ import { t } from '../../lib/i18n.js';
 
 import { cn } from '../../lib/utils.js';
 import { Button } from './button.js';
-import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, MoreHorizontalIcon } from 'lucide-react';
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
     <nav
       aria-label="pagination"
       data-slot="pagination"
-      className={cn('mx-auto flex w-full justify-center', className)}
+      className={cn('nop-pagination ','mx-auto flex w-full justify-center', className)}
       {...props}
     />
   );
@@ -20,7 +20,7 @@ function PaginationContent({ className, ...props }: React.ComponentProps<'ul'>) 
   return (
     <ul
       data-slot="pagination-content"
-      className={cn('flex items-center gap-0.5', className)}
+      className={cn('nop-pagination ','flex items-center gap-0.5', className)}
       {...props}
     />
   );
@@ -40,7 +40,7 @@ function PaginationLink({ className, isActive, size = 'icon', ...props }: Pagina
     <Button
       variant={isActive ? 'outline' : 'ghost'}
       size={size}
-      className={cn(className)}
+      className={cn('nop-pagination ',className)}
       nativeButton={false}
       render={
         <a
@@ -56,35 +56,75 @@ function PaginationLink({ className, isActive, size = 'icon', ...props }: Pagina
 
 function PaginationPrevious({
   className,
+  title,
   text = t('flux.pagination.previous'),
   ...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
   return (
     <PaginationLink
-      aria-label="Go to previous page"
+      aria-label={text}
+      title={title ?? text}
       size="default"
-      className={cn('pl-1.5!', className)}
+      className={cn('nop-pagination ','pl-1.5!', className)}
       {...props}
     >
       <ChevronLeftIcon data-icon="inline-start" />
-      <span className="hidden sm:block">{text}</span>
+    </PaginationLink>
+  );
+}
+
+function PaginationFirst({
+  className,
+  title,
+  text = t('flux.pagination.first'),
+  ...props
+}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+  return (
+    <PaginationLink
+      aria-label={text}
+      title={title ?? text}
+      size="default"
+      className={cn('nop-pagination ','pl-1.5!', className)}
+      {...props}
+    >
+      <ChevronsLeftIcon data-icon="inline-start" />
+    </PaginationLink>
+  );
+}
+
+function PaginationLast({
+  className,
+  title,
+  text = t('flux.pagination.last'),
+  ...props
+}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+  return (
+    <PaginationLink
+      aria-label={text}
+      title={title ?? text}
+      size="default"
+      className={cn('nop-pagination ','pr-1.5!', className)}
+      {...props}
+    >
+      <ChevronsRightIcon data-icon="inline-end" />
     </PaginationLink>
   );
 }
 
 function PaginationNext({
   className,
+  title,
   text = t('flux.pagination.next'),
   ...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
   return (
     <PaginationLink
-      aria-label="Go to next page"
+      aria-label={text}
+      title={title ?? text}
       size="default"
-      className={cn('pr-1.5!', className)}
+      className={cn('nop-pagination ','pr-1.5!', className)}
       {...props}
     >
-      <span className="hidden sm:block">{text}</span>
       <ChevronRightIcon data-icon="inline-end" />
     </PaginationLink>
   );
@@ -95,7 +135,7 @@ function PaginationEllipsis({ className, ...props }: React.ComponentProps<'span'
     <span
       aria-hidden
       data-slot="pagination-ellipsis"
-      className={cn(
+      className={cn('nop-pagination ',
         "flex size-8 items-center justify-center [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
@@ -111,7 +151,9 @@ export {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
+  PaginationFirst,
   PaginationItem,
+  PaginationLast,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,

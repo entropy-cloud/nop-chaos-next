@@ -20,6 +20,6 @@ const toggleVariants = cva("group/toggle inline-flex items-center justify-center
     },
 });
 function Toggle({ className, variant = 'default', size = 'default', ...props }) {
-    return (_jsx(TogglePrimitive, { "data-slot": "toggle", className: cn(toggleVariants({ variant, size, className })), ...props }));
+    return (_jsx(TogglePrimitive, { "data-slot": "toggle", className: cn('nop-toggle ', toggleVariants({ variant, size, className })), ...props }));
 }
 export { Toggle, toggleVariants };

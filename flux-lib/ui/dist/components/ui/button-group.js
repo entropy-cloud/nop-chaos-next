@@ -16,7 +16,7 @@ const buttonGroupVariants = cva("flex w-fit items-stretch *:focus-visible:relati
     },
 });
 function ButtonGroup({ className, orientation, ...props }) {
-    return (_jsx("div", { role: "group", "data-slot": "button-group", "data-orientation": orientation, className: cn(buttonGroupVariants({ orientation }), className), ...props }));
+    return (_jsx("div", { role: "group", "data-slot": "button-group", "data-orientation": orientation, className: cn('nop-button-group ', buttonGroupVariants({ orientation }), className), ...props }));
 }
 function ButtonGroupText({ className, render, ...props }) {
     return useRender({
@@ -31,6 +31,6 @@ function ButtonGroupText({ className, render, ...props }) {
     });
 }
 function ButtonGroupSeparator({ className, orientation = 'vertical', ...props }) {
-    return (_jsx(Separator, { "data-slot": "button-group-separator", orientation: orientation, className: cn('relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto', className), ...props }));
+    return (_jsx(Separator, { "data-slot": "button-group-separator", orientation: orientation, className: cn('nop-button-group ', 'relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto', className), ...props }));
 }
 export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants };
