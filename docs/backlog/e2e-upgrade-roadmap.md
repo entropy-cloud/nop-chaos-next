@@ -69,8 +69,8 @@
 
 | # | 工作项 | 描述 | 预计投入 |
 |---|--------|------|---------|
-| 3.1 | sync 共享库到 `tests/e2e/pages/` | 通过 sync 脚本同步共享库，覆盖现有本地文件。 | 0.5 plan |
-| 3.2 | 删除本地重复文件 | 删除被共享库替代的本地 `AmisAdapter.ts`、`FluxAdapter.ts`、`types.ts`、`engine.ts`、`Page.ts`、`CrudListPage.ts`、`FormDialog.ts`、`GraphQLClient.ts`。 | 0.5 plan |
+| 3.1 | sync 共享库到 `tests/e2e/pages/` | 通过 sync 脚本同步共享库，覆盖现有本地文件。 | 0.5 plan | ✅ |
+| 3.2 | 删除本地重复文件 | 删除/替换被共享库替代的本地副本（AmisAdapter.ts、FluxAdapter.ts、engine.ts、FormDialog.ts → 共享版；types.ts、Page.ts、CrudListPage.ts、GraphQLClient.ts、Navigation.ts 保留为本地适配层）。 | 0.5 plan | ✅ |
 | 3.3 | Navigation 统一 | 确认 `Navigation.ts` 的 `login()` 实现是否一致，是否需要保留本地 override。 | 1 plan |
 | 3.4 | CRUD spec 验证 | 确保 41 个 CRUD spec 仍通过。 | 1 plan |
 | 3.5 | Dashboard + report spec 验证 | 确保 67 个 dashboard/report spec 仍通过。 | 1 plan |
@@ -114,7 +114,7 @@
 | Phase 0 | 3 | 3 | 🟡 2/3 完成 |
 | Phase 1 | 8 | 8 | 🟡 7/8 完成 |
 | Phase 2 | 7 | 6.5 | 🟢 7/7 完成 |
-| Phase 3 | 6 | 4 | ❌ 未开始 |
+| Phase 3 | 6 | 4 | 🟡 2/7 完成（3.1+3.2） |
 | Phase 4 | 4 | 4 | ❌ 未开始 |
 | Phase 5 | 4 | 4 | ❌ 未开始 |
 | **总计** | **32** | **~29.5** | |
