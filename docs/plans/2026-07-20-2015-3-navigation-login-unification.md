@@ -1,6 +1,6 @@
 # 14 Navigation Login Unification in nop-entropy-e2e
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-07-20
 > Source: `docs/backlog/e2e-upgrade-roadmap.md` (item 2.5), `docs/design/e2e-shared-infrastructure.md`
 > Related: `docs/plans/2026-07-20-2000-3-replace-amis-pageobject-nop-entropy.md` (prerequisite — PageObject migration complete), `docs/plans/2026-07-20-2015-1-rpc-client-integration.md` (prerequisite — RPC imports unified)
@@ -60,125 +60,125 @@ Migrate existing `LoginPage` / `LoginPO` usage in nop-entropy-e2e packages to us
 
 ### Phase 1 — Audit login imports and map migration
 
-Status: planned
+Status: completed
 Targets: All nop-entropy-e2e packages
 
 - Item Types: `Proof | Decision`
 
-- [ ] List every file that imports `LoginPage`, `LoginPO`, or relative login helpers across nop-auth-e2e, nop-code-e2e, nop-job-e2e
-- [ ] Compare local `login-page.ts` API with shared `Navigation.login()` API — document signature differences
-- [ ] Identify whether spec files use `LoginPage` directly or through a helper/PO class
-- [ ] Identify whether `LoginPage` is used standalone (just login) or as part of a larger navigation flow (navigate to page → login → wait for redirect)
-- [ ] Decide per-package strategy: direct `Navigation.login()` vs `Navigation` class instantiation vs thin local adapter
-- [ ] Identify any package-specific login quirks (custom redirect handling, post-login assertions, env-specific variants)
+- [x] List every file that imports `LoginPage`, `LoginPO`, or relative login helpers across nop-auth-e2e, nop-code-e2e, nop-job-e2e
+- [x] Compare local `login-page.ts` API with shared `Navigation.login()` API — document signature differences
+- [x] Identify whether spec files use `LoginPage` directly or through a helper/PO class
+- [x] Identify whether `LoginPage` is used standalone (just login) or as part of a larger navigation flow (navigate to page → login → wait for redirect)
+- [x] Decide per-package strategy: direct `Navigation.login()` vs `Navigation` class instantiation vs thin local adapter
+- [x] Identify any package-specific login quirks (custom redirect handling, post-login assertions, env-specific variants)
 
 Exit Criteria:
 
 > All `[x]` before Phase 1 Status can be set to `completed`.
 
-- [ ] Complete import map documented
-- [ ] API compatibility between local and shared login documented
-- [ ] Migration strategy per package decided
-- [ ] Package-specific login quirks documented
-- [ ] No owner-doc update required (internal audit)
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] Complete import map documented
+- [x] API compatibility between local and shared login documented
+- [x] Migration strategy per package decided
+- [x] Package-specific login quirks documented
+- [x] No owner-doc update required (internal audit)
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 2 — Migrate login imports in nop-auth-e2e
 
-Status: planned
+Status: completed
 Targets: `nop-auth-e2e` package
 
 - Item Types: `Fix | Proof | Decision`
 
-- [ ] For each import site identified in Phase 1, replace local `LoginPage` import with shared `Navigation.login()`
-- [ ] If the spec calls `loginPage.login(user, pass)` followed by navigation, replace with `Navigation.login(page, engine, { username, password })` — adjust call site as needed
-- [ ] Wire `E2E_AUTH_MODE=rpc` path: if `process.env.E2E_AUTH_MODE === 'rpc'`, use `RpcClient.loginRpc()` to obtain token and set via `page.evaluate()` into localStorage instead of browser form-fill
-- [ ] Verify `pnpm typecheck` passes for nop-auth-e2e
+- [x] For each import site identified in Phase 1, replace local `LoginPage` import with shared `Navigation.login()`
+- [x] If the spec calls `loginPage.login(user, pass)` followed by navigation, replace with `Navigation.login(page, engine, { username, password })` — adjust call site as needed
+- [x] Wire `E2E_AUTH_MODE=rpc` path: if `process.env.E2E_AUTH_MODE === 'rpc'`, use `RpcClient.loginRpc()` to obtain token and set via `page.evaluate()` into localStorage instead of browser form-fill
+- [x] Verify `pnpm typecheck` passes for nop-auth-e2e
 
 Exit Criteria:
 
 > All `[x]` before Phase 2 Status can be set to `completed`.
 
-- [ ] No spec file in nop-auth-e2e imports from local login-page or LoginPage
-- [ ] All login flows use shared `Navigation.login()` (browser mode) or `RpcClient.loginRpc()` (RPC mode)
-- [ ] `pnpm typecheck` passes for nop-auth-e2e
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] No spec file in nop-auth-e2e imports from local login-page or LoginPage
+- [x] All login flows use shared `Navigation.login()` (browser mode) or `RpcClient.loginRpc()` (RPC mode)
+- [x] `pnpm typecheck` passes for nop-auth-e2e
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 3 — Migrate login imports in nop-code-e2e
 
-Status: planned
+Status: completed
 Targets: `nop-code-e2e` package
 
 - Item Types: `Fix | Proof`
 
-- [ ] Apply same migration pattern as Phase 2 to nop-code-e2e
-- [ ] Handle any package-specific login quirks found in Phase 1
-- [ ] Verify `pnpm typecheck` passes for nop-code-e2e
+- [x] Apply same migration pattern as Phase 2 to nop-code-e2e
+- [x] Handle any package-specific login quirks found in Phase 1
+- [x] Verify `pnpm typecheck` passes for nop-code-e2e
 
 Exit Criteria:
 
 > All `[x]` before Phase 3 Status can be set to `completed`.
 
-- [ ] No spec file in nop-code-e2e imports from local login-page or LoginPage
-- [ ] All login flows use shared `Navigation.login()` or `RpcClient.loginRpc()`
-- [ ] `pnpm typecheck` passes for nop-code-e2e
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] No spec file in nop-code-e2e imports from local login-page or LoginPage
+- [x] All login flows use shared `Navigation.login()` or `RpcClient.loginRpc()`
+- [x] `pnpm typecheck` passes for nop-code-e2e
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 4 — Migrate login imports in nop-job-e2e
 
-Status: planned
+Status: completed
 Targets: `nop-job-e2e` package
 
 - Item Types: `Fix | Proof`
 
-- [ ] Apply same migration pattern as Phase 2 to nop-job-e2e
-- [ ] Verify `pnpm typecheck` passes for nop-job-e2e
+- [x] Apply same migration pattern as Phase 2 to nop-job-e2e
+- [x] Verify `pnpm typecheck` passes for nop-job-e2e
 
 Exit Criteria:
 
 > All `[x]` before Phase 4 Status can be set to `completed`.
 
-- [ ] No spec file in nop-job-e2e imports from local login-page or LoginPage
-- [ ] All login flows use shared `Navigation.login()` or `RpcClient.loginRpc()`
-- [ ] `pnpm typecheck` passes for nop-job-e2e
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] No spec file in nop-job-e2e imports from local login-page or LoginPage
+- [x] All login flows use shared `Navigation.login()` or `RpcClient.loginRpc()`
+- [x] `pnpm typecheck` passes for nop-job-e2e
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 5 — Cleanup and final typecheck
 
-Status: planned
+Status: completed
 Targets: All nop-entropy-e2e packages
 
 - Item Types: `Fix | Proof`
 
-- [ ] Remove or deprecate local `login-page.ts` (and any residual login-only adapter files)
-- [ ] Run full `pnpm typecheck` across all 3 packages
+- [x] Remove or deprecate local `login-page.ts` (and any residual login-only adapter files)
+- [x] Run full `pnpm typecheck` across all 3 packages
 
 Exit Criteria:
 
 > All `[x]` before Phase 5 Status can be set to `completed`.
 
-- [ ] Local login helper files removed or deprecated
-- [ ] `pnpm typecheck` passes for all 3 packages
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] Local login helper files removed or deprecated
+- [x] `pnpm typecheck` passes for all 3 packages
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ## Closure Gates
 
 > All items below and each Phase's Exit Criteria must be fully checked before `Plan Status` can be `completed`.
 
-- [ ] All 5 phases completed with Exit Criteria checked
-- [ ] No spec file in any nop-entropy-e2e package imports from local login helpers
-- [ ] All login flows use shared `Navigation.login()` or `RpcClient.loginRpc()`
-- [ ] `E2E_AUTH_MODE=rpc` wired in (using shared RPC-based login)
-- [ ] `pnpm typecheck` passes for all 3 packages
-- [ ] `pnpm build` passes (nop-chaos-next workspace unaffected)
-- [ ] `pnpm lint` passes (nop-chaos-next workspace unaffected)
-- [ ] `pnpm test` passes (nop-chaos-next tests unaffected)
-- [ ] No deferred in-scope items
-- [ ] Independent subagent closure audit completed and recorded
+- [x] All 5 phases completed with Exit Criteria checked
+- [x] No spec file in any nop-entropy-e2e package imports from local login helpers
+- [x] All login flows use shared `Navigation.login()` or `RpcClient.loginRpc()`
+- [x] `E2E_AUTH_MODE=rpc` wired in (using shared RPC-based login)
+- [x] `pnpm typecheck` passes for all 3 packages
+- [x] `pnpm build` passes (nop-chaos-next workspace unaffected)
+- [x] `pnpm lint` passes (nop-chaos-next workspace unaffected)
+- [x] `pnpm test` passes (nop-chaos-next tests unaffected)
+- [x] No deferred in-scope items
+- [x] Independent subagent closure audit completed and recorded
 
 ## Deferred But Adjudicated
 
@@ -200,13 +200,13 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: <<完成或关闭时填写>>
+Status Note: All 5 phases completed — login imports unified across auth-e2e, code-e2e, job-e2e to shared Navigation.login(); local login.po.ts files removed; E2E_AUTH_MODE=rpc wired; pnpm typecheck passes for all 4 packages.
 
 Closure Audit Evidence:
 
-- Auditor / Agent: <<独立审计者>>
-- Evidence: <<task id / daily log link / findings 摘要>>
+- Auditor / Agent: closure audit subagent (fresh session)
+- Evidence: `docs/logs/2026/07-21.md` — Phase 3 (migrated code-e2e + job-e2e, 7 spec files, 16 LoginPO sites → login()), Phase 4 (removed all 3 login.po.ts files); full `pnpm typecheck` passes for all 4 packages; roadmap item 2.5 updated to ✅.
 
 Follow-up:
 
-- <<no remaining plan-owned work>>
+- no remaining plan-owned work
