@@ -57,8 +57,8 @@
 | 2.3 | RpcClient 集成 | 将现有的 `loginRpc()` / `rpc()` 独立函数替换为共享库的兼容导出（保持import兼容）。 | 1 plan | ✅ |
 | 2.4 | `FRONTEND_DEV_MODE` 支持 | 在各 e2e 包的 `playwright.config.ts` 中增加前端模式切换逻辑。 | 1 plan | ✅ |
 | 2.5 | Navigation 统一登录 | 将现有 `LoginPage` / `LoginPO` 迁移到共享库的 `Navigation.login()`。 | 1 plan | ✅
-| 2.6 | auth-e2e 测试适配 | 改造 `nop-auth-e2e` 下所有 spec 使用新 PageObject。 | 1 plan |
-| 2.7 | code-e2e / job-e2e 测试适配 | 改造其他 e2e 包。 | 1 plan |
+| 2.6 | auth-e2e 测试适配 | 改造 `nop-auth-e2e` 下所有 spec 使用新 PageObject。 | 1 plan | ✅ |
+| 2.7 | code-e2e / job-e2e 测试适配 | 改造其他 e2e 包。 | 1 plan | ✅ |
 
 **完成标准**：
 - `pnpm test:auth` / `pnpm test:code` / `pnpm test:job` 全部通过
@@ -113,7 +113,7 @@
 |------|-----------|-------------|------|
 | Phase 0 | 3 | 3 | 🟡 2/3 完成 |
 | Phase 1 | 8 | 8 | 🟡 7/8 完成 |
-| Phase 2 | 7 | 6.5 | 🟡 5/7 完成 |
+| Phase 2 | 7 | 6.5 | 🟢 7/7 完成 |
 | Phase 3 | 6 | 4 | ❌ 未开始 |
 | Phase 4 | 4 | 4 | ❌ 未开始 |
 | Phase 5 | 4 | 4 | ❌ 未开始 |

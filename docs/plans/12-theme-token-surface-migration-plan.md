@@ -1,18 +1,16 @@
 # 12 Theme Token Surface Migration Plan
 
 > Plan Status: draft
-> Review Hold: 2026-07-20 (confirmed 2026-07-20 re-review) — plan baseline is stale; migration is already fully landed. Promoting to `active` would trigger redundant execution. Marking `completed` requires an independent closure audit (not a review action). Next round should either (a) run a formal closure audit and mark `completed`, or (b) cancel as obsolete. Held as `draft` pending that decision.
-> Last Reviewed: 2026-07-20
+> Review Hold: scope already fully landed; promoting to `active` would trigger redundant execution. Needs closure audit or cancellation.
+> Last Reviewed: 2026-07-21
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (finding 09-02), independent hardcoded-color inventory
 > Related: `docs/plans/10-style-and-animation-governance-plan.md`
 
-## Review Findings (2026-07-20)
+## Review Findings (2026-07-21)
 
-Live-repo audit during review shows every Phase's deliverables already exist. The `Outdated Note` section below reflects the pre-migration state and is now outdated; this section records the current live state.
+Live-repo audit during this review confirms the 2026-07-20 finding: every Phase's deliverables already exist in the live repo. The `Outdated Note` section below reflects the pre-migration state; this section records current state.
 
-**Re-review (2026-07-20) confirmed**: prior findings remain accurate. Plan cannot be promoted to `active` — migration is fully landed in live repo; promoting would trigger redundant execution. The `Review Hold` blocker is still in effect. Plan remains `draft` pending a formal closure audit or cancellation decision.
-
-Reviewer note: this review pass confirms no fixable Blocker/Major issues exist in the plan itself. The sole blocker is that scope is already landed, making `active` promotion harmful. Holding as `draft` until closure audit or cancellation decision.
+**Prior reviews (2026-05-12, 2026-07-20) confirmed**: plan baseline stale; migration is fully landed. This pass (2026-07-21) re-verifies against live repo — no drift, no fixable Blocker/Major issues in the plan itself. The sole blocker is that scope is already landed, making `active` promotion harmful. Plan remains `draft` pending a formal closure audit or cancellation decision.
 
 ### Phase 1 — Token Foundation: already landed
 
