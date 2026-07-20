@@ -40,7 +40,7 @@
 | 1.4 | PageObject 改造：流编辑器和插件 spec | 改造 `flow-editor.spec.ts`、`plugin-demo.spec.ts`、`extension-demo.spec.ts`。 | 1 plan | ✅ |
 | 1.5 | PageObject 改造：AMIS 相关 spec | 改造 `amis-demo.spec.ts`、`amis-preview-crud.spec.ts`、`amis-css-isolation.spec.ts`、`amis-react19-transition.spec.ts`。 | 1 plan | ✅ |
 | 1.6 | PageObject 改造：CRUD 和 AI Workbench spec | 改造 `master-detail-buttons.spec.ts`、`master-detail-dialogs.spec.ts`、`ai-workbench-styles.spec.ts`。 | 1 plan | ✅
-| 1.7 | PageObject 改造：lazy loading + prototype spec | 改造 `lazy-loading.spec.ts`、`amis-prototype.spec.ts`、`flux-prototype.spec.ts`。 | 1 plan |
+| 1.7 | PageObject 改造：lazy loading + prototype spec | 改造 `lazy-loading.spec.ts`、`amis-prototype.spec.ts`、`flux-prototype.spec.ts`。 | 1 plan | ✅ |
 | 1.8 | MockAuthAdapter | 将 `support/auth.ts` 的 mock login pattern 适配为共享库可用的 `MockAuthAdapter`（不阻塞、逐步迁移）。 | 1 plan | ✅ |
 
 **完成标准**：
