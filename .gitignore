@@ -19,6 +19,7 @@ nop-task.md
 amis-server.log
 nul
 debug-screenshot.png
+_tmp/
 packages/*/src/**/*.js
 packages/*/src/**/*.d.ts
 packages/*/src/**/*.js.map
