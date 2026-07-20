@@ -3,9 +3,10 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4175';
-const useExternalServer = Boolean(process.env.PLAYWRIGHT_BASE_URL);
+const baseURL = process.env.BASE_URL ?? process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4175';
+const useExternalServer = Boolean(process.env.BASE_URL ?? process.env.PLAYWRIGHT_BASE_URL);
 const appMode = process.env.PLAYWRIGHT_APP_MODE ?? 'mock';
+const e2eEngine = process.env.E2E_ENGINE; // read for engine factory in shared fixtures
 
 const rootDir = dirname(fileURLToPath(import.meta.url));
 
@@ -86,11 +87,14 @@ export default defineConfig({
   ],
   webServer: useExternalServer
     ? undefined
-    : {
-        command: serverCommand,
-        url: 'http://127.0.0.1:4175',
-        env: webServerEnv,
-        reuseExistingServer: false,
-        timeout: 180_000,
-      },
+      : {
+          command: serverCommand,
+          url: 'http://127.0.0.1:4175',
+          env: {
+            ...webServerEnv,
+            ...(e2eEngine ? { E2E_ENGINE: e2eEngine } : {}),
+          },
+          reuseExistingServer: false,
+          timeout: 180_000,
+        },
 });
