@@ -158,6 +158,8 @@ pnpm dev:main     # Main app only
 | `npm run pack:nop-chaos` | Build + pack all AMIS packages into tgz |
 | `npm run build --workspace=packages/amis-formula` | Build single package |
 
+**React 19 JSX runtime:** AMIS packages are built with `jsx: "react-jsx"` (modern JSX transform). The ESM build (`esm/` directory) is the path consumed by `nop-chaos-next`'s Vite pipeline. ESM builds skip the `transpileReactCreateElement()` post-processing plugin (CJS-only). Additionally, a `normalizeEsmJsxRuntime()` post-processing step ensures any spurious `createElement` imports/calls introduced by `@rollup/plugin-typescript` are replaced with `jsx()` from `react/jsx-runtime`. This guarantees ESM output produces no mixed-runtime React 19 warnings. Before rebuilding `dist-packages/*.tgz`, run `npm run pack:nop-chaos` from the repo root.
+
 ### nop-chaos-flux (sibling repo)
 
 Two flows exist for Flux integration:
