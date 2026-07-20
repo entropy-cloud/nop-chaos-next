@@ -544,9 +544,6 @@ importers:
       '@nop-chaos/ui':
         specifier: workspace:*
         version: link:../../flux-lib/ui
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       i18next:
         specifier: 26.0.5
         version: 26.0.5(typescript@6.0.2)
@@ -562,9 +559,6 @@ importers:
       react-i18next:
         specifier: 17.0.4
         version: 17.0.4(i18next@26.0.5(typescript@6.0.2))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.2)
-      react-router-dom:
-        specifier: ^7.14.0
-        version: 7.14.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       systemjs:
         specifier: ^6.15.1
         version: 6.15.1
@@ -2228,7 +2222,7 @@ packages:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
 
   amis-core@file:libs/amis-core-6.13.1.tgz:
-    resolution: {integrity: sha512-zhv2i5VX6MZWQsRncH59b6ZdhmZN4Mwp/BboO6fgR/C4GR46+3piujwF0gqsq9ycQdaVHV7Xbu9J0kxaAPDhbw==, tarball: file:libs/amis-core-6.13.1.tgz}
+    resolution: {integrity: sha512-wrRHyaRm3suGkZCkDTw+7PB0te8TxZGFeP5uFka8bVhV43hQF5QHrrpID+TdeCykC5f4NzbhEvKYXAuLTdSEUA==, tarball: file:libs/amis-core-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-formula: '*'
@@ -2236,11 +2230,11 @@ packages:
       react-dom: '>=16.8.6'
 
   amis-formula@file:libs/amis-formula-6.13.1.tgz:
-    resolution: {integrity: sha512-DxybZ2UmaRcx1e9teOsqLCtNjaRdmkQFYr9kpaCjv56we0MtPqTS5LJC4yUZNDoCjQMSPqQQSMKm1UNp0ioOfw==, tarball: file:libs/amis-formula-6.13.1.tgz}
+    resolution: {integrity: sha512-9E9fMtfKcBuO7/pBtGcvmkuw7SDIWt5+wLEa4BJgh7vF++laFDzeSRXFXkhLJoxC3m7rlAqEggWSqmVXoIim+g==, tarball: file:libs/amis-formula-6.13.1.tgz}
     version: 6.13.1
 
   amis-ui@file:libs/amis-ui-6.13.1.tgz:
-    resolution: {integrity: sha512-6sW9RzwEJxLbeGYUzliC3gcqFFl8315XG7WCGLYFn/rmmwBb/dJNSxSdd+VQR+u3RqCfDMShn9JpK4FttZfIBA==, tarball: file:libs/amis-ui-6.13.1.tgz}
+    resolution: {integrity: sha512-jdaF05YMOERK4qkrsLb9Z91cvXGxO4lILSnvXeqRFlhVcNgrdI2ZyW1EUBe9RWGxz9JFeZ+Yrawi2f/E8lODpA==, tarball: file:libs/amis-ui-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-core: '*'
@@ -2249,7 +2243,7 @@ packages:
       react-dom: '>=16.8.6'
 
   amis@file:libs/amis-6.13.1.tgz:
-    resolution: {integrity: sha512-RlWBJljUt9blPWm5mfBdXKbR2pjL9WwmD9zg08Ph7Ripi8mAuYyVtPV1UsA3bQ7Hjouq71iJMhkefTM2MuY3Fg==, tarball: file:libs/amis-6.13.1.tgz}
+    resolution: {integrity: sha512-1Bm0eJ32qmLpLKZLljysOKJupi+VJVlTZx6OlORt1kqLIpkl2yCH17we7CSvxo7zV/fFEWi8ZwLKZq9p3B2XTg==, tarball: file:libs/amis-6.13.1.tgz}
     version: 6.13.1
     peerDependencies:
       amis-core: '*'
@@ -4116,7 +4110,7 @@ packages:
       echarts: ^5.4.0
 
   office-viewer@file:libs/office-viewer-0.3.14.tgz:
-    resolution: {integrity: sha512-1Si+dfaGq2WgfL44qqy0pf2F0+51qP/F+roawwAI2dUolI+Zj1yNQSZVyKsDlH8/9h3gzkaNDTLDXBeCna63Zg==, tarball: file:libs/office-viewer-0.3.14.tgz}
+    resolution: {integrity: sha512-A1VyV1EXuWuJQCmc+Y5zx95UGJyETjZ0/rh5N7209RR6nR9oLy41PJhbvtUsDA1s1yNsuIVOg/EW/Ew1+KCnAA==, tarball: file:libs/office-viewer-0.3.14.tgz}
     version: 0.3.14
     peerDependencies:
       echarts: ^5.5.1
