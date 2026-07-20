@@ -16,6 +16,9 @@ export type { GraphQLResponse } from './GraphQlClient';
 export { RpcClient, loginRpc, rpc, resetAuth, setAuthToken } from './RpcClient';
 export type { RpcRequest, RpcResponse } from './RpcClient';
 
-export { login, navigateTo, loginAndNavigate } from './Navigation';
+export { navigateTo, loginAndNavigate } from './Navigation';
+
+export { login, MockAuthAdapter, buildMockLoginResponse, defaultSiteMapResponse, defaultMenuResponse } from './MockAuthAdapter';
+export type { LoginVariant, LoginOptions } from './MockAuthAdapter';
 
 export { test } from './fixtures';
