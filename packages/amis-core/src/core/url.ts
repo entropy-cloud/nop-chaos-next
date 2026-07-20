@@ -20,6 +20,4 @@ export function splitPrefixUrl(url: string): ParsedPrefixUrl | undefined {
   return [url.slice(0, separatorIndex), url.slice(separatorIndex + 3)];
 }
 
-export function isAbsoluteUrl(url: string) {
-  return /^https?:\/\//i.test(url);
-}
+
