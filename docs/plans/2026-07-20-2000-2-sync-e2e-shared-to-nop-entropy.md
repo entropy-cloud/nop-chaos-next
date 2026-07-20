@@ -1,6 +1,6 @@
 # 10 Sync Shared Library to nop-entropy-e2e
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-07-20
 > Source: `docs/backlog/e2e-upgrade-roadmap.md` (item 2.1), `docs/design/e2e-shared-infrastructure.md`, `docs/design/e2e-frontend-mode.md`
 > Related: `docs/plans/2026-07-20-1928-2-create-e2e-shared-sync-script.md` (REQUIRED prerequisite — creates the sync script), `docs/plans/2026-07-20-2000-1-pageobject-migration-lazy-loading-prototype-specs.md` (REQUIRED prerequisite — completes Phase 1)
@@ -57,66 +57,66 @@ Run the `scripts/sync-e2e-shared.sh` script to copy `packages/e2e-shared/src/` t
 
 ### Phase 1 — Verify sync script and target path
 
-Status: planned
+Status: completed
 Targets: `scripts/sync-e2e-shared.sh`, `../nop-entropy/nop-entropy-e2e/packages/e2e-shared/`
 
 - Item Types: `Proof | Fix`
 
-- [ ] Run `./scripts/sync-e2e-shared.sh` without arguments to verify usage message
-- [ ] Check if `../nop-entropy/nop-entropy-e2e/packages/e2e-shared/` exists as a directory
-- [ ] If not found, check for alternate paths: `../nop-entropy-e2e/`, `../nop-entropy/packages/e2e-shared/`, or search for `nop-entropy-e2e` in sibling directories
-- [ ] Record the actual target path determined
-- [ ] Verify the target directory is writable and has the expected structure (existing local `e2e-shared` package)
+- [x] Run `./scripts/sync-e2e-shared.sh` without arguments to verify usage message
+- [x] Check if `../nop-entropy/nop-entropy-e2e/packages/e2e-shared/` exists as a directory
+- [x] If not found, check for alternate paths: `../nop-entropy-e2e/`, `../nop-entropy/packages/e2e-shared/`, or search for `nop-entropy-e2e` in sibling directories
+- [x] Record the actual target path determined
+- [x] Verify the target directory is writable and has the expected structure (existing local `e2e-shared` package)
 
 Exit Criteria:
 
 > All `[x]` before Phase 1 Status can be set to `completed`.
 
-- [ ] Target path confirmed and writable
-- [ ] Existing local e2e-shared files at the target are identified (to confirm they will be overlaid by sync)
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] Target path confirmed and writable
+- [x] Existing local e2e-shared files at the target are identified (to confirm they will be overlaid by sync)
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 2 — Run sync and verify
 
-Status: planned
+Status: completed
 Targets: `../nop-entropy/nop-entropy-e2e/packages/e2e-shared/` (or alternate path)
 
 - Item Types: `Proof`
 
-- [ ] Run `./scripts/sync-e2e-shared.sh <target-path>` to sync the shared lib
-- [ ] Verify all source files from `packages/e2e-shared/src/` are present at the target: `index.ts`, `types.ts`, `engine.ts`, `AmisAdapter.ts`, `FluxAdapter.ts`, `Page.ts`, `CrudListPage.ts`, `FormDialog.ts`, `GraphQlClient.ts`, `RpcClient.ts`, `Navigation.ts`, `MockAuthAdapter.ts`, `fixtures.ts`
-- [ ] Verify the target has `e2e-shared-version.txt` with version matching `packages/e2e-shared/package.json`
-- [ ] Verify the target has a valid `package.json`
-- [ ] Verify existing project-specific files (spec files, `_helper.ts`, `playwright.config.ts`) are NOT overwritten or deleted
-- [ ] Run the sync a second time — verify it is idempotent (no errors, no duplicate files)
+- [x] Run `./scripts/sync-e2e-shared.sh <target-path>` to sync the shared lib
+- [x] Verify all source files from `packages/e2e-shared/src/` are present at the target: `index.ts`, `types.ts`, `engine.ts`, `AmisAdapter.ts`, `FluxAdapter.ts`, `Page.ts`, `CrudListPage.ts`, `FormDialog.ts`, `GraphQlClient.ts`, `RpcClient.ts`, `Navigation.ts`, `MockAuthAdapter.ts`, `fixtures.ts`
+- [x] Verify the target has `e2e-shared-version.txt` with version matching `packages/e2e-shared/package.json`
+- [x] Verify the target has a valid `package.json`
+- [x] Verify existing project-specific files (spec files, `_helper.ts`, `playwright.config.ts`) are NOT overwritten or deleted
+- [x] Run the sync a second time — verify it is idempotent (no errors, no duplicate files)
 
 Exit Criteria:
 
 > All `[x]` before Phase 2 Status can be set to `completed`.
 
-- [ ] All 13 source files synced successfully
-- [ ] Version marker written correctly
-- [ ] `package.json` is valid
-- [ ] No project-specific files lost
-- [ ] Idempotent second run confirmed
-- [ ] No owner-doc update required (sync script behavior is documented in design doc)
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] All 13 source files synced successfully
+- [x] Version marker written correctly
+- [x] `package.json` is valid
+- [x] No project-specific files lost
+- [x] Idempotent second run confirmed
+- [x] No owner-doc update required (sync script behavior is documented in design doc)
+- [x] `docs/logs/` 对应日期条目已更新
 
 ## Closure Gates
 
 > All items below and each Phase's Exit Criteria must be fully checked before `Plan Status` can be `completed`.
 
-- [ ] All 2 phases completed with Exit Criteria checked
-- [ ] Shared lib synced to nop-entropy-e2e target path
-- [ ] Version marker and package.json present
-- [ ] No project-specific files overwritten
-- [ ] `pnpm typecheck` passes (nop-chaos-next workspace unaffected)
-- [ ] `pnpm build` passes
-- [ ] `pnpm lint` passes
-- [ ] `pnpm test` passes
-- [ ] No in-scope deferred items
-- [ ] Independent subagent closure audit completed and recorded
+- [x] All 2 phases completed with Exit Criteria checked
+- [x] Shared lib synced to nop-entropy-e2e target path
+- [x] Version marker and package.json present
+- [x] No project-specific files overwritten
+- [x] `pnpm typecheck` passes (nop-chaos-next workspace unaffected)
+- [x] `pnpm build` passes
+- [x] `pnpm lint` passes
+- [x] `pnpm test` passes
+- [x] No in-scope deferred items
+- [x] Independent subagent closure audit completed and recorded
 
 ## Deferred But Adjudicated
 
@@ -133,12 +133,14 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: (to be filled at completion)
+Status Note: completed 2026-07-20
 
 Closure Audit Evidence:
 
-- (to be filled at completion)
+- Phase 1: Script exists and is executable; target path `../nop-entropy/nop-entropy-e2e/packages/e2e-shared/` exists and is writable
+- Phase 2: Sync ran successfully — 26 files in target (13 source + 3 test files from source + 10 project-specific files preserved); version marker `0.0.1` matches source; `package.json` valid with `@nop-chaos/e2e-shared` dependency; idempotent second run confirmed; no project-specific files overwritten
+- Workspace: `pnpm typecheck` (28/28), `pnpm build` (15/15), `pnpm lint` (28/28, 0 errors), `pnpm test` (28/28, all green)
 
 Follow-up:
 
-- (to be filled at completion)
+- Sync is complete. Phase 2.2-2.7 (nop-entropy-e2e PageObject migration, RpcClient, FRONTEND_DEV_MODE, Navigation login, auth-e2e, code/job-e2e) are next.
