@@ -1,5 +1,6 @@
-import { expect, test } from '@playwright/test';
-import { login } from './support/auth';
+import { expect } from '@playwright/test';
+import { test } from '@nop-chaos/e2e-shared';
+import { login } from '@nop-chaos/e2e-shared';
 
 function failOnUnexpectedNativeDialog(page: import('@playwright/test').Page) {
   const dialogs: Array<{ type: string; message: string }> = [];

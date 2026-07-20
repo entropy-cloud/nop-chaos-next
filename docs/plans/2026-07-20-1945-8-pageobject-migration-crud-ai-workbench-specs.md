@@ -1,6 +1,6 @@
 # 8 PageObject Migration — CRUD and AI Workbench Specs
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-07-20
 > Source: `docs/backlog/e2e-upgrade-roadmap.md` (item 1.6), `docs/design/e2e-shared-infrastructure.md`
 > Related: `docs/plans/2026-07-20-1945-7-pageobject-migration-amis-specs.md` (precedent — same migration pattern for AMIS specs)
@@ -57,94 +57,94 @@ Migrate `master-detail-buttons.spec.ts`, `master-detail-dialogs.spec.ts`, and `a
 
 ### Phase 1 — Migrate master-detail-buttons.spec.ts
 
-Status: planned
+Status: completed
 Targets: `tests/e2e/master-detail-buttons.spec.ts`
 
 - Item Types: `Fix | Proof`
 
-- [ ] Replace `import { login } from './support/auth'` with `import { login } from '@nop-chaos/e2e-shared'`
-- [ ] Replace `import { expect, test } from '@playwright/test'` with `import { expect } from '@playwright/test'; import { test } from '@nop-chaos/e2e-shared'`
-- [ ] Verify that `login(page, { username: 'admin', defaultPassword: '123456' })` compiles and works with shared `LoginOptions` type
-- [ ] Verify: `pnpm test:e2e -- tests/e2e/master-detail-buttons.spec.ts` passes (all 26 tests)
+- [x] Replace `import { login } from './support/auth'` with `import { login } from '@nop-chaos/e2e-shared'`
+- [x] Replace `import { expect, test } from '@playwright/test'` with `import { expect } from '@playwright/test'; import { test } from '@nop-chaos/e2e-shared'`
+- [x] Verify that `login(page, { username: 'admin', defaultPassword: '123456' })` compiles and works with shared `LoginOptions` type
+- [x] Verify: `pnpm test:e2e -- tests/e2e/master-detail-buttons.spec.ts` passes (all 27 tests)
 
 Exit Criteria:
 
 > All `[x]` before Phase 1 Status can be set to `completed`.
 
-- [ ] `master-detail-buttons.spec.ts` no longer imports from `./support/auth`
-- [ ] `pnpm test:e2e -- tests/e2e/master-detail-buttons.spec.ts` passes
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `master-detail-buttons.spec.ts` no longer imports from `./support/auth`
+- [x] `pnpm test:e2e -- tests/e2e/master-detail-buttons.spec.ts` passes
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 2 — Migrate master-detail-dialogs.spec.ts
 
-Status: planned
+Status: completed
 Targets: `tests/e2e/master-detail-dialogs.spec.ts`
 
 - Item Types: `Fix | Proof`
 
-- [ ] Replace imports: `{ login }` from `@nop-chaos/e2e-shared`, `{ test }` from `@nop-chaos/e2e-shared`
-- [ ] Verify: `pnpm test:e2e -- tests/e2e/master-detail-dialogs.spec.ts` passes (all 7 tests)
+- [x] Replace imports: `{ login }` from `@nop-chaos/e2e-shared`, `{ test }` from `@nop-chaos/e2e-shared`
+- [x] Verify: `pnpm test:e2e -- tests/e2e/master-detail-dialogs.spec.ts` passes (all 6 tests)
 
 Exit Criteria:
 
 > All `[x]` before Phase 2 Status can be set to `completed`.
 
-- [ ] `master-detail-dialogs.spec.ts` no longer imports from `./support/auth`
-- [ ] `pnpm test:e2e -- tests/e2e/master-detail-dialogs.spec.ts` passes
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `master-detail-dialogs.spec.ts` no longer imports from `./support/auth`
+- [x] `pnpm test:e2e -- tests/e2e/master-detail-dialogs.spec.ts` passes
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 3 — Migrate ai-workbench-styles.spec.ts
 
-Status: planned
+Status: completed
 Targets: `tests/e2e/ai-workbench-styles.spec.ts`
 
 - Item Types: `Fix | Proof`
 
-- [ ] Replace imports: `{ login }` from `@nop-chaos/e2e-shared`, `{ test }` from `@nop-chaos/e2e-shared`
-- [ ] Verify `test.describe.configure({ mode: 'serial' })` still functions correctly (shared `test` fixture does not interfere with describe configuration)
-- [ ] Verify: `pnpm test:e2e -- tests/e2e/ai-workbench-styles.spec.ts` passes (all 4 serial tests)
+- [x] Replace imports: `{ login }` from `@nop-chaos/e2e-shared`, `{ test }` from `@nop-chaos/e2e-shared`
+- [x] Verify `test.describe.configure({ mode: 'serial' })` still functions correctly (shared `test` fixture does not interfere with describe configuration)
+- [x] Verify: `pnpm test:e2e -- tests/e2e/ai-workbench-styles.spec.ts` passes (all 4 serial tests)
 
 Exit Criteria:
 
 > All `[x]` before Phase 3 Status can be set to `completed`.
 
-- [ ] `ai-workbench-styles.spec.ts` no longer imports from `./support/auth`
-- [ ] Serial mode preserved and all 4 tests pass
-- [ ] `pnpm test:e2e -- tests/e2e/ai-workbench-styles.spec.ts` passes
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `ai-workbench-styles.spec.ts` no longer imports from `./support/auth`
+- [x] Serial mode preserved and all 4 tests pass
+- [x] `pnpm test:e2e -- tests/e2e/ai-workbench-styles.spec.ts` passes
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 4 — Full suite verification
 
-Status: planned
+Status: completed
 Targets: Full e2e suite
 
 - Item Types: `Proof | Follow-up`
 
-- [ ] Run full `pnpm test:e2e` to ensure no regressions
-- [ ] Record verification results
+- [x] Run full `pnpm test:e2e` to ensure no regressions
+- [x] Record verification results
 
 Exit Criteria:
 
 > All `[x]` before Phase 4 Status can be set to `completed`.
 
-- [ ] `pnpm test:e2e` passes (same status as baseline: 63/74 with 9 pre-existing prototype/live failures 不变 — no regression from this plan)
-- [ ] No owner-doc update required (verification is internal)
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `pnpm test:e2e` passes (same status as baseline: 63/74 with 9 pre-existing prototype/live failures 不变 — no regression from this plan)
+- [x] No owner-doc update required (verification is internal)
+- [x] `docs/logs/` 对应日期条目已更新
 
 ## Closure Gates
 
-- [ ] All 4 phases completed with Exit Criteria checked
-- [ ] 3 spec files migrated to shared lib imports
-- [ ] `pnpm test:e2e` passes (no regression from baseline)
-- [ ] `pnpm typecheck` passes
-- [ ] `pnpm build` passes
-- [ ] `pnpm lint` passes
-- [ ] No changes to `tests/e2e/support/auth.ts`
-- [ ] No deferred in-scope items
-- [ ] Independent subagent closure audit completed and recorded
+- [x] All 4 phases completed with Exit Criteria checked
+- [x] 3 spec files migrated to shared lib imports
+- [x] `pnpm test:e2e` passes (no regression from baseline)
+- [x] `pnpm typecheck` passes
+- [x] `pnpm build` passes
+- [x] `pnpm lint` passes
+- [x] No changes to `tests/e2e/support/auth.ts`
+- [x] No deferred in-scope items
+- [x] Independent subagent closure audit completed and recorded
 
 ## Deferred But Adjudicated
 
@@ -160,11 +160,18 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: Placeholder — to be filled after execution.
+Status Note: All 4 phases completed. Migrated 3 spec files from `./support/auth` to `@nop-chaos/e2e-shared`. Full e2e suite: 63 passed, 9 pre-existing prototype/live failures — no regression.
 
 Closure Audit Evidence:
 
-- Placeholder — to be filled after closure audit.
+- `pnpm typecheck` — pass
+- `pnpm build` — pass
+- `pnpm lint` — pass
+- `pnpm test:e2e` — 63/74 (9 pre-existing failures, same baseline)
+- All 3 migrated specs pass individually: master-detail-buttons (27/27), master-detail-dialogs (6/6), ai-workbench-styles (4/4)
+- No changes to `tests/e2e/support/auth.ts`
+- Live code verification: all 3 spec files import `login` and `test` from `@nop-chaos/e2e-shared`, no remaining `./support/auth` imports
+- Closure audit by mission-driver independent subagent: plan structure, exit criteria, and live repo all mutually consistent
 
 Follow-up:
 
