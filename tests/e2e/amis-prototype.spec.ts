@@ -1,51 +1,8 @@
-import { expect, test } from '@playwright/test';
-
-/**
- * AMIS Prototype Demo end-to-end tests.
- *
- * Run with: pnpm test:e2e:amis-prototype
- *
- * Verifies:
- * - Two-level menu loaded from prototype menu.json
- * - CRUD AMIS pages rendered from x:extends-resolved JSON
- * - Mock CRUD API (list / create)
- */
-
-async function login(page: import('@playwright/test').Page) {
-  await page.addInitScript(() => {
-    window.localStorage.clear();
-    window.sessionStorage.clear();
-  });
-
-  await page.route('**/r/LoginApi__login?*', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        accessToken: 'mock-token:proto',
-        expiresIn: 300,
-        refreshToken: 'mock-refresh',
-        refreshExpiresIn: 86400,
-        userInfo: {
-          username: 'proto',
-          nickname: 'Proto User',
-          email: 'proto@ex.com',
-          roles: [{ value: 'admin' }],
-        },
-      }),
-    });
-  });
-
-  await page.goto('/#/auth/login');
-  const passwordInput = page.locator('input[type="password"]');
-  await passwordInput.waitFor({ state: 'visible', timeout: 10_000 });
-  await page.locator('input').first().fill('proto');
-  await passwordInput.fill('123456');
-  await page.locator('button[type="submit"]').click();
-}
+import { expect } from '@playwright/test';
+import { test, login } from '@nop-chaos/e2e-shared';
 
 test('prototype menu loads two-level navigation with CRUD pages', async ({ page }) => {
-  await login(page);
+  await login(page, { username: 'proto', mockMenuRoutes: false });
 
   const nav = page.getByRole('navigation', { name: 'Primary navigation' }).first();
 
@@ -66,7 +23,7 @@ test('prototype menu loads two-level navigation with CRUD pages', async ({ page 
 });
 
 test('CRUD create: add a new user via dialog', async ({ page }) => {
-  await login(page);
+  await login(page, { username: 'proto', mockMenuRoutes: false });
 
   const nav = page.getByRole('navigation', { name: 'Primary navigation' }).first();
 
@@ -94,7 +51,7 @@ test('CRUD create: add a new user via dialog', async ({ page }) => {
 });
 
 test('second group 内容管理 shows articles CRUD', async ({ page }) => {
-  await login(page);
+  await login(page, { username: 'proto', mockMenuRoutes: false });
 
   const nav = page.getByRole('navigation', { name: 'Primary navigation' }).first();
 

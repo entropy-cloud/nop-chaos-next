@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { login } from './support/auth';
+import { expect } from '@playwright/test';
+import { test, login } from '@nop-chaos/e2e-shared';
 
 const fluxEnabledSiteMapResponse = {
   status: 0,

@@ -11,6 +11,7 @@ export interface LoginOptions {
   roles?: string[];
   defaultPassword?: string;
   harborPassword?: string;
+  mockMenuRoutes?: boolean;
 }
 
 export const defaultSiteMapResponse = {
@@ -362,6 +363,7 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<Log
     roles,
     defaultPassword = '123456',
     harborPassword: _harborPassword = '123456',
+    mockMenuRoutes = true,
   } = options;
   const preferredUsername = username ?? 'nop';
 
@@ -398,21 +400,23 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<Log
     });
   });
 
-  await page.route('**/r/SiteMapApi__getSiteMap', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(defaultSiteMapResponse),
+  if (mockMenuRoutes !== false) {
+    await page.route('**/r/SiteMapApi__getSiteMap', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(defaultSiteMapResponse),
+      });
     });
-  });
 
-  await page.route('**/data/menu-config.json', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(defaultMenuResponse),
+    await page.route('**/data/menu-config.json', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(defaultMenuResponse),
+      });
     });
-  });
+  }
 
   await setup?.();
   await page.goto('/#/auth/login');
