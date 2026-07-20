@@ -54,7 +54,7 @@
 |---|--------|------|---------|
 | 2.1 | sync 共享库到 `e2e-shared` | 通过 sync 脚本将共享库同步到 `nop-entropy-e2e/packages/e2e-shared/`。 | 0.5 plan | ✅ |
 | 2.2 | 替换 AMIS-only PageObject | 将现有 `AmisCrudPage` 替换为双引擎 `CrudListPage` + `FormDialog`；迁移 `helpers/` 中相关逻辑到共享库。 | 1 plan | ✅ |
-| 2.3 | RpcClient 集成 | 将现有的 `loginRpc()` / `rpc()` 独立函数替换为共享库的兼容导出（保持import兼容）。 | 1 plan |
+| 2.3 | RpcClient 集成 | 将现有的 `loginRpc()` / `rpc()` 独立函数替换为共享库的兼容导出（保持import兼容）。 | 1 plan | ✅ |
 | 2.4 | `FRONTEND_DEV_MODE` 支持 | 在各 e2e 包的 `playwright.config.ts` 中增加前端模式切换逻辑。 | 1 plan |
 | 2.5 | Navigation 统一登录 | 将现有 `LoginPage` / `LoginPO` 迁移到共享库的 `Navigation.login()`。 | 1 plan |
 | 2.6 | auth-e2e 测试适配 | 改造 `nop-auth-e2e` 下所有 spec 使用新 PageObject。 | 1 plan |
@@ -113,7 +113,7 @@
 |------|-----------|-------------|------|
 | Phase 0 | 3 | 3 | 🟡 2/3 完成 |
 | Phase 1 | 8 | 8 | 🟡 7/8 完成 |
-| Phase 2 | 7 | 6.5 | 🟡 2/7 完成 |
+| Phase 2 | 7 | 6.5 | 🟡 3/7 完成 |
 | Phase 3 | 6 | 4 | ❌ 未开始 |
 | Phase 4 | 4 | 4 | ❌ 未开始 |
 | Phase 5 | 4 | 4 | ❌ 未开始 |

@@ -73,6 +73,7 @@ When adding a new log entry for today:
 
 ### 2026-07
 
+- [07-20](2026/07-20.md) — Executed 12 plans: e2e-shared package creation, sync script, E2E_ENGINE/BASE_URL support, MockAuthAdapter, 5 PageObject migration plans (login, dashboard, permissions, i18n, flow editor, plugin, AMIS, CRUD, AI workbench, lazy loading, prototypes), AMIS PageObject replacement in nop-entropy-e2e, RpcClient integration in nop-entropy-e2e
 - [07-13](2026/07-13.md) — 兼容旧版 amis JSON 的 `vue-form-item` + `icon-picker`：amis-react 新增通用 name→React 组件桥接渲染器，apps/main 新增 React `IconPicker`（复用 `LowCodeIcon`，lucide 图标集）；修复 host/bridge 分层违规
 - [07-10](2026/07-10.md) — Decoupled prototype extension from main default build path: removed static `import('@prototype-extension')` from `config.ts`; prototype-server plugin now injects `window.__NOP_EXTENSIONS__` via `transformIndexHtml` (`/@fs/` entry). Fixes default `pnpm dev:main` resolution error.
 - [07-05](2026/07-05.md) — Created `docs/design/overview.md` (generic-shell vision) and `docs/design/shell-profiles.md` (multi-client profile mechanism: web/mobile/kiosk via single build artifact)
