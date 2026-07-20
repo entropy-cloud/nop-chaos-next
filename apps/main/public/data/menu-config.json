@@ -121,6 +121,24 @@
       "sort": 7
     },
     {
+      "id": "flux-dashboard",
+      "title": "Flux Dashboard",
+      "path": "/flux-dashboard",
+      "icon": "layout-dashboard",
+      "pageType": "flux",
+      "schemaPath": "/data/flux-dashboard.json",
+      "sort": 8
+    },
+    {
+      "id": "flux-report",
+      "title": "Flux Report",
+      "path": "/flux-report",
+      "icon": "file-text",
+      "pageType": "flux",
+      "schemaPath": "/data/flux-report.json",
+      "sort": 9
+    },
+    {
       "id": "settings",
       "titleKey": "menu.settings",
       "path": "/settings",
