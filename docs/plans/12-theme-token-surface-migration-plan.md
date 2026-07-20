@@ -1,14 +1,14 @@
 # 12 Theme Token Surface Migration Plan
 
 > Plan Status: draft
-> Review Hold: 2026-07-20 review found the plan's baseline is stale — the migration it describes appears **already fully landed** in the live repo. See `## Review Findings (2026-07-20)` below for evidence. Promoting to `active` would trigger redundant re-execution; marking `completed` requires an independent closure audit (not a review action). Next round should either (a) run a formal closure audit and mark `completed`, or (b) cancel as obsolete. Held as `draft` pending that decision.
+> Review Hold: 2026-07-20 (confirmed 2026-07-20 re-review) — plan baseline is stale; migration is already fully landed. Promoting to `active` would trigger redundant execution. Marking `completed` requires an independent closure audit (not a review action). Next round should either (a) run a formal closure audit and mark `completed`, or (b) cancel as obsolete. Held as `draft` pending that decision.
 > Last Reviewed: 2026-07-20
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (finding 09-02), independent hardcoded-color inventory
 > Related: `docs/plans/10-style-and-animation-governance-plan.md`
 
 ## Review Findings (2026-07-20)
 
-Live-repo audit during review shows every Phase's deliverables already exist. The `Current Baseline` section below reflects the pre-migration state and is now outdated; this section records the current live state.
+Live-repo audit during review shows every Phase's deliverables already exist. The `Outdated Note` section below reflects the pre-migration state and is now outdated; this section records the current live state.
 
 ### Phase 1 — Token Foundation: already landed
 
@@ -41,7 +41,7 @@ These match the plan's `Deferred But Adjudicated` classification — no drift.
 
 ### Conclusion
 
-The plan's execution scope is fully satisfied by the current live baseline. The `Current Baseline` and per-Phase `Status: planned` markers are stale. Recommended next actions (out of review scope):
+The plan's execution scope is fully satisfied by the current live baseline. The `Outdated Note` section and per-Phase `Status: planned` markers are stale. Recommended next actions (out of review scope):
 
 1. Run an independent closure audit (fresh subagent) against the live repo, then mark `Plan Status: completed` with evidence; or
 2. Mark `Plan Status: cancelled` (or `superseded`) as obsolete if no closure record is needed.
@@ -54,7 +54,9 @@ Until that decision is made, the plan stays `draft` so the execution engine does
 
 > **文件计数**：26 个文件经审计包含硬编码色，其中 3 个仅含中性 overlay hover（adjudicated，不修改），23 个需要代码变更（21 个在 `apps/main/src`，2 个在 `packages/core`），加上 2 个需要新增 token 的基础设施文件（`theme-tokens/styles.css` 和 `tailwind-preset/index.ts`）。
 
-## Current Baseline
+## Outdated Note
+
+> This `Current Baseline` section describes the pre-migration state at the time of drafting. The authoritative current state is documented in `## Review Findings (2026-07-20)` above. Per `00-plan-authoring-and-execution-guide.md` Rule 7, this section is preserved as historical reference only.
 
 - `packages/theme-tokens/src/styles.css` 已为 4 种主题×模式组合定义了 `--card-surface`、`--border-surface`、`--app-topbar-bg`、`--app-sidebar-bg`、`--app-tabs-bg` 等语义化 token。
 - `apps/main/src/styles/index.css` 已有 `.theme-card` 工具类，使用 `var(--card-surface)` + `var(--border-surface)` + `var(--glass-blur)`，但仅用于少数组件。
@@ -280,7 +282,7 @@ Targets: `apps/main/src/pages/dashboard/**`, `apps/main/src/pages/auth/**`, `app
 - [ ] 4.5 `components/layout/SidebarUserMenu.tsx`：保留 `bg-black/5` + `dark:bg-white/10`（hover overlay 微交互，不属于 surface 语义，记录为 adjudicated）
 - [ ] 4.6 `components/plugin/PluginMountPanel.tsx`：替换 2 处
 - [ ] 4.7 `router/RouteRenderer.tsx`：替换 1 处
-- [ ] 4.8 `lib/tableRowClassName.ts`：替换 1 处（`hover:bg-white/45 dark:hover:bg-slate-900/45` → `hover:bg-surface-hover`，属于 surface hover 变体）
+- [x] 4.8 `lib/tableRowClassName.ts`：文件已不存在于 live repo（仅 `themeContract.test.ts` 引用其路径）。该迁移点已自动消除，视为 moot。
 - [ ] 4.9 `packages/core/src/components/Sidebar.tsx`：保留 `hover:bg-black/5` + `dark:hover:bg-white/10`（中性 overlay hover，不属于 surface 语义，记录为 adjudicated）
 - [ ] 4.10 `packages/core/src/components/ErrorBoundary.tsx`：替换 1 处
 - [ ] 4.11 `packages/core/src/components/MainLayout.tsx`：`bg-slate-950/40` 替换为 `bg-surface-overlay`（注意：原 slate-950 `rgb(2,6,23)` → 新 slate-900 基色 `rgb(15,23,42)`，40% opacity 下有细微色偏，视觉可接受）

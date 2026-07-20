@@ -41,7 +41,7 @@
 | 1.5 | PageObject 改造：AMIS 相关 spec | 改造 `amis-demo.spec.ts`、`amis-preview-crud.spec.ts`、`amis-css-isolation.spec.ts`、`amis-react19-transition.spec.ts`。 | 1 plan |
 | 1.6 | PageObject 改造：CRUD 和 AI Workbench spec | 改造 `master-detail-buttons.spec.ts`、`master-detail-dialogs.spec.ts`、`ai-workbench-styles.spec.ts`。 | 1 plan |
 | 1.7 | PageObject 改造：lazy loading + prototype spec | 改造 `lazy-loading.spec.ts`、`amis-prototype.spec.ts`、`flux-prototype.spec.ts`。 | 1 plan |
-| 1.8 | MockAuthAdapter | 将 `support/auth.ts` 的 mock login pattern 适配为共享库可用的 `MockAuthAdapter`（不阻塞、逐步迁移）。 | 1 plan |
+| 1.8 | MockAuthAdapter | 将 `support/auth.ts` 的 mock login pattern 适配为共享库可用的 `MockAuthAdapter`（不阻塞、逐步迁移）。 | 1 plan | ✅ |
 
 **完成标准**：
 - `pnpm test:e2e` 全部 23+ spec 通过
@@ -112,7 +112,7 @@
 | 阶段 | 工作项合计 | 预计 plan 数 | 状态 |
 |------|-----------|-------------|------|
 | Phase 0 | 3 | 3 | 🟡 2/3 完成 |
-| Phase 1 | 8 | 8 | 🟡 2/8 完成 |
+| Phase 1 | 8 | 8 | 🟡 3/8 完成 |
 | Phase 2 | 7 | 6.5 | ❌ 未开始 |
 | Phase 3 | 6 | 4 | ❌ 未开始 |
 | Phase 4 | 4 | 4 | ❌ 未开始 |
