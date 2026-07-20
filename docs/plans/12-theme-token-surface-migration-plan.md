@@ -58,7 +58,7 @@ Until that decision is made, the plan stays `draft` so the execution engine does
 
 ## Outdated Note
 
-> This `Current Baseline` section describes the pre-migration state at the time of drafting. The authoritative current state is documented in `## Review Findings (2026-07-20)` above. Per `00-plan-authoring-and-execution-guide.md` Rule 7, this section is preserved as historical reference only.
+> This `Current Baseline` section describes the pre-migration state at the time of drafting. The authoritative current state is documented in `## Review Findings (2026-07-21)` above. Per `00-plan-authoring-and-execution-guide.md` Rule 7, this section is preserved as historical reference only.
 
 - `packages/theme-tokens/src/styles.css` 已为 4 种主题×模式组合定义了 `--card-surface`、`--border-surface`、`--app-topbar-bg`、`--app-sidebar-bg`、`--app-tabs-bg` 等语义化 token。
 - `apps/main/src/styles/index.css` 已有 `.theme-card` 工具类，使用 `var(--card-surface)` + `var(--border-surface)` + `var(--glass-blur)`，但仅用于少数组件。
