@@ -15,7 +15,7 @@ describe('setAuthToken', () => {
   it('updates token mid-session and rpc includes it', async () => {
     setAuthToken('custom-token');
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: 'ok', status: 200 }),
+      json: () => Promise.resolve({ data: 'ok', status: 0 }),
     } as Response);
 
     await rpc({}, 'Test__ping');
@@ -32,7 +32,7 @@ describe('resetAuth', () => {
     setAuthToken('token-to-clear');
     resetAuth();
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: 'ok', status: 200 }),
+      json: () => Promise.resolve({ data: 'ok', status: 0 }),
     } as Response);
 
     await rpc({}, 'Test__ping');
@@ -45,7 +45,7 @@ describe('resetAuth', () => {
 describe('loginRpc', () => {
   it('sends login request and sets auth token', async () => {
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: { accessToken: 'token-123' }, status: 200 }),
+      json: () => Promise.resolve({ data: { accessToken: 'token-123' }, status: 0 }),
     } as Response);
 
     const token = await loginRpc({}, 'testuser', 'testpass');
@@ -65,7 +65,7 @@ describe('loginRpc', () => {
     process.env.E2E_PASSWORD = 'env-pass';
 
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: { accessToken: 'env-token' }, status: 200 }),
+      json: () => Promise.resolve({ data: { accessToken: 'env-token' }, status: 0 }),
     } as Response);
 
     const token = await loginRpc({});
@@ -89,7 +89,7 @@ describe('loginRpc', () => {
 describe('rpc', () => {
   it('sends correct RPC request', async () => {
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: { result: 'pong' }, status: 200 }),
+      json: () => Promise.resolve({ data: { result: 'pong' }, status: 0 }),
     } as Response);
 
     const response = await rpc({}, 'Test__ping', { echo: 'hello' });
@@ -99,13 +99,13 @@ describe('rpc', () => {
     expect(options?.method).toBe('POST');
     expect(options?.headers).toMatchObject({ 'Content-Type': 'application/json' });
     expect(options?.body).toContain('hello');
-    expect(response).toEqual({ data: { result: 'pong' }, status: 200 });
+    expect(response).toEqual({ data: { result: 'pong' }, status: 0, ok: true });
   });
 
   it('includes auth header when token is set', async () => {
     setAuthToken('secret-token');
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: 'ok', status: 200 }),
+      json: () => Promise.resolve({ data: 'ok', status: 0 }),
     } as Response);
 
     await rpc({}, 'Test__secure');
@@ -118,7 +118,7 @@ describe('rpc', () => {
 
   it('sends request to custom URL when provided', async () => {
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: 'ok', status: 200 }),
+      json: () => Promise.resolve({ data: 'ok', status: 0 }),
     } as Response);
 
     await rpc({ url: 'http://custom.example.com' }, 'Test__remote');
@@ -129,7 +129,7 @@ describe('rpc', () => {
 
   it('merges custom headers', async () => {
     vi.mocked(fetch).mockResolvedValue({
-      json: () => Promise.resolve({ data: 'ok', status: 200 }),
+      json: () => Promise.resolve({ data: 'ok', status: 0 }),
     } as Response);
 
     await rpc({ headers: { 'X-Custom': 'header-value' } }, 'Test__ping');
