@@ -18,6 +18,13 @@ import {
 } from './index';
 import { setPluginBridge } from './host';
 
+vi.mock('react', () => ({
+  useSyncExternalStore: vi.fn(<T>(subscribe: (listener: () => void) => () => void, getSnapshot: () => T) => {
+    subscribe(() => {});
+    return getSnapshot();
+  }),
+}));
+
 const hostKey = '__NOP_PLUGIN_BRIDGE__';
 const listenersKey = '__NOP_PLUGIN_BRIDGE_LISTENERS__';
 
@@ -102,6 +109,42 @@ function createBridge(): PluginBridge {
       } as PluginBridge['i18n'],
       themeConfig,
       user: null,
+      plugins: [],
+    }),
+  };
+}
+
+function createBridgeWithUser(user: User | null = null): PluginBridge {
+  const themeConfig: ThemeConfig = { themeId: 'ocean', displayMode: 'dark' };
+
+  return {
+    i18n: {
+      language: 'zh-CN',
+      t: (key: string) => `[${key}]`,
+    } as PluginBridge['i18n'],
+    notifications: {
+      success: vi.fn(),
+      error: vi.fn(),
+      info: vi.fn(),
+    },
+    stores: {
+      authStore: createBoundStore({ user, isAuthenticated: user !== null }),
+      themeStore: createBoundStore({ themeConfig }),
+      pluginStore: createBoundStore({ plugins: [] }),
+    },
+    navigate: vi.fn(),
+    getCurrentUser: () => user,
+    getCurrentPath: () => '/test',
+    getThemeConfig: () => themeConfig,
+    getPluginManifest: () => undefined,
+    subscribe: () => () => undefined,
+    getSnapshot: () => ({
+      i18n: {
+        language: 'zh-CN',
+        t: (key: string) => `[${key}]`,
+      } as PluginBridge['i18n'],
+      themeConfig,
+      user,
       plugins: [],
     }),
   };
@@ -214,49 +257,6 @@ describe('plugin bridge', () => {
     expect(firstSnapshot.i18n.t('demo.key')).toBe('demo.key');
   });
 });
-
-vi.mock('react', () => ({
-  useSyncExternalStore: vi.fn(<T>(subscribe: (listener: () => void) => () => void, getSnapshot: () => T) => {
-    subscribe(() => {});
-    return getSnapshot();
-  }),
-}));
-
-function createBridgeWithUser(user: User | null = null): PluginBridge {
-  const themeConfig: ThemeConfig = { themeId: 'ocean', displayMode: 'dark' };
-
-  return {
-    i18n: {
-      language: 'zh-CN',
-      t: (key: string) => `[${key}]`,
-    } as PluginBridge['i18n'],
-    notifications: {
-      success: vi.fn(),
-      error: vi.fn(),
-      info: vi.fn(),
-    },
-    stores: {
-      authStore: createBoundStore({ user, isAuthenticated: user !== null }),
-      themeStore: createBoundStore({ themeConfig }),
-      pluginStore: createBoundStore({ plugins: [] }),
-    },
-    navigate: vi.fn(),
-    getCurrentUser: () => user,
-    getCurrentPath: () => '/test',
-    getThemeConfig: () => themeConfig,
-    getPluginManifest: () => undefined,
-    subscribe: () => () => undefined,
-    getSnapshot: () => ({
-      i18n: {
-        language: 'zh-CN',
-        t: (key: string) => `[${key}]`,
-      } as PluginBridge['i18n'],
-      themeConfig,
-      user,
-      plugins: [],
-    }),
-  };
-}
 
 describe('plugin bridge hooks', () => {
   beforeEach(() => {
