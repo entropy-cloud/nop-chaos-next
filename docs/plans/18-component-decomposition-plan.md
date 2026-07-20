@@ -1,7 +1,8 @@
 # 18 Component Decomposition Plan
 
 > Plan Status: draft
-> Last Reviewed: 2026-05-16
+> Last Reviewed: 2026-07-20
+> Review Hold: Current Baseline is stale (from 2026-05-16 deep audit) — all 3 files are already under target thresholds and decomposition is complete. Scope cannot be resolved without rewriting from fresh live-repo audit.
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (findings 02-01, 02-02, 02-03)
 > Related: `docs/plans/01-code-quality-improvement-plan.md`
 
@@ -11,9 +12,9 @@
 
 ## Current Baseline
 
-- `flow-editor/[id]/index.tsx` 573 行，7 职责（02-01, P2）。
-- `amis-core/graphql.ts` 555 行，4 职责（02-02, P2）。
-- `dashboard/index.tsx` 532 行，6 个图表全部内联（02-03, P2）。
+- `flow-editor/[id]/index.tsx` 210 行（原 573 行，7 职责 — 已拆分出 5 个 hooks + 6 个组件）
+- `amis-core/graphql.ts` 175 行（原 555 行，4 职责 — 已拆分出 graphqlArgs.ts + graphqlFilter.ts）
+- `dashboard/index.tsx` 171 行（原 532 行，6 个图表全部内联 — 已拆分至 dashboard/components/）
 
 ## Goals
 

@@ -25,6 +25,7 @@ This `docs/` tree is the durable memory and routing surface for `nop-chaos-next`
 | Understand the current stable project baseline                  | `docs/design/index.md`                                | the relevant file in `docs/design/`                                          |
 | Analyze dependency or bundle issues                             | `docs/skills/README.md`                               | `docs/skills/main-bundle-dependency-governance.md`, then the related scripts |
 | Start or review non-trivial execution                           | `docs/plans/00-plan-authoring-and-execution-guide.md` | the active plan and latest log entry                                         |
+| Understand mission-driven workflow                              | `docs/backlog/e2e-upgrade-roadmap.md`                 | `missions/e2e-upgrade.json`                                                   |
 | Review recent implementation history                            | `docs/logs/index.md`                                  | the latest dated log file                                                    |
 | Look up a past subtle regression                                | `docs/bugs/00-bug-fix-note-writing-guide.md`          | the relevant file in `docs/bugs/`                                            |
 | Check build and setup workflow                                  | `docs/references/build-guide.md`                      | the relevant design/spec file                                                |
@@ -42,6 +43,8 @@ This `docs/` tree is the durable memory and routing surface for `nop-chaos-next`
 - `docs/testing/` - manual/exploratory testing notes and guides
 - `docs/examples/` - how-to and example docs
 - `docs/input/` - raw external input material
+- `docs/backlog/` - mission roadmap files (work item queues for mission-driven development)
+- `missions/` - mission configuration files (project root, not `docs/`)
 
 ## Sibling References (outside `docs/`)
 
@@ -71,6 +74,8 @@ Feature and page design documents. See [`design/index.md`](./design/index.md) fo
 | [main-bundle-dependency-spec.md](./design/main-bundle-dependency-spec.md)                       | Main app dependency spec               |
 | [package-exports-spec.md](./design/package-exports-spec.md)                                     | Package exports spec                   |
 | [styling-system-specification.md](./design/styling-system-specification.md)                     | Styling system specification           |
+| [e2e-frontend-mode.md](./design/e2e-frontend-mode.md)                                           | E2E 测试前端模式：Vite dev vs nop-web-site JAR |
+| [e2e-shared-infrastructure.md](./design/e2e-shared-infrastructure.md)                           | E2E 测试共享基础设施：PageObject、双引擎适配器、代码分发 |
 
 ## References (`references/`)
 

@@ -1,9 +1,52 @@
 # 12 Theme Token Surface Migration Plan
 
 > Plan Status: draft
-> Last Reviewed: 2026-05-16
+> Review Hold: 2026-07-20 review found the plan's baseline is stale — the migration it describes appears **already fully landed** in the live repo. See `## Review Findings (2026-07-20)` below for evidence. Promoting to `active` would trigger redundant re-execution; marking `completed` requires an independent closure audit (not a review action). Next round should either (a) run a formal closure audit and mark `completed`, or (b) cancel as obsolete. Held as `draft` pending that decision.
+> Last Reviewed: 2026-07-20
 > Source: `docs/analysis/2026-05-16-deep-audit-full-run/summary.md` (finding 09-02), independent hardcoded-color inventory
 > Related: `docs/plans/10-style-and-animation-governance-plan.md`
+
+## Review Findings (2026-07-20)
+
+Live-repo audit during review shows every Phase's deliverables already exist. The `Current Baseline` section below reflects the pre-migration state and is now outdated; this section records the current live state.
+
+### Phase 1 — Token Foundation: already landed
+
+- `packages/theme-tokens/src/styles.css` defines all 6 variables (`--surface-primary`, `--surface-secondary`, `--surface-ghost`, `--surface-highlight`, `--surface-hover`, `--surface-overlay`) across multiple theme×mode blocks, with values matching the plan's spec.
+- `packages/theme-tokens/src/index.ts` exports all 6 `SURFACE_*` token names.
+- `packages/tailwind-preset/src/index.ts` already has the `theme.extend.backgroundColor` section with all 6 surface keys (`surface`, `surface-secondary`, `surface-ghost`, `surface-highlight`, `surface-hover`, `surface-overlay`).
+
+### Phases 2–4 — file migrations: already landed
+
+A repo-wide `rg 'bg-white/|dark:bg-slate-(900|950)/' apps/main/src packages/core/src` returns **zero** hardcoded surface colors in any of the 22 in-scope files. Each claimed file was individually checked — all now use `bg-surface*` tokens (3–5 occurrences per file). Examples:
+
+- `apps/main/src/pages/ai-workbench/index.tsx`: uses `bg-surface`, `bg-surface-ghost` (no `dark:bg-slate-950/`).
+- `apps/main/src/pages/ai-workbench/components/SessionSidebar.tsx`: uses `bg-surface`, `bg-surface-secondary`, `bg-surface-highlight`, `hover:bg-surface-hover`.
+- `apps/main/src/pages/data-management/master-detail/[id]/components/SummaryCard.tsx`: 5 `bg-surface*` usages.
+- `apps/main/src/router/RouteRenderer.tsx`: `bg-surface-secondary`.
+- `packages/core/src/components/MainLayout.tsx`: `bg-surface*` (no `bg-slate-950/40`).
+
+### Residual hardcoded patterns — exactly the adjudicated set
+
+The only remaining `bg-white/` / `dark:bg-slate-*/`-style patterns in scope are the two the plan already classifies as `adjudicated` (out of scope, neutral overlay hover):
+
+- `packages/core/src/components/Sidebar.tsx` — `hover:bg-black/5`, `dark:hover:bg-white/10`, `dark:hover:bg-white/8`.
+- `apps/main/src/components/layout/SidebarUserMenu.tsx` — `group-data-[state=open]:bg-black/5`, `dark:group-data-[state=open]:bg-white/10`.
+
+These match the plan's `Deferred But Adjudicated` classification — no drift.
+
+### Anomaly
+
+- Item 4.8 references `apps/main/src/lib/tableRowClassName.ts`, which no longer exists in the live repo (only `apps/main/src/styles/themeContract.test.ts` references the name). This item is moot.
+
+### Conclusion
+
+The plan's execution scope is fully satisfied by the current live baseline. The `Current Baseline` and per-Phase `Status: planned` markers are stale. Recommended next actions (out of review scope):
+
+1. Run an independent closure audit (fresh subagent) against the live repo, then mark `Plan Status: completed` with evidence; or
+2. Mark `Plan Status: cancelled` (or `superseded`) as obsolete if no closure record is needed.
+
+Until that decision is made, the plan stays `draft` so the execution engine does not re-run completed work.
 
 ## Purpose
 

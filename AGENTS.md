@@ -8,6 +8,23 @@
 - Remote demo plugin: `examples/plugin-demo`.
 - Shared packages: `packages/shared`, `packages/ui`, `packages/core`, `packages/plugin-bridge`.
 - AMIS framework reference: `amis-guide/` (repo-root sibling of `docs/`).
+- Mission driver available at `tools/mission-driver.sh` — see `missions/` for active mission configs.
+
+### Mission Driver
+
+本项目使用 Mission Driver 进行跨计划工作编排。Mission Driver 引擎位于 `../attractor-guided-engineering-template/tools/mission-driver/`（AGE 模板兄弟目录），通过 `tools/mission-driver.sh` 启动。
+
+当前活跃 mission：
+- `e2e-upgrade` — 跨项目 E2E 测试基础设施统一升级（详见 `missions/e2e-upgrade.json`、`docs/backlog/e2e-upgrade-roadmap.md`）
+
+Mission Driver 工作流：
+1. **CHECK** — 健康检查 (`pnpm typecheck && pnpm build`)
+2. **REVIEW_PLANS** — 审阅 `Status: draft` 的计划并提升为 `active`
+3. **EXEC_PLANS** — 执行所有 `active` 计划
+4. **DRAFT_PLANS** — 读取 roadmap，选择下一个工作项，起草计划
+5. **DEEP_AUDIT** — 空闲时自动发起深度审计
+
+每个计划遵循 `docs/plans/00-plan-authoring-and-execution-guide.md` 规范，执行后必须更新 daily log 并经过 closure audit。
 
 ### Extension Project Boundary
 
