@@ -80,8 +80,10 @@ export function useFlowEditorState(): FlowEditorState {
   const activeFlowRouteIdRef = useRef(id);
   const activeFlowDocumentIdRef = useRef<string | null>(null);
 
-  const dirty =
-    initialized && JSON.stringify({ nodes, edges }) !== savedSnapshot;
+  const dirty = useMemo(
+    () => initialized && JSON.stringify({ nodes, edges }) !== savedSnapshot,
+    [initialized, nodes, edges, savedSnapshot],
+  );
 
   const { canUndo, canRedo, initializeHistory, resetHistory, recordSnapshot, undo, redo } =
     useFlowHistory();

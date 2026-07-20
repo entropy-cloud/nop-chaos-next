@@ -3,7 +3,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type EdgeProps } from '@xyflow/react';
 import { Button } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
-import { useFlowEditorActions } from '../context';
+import { useFlowEditorActions, useFlowEditorHover } from '../context';
 import { useFloatingToolbarVisibility } from '../useFloatingToolbarVisibility';
 import type { FlowEdge } from '../types';
 
@@ -24,6 +24,7 @@ export function FlowEdgeRenderer(props: EdgeProps<FlowEdge>) {
     label,
   } = props;
   const actions = useFlowEditorActions();
+  const hover = useFlowEditorHover();
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
@@ -35,8 +36,8 @@ export function FlowEdgeRenderer(props: EdgeProps<FlowEdge>) {
   const { showToolbar, show, hide } = useFloatingToolbarVisibility(
     id,
     selected ?? false,
-    actions.hoveredEdgeId,
-    actions.setHoveredEdge,
+    hover.hoveredEdgeId,
+    hover.setHoveredEdge,
   );
 
   const stopToolbarEvent = (event: ReactMouseEvent<HTMLButtonElement>) => {

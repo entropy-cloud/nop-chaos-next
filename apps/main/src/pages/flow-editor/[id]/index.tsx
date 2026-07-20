@@ -10,7 +10,7 @@ import { cn } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { confirmInApp } from '../../../services/confirm';
 import { nodeMeta } from './constants';
-import { FlowEditorActionsContext } from './context';
+import { FlowEditorActionsContext, FlowEditorHoverContext } from './context';
 import { FlowCanvas } from './components/FlowCanvas';
 import { FlowDeleteDialog } from './components/FlowDeleteDialog';
 import { FlowEditorToolbar } from './components/FlowEditorToolbar';
@@ -81,6 +81,16 @@ function FlowEditorPageInner() {
       : null;
   const inspectorHandleLabel = activeSummary?.type ?? t('flowEditor.editor.properties');
 
+  const hoverContextValue = useMemo(
+    () => ({
+      hoveredNodeId: state.hoveredNodeId,
+      hoveredEdgeId: state.hoveredEdgeId,
+      setHoveredNode: state.setHoveredNodeId,
+      setHoveredEdge: state.setHoveredEdgeId,
+    }),
+    [state.hoveredNodeId, state.hoveredEdgeId, state.setHoveredNodeId, state.setHoveredEdgeId],
+  );
+
   const navigateBackWithGuard = async () => {
     if (state.dirty && !(await confirmInApp(t('flowEditor.editor.leaveConfirm')))) {
       return;
@@ -90,6 +100,7 @@ function FlowEditorPageInner() {
   };
 
   return (
+    <FlowEditorHoverContext.Provider value={hoverContextValue}>
     <FlowEditorActionsContext.Provider value={actions.editorActions}>
       <div className="flex h-[calc(100vh-10rem)] min-h-[40rem] flex-col gap-3">
         <FlowEditorToolbar
@@ -198,6 +209,7 @@ function FlowEditorPageInner() {
         />
       </div>
     </FlowEditorActionsContext.Provider>
+    </FlowEditorHoverContext.Provider>
   );
 }
 

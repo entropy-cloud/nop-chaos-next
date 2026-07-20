@@ -27,6 +27,7 @@ import type {
 } from './types';
 import type { FlowEditorState } from './useFlowEditorState';
 
+
 interface UseFlowEditorActionsOptions {
   state: FlowEditorState;
 }
@@ -36,8 +37,6 @@ export function useFlowEditorActions({ state }: UseFlowEditorActionsOptions) {
   const {
     nodes,
     edges,
-    hoveredNodeId,
-    hoveredEdgeId,
     applyState,
     setSelectedNodeId,
     setSelectedEdgeId,
@@ -124,18 +123,14 @@ export function useFlowEditorActions({ state }: UseFlowEditorActionsOptions) {
 
   const editorActions = useMemo<FlowEditorActions>(
     () => ({
-      hoveredNodeId,
-      hoveredEdgeId,
       openNodeEditor,
       openEdgeEditor,
       duplicateNode,
       requestDelete,
       selectNode: setSelectedNodeId,
       selectEdge: setSelectedEdgeId,
-      setHoveredNode: state.setHoveredNodeId,
-      setHoveredEdge: state.setHoveredEdgeId,
     }),
-    [duplicateNode, hoveredEdgeId, hoveredNodeId, openEdgeEditor, openNodeEditor, requestDelete, setSelectedEdgeId, setSelectedNodeId, state],
+    [duplicateNode, openEdgeEditor, openNodeEditor, requestDelete, setSelectedEdgeId, setSelectedNodeId],
   );
 
   const confirmDelete = useCallback(() => {

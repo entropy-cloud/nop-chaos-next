@@ -22,14 +22,17 @@ export type FlowEdge = Edge<FlowEdgeData>;
 export type DeleteTarget = { type: 'node' | 'edge'; id: string } | null;
 
 export interface FlowEditorActions {
-  hoveredNodeId: string | null;
-  hoveredEdgeId: string | null;
   openNodeEditor: (nodeId: string) => void;
   openEdgeEditor: (edgeId: string) => void;
   duplicateNode: (nodeId: string) => void;
   requestDelete: (target: DeleteTarget) => void;
   selectNode: (nodeId: string | null) => void;
   selectEdge: (edgeId: string | null) => void;
+}
+
+export interface FlowEditorHoverState {
+  hoveredNodeId: string | null;
+  hoveredEdgeId: string | null;
   setHoveredNode: Dispatch<SetStateAction<string | null>>;
   setHoveredEdge: Dispatch<SetStateAction<string | null>>;
 }

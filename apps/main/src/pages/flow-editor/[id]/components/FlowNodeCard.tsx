@@ -4,20 +4,21 @@ import { Handle, NodeToolbar, Position, type NodeProps } from '@xyflow/react';
 import { Button } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { nodeMeta } from '../constants';
-import { useFlowEditorActions } from '../context';
+import { useFlowEditorActions, useFlowEditorHover } from '../context';
 import { useFloatingToolbarVisibility } from '../useFloatingToolbarVisibility';
 import type { FlowNode } from '../types';
 
 export function FlowNodeCard({ id, data, selected }: NodeProps<FlowNode>) {
   const { t } = useTranslation();
   const actions = useFlowEditorActions();
+  const hover = useFlowEditorHover();
   const meta = nodeMeta[data.kind];
   const Icon = meta.icon;
   const { showToolbar, show, hide } = useFloatingToolbarVisibility(
     id,
     selected,
-    actions.hoveredNodeId,
-    actions.setHoveredNode,
+    hover.hoveredNodeId,
+    hover.setHoveredNode,
   );
   const allowTarget = data.kind !== 'start';
   const allowSource = data.kind !== 'end';
