@@ -6,7 +6,7 @@
 
 ## 1. 核心原则
 
-- 插件远程加载支持 `SystemJS` 和原生 `ESM`
+- 插件远程加载当前使用 `SystemJS` 格式（运行时也支持原生 `ESM` 路径，但构建合同当前为 `SystemJS`-only）
 - 共享依赖由宿主统一注册，插件构建时 external
 - 宿主特有能力通过 `@nop-chaos/plugin-bridge` 获取
 - 插件不应直接依赖 `@nop-chaos/core`
@@ -66,7 +66,7 @@
 ### 产物要求
 
 - 默认导出 React 组件
-- 可输出为 `system`（通过 Rollup 构建）或原生 `esm`
+- 当前输出为 `system` 格式（通过 Rollup 构建）
 - 共享依赖通过 external 排除
 
 ### 参考实现

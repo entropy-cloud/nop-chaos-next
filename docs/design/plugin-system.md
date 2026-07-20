@@ -83,7 +83,7 @@
 
 ## 4. Shared Module 前提
 
-`examples/plugin-demo/scripts/build-with-rollup.mjs` 当前输出的是 externalized SystemJS bundle。
+`examples/plugin-demo/scripts/build-with-rollup.mjs` 当前输出的是 externalized SystemJS bundle（构建合同为 `SystemJS`-only，运行时于 `packages/core/src/utils/systemjs.ts` 保留原生 `ESM` 加载路径以备后续扩展）。
 
 这意味着：
 
