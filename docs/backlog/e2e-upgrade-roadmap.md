@@ -86,7 +86,7 @@
 | # | 工作项 | 描述 | 预计投入 |
 |---|--------|------|---------|
 | 4.1 | FluxAdapter 完善 | 补齐 `AmisAdapter` 已实现但 `FluxAdapter` 缺失的方法（`selectOption` 完善、date 输入、特殊弹窗）。 | 1 plan | ✅ |
-| 4.2 | Flux CRUD 端到端测试 | 写一组 Flux CRUD e2e spec（每个项目各一套）。 | 1 plan |
+| 4.2 | Flux CRUD 端到端测试 | 写一组 Flux CRUD e2e spec（每个项目各一套）。 | 1 plan | ✅ |
 | 4.3 | Flux dashboard + report 测试 | 写 Flux 版 dashboard/report spec。 | 1 plan |
 | 4.4 | CI 双引擎矩阵 | CI 配置同时运行 `E2E_ENGINE=amis` 和 `E2E_ENGINE=flux`。 | 1 plan |
 
@@ -115,7 +115,7 @@
 | Phase 1 | 8 | 8 | 🟡 7/8 完成 |
 | Phase 2 | 7 | 6.5 | 🟢 7/7 完成 |
 | Phase 3 | 6 | 4 | 🟡 3/7 完成（3.1+3.2+3.3） |
-| Phase 4 | 4 | 4 | 🟡 1/4 完成 |
+| Phase 4 | 4 | 4 | 🟡 2/4 完成 |
 | Phase 5 | 4 | 4 | 🟡 1/4 完成（5.4） |
 | **总计** | **32** | **~29.5** | |
 
