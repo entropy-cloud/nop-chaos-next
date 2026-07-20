@@ -281,14 +281,14 @@ Targets: `apps/main/src/pages/dashboard/**`, `apps/main/src/pages/auth/**`, `app
 - [ ] 4.2 `auth/login/index.tsx`：替换 1 处
 - [ ] 4.3 `plugins/index.tsx`：替换 1 处
 - [ ] 4.4 `settings/theme/index.tsx`：替换 1 处
-- [ ] 4.5 `components/layout/SidebarUserMenu.tsx`：保留 `bg-black/5` + `dark:bg-white/10`（hover overlay 微交互，不属于 surface 语义，记录为 adjudicated）
+- [x] 4.5 `components/layout/SidebarUserMenu.tsx`：保留 `bg-black/5` + `dark:bg-white/10`（hover overlay 微交互，不属于 surface 语义，记录为 adjudicated）
 - [ ] 4.6 `components/plugin/PluginMountPanel.tsx`：替换 2 处
 - [ ] 4.7 `router/RouteRenderer.tsx`：替换 1 处
 - [x] 4.8 `lib/tableRowClassName.ts`：文件已不存在于 live repo（仅 `themeContract.test.ts` 引用其路径）。该迁移点已自动消除，视为 moot。
-- [ ] 4.9 `packages/core/src/components/Sidebar.tsx`：保留 `hover:bg-black/5` + `dark:hover:bg-white/10`（中性 overlay hover，不属于 surface 语义，记录为 adjudicated）
+- [x] 4.9 `packages/core/src/components/Sidebar.tsx`：保留 `hover:bg-black/5` + `dark:hover:bg-white/10`（中性 overlay hover，不属于 surface 语义，记录为 adjudicated）
 - [ ] 4.10 `packages/core/src/components/ErrorBoundary.tsx`：替换 1 处
 - [ ] 4.11 `packages/core/src/components/MainLayout.tsx`：`bg-slate-950/40` 替换为 `bg-surface-overlay`（注意：原 slate-950 `rgb(2,6,23)` → 新 slate-900 基色 `rgb(15,23,42)`，40% opacity 下有细微色偏，视觉可接受）
-- [ ] 4.12 `ai-workbench/markdown.tsx`：保留 `bg-slate-950/90`（code block 有意使用深色背景，非 surface 语义，记录为 adjudicated）
+- [x] 4.12 `ai-workbench/markdown.tsx`：保留 `bg-slate-950/90`（code block 有意使用深色背景，非 surface 语义，记录为 adjudicated）
 
 Exit Criteria:
 

@@ -175,6 +175,35 @@ git clone <本仓库地址>
 
 原子命令（`import:amis`、`import:flux`、`refresh:libs`、`sync:flux:src` 等）、AMIS 开发工作流、CI 流水线与常见问题，详见 [构建指南](docs/references/build-guide.md)。
 
+## E2E 测试
+
+E2E 测试使用 Playwright 框架，测试文件位于 `tests/e2e/`。共享测试基础设施库 `@nop-chaos/e2e-shared`（`packages/e2e-shared/`）提供 EngineAdapter、PageObject、API 客户端等跨项目通用组件。
+
+### 三种测试模式
+
+| 模式 | 命令 | 说明 |
+|------|------|------|
+| **Mock（默认）** | `pnpm test:e2e` | MSW 拦截 API，纯前端行为测试，无需后端 |
+| **AMIS Prototype** | `pnpm test:e2e:amis-prototype` | 使用 AMIS JSON 原型文件渲染测试 |
+| **Flux Prototype** | `pnpm test:e2e:flux-prototype` | 使用 Flux JSON 原型文件渲染测试 |
+| **Extension Demo** | `pnpm test:e2e:extension-demo` | 测试 extension 系统的 Harbor login 和内置页面 |
+
+### 快速命令参考
+
+```bash
+pnpm test:e2e                              # 全部 E2E 测试（无头）
+pnpm test:e2e:headed                       # 有头模式（可见浏览器窗口）
+pnpm test:e2e -- tests/e2e/login.spec.ts   # 指定文件
+pnpm test:e2e -- --grep "dashboard"        # 按名称筛选
+pnpm test:e2e --list                       # 列出所有测试（不运行）
+```
+
+### 开发者指南
+
+完整的 E2E 测试开发文档，包括架构概览、编写指南、引擎切换、环境变量参考、调试技巧和常见问题，请参阅：
+
+➡️ [E2E 测试开发者指南](docs/testing/01-e2e-developer-guide.md)
+
 ## Extension 开发
 
 创建一个新的 Extension：
