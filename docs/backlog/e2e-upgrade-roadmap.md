@@ -99,8 +99,8 @@
 | # | 工作项 | 描述 | 预计投入 |
 |---|--------|------|---------|
 | 5.1 | nop-chaos-next CI 接入 e2e | 将 e2e 测试加入 GitHub Actions（turbo 构建 + playwright run）。 | 1 plan | ✅ |
-| 5.2 | nop-entropy CI 接入 e2e | 在 Maven CI 后触发 e2e 测试。 | 1 plan |
-| 5.3 | nop-app-erp CI 加固 | 确认现有 CI 覆盖全部 e2e，添加 `BASE_URL`/`FRONTEND_DEV_MODE` 可选参数。 | 1 plan |
+| 5.2 | nop-entropy CI 接入 e2e | 在 Maven CI 后触发 e2e 测试。 | 1 plan | ✅ |
+| 5.3 | nop-app-erp CI 加固 | 确认现有 CI 覆盖全部 e2e，添加 `BASE_URL`/`FRONTEND_DEV_MODE` 可选参数。 | 1 plan | ✅ |
 | 5.4 | E2E 文档化 | 更新各项目 README，写 E2E 开发者指南（如何写新测试、如何切换引擎、如何调试）。 | 1 plan | ✅ |
 
 **完成标准**：
@@ -116,7 +116,7 @@
 | Phase 2 | 7 | 6.5 | 🟢 7/7 完成 |
 | Phase 3 | 6 | 4 | 🟡 3/7 完成（3.1+3.2+3.3） |
 | Phase 4 | 4 | 4 | 🟢 4/4 完成 |
-| Phase 5 | 4 | 4 | 🟡 2/4 完成（5.1, 5.4） |
+| Phase 5 | 4 | 4 | 🟢 4/4 完成 |
 | **总计** | **32** | **~29.5** | |
 
 ## 设计文档
