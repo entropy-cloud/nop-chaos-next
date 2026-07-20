@@ -38,7 +38,7 @@
 | 1.2 | 支持 `BASE_URL` alias | `playwright.config.ts` 同时识别 `PLAYWRIGHT_BASE_URL` 和 `BASE_URL`。 | 1 plan | ✅ |
 | 1.3 | PageObject 改造：登录 + dashboard 相关 spec | 改造 `login.spec.ts`、`sidebar-user-menu.spec.ts`、`permission.spec.ts`、`i18n-persistence.spec.ts` 使用共享库 PageObject。 | 1 plan | ✅ |
 | 1.4 | PageObject 改造：流编辑器和插件 spec | 改造 `flow-editor.spec.ts`、`plugin-demo.spec.ts`、`extension-demo.spec.ts`。 | 1 plan | ✅ |
-| 1.5 | PageObject 改造：AMIS 相关 spec | 改造 `amis-demo.spec.ts`、`amis-preview-crud.spec.ts`、`amis-css-isolation.spec.ts`、`amis-react19-transition.spec.ts`。 | 1 plan |
+| 1.5 | PageObject 改造：AMIS 相关 spec | 改造 `amis-demo.spec.ts`、`amis-preview-crud.spec.ts`、`amis-css-isolation.spec.ts`、`amis-react19-transition.spec.ts`。 | 1 plan | ✅ |
 | 1.6 | PageObject 改造：CRUD 和 AI Workbench spec | 改造 `master-detail-buttons.spec.ts`、`master-detail-dialogs.spec.ts`、`ai-workbench-styles.spec.ts`。 | 1 plan |
 | 1.7 | PageObject 改造：lazy loading + prototype spec | 改造 `lazy-loading.spec.ts`、`amis-prototype.spec.ts`、`flux-prototype.spec.ts`。 | 1 plan |
 | 1.8 | MockAuthAdapter | 将 `support/auth.ts` 的 mock login pattern 适配为共享库可用的 `MockAuthAdapter`（不阻塞、逐步迁移）。 | 1 plan | ✅ |
@@ -112,7 +112,7 @@
 | 阶段 | 工作项合计 | 预计 plan 数 | 状态 |
 |------|-----------|-------------|------|
 | Phase 0 | 3 | 3 | 🟡 2/3 完成 |
-| Phase 1 | 8 | 8 | 🟡 5/8 完成 |
+| Phase 1 | 8 | 8 | 🟡 6/8 完成 |
 | Phase 2 | 7 | 6.5 | ❌ 未开始 |
 | Phase 3 | 6 | 4 | ❌ 未开始 |
 | Phase 4 | 4 | 4 | ❌ 未开始 |

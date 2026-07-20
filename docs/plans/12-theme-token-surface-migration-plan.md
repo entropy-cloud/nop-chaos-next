@@ -10,6 +10,8 @@
 
 Live-repo audit during review shows every Phase's deliverables already exist. The `Outdated Note` section below reflects the pre-migration state and is now outdated; this section records the current live state.
 
+**Re-review (2026-07-20) confirmed**: prior findings remain accurate. Plan cannot be promoted to `active` — migration is fully landed in live repo; promoting would trigger redundant execution. The `Review Hold` blocker is still in effect. Plan remains `draft` pending a formal closure audit or cancellation decision.
+
 ### Phase 1 — Token Foundation: already landed
 
 - `packages/theme-tokens/src/styles.css` defines all 6 variables (`--surface-primary`, `--surface-secondary`, `--surface-ghost`, `--surface-highlight`, `--surface-hover`, `--surface-overlay`) across multiple theme×mode blocks, with values matching the plan's spec.
