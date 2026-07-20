@@ -1,0 +1,106 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      engine:
+        description: 'Engine to test (amis, flux, both)'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - amis
+          - flux
+          - both
+
+env:
+  CI: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            apps/*/dist/**
+            packages/*/dist/**
+            examples/*/dist/**
+          retention-days: 1
+
+  e2e-amis:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.engine == 'amis' || github.event.inputs.engine == 'both' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: npx playwright install chromium
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+      - name: Run AMIS engine E2E tests
+        run: E2E_ENGINE=amis pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-amis
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+  e2e-flux:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.engine == 'flux' || github.event.inputs.engine == 'both' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: npx playwright install chromium
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+      - name: Run Flux engine E2E tests
+        run: E2E_ENGINE=flux pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-flux
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
