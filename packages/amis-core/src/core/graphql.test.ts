@@ -108,3 +108,66 @@ describe('transformGraphQLRequest', () => {
     });
   });
 });
+
+describe('normalizeGraphQLResponse error branches', () => {
+  it('extracts status and msg from errors array', () => {
+    const result = normalizeGraphQLResponse({
+      data: null,
+      errors: [{ message: 'Not found' }],
+    }) as Record<string, unknown>;
+
+    expect(result.status).toBe(-1);
+    expect(result.msg).toBe('Not found');
+  });
+
+  it('uses nop-status from extensions when errors are present', () => {
+    const result = normalizeGraphQLResponse({
+      data: null,
+      errors: [{ message: 'Forbidden' }],
+      extensions: { 'nop-status': 403 },
+    }) as Record<string, unknown>;
+
+    expect(result.status).toBe(403);
+    expect(result.msg).toBe('Forbidden');
+  });
+
+  it('falls back to generic message when error object lacks message', () => {
+    const result = normalizeGraphQLResponse({
+      data: null,
+      errors: [{ code: 'INTERNAL' }],
+    }) as Record<string, unknown>;
+
+    expect(result.msg).toBe('GraphQL request failed');
+  });
+
+  it('falls back to generic message when error is a primitive', () => {
+    const result = normalizeGraphQLResponse({
+      data: null,
+      errors: ['unexpected error'],
+    }) as Record<string, unknown>;
+
+    expect(result.msg).toBe('GraphQL request failed');
+  });
+
+  it('passes non-object data through unchanged', () => {
+    expect(normalizeGraphQLResponse(null)).toBeNull();
+    expect(normalizeGraphQLResponse('string')).toBe('string');
+    expect(normalizeGraphQLResponse(42)).toBe(42);
+  });
+
+  it('extracts operation data when operationName matches', () => {
+    const result = normalizeGraphQLResponse(
+      {
+        data: {
+          PageProvider__getPage: { schema: true },
+        },
+        extensions: { 'nop-msg': 'ok' },
+      },
+      'PageProvider__getPage',
+    ) as Record<string, unknown>;
+
+    expect((result.data as Record<string, unknown>)).toEqual({ schema: true });
+    expect(result.status).toBe(0);
+    expect(result.msg).toBe('ok');
+  });
+});
