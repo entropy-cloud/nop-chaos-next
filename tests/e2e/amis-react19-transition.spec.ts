@@ -19,8 +19,8 @@
  *      during either interaction.
  */
 
-import { expect, test } from '@playwright/test';
-import { login } from './support/auth';
+import { expect } from '@playwright/test';
+import { login, test } from '@nop-chaos/e2e-shared';
 
 test.describe('amis-ui Transition components – React 19 findDOMNode regression', () => {
   test.beforeEach(async ({ page }) => {

@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test';
-import { login } from './support/auth';
+import { expect } from '@playwright/test';
+import { login, test } from '@nop-chaos/e2e-shared';
 
 test.describe('AMIS preview CRUD integration', () => {
   test('row action buttons stay on one line and AMIS confirm uses compact radius', async ({ page }) => {

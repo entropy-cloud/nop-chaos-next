@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test';
-import { login } from './support/auth';
+import { expect } from '@playwright/test';
+import { login, test } from '@nop-chaos/e2e-shared';
 
 test('real amis demo page renders and exposes report actions', async ({ page }) => {
   await login(page);
