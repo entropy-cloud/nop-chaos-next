@@ -1,5 +1,6 @@
 import type { MenuItem } from './menu';
 import type { PluginManifest } from './plugin';
+import type { PageTransformerRegistration } from './pageTransformer';
 import type { ComponentType, LazyExoticComponent } from 'react';
 
 export type ExtensionBuiltinPageComponent = ComponentType | LazyExoticComponent<ComponentType>;
@@ -223,6 +224,12 @@ export interface ShellExtension {
   userMenuItems?: ExtensionUserMenuItem[];
   /** Authentication configuration (token storage, refresh). */
   auth?: ExtensionAuthConfig;
+  /**
+   * Page JSON post-processing transformers.
+   * Executed in order after page JSON is loaded, before rendering.
+   * Multiple extensions' transformers are merged and sorted globally.
+   */
+  pageTransformers?: PageTransformerRegistration[];
   /** Lifecycle hook called after the extension is loaded. */
   setup?: (context: ExtensionSetupContext) => void | Promise<void>;
 }

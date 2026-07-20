@@ -34,6 +34,8 @@ export type {
   ExtensionManifest,
 } from './types/extension';
 
+export type { PageTransformerContext, PageTransformFn, PageTransformerRegistration } from './types/pageTransformer';
+
 export type { MenuItem, MenuResponse } from './types/menu';
 
 export type { PluginManifest } from './types/plugin';

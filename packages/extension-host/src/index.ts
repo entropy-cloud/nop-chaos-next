@@ -1,3 +1,10 @@
+export {
+  registerPageTransformer,
+  unregisterPageTransformer,
+  getPageTransformers,
+  applyPageTransformers,
+  clearPageTransformers
+} from './pageTransformers'
 export { loadExtensions } from './loadExtensions'
 export {
   resolveShellRuntimeConfig,

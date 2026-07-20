@@ -1,6 +1,6 @@
 import { resetTokenStorage, setAuthConfig, type PluginManifest } from '@nop-chaos/shared'
 import type { ExtensionLogger, LoadedExtension } from '@nop-chaos/shared'
-import { loadExtensions, resolveShellRuntimeConfig, setLoadedExtensions, setShellRuntimeConfig } from '@nop-chaos/extension-host'
+import { loadExtensions, registerPageTransformer, resolveShellRuntimeConfig, setLoadedExtensions, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import i18n, { initializeI18n } from '../config/i18n'
 import { registerLanguages, resetLanguages, setDefaultLanguage } from '../config/i18n/languages'
 import { getShellProfile, applyExtensionProfileOverrides } from '../config/profile'
@@ -113,6 +113,12 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
 
     if (extension.builtinPages) {
       registerBuiltinPages(extension.builtinPages)
+    }
+
+    if (extension.pageTransformers) {
+      for (const registration of extension.pageTransformers) {
+        registerPageTransformer(registration)
+      }
     }
   }
 

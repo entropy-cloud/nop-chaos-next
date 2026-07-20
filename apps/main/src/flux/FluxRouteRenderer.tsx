@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createDefaultFluxEnv, createFluxSchemaRenderer } from '@nop-chaos/flux';
 import type { FluxSchema } from '@nop-chaos/flux';
+import { applyPageTransformers } from '@nop-chaos/extension-host';
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { createMainFluxEnv } from './adapter';
 import { fetchFluxPage } from './providers';
@@ -47,9 +48,13 @@ export function FluxRouteRenderer({ schemaPath, title }: FluxRouteRendererProps)
     const controller = new AbortController();
 
     void fetchFluxPage(schemaPath, controller.signal)
-      .then((value) => {
+      .then((value) => applyPageTransformers(value, {
+        schemaPath,
+        pageType: 'flux',
+      }))
+      .then((transformed) => {
         setResolvedSchemaPath(schemaPath);
-        setSchema(value);
+        setSchema(transformed);
         setError(null);
       })
       .catch((reason: unknown) => {

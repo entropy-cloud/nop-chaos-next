@@ -1,11 +1,16 @@
 import type { AmisDictProvider, AmisPageProvider } from '@nop-chaos/amis-core';
+import { applyPageTransformers } from '@nop-chaos/extension-host';
 import { isMockEnabled } from '../config/env';
 import { fetchDictOptions } from '../services/dictApi';
 import { fetchAmisPage } from '../services/pageApi';
 
 export const mainAmisPageProvider: AmisPageProvider = {
   async getPage(schemaPath) {
-    return fetchAmisPage(schemaPath);
+    const schema = await fetchAmisPage(schemaPath);
+    return applyPageTransformers(schema as Record<string, unknown>, {
+      schemaPath,
+      pageType: 'amis',
+    });
   },
 };
 

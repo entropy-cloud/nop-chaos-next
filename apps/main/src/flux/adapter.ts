@@ -1,4 +1,5 @@
 import type { FluxApiRequest, FluxApiRequestContext, FluxRendererEnv } from '@nop-chaos/flux';
+import { applyPageTransformers } from '@nop-chaos/extension-host';
 import { toast } from '@nop-chaos/ui';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
@@ -54,7 +55,11 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
     confirm: async (message: string) => confirmInApp(message),
     locale: normalizeLanguageCode(i18n.language),
     loadPage: (path: string, signal?: AbortSignal) =>
-      withPageCache(normalizeLanguageCode(i18n.language), path, () => fetchFluxPage(path, signal)),
+      withPageCache(normalizeLanguageCode(i18n.language), path, () =>
+        fetchFluxPage(path, signal).then((schema) =>
+          applyPageTransformers(schema, { schemaPath: path, pageType: 'flux' }),
+        ),
+      ),
     loadDict: (name: string, signal?: AbortSignal) =>
       withDictCache(normalizeLanguageCode(i18n.language), name, () => fetchFluxDict(name, signal)),
   };
