@@ -204,6 +204,13 @@ export default tseslint.config(
     },
   },
   {
+    files: ['packages/e2e-shared/src/fixtures.ts'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
+      'no-empty-pattern': 'off',
+    },
+  },
+  {
     files: [
       'packages/ui/src/**/*.{ts,tsx}',
       'packages/core/src/**/*.{ts,tsx}',

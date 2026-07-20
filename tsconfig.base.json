@@ -39,6 +39,7 @@
       "@nop-chaos/extension-host/*": ["packages/extension-host/src/*"],
       "@demo-extension": ["apps/main/src/extensions/demo/index.ts"],
       "@nop-chaos/delta-merge": ["packages/delta-merge/src/index.ts"],
+      "@nop-chaos/e2e-shared": ["packages/e2e-shared/src/index.ts"],
       "@nop-chaos/vite-plugin-prototype-server": [
         "packages/vite-plugin-prototype-server/src/index.ts"
       ]
