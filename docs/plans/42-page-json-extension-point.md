@@ -1,6 +1,6 @@
 # 42 Page JSON Extension Point Implementation
 
-> Plan Status: active
+> Plan Status: completed
 > Last Reviewed: 2026-07-20
 > Source: `docs/design/page-json-extension-point.md`
 > Related: `docs/design/extension-system.md`
@@ -63,78 +63,78 @@
 
 ### Phase 1 - 类型定义
 
-Status: planned
+Status: completed
 Targets: `packages/shared/src/types/pageTransformer.ts` (new), `packages/shared/src/types/extension.ts` (modify)
 
 - Item Types: `Fix | Decision | Proof`
 
 - [x] Proof: 设计文档已验证包边界、类型签名正确
-- [ ] 新增 `packages/shared/src/types/pageTransformer.ts`，导出 `PageTransformerContext`、`PageTransformFn<T>`、`PageTransformerRegistration<T>`
-- [ ] 修改 `packages/shared/src/types/extension.ts`，在 `ShellExtension` 接口新增 `pageTransformers?: PageTransformerRegistration[]`
+- [x] 新增 `packages/shared/src/types/pageTransformer.ts`，导出 `PageTransformerContext`、`PageTransformFn<T>`、`PageTransformerRegistration<T>`
+- [x] 修改 `packages/shared/src/types/extension.ts`，在 `ShellExtension` 接口新增 `pageTransformers?: PageTransformerRegistration[]`
 
 Exit Criteria:
 
 > 每个 Phase 完成后，必须逐条勾选本节。所有 `[x]` 后才能将 Phase Status 改为 `completed`。
 
-- [ ] 新增文件存在，类型导出正确
-- [ ] `ShellExtension` 接口包含 `pageTransformers` 字段
-- [ ] `pnpm --filter @nop-chaos/shared typecheck` 通过
-- [ ] No owner-doc update required（纯类型新增，已有设计文档覆盖）
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] 新增文件存在，类型导出正确
+- [x] `ShellExtension` 接口包含 `pageTransformers` 字段
+- [x] `pnpm --filter @nop-chaos/shared typecheck` 通过
+- [x] No owner-doc update required（纯类型新增，已有设计文档覆盖）
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 2 - Registry + 执行引擎
 
-Status: planned
+Status: completed
 Targets: `packages/extension-host/src/pageTransformers.ts` (new), `packages/extension-host/src/index.ts` (modify)
 
 - Item Types: `Fix | Proof`
 
-- [ ] 新增 `packages/extension-host/src/pageTransformers.ts`，实现：
+- [x] 新增 `packages/extension-host/src/pageTransformers.ts`，实现：
   - `registerPageTransformer(registration)` — 按 `order` 升序插入，同 order 按注册顺序
   - `unregisterPageTransformer(id)` — 按 `id` 删除
   - `getPageTransformers()` — 返回只读快照
   - `applyPageTransformers<T>(schema, context)` — 串联执行，异常跳过并记录 `console.warn`
-- [ ] 修改 `packages/extension-host/src/index.ts`，导出全部 4 个函数
-- [ ] 单元测试：`packages/extension-host/src/pageTransformers.test.ts`（暂放 Phase 6）
+- [x] 修改 `packages/extension-host/src/index.ts`，导出全部 4 个函数
+- [x] 单元测试：`packages/extension-host/src/pageTransformers.test.ts`（暂放 Phase 6）
 
 Exit Criteria:
 
 > 每个 Phase 完成后，必须逐条勾选本节。所有 `[x]` 后才能将 Phase Status 改为 `completed`。
 
-- [ ] 新增文件存在，公共 API 从 `@nop-chaos/extension-host` 正确导出
-- [ ] `pnpm --filter @nop-chaos/extension-host build` 通过
-- [ ] `pnpm --filter @nop-chaos/extension-host typecheck` 通过
-- [ ] No owner-doc update required（实现与设计文档一致）
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] 新增文件存在，公共 API 从 `@nop-chaos/extension-host` 正确导出
+- [x] `pnpm --filter @nop-chaos/extension-host typecheck` 通过
+- [x] `pnpm --filter @nop-chaos/extension-host build` 通过
+- [x] No owner-doc update required（实现与设计文档一致）
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 3 - Bootstrap 注册
 
-Status: planned
+Status: completed
 Targets: `apps/main/src/extensions/bootstrap.ts`
 
 - Item Types: `Fix`
 
-- [ ] 在 `applyExtensionDefinitions` 中遍历 `loaded`，对每个 extension 的 `pageTransformers` 调用 `registerPageTransformer`
+- [x] 在 `applyExtensionDefinitions` 中遍历 `loaded`，对每个 extension 的 `pageTransformers` 调用 `registerPageTransformer`
 
-- [ ] 确保 transformer 注册在 bootstrap 的 `applyExtensionDefinitions` 阶段完成（与 `themes`、`plugins`、`builtinPages` 等一致）
+- [x] 确保 transformer 注册在 bootstrap 的 `applyExtensionDefinitions` 阶段完成（与 `themes`、`plugins`、`builtinPages` 等一致）
 
 Exit Criteria:
 
 > 每个 Phase 完成后，必须逐条勾选本节。所有 `[x]` 后才能将 Phase Status 改为 `completed`。
 
-- [ ] `applyExtensionDefinitions` 包含 `pageTransformers` 注册逻辑
-- [ ] `pnpm --filter @nop-chaos/main typecheck` 通过
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `applyExtensionDefinitions` 包含 `pageTransformers` 注册逻辑
+- [x] `pnpm --filter @nop-chaos/main typecheck` 通过
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 4 - AMIS 集成
 
-Status: planned
+Status: completed
 Targets: `apps/main/src/amis/providers.ts`
 
 - Item Types: `Fix`
 
-- [ ] 在 `mainAmisPageProvider.getPage` 中，`fetchAmisPage` 返回后调用 `applyPageTransformers`，然后返回转换结果
+- [x] 在 `mainAmisPageProvider.getPage` 中，`fetchAmisPage` 返回后调用 `applyPageTransformers`，然后返回转换结果
 
 ```ts
 async getPage(schemaPath) {
@@ -150,75 +150,75 @@ Exit Criteria:
 
 > 每个 Phase 完成后，必须逐条勾选本节。所有 `[x]` 后才能将 Phase Status 改为 `completed`。
 
-- [ ] `providers.ts` 中 `mainAmisPageProvider.getPage` 已包装 transformer
-- [ ] `AmisPageRoute.tsx` 无任何修改（共享包不受影响）
-- [ ] `pnpm --filter @nop-chaos/main typecheck` 通过
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `providers.ts` 中 `mainAmisPageProvider.getPage` 已包装 transformer
+- [x] `AmisPageRoute.tsx` 无任何修改（共享包不受影响）
+- [x] `pnpm --filter @nop-chaos/main typecheck` 通过
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 5 - Flux 集成
 
-Status: planned
+Status: completed
 Targets: `apps/main/src/flux/FluxRouteRenderer.tsx`, `apps/main/src/flux/adapter.ts`
 
 - Item Types: `Fix`
 
-- [ ] 修改 `FluxRouteRenderer.tsx`：在 `fetchFluxPage` 的 `.then` 回调中，setSchema 前插入 `applyPageTransformers`
-- [ ] 修改 `flux/adapter.ts`：在 `loadPage` 的 `fetchFluxPage` 回调后插入 `applyPageTransformers`
+- [x] 修改 `FluxRouteRenderer.tsx`：在 `fetchFluxPage` 的 `.then` 回调中，setSchema 前插入 `applyPageTransformers`
+- [x] 修改 `flux/adapter.ts`：在 `loadPage` 的 `fetchFluxPage` 回调后插入 `applyPageTransformers`
 
 Exit Criteria:
 
 > 每个 Phase 完成后，必须逐条勾选本节。所有 `[x]` 后才能将 Phase Status 改为 `completed`。
 
-- [ ] `FluxRouteRenderer.tsx` 的初始加载路径已应用 transformer
-- [ ] `adapter.ts` 的内部导航 `loadPage` 已应用 transformer
-- [ ] `pnpm --filter @nop-chaos/main typecheck` 通过
-- [ ] No owner-doc update required
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] `FluxRouteRenderer.tsx` 的初始加载路径已应用 transformer
+- [x] `adapter.ts` 的内部导航 `loadPage` 已应用 transformer
+- [x] `pnpm --filter @nop-chaos/main typecheck` 通过
+- [x] No owner-doc update required
+- [x] `docs/logs/` 对应日期条目已更新
 
 ### Phase 6 - 单元测试
 
-Status: planned
+Status: completed
 Targets: `packages/extension-host/src/pageTransformers.test.ts` (new)
 
 - Item Types: `Fix | Proof`
 
-- [ ] 测试 `registerPageTransformer` 按 order 排序
-- [ ] 测试同 order 按注册顺序执行
-- [ ] 测试 `unregisterPageTransformer` 删除指定 transformer
-- [ ] 测试 `applyPageTransformers` 串联执行，前一个输出是后一个输入
-- [ ] 测试 transformer 返回 `undefined` 时保持输入不变
-- [ ] 测试 transformer 抛出异常时跳过、记录警告、不影响后续
-- [ ] 测试全部 transformer 抛出异常时返回原始 schema
-- [ ] 测试 `getPageTransformers` 返回快照不被外部修改影响
-- [ ] 测试 `PageTransformFn<T>` 泛型类型的正确推断
+- [x] 测试 `registerPageTransformer` 按 order 排序
+- [x] 测试同 order 按注册顺序执行
+- [x] 测试 `unregisterPageTransformer` 删除指定 transformer
+- [x] 测试 `applyPageTransformers` 串联执行，前一个输出是后一个输入
+- [x] 测试 transformer 返回 `undefined` 时保持输入不变
+- [x] 测试 transformer 抛出异常时跳过、记录警告、不影响后续
+- [x] 测试全部 transformer 抛出异常时返回原始 schema
+- [x] 测试 `getPageTransformers` 返回快照不被外部修改影响
+- [x] 测试 `PageTransformFn<T>` 泛型类型的正确推断
 
 Exit Criteria:
 
 > 每个 Phase 完成后，必须逐条勾选本节。所有 `[x]` 后才能将 Phase Status 改为 `completed`。
 
-- [ ] 所有用例通过：`pnpm --filter @nop-chaos/extension-host test`
-- [ ] `pnpm --filter @nop-chaos/extension-host typecheck && build && test` 全绿
-- [ ] No owner-doc update required（纯测试新增）
-- [ ] `docs/logs/` 对应日期条目已更新
+- [x] 所有用例通过：`pnpm --filter @nop-chaos/extension-host test`
+- [x] `pnpm --filter @nop-chaos/extension-host typecheck && build && test` 全绿
+- [x] No owner-doc update required（纯测试新增）
+- [x] `docs/logs/` 对应日期条目已更新
 
 ## Closure Gates
 
 > **关闭条件**：只有本 section 所有条目以及每个 Phase 的 Exit Criteria 全部勾选为 `[x]` 后，才能将 `Plan Status` 改为 `completed`。
 
-- [ ] 所有 in-scope 类型定义已落地并可被消费方正确 import
-- [ ] Registry 接口正确，执行引擎行为与设计文档一致
-- [ ] Bootstrap 注册 transformer 流程已实现
-- [ ] AMIS 页面加载经过 transformer
-- [ ] Flux 页面初始加载和内部导航均经过 transformer
-- [ ] 单元测试覆盖核心行为（排序、错误处理、串联执行）
-- [ ] 不存在被静默降级到 deferred / follow-up 的 in-scope live defect 或 contract drift
-- [ ] 受影响的 owner docs 已同步到 live baseline（每个 Phase Exit Criteria 已有裁定）
-- [ ] `pnpm typecheck` 全包全绿
-- [ ] `pnpm build` 全包通过
-- [ ] `pnpm lint` 通过
-- [ ] `pnpm test` 全绿
-- [ ] 独立子 agent closure-audit 已完成并记录证据
+- [x] 所有 in-scope 类型定义已落地并可被消费方正确 import
+- [x] Registry 接口正确，执行引擎行为与设计文档一致
+- [x] Bootstrap 注册 transformer 流程已实现
+- [x] AMIS 页面加载经过 transformer
+- [x] Flux 页面初始加载和内部导航均经过 transformer
+- [x] 单元测试覆盖核心行为（排序、错误处理、串联执行）
+- [x] 不存在被静默降级到 deferred / follow-up 的 in-scope live defect 或 contract drift
+- [x] 受影响的 owner docs 已同步到 live baseline（每个 Phase Exit Criteria 已有裁定）
+- [x] `pnpm typecheck` 全包全绿
+- [x] `pnpm build` 全包通过
+- [x] `pnpm lint` 通过
+- [x] `pnpm test` 全绿
+- [x] 独立子 agent closure-audit 已完成并记录证据
 
 ## Deferred But Adjudicated
 
@@ -240,8 +240,11 @@ Exit Criteria:
 
 ## Closure
 
-Status Note: 待计划执行完毕后填写
+Status Note: 计划已完成，所有 Phase 已执行，Exit Criteria 全部满足。
 
-Closure Audit Evidence: 待计划执行完毕后填写
+Closure Audit Evidence:
 
-Follow-up: 待计划执行完毕后填写
+- Auditor / Agent: mission-driver closure-audit subagent
+- Evidence: 2026-07-20 — plan re-read in full; all 6 Phases verified completed with all Exit Criteria `[x]`; Closure Gates all `[x]`; deferred items adjudicated as non-blocking; pnpm typecheck/build/test/lint all green; 13 unit tests cover registry sorting, serial execution, error handling, snapshot isolation, and generic inference.
+
+Follow-up: 无
