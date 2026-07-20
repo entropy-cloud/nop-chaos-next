@@ -17,6 +17,12 @@
 - 仅当变更同时涉及主项目代码（如 bridge 类型、host 集成逻辑）时，才在当前主项目的 `docs/` 中记录主项目侧的变更。
 - 当前主项目的 `docs/bugs/`、`docs/plans/`、`docs/design/` 等指南文件中的流程和格式要求适用于主项目自身，不适用于 extension 项目。
 
+### Sibling Project: nop-chaos-flux
+
+`nop-chaos-flux`（flux 编辑器/渲染器项目）是与本项目同级的兄弟项目。`flux-guide/` 是其面向 AI 的精简开发指南，与本项目对 AMIS 的 `amis-guide/` 同构，是查 flux 组件字段、schema、表达式、事件、设计模式时的权威来源。路径以 `../nop-chaos-flux/`（兄弟目录）为基准，仅引用 `flux-guide/`；flux 的其余目录（`docs/`、`AGENTS.md` 等）是其内部开发文档，不属于本项目需要参考的范围。
+
+**何时阅读：** 在实现任何涉及 flux 组件字段、flux schema、flux 事件机制、flux 渲染器集成、或 host 与 flux 之间 bridge 协同的功能之前，先查 `../nop-chaos-flux/flux-guide/`。
+
 ## Workspace Layout
 
 - `apps/main`: host React shell, routes, stores, pages, theme, i18n.
