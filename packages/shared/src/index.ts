@@ -57,22 +57,13 @@ export { getAuthConfig, setAuthConfig, resetAuthConfig } from './auth/config';
 
 export type { TokenStorage, RefreshTokenResponse, RefreshTokenFetcher } from './auth/tokenManager';
 export {
-  createTokenStorage,
-  getTokenStorage,
   resetTokenStorage,
   setRefreshTokenFetcher,
-  getRefreshPromise,
-  setRefreshPromise,
   getAccessToken,
   getRefreshToken,
   setTokens,
   clearTokens,
-  isTokenExpiringSoon,
-  isTokenExpired,
-  refreshAccessToken,
   getValidToken,
-  decodeJwtPayload,
-  getTokenExpiry,
 } from './auth/tokenManager';
 
 export { createHttpClient } from './http/client';
@@ -84,13 +75,8 @@ export type { HttpRuntime, HttpRequestOptions, HttpResponse } from './http/types
 
 export {
   getBaseOrigin,
-  hasProtocolPath,
   isAbsoluteUrl,
-  isProtocolRelativePath,
   isRelativeOrRootPath,
-  appendQueryParams,
-  normalizeRequestUrl,
-  resolveRequestUrl,
   resolveSameOriginPath,
 } from './http/url';
 
