@@ -541,3 +541,63 @@ nop-entropy-e2e/  ────  nop-app-erp/
 ### 共享库 API
 
 `packages/e2e-shared/src/index.ts` 的 public API 与 `docs/design/e2e-shared-infrastructure.md` 中的定义完全一致。当前无 drift。
+
+---
+
+## 10. CI 集成
+
+### GitHub Actions 工作流
+
+nop-chaos-next 使用 GitHub Actions 在每次推送和 PR 时自动运行 E2E 测试。工作流文件位于 `.github/workflows/e2e.yml`。
+
+### 工作流架构
+
+```
+push/PR → build job (pnpm install + pnpm build)
+              ├── e2e-amis job (E2E_ENGINE=amis pnpm test:e2e)
+              └── e2e-flux job (E2E_ENGINE=flux pnpm test:e2e)
+```
+
+三个 job 串行依赖：build → e2e-amis + e2e-flux（并行）。构建产物通过 artifact 共享。
+
+### 触发条件
+
+| 事件 | 说明 |
+|------|------|
+| `push` 到 `main` | 自动运行双引擎测试 |
+| `pull_request` 到 `main` | 自动运行双引擎测试 |
+| `workflow_dispatch` | 手动触发，可选择 `amis`/`flux`/`both` 引擎 |
+
+### CI 环境配置
+
+- **Node.js 20** + **pnpm 10.0.0**（通过 `actions/setup-node` + `pnpm/action-setup`）
+- Playwright Chromium 浏览器（`npx playwright install chromium`）
+- `CI=true` 自动设置 → Playwright 启用 `forbidOnly` 和 `retries: 2`
+- Mock 模式运行，无需外部后端
+- Turborepo 全量构建（无远程缓存）
+
+### Artifact 策略
+
+| 产物 | 路径 | 条件 |
+|------|------|------|
+| HTML 测试报告 | `playwright-report/` | 仅测试失败时 |
+| Trace 录制 | `test-results/` | 仅测试失败时 |
+| 截图 | `test-results/` | 仅测试失败时 |
+| 视频 | `test-results/` | 仅测试失败时 |
+
+### 手动触发
+
+```bash
+# 通过 GitHub UI: Actions → E2E Tests → Run workflow
+# 选择 engine: amis / flux / both
+```
+
+### 本地模拟 CI 环境
+
+```bash
+# 模拟 CI 环境运行测试
+CI=true pnpm test:e2e
+
+# 模拟 CI 环境运行双引擎
+CI=true E2E_ENGINE=flux pnpm test:e2e
+```

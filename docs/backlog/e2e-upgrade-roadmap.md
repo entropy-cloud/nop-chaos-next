@@ -23,7 +23,7 @@
 |---|--------|------|---------|
 | 0.1 | 创建 `packages/e2e-shared` | 从 nop-app-erp `pages/` 提取 EngineAdapter 接口、AmisAdapter、FluxAdapter、BasePage、CrudListPage、FormDialog、GraphQLClient、Navigation、engine 工厂、fixtures。适配为独立 workspace 包。 | 1 plan | ✅ |
 | 0.2 | 创建 `scripts/sync-e2e-shared.sh` | 同步脚本，将 `packages/e2e-shared/src/` 拷贝到目标项目指定路径、生成/更新 version 标记。 | 1 plan | ✅ |
-| 0.3 | 创建 `tools/mission-driver.sh` | Mission driver 启动脚本，指向 AGE 模板引擎。 | 1 plan |
+| 0.3 | 创建 `tools/mission-driver.sh` | Mission driver 启动脚本，指向 AGE 模板引擎。 | 1 plan | ✅ |
 
 **完成标准**：
 - `pnpm --filter @nop-chaos/e2e-shared typecheck` 通过
@@ -88,7 +88,7 @@
 | 4.1 | FluxAdapter 完善 | 补齐 `AmisAdapter` 已实现但 `FluxAdapter` 缺失的方法（`selectOption` 完善、date 输入、特殊弹窗）。 | 1 plan | ✅ |
 | 4.2 | Flux CRUD 端到端测试 | 写一组 Flux CRUD e2e spec（每个项目各一套）。 | 1 plan | ✅ |
 | 4.3 | Flux dashboard + report 测试 | 写 Flux 版 dashboard/report spec。 | 1 plan | ✅ |
-| 4.4 | CI 双引擎矩阵 | CI 配置同时运行 `E2E_ENGINE=amis` 和 `E2E_ENGINE=flux`。 | 1 plan |
+| 4.4 | CI 双引擎矩阵 | CI 配置同时运行 `E2E_ENGINE=amis` 和 `E2E_ENGINE=flux`。 | 1 plan | ✅ |
 
 **完成标准**：
 - `E2E_ENGINE=flux pnpm test:e2e` 在 nop-chaos-next 全部通过
@@ -98,7 +98,7 @@
 
 | # | 工作项 | 描述 | 预计投入 |
 |---|--------|------|---------|
-| 5.1 | nop-chaos-next CI 接入 e2e | 将 e2e 测试加入 GitHub Actions（turbo 构建 + playwright run）。 | 1 plan |
+| 5.1 | nop-chaos-next CI 接入 e2e | 将 e2e 测试加入 GitHub Actions（turbo 构建 + playwright run）。 | 1 plan | ✅ |
 | 5.2 | nop-entropy CI 接入 e2e | 在 Maven CI 后触发 e2e 测试。 | 1 plan |
 | 5.3 | nop-app-erp CI 加固 | 确认现有 CI 覆盖全部 e2e，添加 `BASE_URL`/`FRONTEND_DEV_MODE` 可选参数。 | 1 plan |
 | 5.4 | E2E 文档化 | 更新各项目 README，写 E2E 开发者指南（如何写新测试、如何切换引擎、如何调试）。 | 1 plan | ✅ |
@@ -111,12 +111,12 @@
 
 | 阶段 | 工作项合计 | 预计 plan 数 | 状态 |
 |------|-----------|-------------|------|
-| Phase 0 | 3 | 3 | 🟡 2/3 完成 |
+| Phase 0 | 3 | 3 | 🟢 3/3 完成 |
 | Phase 1 | 8 | 8 | 🟡 7/8 完成 |
 | Phase 2 | 7 | 6.5 | 🟢 7/7 完成 |
 | Phase 3 | 6 | 4 | 🟡 3/7 完成（3.1+3.2+3.3） |
-| Phase 4 | 4 | 4 | 🟡 3/4 完成 |
-| Phase 5 | 4 | 4 | 🟡 1/4 完成（5.4） |
+| Phase 4 | 4 | 4 | 🟢 4/4 完成 |
+| Phase 5 | 4 | 4 | 🟡 2/4 完成（5.1, 5.4） |
 | **总计** | **32** | **~29.5** | |
 
 ## 设计文档
