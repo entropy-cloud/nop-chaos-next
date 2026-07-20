@@ -34,8 +34,8 @@
 
 | # | 工作项 | 描述 | 预计投入 |
 |---|--------|------|---------|
-| 1.1 | 支持 `E2E_ENGINE` env var | 在 `playwright.config.ts` 中读取 `E2E_ENGINE`，注入 engine fixture（用于双引擎切换测试）。 | 1 plan |
-| 1.2 | 支持 `BASE_URL` alias | `playwright.config.ts` 同时识别 `PLAYWRIGHT_BASE_URL` 和 `BASE_URL`。 | 1 plan |
+| 1.1 | 支持 `E2E_ENGINE` env var | 在 `playwright.config.ts` 中读取 `E2E_ENGINE`，注入 engine fixture（用于双引擎切换测试）。 | 1 plan | ✅ |
+| 1.2 | 支持 `BASE_URL` alias | `playwright.config.ts` 同时识别 `PLAYWRIGHT_BASE_URL` 和 `BASE_URL`。 | 1 plan | ✅ |
 | 1.3 | PageObject 改造：登录 + dashboard 相关 spec | 改造 `login.spec.ts`、`sidebar-user-menu.spec.ts`、`permission.spec.ts`、`i18n-persistence.spec.ts` 使用共享库 PageObject。 | 1 plan |
 | 1.4 | PageObject 改造：流编辑器和插件 spec | 改造 `flow-editor.spec.ts`、`plugin-demo.spec.ts`、`extension-demo.spec.ts`。 | 1 plan |
 | 1.5 | PageObject 改造：AMIS 相关 spec | 改造 `amis-demo.spec.ts`、`amis-preview-crud.spec.ts`、`amis-css-isolation.spec.ts`、`amis-react19-transition.spec.ts`。 | 1 plan |
@@ -112,7 +112,7 @@
 | 阶段 | 工作项合计 | 预计 plan 数 | 状态 |
 |------|-----------|-------------|------|
 | Phase 0 | 3 | 3 | 🟡 2/3 完成 |
-| Phase 1 | 8 | 8 | ❌ 未开始 |
+| Phase 1 | 8 | 8 | 🟡 2/8 完成 |
 | Phase 2 | 7 | 6.5 | ❌ 未开始 |
 | Phase 3 | 6 | 4 | ❌ 未开始 |
 | Phase 4 | 4 | 4 | ❌ 未开始 |
