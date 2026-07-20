@@ -22,7 +22,7 @@
 | # | 工作项 | 描述 | 预计投入 |
 |---|--------|------|---------|
 | 0.1 | 创建 `packages/e2e-shared` | 从 nop-app-erp `pages/` 提取 EngineAdapter 接口、AmisAdapter、FluxAdapter、BasePage、CrudListPage、FormDialog、GraphQLClient、Navigation、engine 工厂、fixtures。适配为独立 workspace 包。 | 1 plan | ✅ |
-| 0.2 | 创建 `scripts/sync-e2e-shared.sh` | 同步脚本，将 `packages/e2e-shared/src/` 拷贝到目标项目指定路径、生成/更新 version 标记。 | 1 plan |
+| 0.2 | 创建 `scripts/sync-e2e-shared.sh` | 同步脚本，将 `packages/e2e-shared/src/` 拷贝到目标项目指定路径、生成/更新 version 标记。 | 1 plan | ✅ |
 | 0.3 | 创建 `tools/mission-driver.sh` | Mission driver 启动脚本，指向 AGE 模板引擎。 | 1 plan |
 
 **完成标准**：
@@ -111,7 +111,7 @@
 
 | 阶段 | 工作项合计 | 预计 plan 数 | 状态 |
 |------|-----------|-------------|------|
-| Phase 0 | 3 | 3 | 🟡 1/3 完成 |
+| Phase 0 | 3 | 3 | 🟡 2/3 完成 |
 | Phase 1 | 8 | 8 | ❌ 未开始 |
 | Phase 2 | 7 | 6.5 | ❌ 未开始 |
 | Phase 3 | 6 | 4 | ❌ 未开始 |
