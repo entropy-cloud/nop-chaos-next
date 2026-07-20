@@ -1,5 +1,6 @@
-import { expect, test } from '@playwright/test';
-import { login } from './support/auth';
+import { expect } from '@playwright/test';
+import { test } from '@nop-chaos/e2e-shared';
+import { login } from '@nop-chaos/e2e-shared';
 
 function sidebarTrigger(page: import('@playwright/test').Page) {
   return page.locator('aside [data-testid="sidebar-user-menu-trigger"]');
