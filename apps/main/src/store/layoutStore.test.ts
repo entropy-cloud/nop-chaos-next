@@ -74,4 +74,84 @@ describe('layoutStore', () => {
     expect(useLayoutStore.getState().hasUserCustomizedSidebarWidth).toBe(false);
     expect(useLayoutStore.getState().hasUserCustomizedSidebarCollapsedWidth).toBe(false);
   });
+
+  it('toggles menu group expands and collapses IDs', async () => {
+    const { useLayoutStore } = await import('./layoutStore');
+
+    expect(useLayoutStore.getState().expandedMenuIds).toContain('flow-editor');
+
+    useLayoutStore.getState().toggleMenuGroup('flow-editor');
+    expect(useLayoutStore.getState().expandedMenuIds).not.toContain('flow-editor');
+
+    useLayoutStore.getState().toggleMenuGroup('flow-editor');
+    expect(useLayoutStore.getState().expandedMenuIds).toContain('flow-editor');
+  });
+
+  it('clamps sidebar width to configured min/max bounds', async () => {
+    const { useLayoutStore } = await import('./layoutStore');
+
+    useLayoutStore.getState().setSidebarWidthRem(1);
+    expect(useLayoutStore.getState().sidebarWidthRem).toBe(14);
+
+    useLayoutStore.getState().setSidebarWidthRem(99);
+    expect(useLayoutStore.getState().sidebarWidthRem).toBe(28);
+  });
+
+  it('clamps sidebar collapsed width to configured min/max bounds', async () => {
+    const { useLayoutStore } = await import('./layoutStore');
+
+    useLayoutStore.getState().setSidebarCollapsedWidthRem(1);
+    expect(useLayoutStore.getState().sidebarCollapsedWidthRem).toBe(4);
+
+    useLayoutStore.getState().setSidebarCollapsedWidthRem(99);
+    expect(useLayoutStore.getState().sidebarCollapsedWidthRem).toBe(8);
+  });
+
+  it('restores persisted sidebar fields when merge receives valid snapshot', async () => {
+    localStorageMock.setItem(
+      'layout:v2',
+      JSON.stringify({
+        state: {
+          sidebarCollapsed: true,
+          expandedMenuIds: ['flow-editor'],
+          sidebarWidthRem: 18,
+          sidebarCollapsedWidthRem: 6,
+          defaults: { sidebarWidthRem: 16, sidebarCollapsedWidthRem: 5 },
+          hasUserCustomizedSidebarWidth: true,
+          hasUserCustomizedSidebarCollapsedWidth: true,
+        },
+        version: 0,
+      }),
+    );
+
+    const { useLayoutStore } = await import('./layoutStore');
+
+    expect(useLayoutStore.getState().sidebarCollapsed).toBe(true);
+    expect(useLayoutStore.getState().sidebarWidthRem).toBe(18);
+    expect(useLayoutStore.getState().sidebarCollapsedWidthRem).toBe(6);
+    expect(useLayoutStore.getState().hasUserCustomizedSidebarWidth).toBe(true);
+  });
+
+  it('falls back to defaults when persisted sidebar widths are out of range', async () => {
+    localStorageMock.setItem(
+      'layout:v2',
+      JSON.stringify({
+        state: {
+          sidebarCollapsed: false,
+          expandedMenuIds: [],
+          sidebarWidthRem: 99,
+          sidebarCollapsedWidthRem: 99,
+          defaults: { sidebarWidthRem: 16, sidebarCollapsedWidthRem: 5 },
+          hasUserCustomizedSidebarWidth: true,
+          hasUserCustomizedSidebarCollapsedWidth: true,
+        },
+        version: 0,
+      }),
+    );
+
+    const { useLayoutStore } = await import('./layoutStore');
+
+    expect(useLayoutStore.getState().sidebarWidthRem).toBe(28);
+    expect(useLayoutStore.getState().sidebarCollapsedWidthRem).toBe(8);
+  });
 });
