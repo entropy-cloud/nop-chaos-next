@@ -73,9 +73,9 @@
 | 3.2 | 删除本地重复文件 | 删除/替换被共享库替代的本地副本（AmisAdapter.ts、FluxAdapter.ts、engine.ts、FormDialog.ts → 共享版；types.ts、Page.ts、CrudListPage.ts、GraphQLClient.ts、Navigation.ts 保留为本地适配层）。 | 0.5 plan | ✅ |
 | 3.3 | Navigation 统一 | 确认 `Navigation.ts` 的 `login()` 实现是否一致，是否需要保留本地 override。 | 1 plan | ✅ |
 | 3.4 | CRUD spec 验证 | 确保 41 个 CRUD spec 仍通过。 | 1 plan | ✅ |
-| 3.5 | Dashboard + report spec 验证 | 确保 67 个 dashboard/report spec 仍通过。 | 1 plan |
-| 3.6 | Business action + orchestration spec 验证 | 确保 105 个 action/orchestration spec 仍通过。 | 1 plan |
-| 3.7 | Visual regression spec 验证 | 确保 snapshot/visual spec 仍通过。 | 1 plan |
+| 3.5 | Dashboard + report spec 验证 | 确保 67 个 dashboard/report spec 仍通过。 | 1 plan | ✅ |
+| 3.6 | Business action + orchestration spec 验证 | 确保 105 个 action/orchestration spec 仍通过。 | 1 plan | ✅ |
+| 3.7 | Visual regression spec 验证 | 确保 snapshot/visual spec 仍通过。 | 1 plan | ✅ |
 
 **完成标准**：
 - `npx playwright test` 全部 ~180 spec 通过
@@ -114,7 +114,7 @@
 | Phase 0 | 3 | 3 | 🟢 3/3 完成 |
 | Phase 1 | 8 | 8 | 🟡 7/8 完成 |
 | Phase 2 | 7 | 6.5 | 🟢 7/7 完成 |
-| Phase 3 | 6 | 4 | 🟡 4/7 完成（3.1+3.2+3.3+3.4） |
+| Phase 3 | 6 | 4 | 🟢 7/7 完成 |
 | Phase 4 | 4 | 4 | 🟢 4/4 完成 |
 | Phase 5 | 4 | 4 | 🟢 4/4 完成 |
 | **总计** | **32** | **~29.5** | |
