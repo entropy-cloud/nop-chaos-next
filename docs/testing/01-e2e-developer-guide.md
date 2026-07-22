@@ -354,6 +354,41 @@ await dialog.submit();
 | `PLAYWRIGHT_APP_MODE` | `mock` | 应用模式：`mock` / `amis-prototype` / `flux-prototype` / `extension-demo`（nop-chaos-next 特有） |
 | `SKIP_WEBSERVER` | (unset) | 跳过后端自动启动，使用已运行的外部服务器 |
 
+### Flux Schema 编译验证
+
+> 本节适用于编写或修改 Flux schema JSON 时的调试。
+
+Flux 的 `SchemaCompiler` 在编译 schema 时收集 diagnostics（未知组件类型、属性校验失败等）。
+以下开关控制 compilation error 是否抛异常：
+
+| 变量 | 默认值 | 描述 |
+|------|--------|------|
+| `__FLUX_FAIL_ON_SCHEMA_DIAGNOSTICS__` | (unset) | 设为 `true` 时，schema 编译 diagnostics 含 error 即抛异常，页面不渲染 |
+| `PLAYWRIGHT` | (unset) | 由 Playwright runner 自动设置为 `true`（检测 `process.env.PLAYWRIGHT`），效果同上 |
+| `VITEST` | (unset) | 由 Vitest runner 自动设置为 `true`，效果同上 |
+
+**陷阱：`openDialog` / `openDrawer` action 的 body 编译失败被静默吞掉。**
+
+```typescript
+// flux-runtime/src/action-adapter.ts:79
+try {
+  const compiled = runtime.compile({ type: 'page', body });
+} catch (error) {
+  return { plan: undefined, error };  // ← catch 后不打开 dialog，也不抛到 console
+}
+```
+
+这意味着：如果 dialog body 引用了未注册的组件（如 `object-field`、`array-field`、或 demo app 未注册的 renderer），
+点击按钮后 dialog **不打开且无 console error**。定位方法：
+
+1. **打开浏览器 DevTools Console** 查看是否有 `[RuntimeHostIssue]` 级别的警告（框架通过 `reportRuntimeHostIssue` 记录）
+2. **简化 dialog body** 到最简（如单个 `input-text`），确认 dialog 能打开，再逐个添加字段缩小范围
+3. **使用单元测试编译 schema**（见 FAQ），在 PR 阶段提前捕获
+
+**已知限制**（nop-chaos-next demo app）：
+- `object-field`、`array-field`、`tabs` 在 `form` body 内未被 demo app 注册 → openDialog 编译静默失败
+- 这些组件在完整产品（nop-app-erp、nop-entropy 业务模块）中可用，但 demo 前端仅加载基础 renderer 集
+
 ### 环境变量命名规则
 
 | 前缀 | 举例 | 语义 |
@@ -509,6 +544,21 @@ A: 目前 spec 文件不区分引擎（fixture 自动注入引擎适配器）。
 ```typescript
 test.skip(process.env.E2E_ENGINE === 'flux', 'Flux 引擎暂不支持此功能');
 ```
+
+### Q: Flux dialog 不打开 / schema 编译静默失败？
+
+A: 如果点击按钮后 dialog 不打开且无 console error，可能是 dialog body 引用了未注册的组件。
+定位方法：
+
+1. **打开 DevTools Console** 检查是否有 `[RuntimeHostIssue]` 警告
+2. **简化 body**：把 dialog body 缩到最简（单个 `input-text`），确认 dialog 能打开
+3. **逐个加字段**：从最简单的表单开始，每次加一个字段直到复现
+4. **检查注册表**：确认组件类型（如 `object-field`）在当前 app 的 renderer registry 中
+
+根本原因：`openDialog` action 内部在 `try/catch` 中编译 schema，编译异常被吞掉（`action-adapter.ts:79`），dialog 不打开、不抛异常、仅通过 `reportRuntimeHostIssue` 记录一个框架级告警。
+
+设置 `__FLUX_FAIL_ON_SCHEMA_DIAGNOSTICS__=true` 可在 Playwright 之外（如单元测试）提前捕获这类问题。
+参见上方 §5 的 [Flux Schema 编译验证](#flux-schema-编译验证) 节。
 
 ### Q: 为我的项目编写 E2E 测试应该从哪里开始？
 
