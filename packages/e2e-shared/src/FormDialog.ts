@@ -19,40 +19,23 @@ export class FormDialog {
     await this.dialog.waitFor({ state: 'hidden' });
   }
 
-  async setField(name: string, value: string): Promise<void> {
-    const field = this.engine.formField(this.dialog, name);
-    await field.fill(value);
+  async setField(name: string, value: string | boolean | number): Promise<void> {
+    await this.engine.setFieldValue(this.dialog, name, value);
   }
 
   async getField(name: string): Promise<string> {
+    // Try 1: native input/textarea/select with matching name
     const field = this.engine.formField(this.dialog, name);
     const count = await field.count();
     if (count > 0) {
       try {
         return (await field.first().inputValue()) ?? '';
       } catch {
-        // fallback: read text content (for AMIS static/read-only fields)
         return (await field.first().textContent()) ?? '';
       }
     }
-    // No input field found — try reading from static display (e.g. .cxd-Form-static)
-    const staticField = this.dialog.locator(`.cxd-Form-item:has(label:text-is("${name}")) .cxd-Form-static`);
-    const staticCount = await staticField.count();
-    if (staticCount > 0) {
-      return (await staticField.first().textContent()) ?? '';
-    }
-    // Fallback: label-adjacent value
-    const labelField = this.dialog.locator(`label`).filter({ hasText: name }).first();
-    if (await labelField.isVisible().catch(() => false)) {
-      const labelText = await labelField.textContent();
-      const parent = labelField.locator('..');
-      const parentText = await parent.textContent();
-      if (labelText && parentText) {
-        return parentText.replace(labelText, '').trim();
-      }
-      return '';
-    }
-    return '';
+    // Try 2: engine-specific static field reader
+    return this.engine.staticFieldValue(this.dialog, name);
   }
 
   async selectOption(fieldLabels: string[], optionTexts: string[]): Promise<void> {

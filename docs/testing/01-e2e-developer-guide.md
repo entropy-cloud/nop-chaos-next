@@ -264,6 +264,19 @@ test('can start from login and enter dashboard', async ({ page }) => {
 
 ---
 
+## 3.5 AMIS DOM 选择器参考
+
+> 完整的 AMIS 组件 DOM 选择器速查手册（含三种下拉组件区别、搜索表单、删除确认对话框、DOM 诊断方法）见独立文档：[`03-amis-dom-selector-reference.md`](03-amis-dom-selector-reference.md)
+
+关键速查：
+
+- **表单字段定位**：优先 `input[name]`，后备 `[data-amis-name]`
+- **搜索**：`.cxd-Table-searchableForm button[type="submit"]`，不要点 `.fa-sync`（重置 filter）
+- **删除确认**：nop-chaos-next 自定义 alert-dialog（`position: fixed`），需用 `page.evaluate()` 原生 DOM click
+- **调试方法**：用 `page.evaluate()` 检查 innerHTML/getComputedStyle，不用截图
+
+---
+
 ## 4. 引擎切换
 
 ### 引擎选择机制
@@ -336,7 +349,7 @@ await dialog.submit();
 
 | 变量 | 默认值 | 描述 |
 |------|--------|------|
-| `BASE_URL` | (动态) | 覆盖 baseURL。在 nop-chaos-next 中默认 `http://127.0.0.1:4175` |
+| `BASE_URL` | (动态) | 覆盖 baseURL。在 nop-chaos-next 中默认 `http://127.0.0.1:4175`。**下游项目浏览器测试必须显式设为 `http://localhost:4173`**（见下方警告） |
 | `PLAYWRIGHT_BASE_URL` | (同 `BASE_URL`) | Playwright 兼容别名，与 `BASE_URL` 任设一个即可 |
 | `PLAYWRIGHT_APP_MODE` | `mock` | 应用模式：`mock` / `amis-prototype` / `flux-prototype` / `extension-demo`（nop-chaos-next 特有） |
 | `SKIP_WEBSERVER` | (unset) | 跳过后端自动启动，使用已运行的外部服务器 |
@@ -349,6 +362,23 @@ await dialog.submit();
 | `FRONTEND_*` | `FRONTEND_DEV_MODE` | 前端来源切换（Vite dev server vs Quarkus JAR） |
 | `NOP_*` | `NOP_CHAOS_NEXT_DIR` | 与项目路径相关，非测试语义配置 |
 | 无前缀 | `BASE_URL` | 已有 Playwright 常用变量名，保留兼容性 |
+
+### ⚠️ `page.goto('#/...')` 与 `BASE_URL` 的关系（必读）
+
+Playwright 的 `page.goto('#/NopAuthUser-main')` 这类相对 URL 会解析到 **Playwright 配置的 `baseURL`**，而不是当前页面 URL。下游项目的 playwright config 默认 `baseURL` 是后端端口（8080），因此：
+
+```ts
+// 如果不设 BASE_URL：
+await page.goto('#/NopAuthUser-main');
+// → 实际导航到 http://localhost:8080/#/NopAuthUser-main （后端！）
+// → 后端不返回 React 前端 → 所有浏览器测试在 waitForList() 处超时
+
+// 必须设置 BASE_URL=http://localhost:4173：
+BASE_URL=http://localhost:4173 npx playwright test
+// → page.goto('#/NopAuthUser-main') 解析为 http://localhost:4173/#/NopAuthUser-main ✅
+```
+
+注意：`login()` 函数内部使用绝对 URL (`http://localhost:4173`)，所以**即使不设 `BASE_URL`，登录本身也能成功**——但后续的 `page.goto('#/...')` 会失败。症状：登录通过但所有浏览器测试在 `waitForList()` 超时，页面快照显示登录页。
 
 ---
 

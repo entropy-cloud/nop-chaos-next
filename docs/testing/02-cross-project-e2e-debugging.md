@@ -399,6 +399,54 @@ test('diagnose environment', async ({ page }) => {
 
 **诊断**：设置 `E2E_ASSERT_NO_CONSOLE_ERRORS=true` 让测试失败暴露问题；或用 `--headed` 观察浏览器 Network 面板。
 
+### 错误 6：登录成功但所有浏览器测试在 `waitForList()` 超时
+
+**症状**：`login()` 不报错，但 `waitForList()` 在 `crudContainer` 处超时 30s。页面快照显示登录页。
+
+**根因**：Playwright 的 `page.goto('#/NopAuthUser-main')` 解析到 **`baseURL`**（默认后端 8080），而不是当前页面 URL。`login()` 内部用绝对 URL (`http://localhost:4173`) 所以登录本身正常，但后续的 hash 导航指向了后端。
+
+**验证方法**：
+
+```typescript
+await login(page, { username: 'nop', password: '123' });
+console.log('After login:', page.url());          // → http://localhost:4173/#/... ✅
+await page.goto('#/NopAuthUser-main');
+console.log('After goto:', page.url());            // → http://localhost:8080/#/... ❌ 后端！
+```
+
+**修复**：必须设置 `BASE_URL=http://localhost:4173`。仅设 `FRONTEND_DEV_MODE=true` 也可以（它会让 playwright config 把 baseURL 设为 4173），但 `BASE_URL` 更直接。
+
+### 错误 7：删除操作后实体仍在列表中（Confirm 按钮点击无效）
+
+**症状**：`deleteRow()` 不报错，但 `assertUserNotExists()` 失败——实体未被删除。
+
+**根因**：nop-chaos-next 的删除确认对话框使用 `position: fixed` 的自定义 alert-dialog（`data-slot="alert-dialog-content"`）。Playwright 的 locator-based click 在这类元素上可能静默失败（`offsetParent` 为 null，click 不触发事件处理器）。
+
+**验证方法**：用 `page.evaluate()` 检查对话框 DOM 结构和按钮状态（见 [`01-e2e-developer-guide.md` §3.5 DOM 诊断方法](01-e2e-developer-guide.md#35-amis-dom-结构速查调试时必读)）。
+
+**修复**：`CrudListPage.deleteRow()` 已改用 `page.evaluate()` 执行原生 DOM `element.click()`。如果自定义 PageObject 也遇到类似问题，使用相同模式：
+
+```typescript
+await page.evaluate(() => {
+  const dlg = document.querySelector('[role="alertdialog"]');
+  if (!dlg) return;
+  for (const btn of dlg.querySelectorAll('button')) {
+    if (/^(confirm|确定|确认|ok)$/i.test(btn.textContent?.trim() || '')) {
+      (btn as HTMLElement).click();
+      return;
+    }
+  }
+});
+```
+
+### 错误 8：AMIS CRUD 搜索表单 filter 不生效
+
+**症状**：搜索后返回全部数据，filter 条件未应用。
+
+**根因**：代码可能点击了 `.fa-sync`（刷新）按钮而非搜索按钮。刷新按钮会**重置** filter 条件。
+
+**修复**：使用 `.cxd-Table-searchableForm button[type="submit"]` 点击搜索。filter input 命名格式为 `filter_<字段名>__contains`（如 `filter_userName__contains`）。
+
 ---
 
 ## 7. 完整示例：调试 nop-auth-e2e 的"创建新用户"测试
@@ -461,6 +509,15 @@ npx playwright test
 
 # ❌ 反模式 5：在 CI 里用 FRONTEND_DEV_MODE=true
 # → CI 应该用后端内置前端（build 时打包），FRONTEND_DEV_MODE 仅用于本地调试
+
+# ❌ 反模式 6：不设 BASE_URL 但依赖 page.goto('#/...') 正确解析
+# → login() 用绝对 URL 所以能过，但后续 hash 导航指向后端 8080
+SKIP_WEBSERVER=true npx playwright test   # ← 少了 BASE_URL！
+
+# ❌ 反模式 7：用 Playwright locator click 点击 position:fixed 的 alert-dialog 按钮
+# → click 可能静默失败（不报错但事件未触发），删除操作无效
+await page.locator('[role="alertdialog"] button:has-text("Confirm")').click();
+# → 应改用 page.evaluate() 原生 DOM click
 ```
 
 ---

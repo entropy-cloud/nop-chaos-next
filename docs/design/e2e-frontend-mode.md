@@ -170,6 +170,30 @@ export default defineConfig({
 3. **为什么每个包的 playwright.config.ts 单独修改而不是提取共享配置？**
    - 每个包已经独立，只有 `port`、`cwd`、`timeout` 不同。提取共享工厂函数会增加这一层的抽象，而当前模式是直接的复制-修改模式。提取共享配置可以在单独的改进中进行（不在本范围内）。
 
+### ⚠️ `BASE_URL` 与 `page.goto('#/...')` 的解析关系（实战踩坑）
+
+**Playwright 的 `page.goto('#/NopAuthUser-main')` 这类相对 URL 解析到配置的 `baseURL`，不是当前页面 URL。** 这意味着：
+
+- 不设 `BASE_URL` 且不设 `FRONTEND_DEV_MODE` 时，`baseURL` 默认为后端端口（8080）
+- `login()` 函数内部使用绝对 URL（`http://localhost:4173`），**登录本身不受影响**
+- 但登录后 `page.goto('#/NopAuthUser-main')` 会解析到 `http://localhost:8080/#/NopAuthUser-main`（后端！）
+- 后端不返回 React 前端 → 所有浏览器测试在 `waitForList()` 处超时
+
+**正确做法**：手动启动场景必须设置 `BASE_URL=http://localhost:4173`：
+
+```bash
+# ✅ 正确
+SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 npx playwright test
+
+# 或用 FRONTEND_DEV_MODE（它会让 config 计算 baseURL = 4173）
+FRONTEND_DEV_MODE=true pnpm test:auth
+
+# ❌ 错误（login 能过但后续 goto 指向后端）
+SKIP_WEBSERVER=true npx playwright test
+```
+
+**症状特征**：RPC 测试全过，浏览器测试全在 `waitForList()` 超时，错误页面快照显示登录页。
+
 ### 边界情况
 
 - **`playwright.config.ts` 中的 `timeout` 差异**：auth-e2e 使用 60s，code-e2e 使用 120s，job-e2e 使用 60s。这些差异与前端模式无关，保持不变。

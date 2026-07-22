@@ -141,6 +141,52 @@ export interface CrudPageConfig {
 | 下拉选择 | `document.querySelectorAll` AMIS menu | `getByRole('option')` |
 | 日期输入 | `.cxd-Form-item` + label + input | `getByLabel(labelText)` |
 
+### 实现注意事项（AMIS 引擎实战经验）
+
+以下经验来自 nop-entropy-e2e 全量适配（38/38 通过）的实战调试。
+
+#### 1. 三种 AMIS 下拉组件不可混用
+
+| 组件 | DOM 结构 | 用途 |
+|------|---------|------|
+| `Select` | `.cxd-Select` → `.cxd-Select-menu` → `.cxd-Select-option` | 表单字段下拉选择 |
+| `DropDownButton` | `button:has-text("更多")` → `.cxd-DropDown-menu` → `li.cxd-DropDown-button` | 行操作折叠菜单 |
+| `.cxd-DropDown-menuItem` | **不存在于 AMIS 源码** | — |
+
+`AmisAdapter.selectOption()` 用 `[data-amis-name="字段名"]` 定位 form-item 后选 `.cxd-Select-option`。
+`AmisAdapter.rowAction()` 先找行内直接按钮，找不到则展开"更多"后找 `li.cxd-DropDown-button`。
+
+#### 2. `position: fixed` 对话框需原生 DOM click
+
+nop-chaos-next 的删除确认对话框使用自定义 alert-dialog（`data-slot="alert-dialog-content"`，`position: fixed`）。Playwright 的 locator click 在这类元素上可能**静默失败**（不抛异常但不触发事件处理器）。
+
+**解决方案**：`CrudListPage.deleteRow()` 用 `page.evaluate()` 执行原生 `element.click()`：
+
+```typescript
+await page.evaluate(() => {
+  const dlg = document.querySelector('[role="alertdialog"]');
+  if (!dlg) return;
+  for (const btn of dlg.querySelectorAll('button')) {
+    if (/^(confirm|确定|确认|ok)$/i.test(btn.textContent?.trim() || '')) {
+      (btn as HTMLElement).click();
+      return;
+    }
+  }
+});
+```
+
+#### 3. AMIS CRUD 搜索表单
+
+搜索表单在 `.cxd-Table-searchableForm` 内，filter input 命名为 `filter_<字段名>__contains`。搜索按钮是 `button[type="submit"]`。**不要**点 `.fa-sync` 刷新按钮——它会重置 filter。
+
+#### 4. AMIS 表单字段定位用 `data-amis-name`
+
+AMIS form-item 元素有 `data-amis-name="字段名"` 属性。编辑表单中的输入框：`[data-amis-name="字段名"] input`。查看（只读）对话框中的静态值：`[data-amis-name="字段名"] .cxd-Form-static`。
+
+#### 5. DOM 诊断优先于截图
+
+调试 Playwright locator 问题时，优先用 `page.evaluate()` 检查 `innerHTML`、`getComputedStyle`、`getBoundingClientRect`、`offsetParent`，而非截图。截图只能看到视觉效果，无法判断 `pointer-events`、`z-index`、`display` 等影响点击的 CSS 属性。
+
 ### PageObject 层次
 
 ```typescript
