@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<actions xmlns:x="/nop/schema/xdsl.xdef" xmlns:xdef="/nop/schema/xdef.xdef"
-         xdef:bean-body-type="List&lt;io.nop.xui.model.IUiActionModel&gt;" xdef:body-type="list" xdef:key-attr="id"
-         x:validated="true" x:schema="/nop/schema/xdef.xdef">
-
-    <action id="!string" xdef:ref="action.xdef"/>
-
-    <actionGroup id="!string" xdef:ref="action-group.xdef"/>
-</actions>

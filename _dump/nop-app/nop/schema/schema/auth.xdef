@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--@skipWhenNoAuth 当没有访问权限时是否自动跳过此字段，不返回到前台-->
-<auth xdef:bean-class="io.nop.api.core.auth.ActionAuthMeta" xmlns:xdef="/nop/schema/xdef.xdef"
-      xmlns:x="/nop/schema/xdsl.xdef" roles="csv-set" permissions="multi-csv-set" publicAccess="!boolean=false"
-      skipWhenNoAuth="boolean" x:validated="true" x:schema="/nop/schema/xdef.xdef"/>

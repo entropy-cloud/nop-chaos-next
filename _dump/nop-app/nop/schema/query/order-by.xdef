@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<order-by xdef:body-type="list" xdef:key-attr="name" xmlns:x="/nop/schema/xdsl.xdef" x:validated="true"
-          x:schema="/nop/schema/xdef.xdef">
-
-    <field name="!string" desc="!boolean=false" nullsFirst="boolean"
-           xdef:bean-class="io.nop.api.core.beans.query.OrderFieldBean"/>
-</order-by>
