@@ -27,3 +27,4 @@ apps/*/src/**/*.js
 apps/*/src/**/*.d.ts
 apps/*/src/**/*.js.map
 _dump/
+pnpm-lock.yaml.bak
