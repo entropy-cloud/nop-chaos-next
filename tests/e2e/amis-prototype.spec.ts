@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test, login } from '@nop-chaos/e2e-shared';
+import { test, mockLogin as login } from '@nop-chaos/e2e-shared';
 
 test('prototype menu loads two-level navigation with CRUD pages', async ({ page }) => {
   await login(page, { username: 'proto', mockMenuRoutes: false });

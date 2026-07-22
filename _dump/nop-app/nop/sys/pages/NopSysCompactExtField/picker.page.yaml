@@ -1,0 +1,99 @@
+type: picker
+valueField: id
+labelField: id
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  url: '@query:NopSysCompactExtField__findPage'
+  gql:selection: total,page,items{ id,sid,entityName,propName,position,displayName,dictName,defaultValue,createdBy,createTime,updatedBy,updateTime,remark
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysCompactExtField__findPage'
+    gql:selection: total,page,items{ id,sid,entityName,propName,position,displayName,dictName,defaultValue,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  columns:
+  - name: entityName
+    label: '@i18n:col.NopSysCompactExtField.entityName,prop.label.NopSysCompactExtField.entityName|实体名'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: propName
+    label: '@i18n:col.NopSysCompactExtField.propName,prop.label.NopSysCompactExtField.propName|属性名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: position
+    label: '@i18n:col.NopSysCompactExtField.position,prop.label.NopSysCompactExtField.position|位置'
+    sortable: true
+    toggled: true
+    type: static
+  - name: displayName
+    label: '@i18n:col.NopSysCompactExtField.displayName,prop.label.NopSysCompactExtField.displayName|显示名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: dictName
+    label: '@i18n:col.NopSysCompactExtField.dictName,prop.label.NopSysCompactExtField.dictName|字典名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: defaultValue
+    label: '@i18n:col.NopSysCompactExtField.defaultValue,prop.label.NopSysCompactExtField.defaultValue|默认值'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysCompactExtField.createdBy,prop.label.NopSysCompactExtField.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysCompactExtField.createTime,prop.label.NopSysCompactExtField.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysCompactExtField.updatedBy,prop.label.NopSysCompactExtField.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysCompactExtField.updateTime,prop.label.NopSysCompactExtField.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopSysCompactExtField.remark,prop.label.NopSysCompactExtField.remark|备注'
+    sortable: true
+    toggled: true
+    type: static

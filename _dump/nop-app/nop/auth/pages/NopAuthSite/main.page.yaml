@@ -1,0 +1,450 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopAuthSite__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: md
+      title: '@i18n:NopAuthSite.forms.add.$title|新增-子站点'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopAuthSite__save/id'
+        body:
+        - type: group
+          id: row-siteId
+          body:
+            name: siteId
+            label: '@i18n:cell.NopAuthSite.siteId,prop.label.NopAuthSite.siteId|站点ID'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-displayName
+          body:
+            name: displayName
+            label: '@i18n:cell.NopAuthSite.displayName,prop.label.NopAuthSite.displayName|显示名称'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-orderNo
+          body:
+            name: orderNo
+            label: '@i18n:cell.NopAuthSite.orderNo,prop.label.NopAuthSite.orderNo|排序'
+            required: true
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-url
+          body:
+            name: url
+            label: '@i18n:cell.NopAuthSite.url,prop.label.NopAuthSite.url|链接'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 200
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-status
+          body:
+            name: status
+            label: '@i18n:cell.NopAuthSite.status,prop.label.NopAuthSite.status|状态'
+            required: true
+            type: select
+            searchable: true
+            clearable: true
+            multiple: false
+            source: '@dict:core/active-status'
+        - type: group
+          id: row-extConfig
+          body:
+            name: extConfig
+            label: '@i18n:cell.NopAuthSite.extConfig,prop.label.NopAuthSite.extConfig|扩展配置'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 1000
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-configVersion
+          body:
+            name: configVersion
+            label: '@i18n:cell.NopAuthSite.configVersion,prop.label.NopAuthSite.configVersion|配置版本'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 20
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-remark
+          body:
+            name: remark
+            label: '@i18n:cell.NopAuthSite.remark,prop.label.NopAuthSite.remark|备注'
+            type: textarea
+            minRows: 3
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthSite__findPage'
+    gql:selection: total,page,items{ id,siteId,displayName,orderNo,url,status,status_label,extConfig,extConfigComponent,configVersion,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  labelTpl: ${displayName}
+  columns:
+  - name: siteId
+    label: '@i18n:col.NopAuthSite.siteId,prop.label.NopAuthSite.siteId|站点ID'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: displayName
+    label: '@i18n:col.NopAuthSite.displayName,prop.label.NopAuthSite.displayName|显示名称'
+    sortable: true
+    toggled: true
+    type: static
+  - name: orderNo
+    label: '@i18n:col.NopAuthSite.orderNo,prop.label.NopAuthSite.orderNo|排序'
+    sortable: true
+    toggled: true
+    type: static
+  - name: url
+    label: '@i18n:col.NopAuthSite.url,prop.label.NopAuthSite.url|链接'
+    sortable: true
+    toggled: true
+    type: static
+  - name: status_label
+    label: '@i18n:col.NopAuthSite.status,prop.label.NopAuthSite.status|状态'
+    sortable: true
+    toggled: true
+    type: static
+  - name: extConfig
+    label: '@i18n:col.NopAuthSite.extConfig,prop.label.NopAuthSite.extConfig|扩展配置'
+    sortable: true
+    toggled: true
+    type: static
+  - name: configVersion
+    label: '@i18n:col.NopAuthSite.configVersion,prop.label.NopAuthSite.configVersion|配置版本'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopAuthSite.createdBy,prop.label.NopAuthSite.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopAuthSite.createTime,prop.label.NopAuthSite.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopAuthSite.updatedBy,prop.label.NopAuthSite.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopAuthSite.updateTime,prop.label.NopAuthSite.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopAuthSite.remark,prop.label.NopAuthSite.remark|备注'
+    sortable: true
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: md
+        title: '@i18n:NopAuthSite.forms.view.$title|查看-子站点'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopAuthSite__get?id=$id'
+            gql:selection: id,siteId,displayName,orderNo,url,status,status_label,extConfig,extConfigComponent,configVersion,createdBy,createTime,updatedBy,updateTime,remark
+          body:
+          - type: group
+            id: row-siteId-displayName
+            body:
+            - name: siteId
+              label: '@i18n:cell.NopAuthSite.siteId,prop.label.NopAuthSite.siteId|站点ID'
+              required: true
+              type: static
+            - name: displayName
+              label: '@i18n:cell.NopAuthSite.displayName,prop.label.NopAuthSite.displayName|显示名称'
+              required: true
+              type: static
+          - type: group
+            id: row-orderNo-url
+            body:
+            - name: orderNo
+              label: '@i18n:cell.NopAuthSite.orderNo,prop.label.NopAuthSite.orderNo|排序'
+              required: true
+              type: static
+            - name: url
+              label: '@i18n:cell.NopAuthSite.url,prop.label.NopAuthSite.url|链接'
+              type: static
+          - type: group
+            id: row-status-extConfig
+            body:
+            - name: status_label
+              label: '@i18n:cell.NopAuthSite.status,prop.label.NopAuthSite.status|状态'
+              required: true
+              type: static
+            - name: extConfig
+              label: '@i18n:cell.NopAuthSite.extConfig,prop.label.NopAuthSite.extConfig|扩展配置'
+              type: static
+          - type: group
+            id: row-configVersion-createdBy
+            body:
+            - name: configVersion
+              label: '@i18n:cell.NopAuthSite.configVersion,prop.label.NopAuthSite.configVersion|配置版本'
+              type: static
+            - name: createdBy
+              label: '@i18n:cell.NopAuthSite.createdBy,prop.label.NopAuthSite.createdBy|创建人'
+              required: true
+              type: static
+          - type: group
+            id: row-createTime-updatedBy
+            body:
+            - name: createTime
+              label: '@i18n:cell.NopAuthSite.createTime,prop.label.NopAuthSite.createTime|创建时间'
+              required: true
+              type: static
+            - name: updatedBy
+              label: '@i18n:cell.NopAuthSite.updatedBy,prop.label.NopAuthSite.updatedBy|修改人'
+              required: true
+              type: static
+          - type: group
+            id: row-updateTime
+            body:
+              name: updateTime
+              label: '@i18n:cell.NopAuthSite.updateTime,prop.label.NopAuthSite.updateTime|修改时间'
+              required: true
+              type: static
+          - type: group
+            id: row-remark
+            body:
+              name: remark
+              label: '@i18n:cell.NopAuthSite.remark,prop.label.NopAuthSite.remark|备注'
+              type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: md
+          title: '@i18n:NopAuthSite.forms.edit.$title|编辑-子站点'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopAuthSite__get?id=$id'
+              gql:selection: id,siteId,displayName,orderNo,url,status,status_label,extConfig,extConfigComponent,configVersion,remark
+            api:
+              data:
+                siteId: $siteId
+                displayName: $displayName
+                orderNo: $orderNo
+                url: $url
+                status: $status
+                extConfig: $extConfig
+                configVersion: $configVersion
+                remark: $remark
+              url: '@mutation:NopAuthSite__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-siteId
+              body:
+                name: siteId
+                label: '@i18n:cell.NopAuthSite.siteId,prop.label.NopAuthSite.siteId|站点ID'
+                required: true
+                type: static
+            - type: group
+              id: row-displayName
+              body:
+                name: displayName
+                label: '@i18n:cell.NopAuthSite.displayName,prop.label.NopAuthSite.displayName|显示名称'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-orderNo
+              body:
+                name: orderNo
+                label: '@i18n:cell.NopAuthSite.orderNo,prop.label.NopAuthSite.orderNo|排序'
+                required: true
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-url
+              body:
+                name: url
+                label: '@i18n:cell.NopAuthSite.url,prop.label.NopAuthSite.url|链接'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 200
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-status
+              body:
+                name: status
+                label: '@i18n:cell.NopAuthSite.status,prop.label.NopAuthSite.status|状态'
+                required: true
+                type: select
+                searchable: true
+                clearable: true
+                multiple: false
+                source: '@dict:core/active-status'
+            - type: group
+              id: row-extConfig
+              body:
+                name: extConfig
+                label: '@i18n:cell.NopAuthSite.extConfig,prop.label.NopAuthSite.extConfig|扩展配置'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 1000
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-configVersion
+              body:
+                name: configVersion
+                label: '@i18n:cell.NopAuthSite.configVersion,prop.label.NopAuthSite.configVersion|配置版本'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 20
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopAuthSite.remark,prop.label.NopAuthSite.remark|备注'
+                type: textarea
+                minRows: 3
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopAuthSite__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button

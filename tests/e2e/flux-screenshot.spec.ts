@@ -54,10 +54,18 @@ const fluxEnabledMenuResponse = {
 
 async function useFluxEnabledMenu(page: import('@playwright/test').Page) {
   await page.route('**/r/SiteMapApi__getSiteMap', async (route) => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fluxEnabledSiteMapResponse) });
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(fluxEnabledSiteMapResponse),
+    });
   });
   await page.route('**/data/menu-config.json', async (route) => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fluxEnabledMenuResponse) });
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(fluxEnabledMenuResponse),
+    });
   });
 }
 
@@ -76,27 +84,27 @@ test('flux crud layout analysis', async ({ page }) => {
   const crud = page.locator('.nop-crud');
   console.log('nop-crud count:', await crud.count());
 
-  if (await crud.count() === 0) {
+  if ((await crud.count()) === 0) {
     console.log('No nop-crud found. Checking all elements with nop- prefix:');
     const allNop = page.locator('[class*="nop-"]');
     console.log('nop-* count:', await allNop.count());
     for (let i = 0; i < Math.min(await allNop.count(), 10); i++) {
       const el = allNop.nth(i);
-      const tag = await el.evaluate(el => el.tagName + '.' + el.className);
+      const tag = await el.evaluate((el) => el.tagName + '.' + el.className);
       console.log(`  ${i}: ${tag}`);
     }
     return;
   }
 
   // Check CRUD root element HTML and computed styles
-  const crudHtml = await crud.first().evaluate(el => {
+  const crudHtml = await crud.first().evaluate((el) => {
     const s = window.getComputedStyle(el);
     return {
       gap: s.gap,
       display: s.display,
       flexDirection: s.flexDirection,
       className: el.className,
-      children: Array.from(el.children).map(c => ({
+      children: Array.from(el.children).map((c) => ({
         tag: c.tagName,
         className: c.className,
         dataSlot: c.getAttribute('data-slot') || '',
@@ -112,15 +120,24 @@ test('flux crud layout analysis', async ({ page }) => {
   });
   console.log('=== CRUD root ===');
   console.log('className:', crudHtml.className);
-  console.log('computed: display=' + crudHtml.display + ' flex=' + crudHtml.flexDirection + ' gap=' + crudHtml.gap);
+  console.log(
+    'computed: display=' +
+      crudHtml.display +
+      ' flex=' +
+      crudHtml.flexDirection +
+      ' gap=' +
+      crudHtml.gap,
+  );
   for (const c of crudHtml.children) {
-    console.log(`[${c.dataSlot || c.className.substring(0, 40)}] top=${Math.round(c.rect.top)} bottom=${Math.round(c.rect.bottom)} mt=${c.style.marginTop} mb=${c.style.marginBottom} pt=${c.style.paddingTop} pb=${c.style.paddingBottom}`);
+    console.log(
+      `[${c.dataSlot || c.className.substring(0, 40)}] top=${Math.round(c.rect.top)} bottom=${Math.round(c.rect.bottom)} mt=${c.style.marginTop} mb=${c.style.marginBottom} pt=${c.style.paddingTop} pb=${c.style.paddingBottom}`,
+    );
   }
 
   // Check query section HTML classes
   const query = page.locator('.nop-crud-query');
-  if (await query.count() > 0) {
-    const qInfo = await query.first().evaluate(el => {
+  if ((await query.count()) > 0) {
+    const qInfo = await query.first().evaluate((el) => {
       const s = window.getComputedStyle(el);
       return { className: el.className, padding: s.padding, marginBottom: s.marginBottom };
     });
@@ -131,8 +148,8 @@ test('flux crud layout analysis', async ({ page }) => {
 
   // Toolbar analysis
   const toolbar = page.locator('.nop-crud-toolbar');
-  if (await toolbar.count() > 0) {
-    const tInfo = await toolbar.first().evaluate(el => {
+  if ((await toolbar.count()) > 0) {
+    const tInfo = await toolbar.first().evaluate((el) => {
       const s = window.getComputedStyle(el);
       return { className: el.className, marginTop: s.marginTop };
     });
@@ -144,8 +161,8 @@ test('flux crud layout analysis', async ({ page }) => {
   // Check form-actions alignment (search/reset buttons in query form)
   const formActions = page.locator('[data-slot="form-actions"]');
   console.log('form-actions count:', await formActions.count());
-  for (let i = 0; i < await formActions.count(); i++) {
-    const faInfo = await formActions.nth(i).evaluate(el => {
+  for (let i = 0; i < (await formActions.count()); i++) {
+    const faInfo = await formActions.nth(i).evaluate((el) => {
       const s = window.getComputedStyle(el);
       return {
         className: el.className,
@@ -155,29 +172,38 @@ test('flux crud layout analysis', async ({ page }) => {
       };
     });
     console.log(`=== form-actions[${i}] ===`);
-    console.log(`  className: ${faInfo.className} justify: ${faInfo.justifyContent} text: ${faInfo.innerText}`);
+    console.log(
+      `  className: ${faInfo.className} justify: ${faInfo.justifyContent} text: ${faInfo.innerText}`,
+    );
   }
 
   // Open the create form dialog to check its button alignment
   const createBtn = page.getByText('Open create form');
-  if (await createBtn.count() > 0) {
+  if ((await createBtn.count()) > 0) {
     await createBtn.click();
     await page.waitForTimeout(500);
     // Check for dialog/modal form-actions
-    const dialogActions = page.locator('[role="dialog"] [data-slot="form-actions"], .nop-modal [data-slot="form-actions"], [class*="modal"] [data-slot="form-actions"]');
+    const dialogActions = page.locator(
+      '[role="dialog"] [data-slot="form-actions"], .nop-modal [data-slot="form-actions"], [class*="modal"] [data-slot="form-actions"]',
+    );
     const daCount = await dialogActions.count();
     console.log('dialog form-actions count:', daCount);
     for (let i = 0; i < daCount; i++) {
-      const daInfo = await dialogActions.nth(i).evaluate(el => {
+      const daInfo = await dialogActions.nth(i).evaluate((el) => {
         const s = window.getComputedStyle(el);
         return { className: el.className, justifyContent: s.justifyContent, display: s.display };
       });
-      console.log(`  dialog form-actions[${i}]: class="${daInfo.className}" justify=${daInfo.justifyContent}`);
+      console.log(
+        `  dialog form-actions[${i}]: class="${daInfo.className}" justify=${daInfo.justifyContent}`,
+      );
     }
     // Also check any button bars in dialogs
     const dialogBtns = page.locator('[role="dialog"] button, .nop-modal button');
     console.log('dialog buttons text:', await dialogBtns.allTextContents());
-    await page.getByLabel('Close').click().catch(() => page.keyboard.press('Escape'));
+    await page
+      .getByLabel('Close')
+      .click()
+      .catch(() => page.keyboard.press('Escape'));
     await page.waitForTimeout(300);
   }
 });

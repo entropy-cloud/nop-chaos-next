@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:x="/nop/schema/xdsl.xdef" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       xmlns:ioc="ioc" x:validated="true" x:schema="/nop/schema/beans.xdef">
+
+    <x:config>
+        <c:import class="io.nop.api.core.ApiConstants"/>
+    </x:config>
+
+    <bean id="nopSqlLibManager" ioc:default="true" class="io.nop.orm.sql_lib.SqlLibManager" ioc:delay-method="delayInit"
+          lazy-init="true"/>
+
+    <bean id="nopDefaultTransactionListener" ioc:default="true" class="io.nop.orm.txn.OrmTransactionListener"/>
+
+    <bean id="nopOrmGlobalCacheConfig" class="io.nop.commons.cache.CacheConfig" ioc:config-prefix="nop.orm.global-cache"
+          ioc:default="true"/>
+
+    <bean id="nopOrmGlobalCacheProvider" ioc:default="true" class="io.nop.commons.cache.LocalCacheProvider">
+        <constructor-arg index="0" value="orm-global-cache"/>
+        <constructor-arg index="1" ref="nopOrmGlobalCacheConfig"/>
+    </bean>
+
+    <util:constant id="nopShardSelector" static-field="io.nop.dao.shard.EmptyShardSelector.INSTANCE" ioc:default="true"/>
+
+    <bean id="nopSequenceGenerator" class="io.nop.dao.seq.UuidSequenceGenerator" ioc:default="true"/>
+
+    <bean id="nopOrmColumnBinderEnhancer" class="io.nop.orm.factory.DefaultOrmColumnBinderEnhancer" ioc:default="true"/>
+
+    <bean id="nopOrmSessionFactory" class="io.nop.orm.factory.OrmSessionFactoryBean" ioc:bean-method="getObject"
+          ioc:default="true">
+        <property name="name" value="app-orm"/>
+        <property name="registerGlobalCache" value="true"/>
+        <property name="sequenceGenerator" ref="nopSequenceGenerator"/>
+        <property name="daoListeners">
+            <ioc:collect-beans by-type="io.nop.orm.IOrmDaoListener" ioc:ignore-depends="true"/>
+        </property>
+        <property name="interceptors">
+            <ioc:collect-beans by-type="io.nop.orm.IOrmInterceptor" ioc:ignore-depends="true"/>
+        </property>
+    </bean>
+
+    <bean id="nopOrmTemplate" class="io.nop.orm.impl.OrmTemplateImpl" ioc:default="true"/>
+
+    <bean id="nopDaoProvider" class="io.nop.orm.dao.OrmDaoProvider" ioc:default="true" init-method="register">
+        <constructor-arg index="0" ref="nopOrmTemplate"/>
+    </bean>
+
+    <bean id="nopDataAuthEntityFilterProvider" class="io.nop.orm.filter.DataAuthEntityFilterProvider" ioc:default="true">
+        <ioc:condition>
+            <on-bean>nopDataAuthChecker</on-bean>
+        </ioc:condition>
+    </bean>
+
+    <bean id="nopSingleSessionMethodInterceptor" ioc:default="true"
+          class="io.nop.orm.interceptor.SingleSessionMethodInterceptor">
+        <constructor-arg index="0" ref="nopOrmTemplate"/>
+        <ioc:pointcut annotations="io.nop.api.core.annotations.orm.SingleSession"
+                      order="#{ApiConstants.INTERCEPTOR_PRIORITY_SINGLE_SESSION}"/>
+    </bean>
+
+    <bean id="nopSingleSessionFunctionInvoker" ioc:default="true" class="io.nop.orm.utils.SingleSessionFunctionInvoker"/>
+
+    <bean id="nopTransactionalFunctionInvoker" class="io.nop.dao.utils.TransactionalFunctionInvoker"/>
+
+    <bean id="io.nop.orm.initialize.DataBaseSchemaInitializer" ioc:type="@bean:id" ioc:after="nopOrmSessionFactory">
+        <ioc:condition>
+            <if-property name="nop.orm.init-database-schema"/>
+        </ioc:condition>
+    </bean>
+
+    <bean id="io.nop.orm.initialize.AddTenantColInitializer" ioc:type="@bean:id"
+          ioc:after="nopOrmSessionFactory,io.nop.orm.initialize.DataBaseSchemaInitializer">
+        <ioc:condition>
+            <if-property name="nop.orm.auto-add-tenant-col"/>
+        </ioc:condition>
+    </bean>
+
+    <bean id="io.nop.orm.initialize.DataInitInitializer" ioc:type="@bean:id"
+          ioc:after="nopOrmSessionFactory,io.nop.orm.initialize.DataBaseSchemaInitializer">
+        <ioc:condition>
+            <if-property name="nop.orm.init-database-data"/>
+        </ioc:condition>
+    </bean>
+
+    <bean id="io.nop.orm.sql_lib.dict.SqlLibDictLoader" ioc:type="@bean:id"/>
+
+    <bean id="nopDaoResourceNamespaceHandler" class="io.nop.orm.resource.DaoResourceNamespaceHandler"
+          init-method="register" destroy-method="unregister" ioc:after="nopOrmSessionFactory"/>
+</beans>

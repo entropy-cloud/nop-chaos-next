@@ -1,0 +1,371 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopSysVariable__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: md
+      title: '@i18n:NopSysVariable.forms.add.$title|新增-系统变量'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopSysVariable__save/id'
+        body:
+        - type: group
+          id: row-varName
+          body:
+            name: varName
+            label: '@i18n:cell.NopSysVariable.varName,prop.label.NopSysVariable.varName|变量名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 32
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-varValue
+          body:
+            name: varValue
+            label: '@i18n:cell.NopSysVariable.varValue,prop.label.NopSysVariable.varValue|变量值'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 4000
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-stdDomain
+          body:
+            name: stdDomain
+            label: '@i18n:cell.NopSysVariable.stdDomain,prop.label.NopSysVariable.stdDomain|变量域'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-varType
+          body:
+            name: varType
+            label: '@i18n:cell.NopSysVariable.varType,prop.label.NopSysVariable.varType|变量类型'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-remark
+          body:
+            name: remark
+            label: '@i18n:cell.NopSysVariable.remark,prop.label.NopSysVariable.remark|备注'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 200
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysVariable__findPage'
+    gql:selection: total,page,items{ id,varName,varValue,stdDomain,varType,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  columns:
+  - name: varName
+    label: '@i18n:col.NopSysVariable.varName,prop.label.NopSysVariable.varName|变量名'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: varValue
+    label: '@i18n:col.NopSysVariable.varValue,prop.label.NopSysVariable.varValue|变量值'
+    sortable: true
+    toggled: true
+    type: static
+  - name: stdDomain
+    label: '@i18n:col.NopSysVariable.stdDomain,prop.label.NopSysVariable.stdDomain|变量域'
+    sortable: true
+    toggled: true
+    type: static
+  - name: varType
+    label: '@i18n:col.NopSysVariable.varType,prop.label.NopSysVariable.varType|变量类型'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysVariable.createdBy,prop.label.NopSysVariable.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysVariable.createTime,prop.label.NopSysVariable.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysVariable.updatedBy,prop.label.NopSysVariable.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysVariable.updateTime,prop.label.NopSysVariable.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopSysVariable.remark,prop.label.NopSysVariable.remark|备注'
+    sortable: true
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: md
+        title: '@i18n:NopSysVariable.forms.view.$title|查看-系统变量'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopSysVariable__get?id=$id'
+            gql:selection: id,varName,varValue,stdDomain,varType,createdBy,createTime,updatedBy,updateTime,remark
+          body:
+          - type: group
+            id: row-varName
+            body:
+              name: varName
+              label: '@i18n:cell.NopSysVariable.varName,prop.label.NopSysVariable.varName|变量名'
+              required: true
+              type: static
+          - type: group
+            id: row-varValue
+            body:
+              name: varValue
+              label: '@i18n:cell.NopSysVariable.varValue,prop.label.NopSysVariable.varValue|变量值'
+              type: static
+          - type: group
+            id: row-stdDomain
+            body:
+              name: stdDomain
+              label: '@i18n:cell.NopSysVariable.stdDomain,prop.label.NopSysVariable.stdDomain|变量域'
+              type: static
+          - type: group
+            id: row-varType
+            body:
+              name: varType
+              label: '@i18n:cell.NopSysVariable.varType,prop.label.NopSysVariable.varType|变量类型'
+              type: static
+          - type: group
+            id: row-createdBy
+            body:
+              name: createdBy
+              label: '@i18n:cell.NopSysVariable.createdBy,prop.label.NopSysVariable.createdBy|创建人'
+              required: true
+              type: static
+          - type: group
+            id: row-createTime
+            body:
+              name: createTime
+              label: '@i18n:cell.NopSysVariable.createTime,prop.label.NopSysVariable.createTime|创建时间'
+              required: true
+              type: static
+          - type: group
+            id: row-updatedBy
+            body:
+              name: updatedBy
+              label: '@i18n:cell.NopSysVariable.updatedBy,prop.label.NopSysVariable.updatedBy|修改人'
+              required: true
+              type: static
+          - type: group
+            id: row-updateTime
+            body:
+              name: updateTime
+              label: '@i18n:cell.NopSysVariable.updateTime,prop.label.NopSysVariable.updateTime|修改时间'
+              required: true
+              type: static
+          - type: group
+            id: row-remark
+            body:
+              name: remark
+              label: '@i18n:cell.NopSysVariable.remark,prop.label.NopSysVariable.remark|备注'
+              type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: md
+          title: '@i18n:NopSysVariable.forms.edit.$title|编辑-系统变量'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopSysVariable__get?id=$id'
+              gql:selection: id,varName,varValue,stdDomain,varType,remark
+            api:
+              data:
+                varName: $varName
+                varValue: $varValue
+                stdDomain: $stdDomain
+                varType: $varType
+                remark: $remark
+              url: '@mutation:NopSysVariable__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-varName
+              body:
+                name: varName
+                label: '@i18n:cell.NopSysVariable.varName,prop.label.NopSysVariable.varName|变量名'
+                required: true
+                type: static
+            - type: group
+              id: row-varValue
+              body:
+                name: varValue
+                label: '@i18n:cell.NopSysVariable.varValue,prop.label.NopSysVariable.varValue|变量值'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 4000
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-stdDomain
+              body:
+                name: stdDomain
+                label: '@i18n:cell.NopSysVariable.stdDomain,prop.label.NopSysVariable.stdDomain|变量域'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-varType
+              body:
+                name: varType
+                label: '@i18n:cell.NopSysVariable.varType,prop.label.NopSysVariable.varType|变量类型'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopSysVariable.remark,prop.label.NopSysVariable.remark|备注'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 200
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopSysVariable__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button

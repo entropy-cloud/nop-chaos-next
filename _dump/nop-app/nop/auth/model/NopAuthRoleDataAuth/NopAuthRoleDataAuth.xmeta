@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[2:2:0:0]/nop/auth/model/NopAuthRoleDataAuth/NopAuthRoleDataAuth.xmeta
+ @xmlns:i18n-en=[2:88:0:0]/nop/auth/model/NopAuthRoleDataAuth/_NopAuthRoleDataAuth.xmeta
+-->
+<meta xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext" xmlns:xpl="xpl" ext:model="orm"
+      ext:icon="database" ext:web-renderer="" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen"
+      xmlns:biz="biz" displayName="角色数据权限" i18n-en:displayName="Role Data Auth" xmlns:ui="ui" xmlns:orm="orm"
+      x:validated="true" x:schema="/nop/schema/xmeta.xdef">
+
+<!--LOC:[11:22:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthRoleDataAuth/_NopAuthRoleDataAuth.xmeta-->
+    <x:config>
+        <c:import from="/nop/core/xlib/filter.xlib"/>
+    </x:config>
+
+<!--LOC:[7:6:0:0]/nop/auth/model/NopAuthRoleDataAuth/_NopAuthRoleDataAuth.xmeta-->
+    <entityName>io.nop.auth.dao.entity.NopAuthRoleDataAuth</entityName>
+
+    <primaryKey>sid</primaryKey>
+
+    <keys/>
+
+    <props>
+        <prop name="sid" displayName="主键" propId="1" i18n-en:displayName="SID" tagSet="seq" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="false" internal="true" ui:show="X">
+            <schema type="java.lang.String" precision="32"/>
+        </prop>
+        <prop name="roleIds" displayName="角色ID" propId="2" i18n-en:displayName="ROLE_IDS" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema domain="roleIds" type="java.lang.String" precision="200"/>
+        </prop>
+        <prop name="bizObj" displayName="业务对象名" propId="3" i18n-en:displayName="Biz Object" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="100"/>
+        </prop>
+        <prop name="priority" displayName="优先级" propId="4" i18n-en:displayName="Priority" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.Integer"/>
+        </prop>
+        <prop name="filterConfig" displayName="业务过滤条件" propId="5" i18n-en:displayName="Filter Config" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema domain="xml-4k" type="java.lang.String" precision="4000"/>
+        </prop>
+        <prop name="whenConfig" displayName="权限应用条件" propId="6" i18n-en:displayName="When Config" queryable="true"
+              sortable="true" insertable="true" updatable="true">
+            <schema domain="xml-4k" type="java.lang.String" precision="4000"/>
+        </prop>
+        <prop name="description" displayName="描述" propId="7" i18n-en:displayName="Description" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="S">
+            <schema type="java.lang.String" precision="4000"/>
+        </prop>
+        <prop name="delFlag" displayName="删除标识" propId="8" i18n-en:displayName="Deleted" queryable="true"
+              sortable="true" insertable="false" updatable="true" internal="true" ui:show="X">
+            <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Byte"/>
+        </prop>
+        <prop name="version" displayName="数据版本" propId="9" i18n-en:displayName="Version" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" internal="true" ui:show="X">
+            <schema domain="version" type="java.lang.Integer"/>
+        </prop>
+        <prop name="createdBy" displayName="创建人" propId="10" i18n-en:displayName="Created By" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false">
+            <schema domain="createdBy" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="createTime" displayName="创建时间" propId="11" i18n-en:displayName="Create Time" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false">
+            <schema domain="createTime" type="java.sql.Timestamp"/>
+        </prop>
+        <prop name="updatedBy" displayName="修改人" propId="12" i18n-en:displayName="Updated By" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false">
+            <schema domain="updatedBy" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="updateTime" displayName="修改时间" propId="13" i18n-en:displayName="Update Time" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false">
+            <schema domain="updateTime" type="java.sql.Timestamp"/>
+        </prop>
+        <prop name="remark" displayName="备注" propId="14" i18n-en:displayName="Remark" queryable="true" sortable="true"
+              insertable="true" updatable="true" ui:show="S">
+            <schema domain="remark" type="java.lang.String" precision="200"/>
+        </prop>
+    </props>
+</meta>

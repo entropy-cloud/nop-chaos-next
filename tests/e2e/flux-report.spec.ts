@@ -1,12 +1,14 @@
 import { expect } from '@playwright/test';
 import { test, getEngineType } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 
 test.describe('flux report page', () => {
   test.beforeEach(async ({ page }) => {
     test.skip(getEngineType() !== 'flux', 'Flux-only test');
     await login(page, { mockMenuRoutes: false });
-    await expect(page.getByRole('button', { name: 'Flux Report' })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole('button', { name: 'Flux Report' })).toBeVisible({
+      timeout: 15_000,
+    });
     await page.getByRole('button', { name: 'Flux Report' }).click();
     await expect(page.getByText('Flux Report Demo')).toBeVisible({ timeout: 15_000 });
   });
@@ -42,7 +44,9 @@ test.describe('flux report page', () => {
   });
 
   test('view button opens detail dialog', async ({ page }) => {
-    const viewBtn = page.locator('tbody tr[data-slot="table-row"]').first()
+    const viewBtn = page
+      .locator('tbody tr[data-slot="table-row"]')
+      .first()
       .getByRole('button', { name: 'View' });
     await viewBtn.click();
     const dialog = page.locator('[data-slot="dialog-surface"]');

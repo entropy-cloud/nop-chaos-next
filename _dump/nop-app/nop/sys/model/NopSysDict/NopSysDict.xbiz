@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[2:2:0:0]/nop/sys/model/NopSysDict/NopSysDict.xbiz
+ @xmlns:xpl=[2:86:0:0]/nop/sys/model/NopSysDict/_NopSysDict.xbiz
+-->
+<biz xmlns:x="/nop/schema/xdsl.xdef" xmlns:xpl="xpl" xmlns:biz-gen="biz-gen" x:validated="true"
+     x:schema="/nop/schema/biz/xbiz.xdef">
+
+<!--LOC:[124:22:0:0]/nop/core/xlib/biz-gen.xlib#/nop/sys/model/NopSysDict/_NopSysDict.xbiz-->
+    <x:config>
+        <c:import id="bo.xlib" from="/nop/biz/xlib/bo.xlib"/>
+    </x:config>
+
+    <actions/>
+</biz>

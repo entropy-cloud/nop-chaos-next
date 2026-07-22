@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -8,31 +8,28 @@ async function expectSemanticColors(
   locator: import('@playwright/test').Locator,
   cssValues: { background: string; foreground: string },
 ) {
-  const styles = await locator.evaluate(
-    (el, { background, foreground }) => {
-      const buttonStyle = getComputedStyle(el);
-      const reference = document.createElement('div');
-      reference.style.color = foreground;
-      reference.style.backgroundColor = background;
-      reference.style.position = 'fixed';
-      reference.style.opacity = '0';
-      reference.style.pointerEvents = 'none';
-      document.body.appendChild(reference);
+  const styles = await locator.evaluate((el, { background, foreground }) => {
+    const buttonStyle = getComputedStyle(el);
+    const reference = document.createElement('div');
+    reference.style.color = foreground;
+    reference.style.backgroundColor = background;
+    reference.style.position = 'fixed';
+    reference.style.opacity = '0';
+    reference.style.pointerEvents = 'none';
+    document.body.appendChild(reference);
 
-      const referenceStyle = getComputedStyle(reference);
-      const result = {
-        color: buttonStyle.color,
-        backgroundColor: buttonStyle.backgroundColor,
-        expectedColor: referenceStyle.color,
-        expectedBackgroundColor: referenceStyle.backgroundColor,
-        className: el.className,
-      };
+    const referenceStyle = getComputedStyle(reference);
+    const result = {
+      color: buttonStyle.color,
+      backgroundColor: buttonStyle.backgroundColor,
+      expectedColor: referenceStyle.color,
+      expectedBackgroundColor: referenceStyle.backgroundColor,
+      className: el.className,
+    };
 
-      reference.remove();
-      return result;
-    },
-    cssValues,
-  );
+    reference.remove();
+    return result;
+  }, cssValues);
 
   expect(styles.backgroundColor).toBe(styles.expectedBackgroundColor);
   expect(styles.color).toBe(styles.expectedColor);
@@ -85,13 +82,17 @@ test('master-detail batch delete button uses semantic destructive colors', async
   });
 });
 
-test('ai workbench secondary button stays correct after AMIS preview loads global css', async ({ page }) => {
+test('ai workbench secondary button stays correct after AMIS preview loads global css', async ({
+  page,
+}) => {
   test.slow();
   await login(page, { username: 'admin', defaultPassword: '123456' });
 
   await page.getByRole('button', { name: 'Amis Preview' }).click();
   await expect(page).toHaveURL(/\/amis\/preview$/);
-  await expect(page.getByRole('button', { name: 'Trigger host toast' })).toBeVisible({ timeout: 30000 });
+  await expect(page.getByRole('button', { name: 'Trigger host toast' })).toBeVisible({
+    timeout: 30000,
+  });
 
   await page.getByRole('button', { name: 'AI Workbench' }).click();
   await expect(page).toHaveURL(/\/ai-workbench$/);

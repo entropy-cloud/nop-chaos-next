@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:x="/nop/schema/xdsl.xdef" xmlns:ioc="ioc" xmlns:feature="feature"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       x:validated="true" x:schema="/nop/schema/beans.xdef">
+
+    <import resource="_dao.beans.xml"/>
+
+    <bean id="nopFileStore" class="io.nop.file.dao.store.DaoResourceFileStore" ioc:default="true">
+        <property name="localDir" value="@cfg:nop.file.store-dir|/nop/file"/>
+    </bean>
+
+    <alias name="nopFileStore" alias="nopOrmEntityFileStore"/>
+</beans>

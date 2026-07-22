@@ -23,25 +23,25 @@ refresh_file_tarball_lock() {
 }
 
 for package_file in \
-  amis-6.13.1.tgz \
-  amis-core-6.13.1.tgz \
-  amis-formula-6.13.1.tgz \
-  amis-ui-6.13.1.tgz \
+  amis-6.13.1-fix.0.tgz \
+  amis-core-6.13.1-fix.0.tgz \
+  amis-formula-6.13.1-fix.0.tgz \
+  amis-ui-6.13.1-fix.0.tgz \
   office-viewer-0.3.14.tgz \
   nop-chaos-flux-0.1.0.tgz; do
   [[ -f "$REPO_ROOT/libs/$package_file" ]] || die "missing libs/$package_file"
 done
 
 refresh_file_tarball_lock "$REPO_ROOT/apps/main" "@nop-chaos/flux" "file:../../libs/nop-chaos-flux-0.1.0.tgz"
-refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis" "file:../../libs/amis-6.13.1.tgz"
-refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis-core" "file:../../libs/amis-core-6.13.1.tgz"
-refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis-formula" "file:../../libs/amis-formula-6.13.1.tgz"
-refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis-ui" "file:../../libs/amis-ui-6.13.1.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis" "file:../../libs/amis-6.13.1-fix.0.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis-core" "file:../../libs/amis-core-6.13.1-fix.0.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis-formula" "file:../../libs/amis-formula-6.13.1-fix.0.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/apps/main" "amis-ui" "file:../../libs/amis-ui-6.13.1-fix.0.tgz"
 refresh_file_tarball_lock "$REPO_ROOT/apps/main" "office-viewer" "file:../../libs/office-viewer-0.3.14.tgz"
 
-refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis" "file:../../libs/amis-6.13.1.tgz"
-refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis-core" "file:../../libs/amis-core-6.13.1.tgz"
-refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis-formula" "file:../../libs/amis-formula-6.13.1.tgz"
-refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis-ui" "file:../../libs/amis-ui-6.13.1.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis" "file:../../libs/amis-6.13.1-fix.0.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis-core" "file:../../libs/amis-core-6.13.1-fix.0.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis-formula" "file:../../libs/amis-formula-6.13.1-fix.0.tgz"
+refresh_file_tarball_lock "$REPO_ROOT/packages/amis-react" "amis-ui" "file:../../libs/amis-ui-6.13.1-fix.0.tgz"
 
 info "Done"

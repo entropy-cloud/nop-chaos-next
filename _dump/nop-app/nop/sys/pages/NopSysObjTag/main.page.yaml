@@ -1,0 +1,355 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopSysObjTag__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: sm
+      title: '@i18n:NopSysObjTag.forms.add.$title|新增-对象标签'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopSysObjTag__save/id'
+        body:
+        - type: group
+          id: row-bizObjId
+          body:
+            name: bizObjId
+            label: '@i18n:cell.NopSysObjTag.bizObjId,prop.label.NopSysObjTag.bizObjId|对象ID'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 50
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-bizObjName
+          body:
+            name: bizObjName
+            label: '@i18n:cell.NopSysObjTag.bizObjName,prop.label.NopSysObjTag.bizObjName|对象名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-tagId
+          body:
+            type: picker
+            valueField: sid
+            labelField: sid
+            size: lg
+            modalSize: lg
+            source:
+              valueField: sid
+              url: '@query:NopSysTag__findPage'
+              gql:selection: total,page,items{ id,sid,name,description,createdBy,createTime,updatedBy,updateTime
+                }
+              labelField: sid
+            pickerSchema:
+              name: crud-grid
+              syncLocation: false
+              footable: false
+              bulkActions: [
+                ]
+              itemActions: [
+                ]
+              headerToolbar:
+              - type: filter-toggler
+                id: filter-toggler
+              - type: bulkActions
+                id: bulkActions
+              - type: columns-toggler
+                align: right
+                id: columns-toggler
+              - type: reload
+                align: right
+                id: reload
+              footerToolbar:
+              - type: statistics
+                id: statistics
+              - type: switch-per-page
+                id: switch-per-page
+              - type: pagination
+                id: pagination
+              api:
+                url: '@query:NopSysTag__findPage'
+                gql:selection: total,page,items{ id,sid,name,description,createdBy,createTime,updatedBy,updateTime
+                  }
+              columns:
+              - name: sid
+                label: '@i18n:col.NopSysTag.sid,prop.label.NopSysTag.sid|主键'
+                sortable: true
+                toggled: true
+                fixed: left
+                type: static
+              - name: name
+                label: '@i18n:col.NopSysTag.name,prop.label.NopSysTag.name|名称'
+                sortable: true
+                toggled: true
+                type: static
+              - name: description
+                label: '@i18n:col.NopSysTag.description,prop.label.NopSysTag.description|描述'
+                sortable: true
+                toggled: true
+                type: static
+              - name: createdBy
+                label: '@i18n:col.NopSysTag.createdBy,prop.label.NopSysTag.createdBy|创建人'
+                sortable: true
+                toggled: true
+                type: static
+              - name: createTime
+                label: '@i18n:col.NopSysTag.createTime,prop.label.NopSysTag.createTime|创建时间'
+                sortable: true
+                width: 160px
+                toggled: true
+                type: static
+              - name: updatedBy
+                label: '@i18n:col.NopSysTag.updatedBy,prop.label.NopSysTag.updatedBy|修改人'
+                sortable: true
+                toggled: true
+                type: static
+              - name: updateTime
+                label: '@i18n:col.NopSysTag.updateTime,prop.label.NopSysTag.updateTime|修改时间'
+                sortable: true
+                width: 160px
+                toggled: true
+                type: static
+            name: tagId
+            label: '@i18n:cell.NopSysObjTag.tagId,prop.label.NopSysObjTag.tagId|标签ID'
+            required: true
+            joinValues: false
+            extractValue: true
+            multiple: false
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysObjTag__findPage'
+    gql:selection: total,page,items{ id,bizObjId,bizObjName,tagId,createdBy,createTime,updatedBy,updateTime
+      }
+  columns:
+  - name: bizObjId
+    label: '@i18n:col.NopSysObjTag.bizObjId,prop.label.NopSysObjTag.bizObjId|对象ID'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: bizObjName
+    label: '@i18n:col.NopSysObjTag.bizObjName,prop.label.NopSysObjTag.bizObjName|对象名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: tagId
+    label: '@i18n:col.NopSysObjTag.tagId,prop.label.NopSysObjTag.tagId|标签ID'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysObjTag.createdBy,prop.label.NopSysObjTag.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysObjTag.createTime,prop.label.NopSysObjTag.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysObjTag.updatedBy,prop.label.NopSysObjTag.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysObjTag.updateTime,prop.label.NopSysObjTag.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: md
+        title: '@i18n:NopSysObjTag.forms.view.$title|查看-对象标签'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopSysObjTag__get?id=$id'
+            gql:selection: id,bizObjId,bizObjName,tagId,createdBy,createTime,updatedBy,updateTime
+          body:
+          - type: group
+            id: row-bizObjId
+            body:
+              name: bizObjId
+              label: '@i18n:cell.NopSysObjTag.bizObjId,prop.label.NopSysObjTag.bizObjId|对象ID'
+              required: true
+              type: static
+          - type: group
+            id: row-bizObjName
+            body:
+              name: bizObjName
+              label: '@i18n:cell.NopSysObjTag.bizObjName,prop.label.NopSysObjTag.bizObjName|对象名'
+              required: true
+              type: static
+          - type: group
+            id: row-tagId
+            body:
+              name: tagId
+              label: '@i18n:cell.NopSysObjTag.tagId,prop.label.NopSysObjTag.tagId|标签ID'
+              required: true
+              type: static
+          - type: group
+            id: row-createdBy
+            body:
+              name: createdBy
+              label: '@i18n:cell.NopSysObjTag.createdBy,prop.label.NopSysObjTag.createdBy|创建人'
+              required: true
+              type: static
+          - type: group
+            id: row-createTime
+            body:
+              name: createTime
+              label: '@i18n:cell.NopSysObjTag.createTime,prop.label.NopSysObjTag.createTime|创建时间'
+              required: true
+              type: static
+          - type: group
+            id: row-updatedBy
+            body:
+              name: updatedBy
+              label: '@i18n:cell.NopSysObjTag.updatedBy,prop.label.NopSysObjTag.updatedBy|修改人'
+              required: true
+              type: static
+          - type: group
+            id: row-updateTime
+            body:
+              name: updateTime
+              label: '@i18n:cell.NopSysObjTag.updateTime,prop.label.NopSysObjTag.updateTime|修改时间'
+              required: true
+              type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: sm
+          title: '@i18n:NopSysObjTag.forms.edit.$title|编辑-对象标签'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopSysObjTag__get?id=$id'
+              gql:selection: id,bizObjId,bizObjName,tagId
+            api:
+              data:
+                bizObjId: $bizObjId
+                bizObjName: $bizObjName
+                tagId: $tagId
+              url: '@mutation:NopSysObjTag__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-bizObjId
+              body:
+                name: bizObjId
+                label: '@i18n:cell.NopSysObjTag.bizObjId,prop.label.NopSysObjTag.bizObjId|对象ID'
+                required: true
+                type: static
+            - type: group
+              id: row-bizObjName
+              body:
+                name: bizObjName
+                label: '@i18n:cell.NopSysObjTag.bizObjName,prop.label.NopSysObjTag.bizObjName|对象名'
+                required: true
+                type: static
+            - type: group
+              id: row-tagId
+              body:
+                name: tagId
+                label: '@i18n:cell.NopSysObjTag.tagId,prop.label.NopSysObjTag.tagId|标签ID'
+                required: true
+                type: static
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopSysObjTag__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button

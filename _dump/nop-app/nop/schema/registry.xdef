@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<registry xmlns:x="/nop/schema/xdsl.xdef" x:validated="true" x:schema="/nop/schema/xdef.xdef">
+
+    <models xdef:body-type="list" xdef:key-attr="name">
+        <model name="!xml-name" xdef:ref="register-model.xdef"/>
+    </models>
+</registry>

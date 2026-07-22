@@ -1,0 +1,126 @@
+type: picker
+valueField: id
+labelField: userName
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  labelField: userName
+  url: '@query:NopAuthUser__active_findPage'
+  gql:selection: total,page,items{ id,userId,userName,nickName,dept{deptName},deptId,gender,gender_label,phone,userType,userType_label,status,status_label
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  affixHeader: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthUser__active_findPage'
+    gql:selection: total,page,items{ id,userId,userName,nickName,dept{deptName},deptId,gender,gender_label,phone,userType,userType_label,status,status_label
+      }
+  labelTpl: ${userName}
+  filter:
+    id: crud-filter
+    mode: horizontal
+    rules: [
+      ]
+    body:
+    - type: group
+      id: row-userName-gender-status
+      body:
+      - name: filter_userName__contains
+        label: '@i18n:cell.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+        type: input-text
+        clearable: true
+      - name: filter_gender
+        label: '@i18n:cell.NopAuthUser.gender,prop.label.NopAuthUser.gender|性别'
+        type: select
+        searchable: true
+        clearable: true
+        multiple: false
+        source: '@dict:auth/gender'
+      - name: filter_status
+        label: '@i18n:cell.NopAuthUser.status,prop.label.NopAuthUser.status|用户状态'
+        type: select
+        searchable: true
+        clearable: true
+        multiple: false
+        source: '@dict:auth/user-status'
+    - type: group
+      id: row-nickName-phone
+      body:
+      - name: filter_nickName
+        label: '@i18n:cell.NopAuthUser.nickName,prop.label.NopAuthUser.nickName|昵称'
+        type: input-text
+        clearable: true
+      - name: filter_phone
+        label: '@i18n:cell.NopAuthUser.phone,prop.label.NopAuthUser.phone|电话'
+        type: input-text
+        clearable: true
+    actions:
+    - type: reset
+      label: '@i18n:common.reset'
+      id: reset-button
+    - type: submit
+      label: '@i18n:common.query'
+      level: primary
+      id: submit-button
+  columns:
+  - name: userName
+    label: '@i18n:col.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: nickName
+    label: '@i18n:col.NopAuthUser.nickName,prop.label.NopAuthUser.nickName|昵称'
+    sortable: true
+    toggled: true
+    type: static
+  - name: dept.deptName
+    label: '@i18n:col.NopAuthUser.deptId,prop.label.NopAuthUser.deptId|所属部门'
+    sortable: true
+    toggled: true
+    type: static
+  - name: gender_label
+    label: '@i18n:col.NopAuthUser.gender,prop.label.NopAuthUser.gender|性别'
+    sortable: true
+    toggled: true
+    type: static
+  - name: phone
+    label: '@i18n:col.NopAuthUser.phone,prop.label.NopAuthUser.phone|电话'
+    sortable: true
+    toggled: true
+    type: static
+  - name: userType_label
+    label: '@i18n:col.NopAuthUser.userType,prop.label.NopAuthUser.userType|用户类型'
+    sortable: true
+    toggled: true
+    type: static
+  - name: status_label
+    label: '@i18n:col.NopAuthUser.status,prop.label.NopAuthUser.status|用户状态'
+    sortable: true
+    toggled: true
+    type: static

@@ -25,10 +25,10 @@ info "Packing AMIS upstream tarballs"
 (cd "$AMIS_ROOT" && npm run pack:nop-chaos)
 
 for package_file in \
-  amis-6.13.1.tgz \
-  amis-core-6.13.1.tgz \
-  amis-formula-6.13.1.tgz \
-  amis-ui-6.13.1.tgz \
+  amis-6.13.1-fix.0.tgz \
+  amis-core-6.13.1-fix.0.tgz \
+  amis-formula-6.13.1-fix.0.tgz \
+  amis-ui-6.13.1-fix.0.tgz \
   office-viewer-0.3.14.tgz; do
   [[ -f "$AMIS_ROOT/dist-packages/$package_file" ]] || die "missing AMIS tarball: $AMIS_ROOT/dist-packages/$package_file"
   cp -f "$AMIS_ROOT/dist-packages/$package_file" "$LIBS_DIR/$package_file"

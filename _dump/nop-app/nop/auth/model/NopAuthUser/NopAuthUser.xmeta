@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[3:2:0:0]/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+ @xmlns:i18n-en=[2:88:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+-->
+<meta xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext" xmlns:xpl="xpl" ext:model="orm"
+      ext:icon="user-round" ext:web-renderer="" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen"
+      xmlns:biz="biz" displayName="用户" i18n-en:displayName="User" tagSet="mapper,no-tenant" xmlns:ui="ui"
+      xmlns:orm="orm" biz:allowGetDeleted="true" x:validated="true" x:schema="/nop/schema/xmeta.xdef">
+
+<!--LOC:[11:22:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta-->
+    <x:config>
+        <c:import from="/nop/core/xlib/filter.xlib"/>
+    </x:config>
+
+<!--LOC:[7:6:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta-->
+    <entityName>io.nop.auth.dao.entity.NopAuthUser</entityName>
+
+    <primaryKey>userId</primaryKey>
+
+    <displayProp>userName</displayProp>
+
+    <keys>
+        <key name="userNameKey" props="userName"/>
+    </keys>
+
+    <props>
+        <prop name="userId" displayName="用户ID" propId="1" i18n-en:displayName="User ID" tagSet="seq" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="false" internal="true" ui:show="X">
+            <schema domain="userId" type="java.lang.String" precision="50"/>
+        </prop>
+<!--LOC:[30:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @name=[7:21:0:0]/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+        <prop name="userName" displayName="用户名" propId="2" i18n-en:displayName="User Name" tagSet="disp"
+              mandatory="true" queryable="true" sortable="true" insertable="true" updatable="false" ui:show="C"
+              allowFilterOp="eq,contains" ui:filterOp="contains">
+            <schema domain="userName" type="java.lang.String" precision="50"/>
+        </prop>
+<!--LOC:[34:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @name=[9:21:0:0]/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+        <prop name="password" displayName="密码" propId="3" i18n-en:displayName="Password" tagSet="masked,var,not-pub"
+              mandatory="true" published="false" queryable="true" sortable="true" insertable="true" updatable="false"
+              internal="true" ui:show="X">
+<!--LOC:[37:14:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @type=[10:27:0:0]/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+            <schema type="String" precision="80" domain="password" maxLength="20"/>
+        </prop>
+        <prop name="salt" displayName="密码加盐" propId="4" i18n-en:displayName="Salt" tagSet="var,not-pub"
+              published="false" queryable="true" sortable="true" insertable="true" updatable="true" internal="true"
+              ui:show="X">
+            <schema type="java.lang.String" precision="32"/>
+        </prop>
+        <prop name="nickName" displayName="昵称" propId="5" i18n-en:displayName="Nick Name" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="deptId" displayName="所属部门" propId="6" i18n-en:displayName="Department" queryable="true"
+              sortable="true" insertable="true" updatable="true" ext:relation="dept">
+            <schema domain="deptId" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="openId" displayName="用户外部标识" propId="7" i18n-en:displayName="OpenId" tagSet="var" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true" ui:show="L">
+            <schema type="java.lang.String" precision="32"/>
+        </prop>
+        <prop name="relDeptId" displayName="相关部门" propId="8" i18n-en:displayName="Related Department" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L" ext:relation="relatedDept">
+            <schema domain="deptId" type="java.lang.String" precision="50"/>
+        </prop>
+<!--LOC:[60:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @name=[49:44:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+        <prop name="gender" displayName="性别" propId="9" i18n-en:displayName="Gender" mandatory="true" queryable="true"
+              sortable="true" insertable="true" updatable="true" graphql:labelProp="gender_label">
+            <schema type="java.lang.Integer" dict="auth/gender"/>
+        </prop>
+<!--LOC:[53:30:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta-->
+        <prop name="gender_label" displayName="性别" internal="true" graphql:dictName="auth/gender"
+              graphql:dictValueProp="gender">
+            <schema type="String"/>
+        </prop>
+<!--LOC:[64:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta-->
+        <prop name="avatar" displayName="头像" propId="10" i18n-en:displayName="Avatar" queryable="true" sortable="true"
+              insertable="true" updatable="true" internal="true" ui:show="X">
+            <schema stdDomain="file" domain="image" type="java.lang.String" precision="100"/>
+        </prop>
+<!--LOC:[68:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @name=[145:48:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+ @ui:maskPattern=[13:44:0:0]/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+        <prop name="email" displayName="邮件" propId="11" i18n-en:displayName="Email" queryable="true" sortable="true"
+              insertable="true" updatable="true" ui:show="L" ui:maskPattern="3*7">
+            <schema domain="email" type="java.lang.String" precision="100"/>
+<!--LOC:[146:34:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta-->
+            <transformOut>
+                                    value?.toString()?.$maskPattern("3*7")
+                                </transformOut>
+        </prop>
+<!--LOC:[72:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta-->
+        <prop name="emailVerified" displayName="邮件已验证" propId="12" i18n-en:displayName="Email Verified" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X" defaultValue="0">
+            <schema domain="boolFlag" type="java.lang.Byte"/>
+        </prop>
+        <prop name="phone" displayName="电话" propId="13" i18n-en:displayName="Phone" queryable="true" sortable="true"
+              insertable="true" updatable="true">
+            <schema domain="phone" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="phoneVerified" displayName="电话已验证" propId="14" i18n-en:displayName="Phone Verified" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X" defaultValue="0">
+            <schema domain="boolFlag" type="java.lang.Byte"/>
+        </prop>
+        <prop name="birthday" displayName="生日" propId="15" i18n-en:displayName="Birthday" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L">
+            <schema type="java.time.LocalDate"/>
+        </prop>
+<!--LOC:[88:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @name=[49:44:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+        <prop name="userType" displayName="用户类型" propId="16" i18n-en:displayName="User Type" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true" graphql:labelProp="userType_label">
+            <schema type="java.lang.Integer" dict="auth/user-type"/>
+        </prop>
+<!--LOC:[53:30:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta-->
+        <prop name="userType_label" displayName="用户类型" internal="true" graphql:dictName="auth/user-type"
+              graphql:dictValueProp="userType">
+            <schema type="String"/>
+        </prop>
+<!--LOC:[92:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @name=[49:44:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+        <prop name="status" displayName="用户状态" propId="17" i18n-en:displayName="Status" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true" graphql:labelProp="status_label">
+            <schema type="java.lang.Integer" dict="auth/user-status"/>
+        </prop>
+<!--LOC:[53:30:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta-->
+        <prop name="status_label" displayName="用户状态" internal="true" graphql:dictName="auth/user-status"
+              graphql:dictValueProp="status">
+            <schema type="String"/>
+        </prop>
+<!--LOC:[96:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta-->
+        <prop name="idType" displayName="证件类型" propId="18" i18n-en:displayName="ID Type" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L">
+            <schema type="java.lang.String" precision="10"/>
+        </prop>
+        <prop name="idNbr" displayName="证件号" propId="19" i18n-en:displayName="ID Number" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L">
+            <schema type="java.lang.String" precision="100"/>
+        </prop>
+        <prop name="expireAt" displayName="用户过期时间" propId="20" i18n-en:displayName="Expire At" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="pwdUpdateTime" displayName="上次密码更新时间" propId="21" i18n-en:displayName="Password Update Time"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="RL">
+            <schema type="java.time.LocalDateTime"/>
+        </prop>
+        <prop name="changePwdAtLogin" displayName="登陆后立刻修改密码" propId="22" i18n-en:displayName="Change Password At Logon"
+              queryable="true" sortable="true" insertable="true" updatable="true" ui:show="L" defaultValue="0">
+            <schema domain="boolFlag" type="java.lang.Byte" precision="1"/>
+        </prop>
+        <prop name="realName" displayName="真实姓名" propId="23" i18n-en:displayName="Real Name" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L">
+            <schema type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="managerId" displayName="上级" propId="24" i18n-en:displayName="Manager" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L" ext:relation="manager">
+            <schema type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="workNo" displayName="工号" propId="25" i18n-en:displayName="Work NO" queryable="true" sortable="true"
+              insertable="true" updatable="true" ui:show="L">
+            <schema type="java.lang.String" precision="100"/>
+        </prop>
+        <prop name="positionId" displayName="职务" propId="26" i18n-en:displayName="Position" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L" ext:relation="position">
+            <schema type="java.lang.String" precision="32"/>
+        </prop>
+        <prop name="telephone" displayName="座机" propId="27" i18n-en:displayName="Telephone" queryable="true"
+              sortable="true" insertable="true" updatable="true" ui:show="L">
+            <schema type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="clientId" displayName="设备ID" propId="28" i18n-en:displayName="Client Id" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X">
+            <schema type="java.lang.String" precision="100"/>
+        </prop>
+        <prop name="delFlag" displayName="删除标识" propId="29" i18n-en:displayName="Deleted" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="true" internal="true" ui:show="X">
+            <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Byte"/>
+        </prop>
+        <prop name="version" displayName="数据版本" propId="30" i18n-en:displayName="Version" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" internal="true" ui:show="X">
+            <schema domain="version" type="java.lang.Integer"/>
+        </prop>
+<!--LOC:[148:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @name=[49:44:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+        <prop name="tenantId" displayName="租户ID" propId="31" i18n-en:displayName="Tenant ID" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="true" internal="true" ui:show="X"
+              graphql:labelProp="tenantId_label">
+<!--LOC:[150:14:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta
+ @dict=[16:27:0:0]/nop/auth/model/NopAuthUser/NopAuthUser.xmeta
+-->
+            <schema type="java.lang.String" precision="32" dict="obj/NopAuthTenant"/>
+        </prop>
+<!--LOC:[53:30:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthUser/NopAuthUser.xmeta-->
+        <prop name="tenantId_label" displayName="租户ID" internal="true" graphql:dictName="obj/NopAuthTenant"
+              graphql:dictValueProp="tenantId">
+            <schema type="String"/>
+        </prop>
+<!--LOC:[152:10:0:0]/nop/auth/model/NopAuthUser/_NopAuthUser.xmeta-->
+        <prop name="createdBy" displayName="创建人" propId="32" i18n-en:displayName="Created By" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="L">
+            <schema domain="createdBy" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="createTime" displayName="创建时间" propId="33" i18n-en:displayName="Create Time" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="L">
+            <schema domain="createTime" type="java.sql.Timestamp"/>
+        </prop>
+        <prop name="updatedBy" displayName="修改人" propId="34" i18n-en:displayName="Updated By" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="L">
+            <schema domain="updatedBy" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="updateTime" displayName="修改时间" propId="35" i18n-en:displayName="Update Time" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="L">
+            <schema domain="updateTime" type="java.sql.Timestamp"/>
+        </prop>
+        <prop name="remark" displayName="备注" propId="36" i18n-en:displayName="Remark" queryable="true" sortable="true"
+              insertable="true" updatable="true" ui:show="SL">
+            <schema domain="remark" type="java.lang.String" precision="200"/>
+        </prop>
+        <prop name="extFlags" displayName="扩展标记" propId="37" i18n-en:displayName="Ext Flags" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X">
+            <schema domain="compactExt" type="java.lang.String" precision="10"/>
+        </prop>
+        <prop name="dept" displayName="部门" i18n-en:displayName="Department" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="deptId" ext:joinRightProp="deptId"
+              ext:joinRightDisplayProp="deptName" insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="NopAuthDept"/>
+        </prop>
+        <prop name="dept.deptName" displayName="部门" i18n-en:displayName="Department" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="relatedDept" displayName="部门" i18n-en:displayName="Related Department" tagSet="pub,ref-pub"
+              ext:kind="to-one" internal="true" queryable="true" ext:joinLeftProp="relDeptId" ext:joinRightProp="deptId"
+              ext:joinRightDisplayProp="deptName" insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="NopAuthDept"/>
+        </prop>
+        <prop name="relatedDept.deptName" displayName="部门" i18n-en:displayName="Related Department" internal="true"
+              queryable="true" sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="position" displayName="岗位" i18n-en:displayName="Position" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="positionId" ext:joinRightProp="positionId"
+              ext:joinRightDisplayProp="name" insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="NopAuthPosition"/>
+        </prop>
+        <prop name="position.name" displayName="岗位" i18n-en:displayName="Position" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="manager" displayName="上级" i18n-en:displayName="Manager" tagSet="pub,ref-pub" ext:kind="to-one"
+              internal="true" queryable="true" ext:joinLeftProp="managerId" ext:joinRightProp="userId"
+              ext:joinRightDisplayProp="userName" insertable="false" updatable="false" lazy="true">
+            <schema bizObjName="NopAuthUser"/>
+        </prop>
+        <prop name="manager.userName" displayName="上级" i18n-en:displayName="Manager" internal="true" queryable="true"
+              sortable="true" lazy="true">
+            <schema type="String"/>
+        </prop>
+        <prop name="roleMappings" displayName="角色映射" i18n-en:displayName="RoleMappings"
+              tagSet="pub,cascade-delete,insertable,updatable" ext:kind="to-many" internal="true"
+              ext:joinLeftProp="userId" ext:joinRightProp="userId" orm:manyToManyRefProp="roleId" insertable="true"
+              updatable="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthUserRole"/>
+            </schema>
+        </prop>
+        <prop name="substitutionMappings" displayName="代理人映射" i18n-en:displayName="Substitution Mappings"
+              tagSet="pub,cascade-delete" ext:kind="to-many" internal="true" ext:joinLeftProp="userId"
+              ext:joinRightProp="userId" insertable="false" updatable="false" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthUserSubstitution"/>
+            </schema>
+        </prop>
+        <prop name="groupMappings" displayName="分组映射" i18n-en:displayName="GroupMappings"
+              tagSet="pub,cascade-delete,insertable,updatable" ext:kind="to-many" internal="true"
+              ext:joinLeftProp="userId" ext:joinRightProp="userId" orm:manyToManyRefProp="groupId" insertable="true"
+              updatable="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthGroupUser"/>
+            </schema>
+        </prop>
+        <prop name="avatarComponentFileStatus" mapToProp="avatarComponent.fileStatus" internal="true" lazy="true">
+            <schema type="io.nop.api.core.beans.file.FileStatusBean"/>
+        </prop>
+        <prop name="relatedRoleList" displayName="relatedRoleList" insertable="true" updatable="true"
+              tagSet="pub,cascade-delete,insertable,updatable" depends="~roleMappings" internal="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthRole"/>
+            </schema>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefProps(
+                                entity["roleMappings"], "role");
+                        </getter>
+        </prop>
+        <prop name="relatedRoleList_ids" displayName="relatedRoleList" insertable="true" updatable="true"
+              graphql:labelProp="relatedRoleList_label" lazy="true"
+              ui:pickerUrl="/nop/auth/pages/NopAuthRole/picker.page.yaml" ui:refLabelProp="id" internal="true"
+              depends="~roleMappings">
+            <schema type="List&lt;String&gt;" domain="ref-ids"/>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefIds(
+                                 entity["roleMappings"], "role");
+                        </getter>
+            <setter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            OrmEntityHelper.setRefIds(
+                                 entity["roleMappings"], "role",value);
+                        </setter>
+        </prop>
+        <prop name="relatedRoleList_label" displayName="relatedRoleList" internal="true" depends="~roleMappings"
+              lazy="true">
+            <schema type="String"/>
+            <getter>
+                    import io.nop.orm.support.OrmEntityHelper;
+                    return OrmEntityHelper.getLabelForRefProps(
+                         entity["roleMappings"], "role");
+                </getter>
+        </prop>
+        <prop name="relatedGroupList" displayName="relatedGroupList" insertable="true" updatable="true"
+              tagSet="pub,cascade-delete,insertable,updatable" depends="~groupMappings" internal="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthGroup"/>
+            </schema>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefProps(
+                                entity["groupMappings"], "group");
+                        </getter>
+        </prop>
+        <prop name="relatedGroupList_ids" displayName="relatedGroupList" insertable="true" updatable="true"
+              graphql:labelProp="relatedGroupList_label" lazy="true"
+              ui:pickerUrl="/nop/auth/pages/NopAuthGroup/picker.page.yaml" ui:refLabelProp="id" internal="true"
+              depends="~groupMappings">
+            <schema type="List&lt;String&gt;" domain="ref-ids"/>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefIds(
+                                 entity["groupMappings"], "group");
+                        </getter>
+            <setter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            OrmEntityHelper.setRefIds(
+                                 entity["groupMappings"], "group",value);
+                        </setter>
+        </prop>
+        <prop name="relatedGroupList_label" displayName="relatedGroupList" internal="true" depends="~groupMappings"
+              lazy="true">
+            <schema type="String"/>
+            <getter>
+                    import io.nop.orm.support.OrmEntityHelper;
+                    return OrmEntityHelper.getLabelForRefProps(
+                         entity["groupMappings"], "group");
+                </getter>
+        </prop>
+    </props>
+</meta>

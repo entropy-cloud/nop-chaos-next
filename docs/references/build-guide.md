@@ -24,10 +24,10 @@
   nop-chaos-next/        # This repo (pnpm workspaces)
     apps/main/
     libs/
-      amis-6.13.1.tgz
-      amis-core-6.13.1.tgz
-      amis-formula-6.13.1.tgz
-      amis-ui-6.13.1.tgz
+      amis-6.13.1-fix.0.tgz
+      amis-core-6.13.1-fix.0.tgz
+      amis-formula-6.13.1-fix.0.tgz
+      amis-ui-6.13.1-fix.0.tgz
       office-viewer-0.3.14.tgz
       nop-chaos-flux-0.1.0.tgz
     packages/
@@ -78,11 +78,11 @@ These commands build upstream packages from the sibling repos and copy the resul
 Those copied `libs/*.tgz` files are expected to remain in git so other developers and CI can build this repo without first cloning sibling upstream repos.
 
 1. Clean `dist-packages/`
-2. Build `amis-formula` -> pack -> `amis-formula-6.13.1.tgz`
-3. Build `amis-core` -> pack -> `amis-core-6.13.1.tgz`
-4. Build `amis-ui` -> pack -> `amis-ui-6.13.1.tgz`
+2. Build `amis-formula` -> pack -> `amis-formula-6.13.1-fix.0.tgz`
+3. Build `amis-core` -> pack -> `amis-core-6.13.1-fix.0.tgz`
+4. Build `amis-ui` -> pack -> `amis-ui-6.13.1-fix.0.tgz`
 5. Build `office-viewer` -> pack -> `office-viewer-0.3.14.tgz`
-6. Build `amis` (custom build) -> pack -> `amis-6.13.1.tgz`
+6. Build `amis` (custom build) -> pack -> `amis-6.13.1-fix.0.tgz`
 
 All steps run with `SKIP_SDK_BUILD=1` to skip SDK generation.
 

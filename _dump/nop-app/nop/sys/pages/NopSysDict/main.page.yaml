@@ -1,0 +1,735 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopSysDict__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: sm
+      title: '@i18n:NopSysDict.forms.add.$title|新增-字典表'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopSysDict__save/id'
+        body:
+        - type: group
+          id: row-dictName
+          body:
+            name: dictName
+            label: '@i18n:cell.NopSysDict.dictName,prop.label.NopSysDict.dictName|字典名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 150
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-displayName
+          body:
+            name: displayName
+            label: '@i18n:cell.NopSysDict.displayName,prop.label.NopSysDict.displayName|显示名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 50
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-remark
+          body:
+            name: remark
+            label: '@i18n:cell.NopSysDict.remark,prop.label.NopSysDict.remark|备注'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 200
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysDict__findPage'
+    gql:selection: total,page,items{ id,sid,dictName,displayName,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  labelTpl: ${displayName}
+  columns:
+  - name: dictName
+    label: '@i18n:col.NopSysDict.dictName,prop.label.NopSysDict.dictName|字典名'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: displayName
+    label: '@i18n:col.NopSysDict.displayName,prop.label.NopSysDict.displayName|显示名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysDict.createdBy,prop.label.NopSysDict.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysDict.createTime,prop.label.NopSysDict.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysDict.updatedBy,prop.label.NopSysDict.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysDict.updateTime,prop.label.NopSysDict.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopSysDict.remark,prop.label.NopSysDict.remark|备注'
+    sortable: true
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: items-button
+      actionType: drawer
+      drawer:
+        type: page
+        name: dict-ref
+        body:
+          type: crud
+          name: crud-grid
+          autoFillHeight: true
+          syncLocation: false
+          footable: false
+          bulkActions:
+          - type: action
+            id: batch-delete-button
+            actionType: ajax
+            api:
+              url: '@mutation:NopSysDictOption__batchDelete?ids=$ids'
+            batch: true
+            confirmText: '@i18n:common.confirmBatchDelete'
+            label: '@i18n:common.batchDelete'
+          itemActions: [
+            ]
+          headerToolbar:
+          - type: filter-toggler
+            id: filter-toggler
+          - type: action
+            id: add-button
+            actionType: dialog
+            dialog:
+              type: page
+              name: add
+              size: md
+              title: '@i18n:NopSysDictOption.forms.add.$title|新增-字典明细'
+              body:
+                type: form
+                name: add
+                mode: horizontal
+                rules: [
+                  ]
+                api:
+                  url: '@mutation:NopSysDictOption__save/id'
+                body:
+                - type: group
+                  id: row-dictId
+                  body:
+                    name: dictId
+                    label: '@i18n:cell.NopSysDictOption.dictId,prop.label.NopSysDictOption.dictId|字典ID'
+                    required: true
+                    clearValueOnHidden: false
+                    type: hidden
+                - type: group
+                  id: row-label
+                  body:
+                    name: label
+                    label: '@i18n:cell.NopSysDictOption.label,prop.label.NopSysDictOption.label|显示名'
+                    required: true
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 150
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                - type: group
+                  id: row-value
+                  body:
+                    name: value
+                    label: '@i18n:cell.NopSysDictOption.value,prop.label.NopSysDictOption.value|值'
+                    required: true
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 150
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                - type: group
+                  id: row-codeValue
+                  body:
+                    name: codeValue
+                    label: '@i18n:cell.NopSysDictOption.codeValue,prop.label.NopSysDictOption.codeValue|内部编码'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 100
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                - type: group
+                  id: row-groupName
+                  body:
+                    name: groupName
+                    label: '@i18n:cell.NopSysDictOption.groupName,prop.label.NopSysDictOption.groupName|分组名'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 50
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                - type: group
+                  id: row-isInternal
+                  body:
+                    name: isInternal
+                    label: '@i18n:cell.NopSysDictOption.isInternal,prop.label.NopSysDictOption.isInternal|是否内部'
+                    required: true
+                    type: switch
+                    trueValue: 1
+                    falseValue: 0
+                    value: '0'
+                - type: group
+                  id: row-isDeprecated
+                  body:
+                    name: isDeprecated
+                    label: '@i18n:cell.NopSysDictOption.isDeprecated,prop.label.NopSysDictOption.isDeprecated|是否已废弃'
+                    required: true
+                    type: switch
+                    trueValue: 1
+                    falseValue: 0
+                    value: '0'
+                - type: group
+                  id: row-remark
+                  body:
+                    name: remark
+                    label: '@i18n:cell.NopSysDictOption.remark,prop.label.NopSysDictOption.remark|备注'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 200
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+            icon: fa fa-plus pull-left
+            label: '@i18n:common.add'
+            level: primary
+          - type: bulkActions
+            id: bulkActions
+          - type: columns-toggler
+            align: right
+            id: columns-toggler
+          - type: reload
+            align: right
+            id: reload
+          footerToolbar:
+          - type: statistics
+            id: statistics
+          - type: switch-per-page
+            id: switch-per-page
+          - type: pagination
+            id: pagination
+          api:
+            url: '@query:NopSysDictOption__findPage/total,page,items{ id,sid,dict{displayName},dictId,label,value,codeValue,groupName,isInternal,isDeprecated,createdBy,createTime,updatedBy,updateTime,remark
+              }?filter_dictId=${''$''}{dictId}'
+            gql:selection: total,page,items{ id,sid,dict{displayName},dictId,label,value,codeValue,groupName,isInternal,isDeprecated,createdBy,createTime,updatedBy,updateTime,remark
+              }
+          labelTpl: ${label}
+          columns:
+          - name: dict.displayName
+            label: '@i18n:col.NopSysDictOption.dictId,prop.label.NopSysDictOption.dictId|字典ID'
+            sortable: true
+            toggled: true
+            fixed: left
+            type: static
+          - name: label
+            label: '@i18n:col.NopSysDictOption.label,prop.label.NopSysDictOption.label|显示名'
+            sortable: true
+            toggled: true
+            type: static
+          - name: value
+            label: '@i18n:col.NopSysDictOption.value,prop.label.NopSysDictOption.value|值'
+            sortable: true
+            toggled: true
+            type: static
+          - name: codeValue
+            label: '@i18n:col.NopSysDictOption.codeValue,prop.label.NopSysDictOption.codeValue|内部编码'
+            sortable: true
+            toggled: true
+            type: static
+          - name: groupName
+            label: '@i18n:col.NopSysDictOption.groupName,prop.label.NopSysDictOption.groupName|分组名'
+            sortable: true
+            toggled: true
+            type: static
+          - name: isInternal
+            label: '@i18n:col.NopSysDictOption.isInternal,prop.label.NopSysDictOption.isInternal|是否内部'
+            sortable: true
+            toggled: true
+            align: center
+            type: static-mapping
+            map:
+              '1': <span class='label label-success'>{@i18n:common.yes}</span>
+              '0': <span class='label label-warning'>{@i18n:common.no}</span>
+              'true': <span class='label label-success'>{@i18n:common.yes}</span>
+              'false': <span class='label label-warning'>{@i18n:common.no}</span>
+              ? ''
+              : ''
+          - name: isDeprecated
+            label: '@i18n:col.NopSysDictOption.isDeprecated,prop.label.NopSysDictOption.isDeprecated|是否已废弃'
+            sortable: true
+            toggled: true
+            align: center
+            type: static-mapping
+            map:
+              '1': <span class='label label-success'>{@i18n:common.yes}</span>
+              '0': <span class='label label-warning'>{@i18n:common.no}</span>
+              'true': <span class='label label-success'>{@i18n:common.yes}</span>
+              'false': <span class='label label-warning'>{@i18n:common.no}</span>
+              ? ''
+              : ''
+          - name: createdBy
+            label: '@i18n:col.NopSysDictOption.createdBy,prop.label.NopSysDictOption.createdBy|创建人'
+            sortable: true
+            toggled: true
+            type: static
+          - name: createTime
+            label: '@i18n:col.NopSysDictOption.createTime,prop.label.NopSysDictOption.createTime|创建时间'
+            sortable: true
+            width: 160px
+            toggled: true
+            type: static
+          - name: updatedBy
+            label: '@i18n:col.NopSysDictOption.updatedBy,prop.label.NopSysDictOption.updatedBy|修改人'
+            sortable: true
+            toggled: true
+            type: static
+          - name: updateTime
+            label: '@i18n:col.NopSysDictOption.updateTime,prop.label.NopSysDictOption.updateTime|修改时间'
+            sortable: true
+            width: 160px
+            toggled: true
+            type: static
+          - name: remark
+            label: '@i18n:col.NopSysDictOption.remark,prop.label.NopSysDictOption.remark|备注'
+            sortable: true
+            toggled: true
+            type: static
+          - type: operation
+            label: '@i18n:common.operation'
+            id: operation
+            width: 140
+            toggled: true
+            fixed: right
+            labelClassName: text-center
+            buttons:
+            - type: action
+              id: row-view-button
+              actionType: dialog
+              dialog:
+                type: page
+                name: view
+                size: md
+                title: '@i18n:NopSysDictOption.forms.view.$title|查看-字典明细'
+                body:
+                  type: form
+                  name: view
+                  mode: horizontal
+                  rules: [
+                    ]
+                  initApi:
+                    url: '@query:NopSysDictOption__get?id=$id'
+                    gql:selection: id,sid,dict{displayName},dictId,label,value,codeValue,groupName,isInternal,isDeprecated,createdBy,createTime,updatedBy,updateTime,remark
+                  body:
+                  - type: group
+                    id: row-dictId-label
+                    body:
+                    - name: dict.displayName
+                      label: '@i18n:cell.NopSysDictOption.dictId,prop.label.NopSysDictOption.dictId|字典ID'
+                      required: true
+                      type: static
+                    - name: label
+                      label: '@i18n:cell.NopSysDictOption.label,prop.label.NopSysDictOption.label|显示名'
+                      required: true
+                      type: static
+                  - type: group
+                    id: row-value-codeValue
+                    body:
+                    - name: value
+                      label: '@i18n:cell.NopSysDictOption.value,prop.label.NopSysDictOption.value|值'
+                      required: true
+                      type: static
+                    - name: codeValue
+                      label: '@i18n:cell.NopSysDictOption.codeValue,prop.label.NopSysDictOption.codeValue|内部编码'
+                      type: static
+                  - type: group
+                    id: row-groupName-isInternal
+                    body:
+                    - name: groupName
+                      label: '@i18n:cell.NopSysDictOption.groupName,prop.label.NopSysDictOption.groupName|分组名'
+                      type: static
+                    - name: isInternal
+                      label: '@i18n:cell.NopSysDictOption.isInternal,prop.label.NopSysDictOption.isInternal|是否内部'
+                      required: true
+                      type: static-mapping
+                      map:
+                        '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                        '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                        'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                        'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                        ? ''
+                        : ''
+                  - type: group
+                    id: row-isDeprecated-createdBy
+                    body:
+                    - name: isDeprecated
+                      label: '@i18n:cell.NopSysDictOption.isDeprecated,prop.label.NopSysDictOption.isDeprecated|是否已废弃'
+                      required: true
+                      type: static-mapping
+                      map:
+                        '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                        '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                        'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                        'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                        ? ''
+                        : ''
+                    - name: createdBy
+                      label: '@i18n:cell.NopSysDictOption.createdBy,prop.label.NopSysDictOption.createdBy|创建人'
+                      required: true
+                      type: static
+                  - type: group
+                    id: row-createTime-updatedBy
+                    body:
+                    - name: createTime
+                      label: '@i18n:cell.NopSysDictOption.createTime,prop.label.NopSysDictOption.createTime|创建时间'
+                      required: true
+                      type: static
+                    - name: updatedBy
+                      label: '@i18n:cell.NopSysDictOption.updatedBy,prop.label.NopSysDictOption.updatedBy|修改人'
+                      required: true
+                      type: static
+                  - type: group
+                    id: row-updateTime-remark
+                    body:
+                    - name: updateTime
+                      label: '@i18n:cell.NopSysDictOption.updateTime,prop.label.NopSysDictOption.updateTime|修改时间'
+                      required: true
+                      type: static
+                    - name: remark
+                      label: '@i18n:cell.NopSysDictOption.remark,prop.label.NopSysDictOption.remark|备注'
+                      type: static
+              label: '@i18n:common.view'
+              level: primary
+            - type: dropdown-button
+              id: row-more-button
+              label: '@i18n:common.more'
+              level: primary
+              buttons:
+              - actionType: dialog
+                dialog:
+                  type: page
+                  name: update
+                  size: md
+                  title: '@i18n:NopSysDictOption.forms.edit.$title|编辑-字典明细'
+                  body:
+                    type: form
+                    name: edit
+                    mode: horizontal
+                    rules: [
+                      ]
+                    initApi:
+                      url: '@query:NopSysDictOption__get?id=$id'
+                      gql:selection: id,sid,dict{displayName},dictId,label,value,codeValue,groupName,isInternal,isDeprecated,remark
+                    api:
+                      data:
+                        dictId: $dictId
+                        label: $label
+                        value: $value
+                        codeValue: $codeValue
+                        groupName: $groupName
+                        isInternal: $isInternal
+                        isDeprecated: $isDeprecated
+                        remark: $remark
+                      url: '@mutation:NopSysDictOption__update/id?id=$id'
+                      withFormData: true
+                    body:
+                    - type: group
+                      id: row-dictId
+                      body:
+                        name: dict.displayName
+                        label: '@i18n:cell.NopSysDictOption.dictId,prop.label.NopSysDictOption.dictId|字典ID'
+                        required: true
+                        type: static
+                    - type: group
+                      id: row-label
+                      body:
+                        name: label
+                        label: '@i18n:cell.NopSysDictOption.label,prop.label.NopSysDictOption.label|显示名'
+                        required: true
+                        type: input-text
+                        clearable: true
+                        validations:
+                          maxLength: 150
+                          minLength: null
+                          matchRegexp: null
+                        transform:
+                          upperCase: null
+                          lowerCase: null
+                    - type: group
+                      id: row-value
+                      body:
+                        name: value
+                        label: '@i18n:cell.NopSysDictOption.value,prop.label.NopSysDictOption.value|值'
+                        required: true
+                        type: input-text
+                        clearable: true
+                        validations:
+                          maxLength: 150
+                          minLength: null
+                          matchRegexp: null
+                        transform:
+                          upperCase: null
+                          lowerCase: null
+                    - type: group
+                      id: row-codeValue
+                      body:
+                        name: codeValue
+                        label: '@i18n:cell.NopSysDictOption.codeValue,prop.label.NopSysDictOption.codeValue|内部编码'
+                        type: input-text
+                        clearable: true
+                        validations:
+                          maxLength: 100
+                          minLength: null
+                          matchRegexp: null
+                        transform:
+                          upperCase: null
+                          lowerCase: null
+                    - type: group
+                      id: row-groupName
+                      body:
+                        name: groupName
+                        label: '@i18n:cell.NopSysDictOption.groupName,prop.label.NopSysDictOption.groupName|分组名'
+                        type: input-text
+                        clearable: true
+                        validations:
+                          maxLength: 50
+                          minLength: null
+                          matchRegexp: null
+                        transform:
+                          upperCase: null
+                          lowerCase: null
+                    - type: group
+                      id: row-isInternal
+                      body:
+                        name: isInternal
+                        label: '@i18n:cell.NopSysDictOption.isInternal,prop.label.NopSysDictOption.isInternal|是否内部'
+                        required: true
+                        type: switch
+                        trueValue: 1
+                        falseValue: 0
+                        value: 0
+                    - type: group
+                      id: row-isDeprecated
+                      body:
+                        name: isDeprecated
+                        label: '@i18n:cell.NopSysDictOption.isDeprecated,prop.label.NopSysDictOption.isDeprecated|是否已废弃'
+                        required: true
+                        type: switch
+                        trueValue: 1
+                        falseValue: 0
+                        value: 0
+                    - type: group
+                      id: row-remark
+                      body:
+                        name: remark
+                        label: '@i18n:cell.NopSysDictOption.remark,prop.label.NopSysDictOption.remark|备注'
+                        type: input-text
+                        clearable: true
+                        validations:
+                          maxLength: 200
+                          minLength: null
+                          matchRegexp: null
+                        transform:
+                          upperCase: null
+                          lowerCase: null
+                id: row-update-button
+                label: '@i18n:common.edit'
+                type: button
+              - actionType: ajax
+                api:
+                  url: '@mutation:NopSysDictOption__delete?id=$id'
+                confirmText: '@i18n:common.confirmDelete'
+                id: row-delete-button
+                label: '@i18n:common.delete'
+                type: button
+        size: lg
+        data:
+          dictId: ${'$'}{id}
+          dictName: ${'$'}{displayName}
+      label: 条目
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: sm
+          title: '@i18n:NopSysDict.forms.edit.$title|编辑-字典表'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopSysDict__get?id=$id'
+              gql:selection: id,sid,dictName,displayName,remark
+            api:
+              data:
+                dictName: $dictName
+                displayName: $displayName
+                remark: $remark
+              url: '@mutation:NopSysDict__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-dictName
+              body:
+                name: dictName
+                label: '@i18n:cell.NopSysDict.dictName,prop.label.NopSysDict.dictName|字典名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 150
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-displayName
+              body:
+                name: displayName
+                label: '@i18n:cell.NopSysDict.displayName,prop.label.NopSysDict.displayName|显示名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 50
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopSysDict.remark,prop.label.NopSysDict.remark|备注'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 200
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopSysDict__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button

@@ -1,0 +1,581 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopSysServiceInstance__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: md
+      title: '@i18n:NopSysServiceInstance.forms.add.$title|新增-服务实例'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopSysServiceInstance__save/id'
+        body:
+        - type: group
+          id: row-instanceId-serviceName
+          body:
+          - name: instanceId
+            label: '@i18n:cell.NopSysServiceInstance.instanceId,prop.label.NopSysServiceInstance.instanceId|服务实例ID'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 50
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+          - name: serviceName
+            label: '@i18n:cell.NopSysServiceInstance.serviceName,prop.label.NopSysServiceInstance.serviceName|服务名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-clusterName-groupName
+          body:
+          - name: clusterName
+            label: '@i18n:cell.NopSysServiceInstance.clusterName,prop.label.NopSysServiceInstance.clusterName|集群名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+          - name: groupName
+            label: '@i18n:cell.NopSysServiceInstance.groupName,prop.label.NopSysServiceInstance.groupName|分组名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-tagsText-serverAddr
+          body:
+          - name: tagsText
+            label: '@i18n:cell.NopSysServiceInstance.tagsText,prop.label.NopSysServiceInstance.tagsText|标签'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+          - name: serverAddr
+            label: '@i18n:cell.NopSysServiceInstance.serverAddr,prop.label.NopSysServiceInstance.serverAddr|服务地址'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 20
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-serverPort-weight
+          body:
+          - name: serverPort
+            label: '@i18n:cell.NopSysServiceInstance.serverPort,prop.label.NopSysServiceInstance.serverPort|服务端口'
+            required: true
+            type: input-text
+            validations: isInt
+          - name: weight
+            label: '@i18n:cell.NopSysServiceInstance.weight,prop.label.NopSysServiceInstance.weight|权重'
+            required: true
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-metaData-isHealthy
+          body:
+          - name: metaData
+            label: '@i18n:cell.NopSysServiceInstance.metaData,prop.label.NopSysServiceInstance.metaData|扩展数据'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 1000
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+          - name: isHealthy
+            label: '@i18n:cell.NopSysServiceInstance.isHealthy,prop.label.NopSysServiceInstance.isHealthy|是否健康'
+            required: true
+            type: switch
+            trueValue: 1
+            falseValue: 0
+            value: 0
+        - type: group
+          id: row-isEnabled-isEphemeral
+          body:
+          - name: isEnabled
+            label: '@i18n:cell.NopSysServiceInstance.isEnabled,prop.label.NopSysServiceInstance.isEnabled|是否启用'
+            required: true
+            type: switch
+            trueValue: 1
+            falseValue: 0
+            value: 0
+          - name: isEphemeral
+            label: '@i18n:cell.NopSysServiceInstance.isEphemeral,prop.label.NopSysServiceInstance.isEphemeral|是否临时'
+            required: true
+            type: switch
+            trueValue: 1
+            falseValue: 0
+            value: 0
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysServiceInstance__findPage'
+    gql:selection: total,page,items{ id,instanceId,serviceName,clusterName,groupName,tagsText,serverAddr,serverPort,weight,metaData,isHealthy,isEnabled,isEphemeral,createTime,updateTime
+      }
+  columns:
+  - name: instanceId
+    label: '@i18n:col.NopSysServiceInstance.instanceId,prop.label.NopSysServiceInstance.instanceId|服务实例ID'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: serviceName
+    label: '@i18n:col.NopSysServiceInstance.serviceName,prop.label.NopSysServiceInstance.serviceName|服务名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: clusterName
+    label: '@i18n:col.NopSysServiceInstance.clusterName,prop.label.NopSysServiceInstance.clusterName|集群名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: groupName
+    label: '@i18n:col.NopSysServiceInstance.groupName,prop.label.NopSysServiceInstance.groupName|分组名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: tagsText
+    label: '@i18n:col.NopSysServiceInstance.tagsText,prop.label.NopSysServiceInstance.tagsText|标签'
+    sortable: true
+    toggled: true
+    type: static
+  - name: serverAddr
+    label: '@i18n:col.NopSysServiceInstance.serverAddr,prop.label.NopSysServiceInstance.serverAddr|服务地址'
+    sortable: true
+    toggled: true
+    type: static
+  - name: serverPort
+    label: '@i18n:col.NopSysServiceInstance.serverPort,prop.label.NopSysServiceInstance.serverPort|服务端口'
+    sortable: true
+    toggled: true
+    type: static
+  - name: weight
+    label: '@i18n:col.NopSysServiceInstance.weight,prop.label.NopSysServiceInstance.weight|权重'
+    sortable: true
+    toggled: true
+    type: static
+  - name: metaData
+    label: '@i18n:col.NopSysServiceInstance.metaData,prop.label.NopSysServiceInstance.metaData|扩展数据'
+    sortable: true
+    toggled: true
+    type: static
+  - name: isHealthy
+    label: '@i18n:col.NopSysServiceInstance.isHealthy,prop.label.NopSysServiceInstance.isHealthy|是否健康'
+    sortable: true
+    toggled: true
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: isEnabled
+    label: '@i18n:col.NopSysServiceInstance.isEnabled,prop.label.NopSysServiceInstance.isEnabled|是否启用'
+    sortable: true
+    toggled: true
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: isEphemeral
+    label: '@i18n:col.NopSysServiceInstance.isEphemeral,prop.label.NopSysServiceInstance.isEphemeral|是否临时'
+    sortable: true
+    toggled: true
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: createTime
+    label: '@i18n:col.NopSysServiceInstance.createTime,prop.label.NopSysServiceInstance.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysServiceInstance.updateTime,prop.label.NopSysServiceInstance.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: md
+        title: '@i18n:NopSysServiceInstance.forms.view.$title|查看-服务实例'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopSysServiceInstance__get?id=$id'
+            gql:selection: id,instanceId,serviceName,clusterName,groupName,tagsText,serverAddr,serverPort,weight,metaData,isHealthy,isEnabled,isEphemeral,createTime,updateTime
+          body:
+          - type: group
+            id: row-instanceId-serviceName
+            body:
+            - name: instanceId
+              label: '@i18n:cell.NopSysServiceInstance.instanceId,prop.label.NopSysServiceInstance.instanceId|服务实例ID'
+              required: true
+              type: static
+            - name: serviceName
+              label: '@i18n:cell.NopSysServiceInstance.serviceName,prop.label.NopSysServiceInstance.serviceName|服务名'
+              required: true
+              type: static
+          - type: group
+            id: row-clusterName-groupName
+            body:
+            - name: clusterName
+              label: '@i18n:cell.NopSysServiceInstance.clusterName,prop.label.NopSysServiceInstance.clusterName|集群名'
+              required: true
+              type: static
+            - name: groupName
+              label: '@i18n:cell.NopSysServiceInstance.groupName,prop.label.NopSysServiceInstance.groupName|分组名'
+              required: true
+              type: static
+          - type: group
+            id: row-tagsText-serverAddr
+            body:
+            - name: tagsText
+              label: '@i18n:cell.NopSysServiceInstance.tagsText,prop.label.NopSysServiceInstance.tagsText|标签'
+              type: static
+            - name: serverAddr
+              label: '@i18n:cell.NopSysServiceInstance.serverAddr,prop.label.NopSysServiceInstance.serverAddr|服务地址'
+              required: true
+              type: static
+          - type: group
+            id: row-serverPort-weight
+            body:
+            - name: serverPort
+              label: '@i18n:cell.NopSysServiceInstance.serverPort,prop.label.NopSysServiceInstance.serverPort|服务端口'
+              required: true
+              type: static
+            - name: weight
+              label: '@i18n:cell.NopSysServiceInstance.weight,prop.label.NopSysServiceInstance.weight|权重'
+              required: true
+              type: static
+          - type: group
+            id: row-metaData-isHealthy
+            body:
+            - name: metaData
+              label: '@i18n:cell.NopSysServiceInstance.metaData,prop.label.NopSysServiceInstance.metaData|扩展数据'
+              type: static
+            - name: isHealthy
+              label: '@i18n:cell.NopSysServiceInstance.isHealthy,prop.label.NopSysServiceInstance.isHealthy|是否健康'
+              required: true
+              type: static-mapping
+              map:
+                '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                ? ''
+                : ''
+          - type: group
+            id: row-isEnabled-isEphemeral
+            body:
+            - name: isEnabled
+              label: '@i18n:cell.NopSysServiceInstance.isEnabled,prop.label.NopSysServiceInstance.isEnabled|是否启用'
+              required: true
+              type: static-mapping
+              map:
+                '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                ? ''
+                : ''
+            - name: isEphemeral
+              label: '@i18n:cell.NopSysServiceInstance.isEphemeral,prop.label.NopSysServiceInstance.isEphemeral|是否临时'
+              required: true
+              type: static-mapping
+              map:
+                '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                ? ''
+                : ''
+          - type: group
+            id: row-createTime-updateTime
+            body:
+            - name: createTime
+              label: '@i18n:cell.NopSysServiceInstance.createTime,prop.label.NopSysServiceInstance.createTime|创建时间'
+              required: true
+              type: static
+            - name: updateTime
+              label: '@i18n:cell.NopSysServiceInstance.updateTime,prop.label.NopSysServiceInstance.updateTime|修改时间'
+              required: true
+              type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: md
+          title: '@i18n:NopSysServiceInstance.forms.edit.$title|编辑-服务实例'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopSysServiceInstance__get?id=$id'
+              gql:selection: id,instanceId,serviceName,clusterName,groupName,tagsText,serverAddr,serverPort,weight,metaData,isHealthy,isEnabled,isEphemeral
+            api:
+              data:
+                instanceId: $instanceId
+                serviceName: $serviceName
+                clusterName: $clusterName
+                groupName: $groupName
+                tagsText: $tagsText
+                serverAddr: $serverAddr
+                serverPort: $serverPort
+                weight: $weight
+                metaData: $metaData
+                isHealthy: $isHealthy
+                isEnabled: $isEnabled
+                isEphemeral: $isEphemeral
+              url: '@mutation:NopSysServiceInstance__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-instanceId-serviceName
+              body:
+              - name: instanceId
+                label: '@i18n:cell.NopSysServiceInstance.instanceId,prop.label.NopSysServiceInstance.instanceId|服务实例ID'
+                required: true
+                type: static
+              - name: serviceName
+                label: '@i18n:cell.NopSysServiceInstance.serviceName,prop.label.NopSysServiceInstance.serviceName|服务名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-clusterName-groupName
+              body:
+              - name: clusterName
+                label: '@i18n:cell.NopSysServiceInstance.clusterName,prop.label.NopSysServiceInstance.clusterName|集群名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+              - name: groupName
+                label: '@i18n:cell.NopSysServiceInstance.groupName,prop.label.NopSysServiceInstance.groupName|分组名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-tagsText-serverAddr
+              body:
+              - name: tagsText
+                label: '@i18n:cell.NopSysServiceInstance.tagsText,prop.label.NopSysServiceInstance.tagsText|标签'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+              - name: serverAddr
+                label: '@i18n:cell.NopSysServiceInstance.serverAddr,prop.label.NopSysServiceInstance.serverAddr|服务地址'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 20
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-serverPort-weight
+              body:
+              - name: serverPort
+                label: '@i18n:cell.NopSysServiceInstance.serverPort,prop.label.NopSysServiceInstance.serverPort|服务端口'
+                required: true
+                type: input-text
+                validations: isInt
+              - name: weight
+                label: '@i18n:cell.NopSysServiceInstance.weight,prop.label.NopSysServiceInstance.weight|权重'
+                required: true
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-metaData-isHealthy
+              body:
+              - name: metaData
+                label: '@i18n:cell.NopSysServiceInstance.metaData,prop.label.NopSysServiceInstance.metaData|扩展数据'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 1000
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+              - name: isHealthy
+                label: '@i18n:cell.NopSysServiceInstance.isHealthy,prop.label.NopSysServiceInstance.isHealthy|是否健康'
+                required: true
+                type: switch
+                trueValue: 1
+                falseValue: 0
+                value: 0
+            - type: group
+              id: row-isEnabled-isEphemeral
+              body:
+              - name: isEnabled
+                label: '@i18n:cell.NopSysServiceInstance.isEnabled,prop.label.NopSysServiceInstance.isEnabled|是否启用'
+                required: true
+                type: switch
+                trueValue: 1
+                falseValue: 0
+                value: 0
+              - name: isEphemeral
+                label: '@i18n:cell.NopSysServiceInstance.isEphemeral,prop.label.NopSysServiceInstance.isEphemeral|是否临时'
+                required: true
+                type: switch
+                trueValue: 1
+                falseValue: 0
+                value: 0
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopSysServiceInstance__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button

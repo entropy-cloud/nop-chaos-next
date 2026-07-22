@@ -1,0 +1,436 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopSysCompactExtField__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: md
+      title: '@i18n:NopSysCompactExtField.forms.add.$title|新增-紧凑扩展字段配置'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopSysCompactExtField__save/id'
+        body:
+        - type: group
+          id: row-entityName
+          body:
+            name: entityName
+            label: '@i18n:cell.NopSysCompactExtField.entityName,prop.label.NopSysCompactExtField.entityName|实体名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 200
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-propName
+          body:
+            name: propName
+            label: '@i18n:cell.NopSysCompactExtField.propName,prop.label.NopSysCompactExtField.propName|属性名'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-position
+          body:
+            name: position
+            label: '@i18n:cell.NopSysCompactExtField.position,prop.label.NopSysCompactExtField.position|位置'
+            required: true
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-displayName
+          body:
+            name: displayName
+            label: '@i18n:cell.NopSysCompactExtField.displayName,prop.label.NopSysCompactExtField.displayName|显示名'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 100
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-dictName
+          body:
+            name: dictName
+            label: '@i18n:cell.NopSysCompactExtField.dictName,prop.label.NopSysCompactExtField.dictName|字典名'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 150
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-defaultValue
+          body:
+            name: defaultValue
+            label: '@i18n:cell.NopSysCompactExtField.defaultValue,prop.label.NopSysCompactExtField.defaultValue|默认值'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 10
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-remark
+          body:
+            name: remark
+            label: '@i18n:cell.NopSysCompactExtField.remark,prop.label.NopSysCompactExtField.remark|备注'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 200
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysCompactExtField__findPage'
+    gql:selection: total,page,items{ id,sid,entityName,propName,position,displayName,dictName,defaultValue,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  columns:
+  - name: entityName
+    label: '@i18n:col.NopSysCompactExtField.entityName,prop.label.NopSysCompactExtField.entityName|实体名'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: propName
+    label: '@i18n:col.NopSysCompactExtField.propName,prop.label.NopSysCompactExtField.propName|属性名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: position
+    label: '@i18n:col.NopSysCompactExtField.position,prop.label.NopSysCompactExtField.position|位置'
+    sortable: true
+    toggled: true
+    type: static
+  - name: displayName
+    label: '@i18n:col.NopSysCompactExtField.displayName,prop.label.NopSysCompactExtField.displayName|显示名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: dictName
+    label: '@i18n:col.NopSysCompactExtField.dictName,prop.label.NopSysCompactExtField.dictName|字典名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: defaultValue
+    label: '@i18n:col.NopSysCompactExtField.defaultValue,prop.label.NopSysCompactExtField.defaultValue|默认值'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysCompactExtField.createdBy,prop.label.NopSysCompactExtField.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysCompactExtField.createTime,prop.label.NopSysCompactExtField.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysCompactExtField.updatedBy,prop.label.NopSysCompactExtField.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysCompactExtField.updateTime,prop.label.NopSysCompactExtField.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopSysCompactExtField.remark,prop.label.NopSysCompactExtField.remark|备注'
+    sortable: true
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: md
+        title: '@i18n:NopSysCompactExtField.forms.view.$title|查看-紧凑扩展字段配置'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopSysCompactExtField__get?id=$id'
+            gql:selection: id,sid,entityName,propName,position,displayName,dictName,defaultValue,createdBy,createTime,updatedBy,updateTime,remark
+          body:
+          - type: group
+            id: row-entityName-propName
+            body:
+            - name: entityName
+              label: '@i18n:cell.NopSysCompactExtField.entityName,prop.label.NopSysCompactExtField.entityName|实体名'
+              required: true
+              type: static
+            - name: propName
+              label: '@i18n:cell.NopSysCompactExtField.propName,prop.label.NopSysCompactExtField.propName|属性名'
+              required: true
+              type: static
+          - type: group
+            id: row-position-displayName
+            body:
+            - name: position
+              label: '@i18n:cell.NopSysCompactExtField.position,prop.label.NopSysCompactExtField.position|位置'
+              required: true
+              type: static
+            - name: displayName
+              label: '@i18n:cell.NopSysCompactExtField.displayName,prop.label.NopSysCompactExtField.displayName|显示名'
+              type: static
+          - type: group
+            id: row-dictName-defaultValue
+            body:
+            - name: dictName
+              label: '@i18n:cell.NopSysCompactExtField.dictName,prop.label.NopSysCompactExtField.dictName|字典名'
+              type: static
+            - name: defaultValue
+              label: '@i18n:cell.NopSysCompactExtField.defaultValue,prop.label.NopSysCompactExtField.defaultValue|默认值'
+              type: static
+          - type: group
+            id: row-createdBy-createTime
+            body:
+            - name: createdBy
+              label: '@i18n:cell.NopSysCompactExtField.createdBy,prop.label.NopSysCompactExtField.createdBy|创建人'
+              required: true
+              type: static
+            - name: createTime
+              label: '@i18n:cell.NopSysCompactExtField.createTime,prop.label.NopSysCompactExtField.createTime|创建时间'
+              required: true
+              type: static
+          - type: group
+            id: row-updatedBy-updateTime
+            body:
+            - name: updatedBy
+              label: '@i18n:cell.NopSysCompactExtField.updatedBy,prop.label.NopSysCompactExtField.updatedBy|修改人'
+              required: true
+              type: static
+            - name: updateTime
+              label: '@i18n:cell.NopSysCompactExtField.updateTime,prop.label.NopSysCompactExtField.updateTime|修改时间'
+              required: true
+              type: static
+          - type: group
+            id: row-remark
+            body:
+              name: remark
+              label: '@i18n:cell.NopSysCompactExtField.remark,prop.label.NopSysCompactExtField.remark|备注'
+              type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: md
+          title: '@i18n:NopSysCompactExtField.forms.edit.$title|编辑-紧凑扩展字段配置'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopSysCompactExtField__get?id=$id'
+              gql:selection: id,sid,entityName,propName,position,displayName,dictName,defaultValue,remark
+            api:
+              data:
+                entityName: $entityName
+                propName: $propName
+                position: $position
+                displayName: $displayName
+                dictName: $dictName
+                defaultValue: $defaultValue
+                remark: $remark
+              url: '@mutation:NopSysCompactExtField__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-entityName
+              body:
+                name: entityName
+                label: '@i18n:cell.NopSysCompactExtField.entityName,prop.label.NopSysCompactExtField.entityName|实体名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 200
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-propName
+              body:
+                name: propName
+                label: '@i18n:cell.NopSysCompactExtField.propName,prop.label.NopSysCompactExtField.propName|属性名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-position
+              body:
+                name: position
+                label: '@i18n:cell.NopSysCompactExtField.position,prop.label.NopSysCompactExtField.position|位置'
+                required: true
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-displayName
+              body:
+                name: displayName
+                label: '@i18n:cell.NopSysCompactExtField.displayName,prop.label.NopSysCompactExtField.displayName|显示名'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-dictName
+              body:
+                name: dictName
+                label: '@i18n:cell.NopSysCompactExtField.dictName,prop.label.NopSysCompactExtField.dictName|字典名'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 150
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-defaultValue
+              body:
+                name: defaultValue
+                label: '@i18n:cell.NopSysCompactExtField.defaultValue,prop.label.NopSysCompactExtField.defaultValue|默认值'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 10
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopSysCompactExtField.remark,prop.label.NopSysCompactExtField.remark|备注'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 200
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopSysCompactExtField__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button

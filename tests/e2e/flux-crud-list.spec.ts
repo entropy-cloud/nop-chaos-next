@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test, getEngineType } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 
 test.describe('flux crud list rendering', () => {
   test.beforeEach(async ({ page }) => {
@@ -48,7 +48,9 @@ test.describe('flux crud list rendering', () => {
   });
 
   test('row inspect action opens detail dialog', async ({ page }) => {
-    const inspectBtn = page.locator('tbody tr[data-slot="table-row"]').first()
+    const inspectBtn = page
+      .locator('tbody tr[data-slot="table-row"]')
+      .first()
       .getByRole('button', { name: 'Inspect' });
     await inspectBtn.click();
 
@@ -59,7 +61,9 @@ test.describe('flux crud list rendering', () => {
   });
 
   test('row edit action opens form with pre-filled data', async ({ page }) => {
-    const editBtn = page.locator('tbody tr[data-slot="table-row"]').first()
+    const editBtn = page
+      .locator('tbody tr[data-slot="table-row"]')
+      .first()
       .getByRole('button', { name: 'Edit Form' });
     await editBtn.click();
 

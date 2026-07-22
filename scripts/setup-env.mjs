@@ -62,7 +62,7 @@ function ensureTarballs(amisDir) {
     cwd: REPO_ROOT,
     env: { ...process.env, AMIS_ROOT: amisDir },
   })
-  return existsSync(path.join(REPO_ROOT, 'libs', 'amis-6.13.1.tgz'))
+  return existsSync(path.join(REPO_ROOT, 'libs', 'amis-6.13.1-fix.0.tgz'))
 }
 
 function syncFlux(fluxDir) {

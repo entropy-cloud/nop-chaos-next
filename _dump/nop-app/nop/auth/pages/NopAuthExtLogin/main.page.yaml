@@ -1,0 +1,389 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopAuthExtLogin__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: md
+      title: '@i18n:NopAuthExtLogin.forms.add.$title|新增-扩展登录方式'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopAuthExtLogin__save/id'
+        body:
+        - type: group
+          id: row-loginType
+          body:
+            name: loginType
+            label: '@i18n:cell.NopAuthExtLogin.loginType,prop.label.NopAuthExtLogin.loginType|登录类型'
+            required: true
+            type: select
+            searchable: true
+            clearable: true
+            multiple: false
+            source: '@dict:auth/login-type'
+        - type: group
+          id: row-extId
+          body:
+            name: extId
+            label: '@i18n:cell.NopAuthExtLogin.extId,prop.label.NopAuthExtLogin.extId|登录标识'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 50
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-credential
+          body:
+            name: credential
+            label: '@i18n:cell.NopAuthExtLogin.credential,prop.label.NopAuthExtLogin.credential|登录密码'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 50
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-verified
+          body:
+            name: verified
+            label: '@i18n:cell.NopAuthExtLogin.verified,prop.label.NopAuthExtLogin.verified|是否已验证'
+            required: true
+            type: switch
+            trueValue: 1
+            falseValue: 0
+            value: 0
+        - type: group
+          id: row-lastLoginTime
+          body:
+            name: lastLoginTime
+            label: '@i18n:cell.NopAuthExtLogin.lastLoginTime,prop.label.NopAuthExtLogin.lastLoginTime|上次登录时间'
+            type: input-datetime
+            format: YYYY-MM-DD HH:mm:ss
+        - type: group
+          id: row-lastLoginIp
+          body:
+            name: lastLoginIp
+            label: '@i18n:cell.NopAuthExtLogin.lastLoginIp,prop.label.NopAuthExtLogin.lastLoginIp|上次登录IP'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 20
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-remark
+          body:
+            name: remark
+            label: '@i18n:cell.NopAuthExtLogin.remark,prop.label.NopAuthExtLogin.remark|备注'
+            type: textarea
+            minRows: 3
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthExtLogin__findPage'
+    gql:selection: total,page,items{ id,sid,loginType,loginType_label,extId,credential,verified,lastLoginTime,lastLoginIp
+      }
+  columns:
+  - name: loginType_label
+    label: '@i18n:col.NopAuthExtLogin.loginType,prop.label.NopAuthExtLogin.loginType|登录类型'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: extId
+    label: '@i18n:col.NopAuthExtLogin.extId,prop.label.NopAuthExtLogin.extId|登录标识'
+    sortable: true
+    toggled: true
+    type: static
+  - name: credential
+    label: '@i18n:col.NopAuthExtLogin.credential,prop.label.NopAuthExtLogin.credential|登录密码'
+    sortable: true
+    toggled: true
+    type: static
+  - name: verified
+    label: '@i18n:col.NopAuthExtLogin.verified,prop.label.NopAuthExtLogin.verified|是否已验证'
+    sortable: true
+    toggled: true
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: lastLoginTime
+    label: '@i18n:col.NopAuthExtLogin.lastLoginTime,prop.label.NopAuthExtLogin.lastLoginTime|上次登录时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: lastLoginIp
+    label: '@i18n:col.NopAuthExtLogin.lastLoginIp,prop.label.NopAuthExtLogin.lastLoginIp|上次登录IP'
+    sortable: true
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: md
+        title: '@i18n:NopAuthExtLogin.forms.view.$title|查看-扩展登录方式'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopAuthExtLogin__get?id=$id'
+            gql:selection: id,sid,loginType,loginType_label,extId,credential,verified,lastLoginTime,lastLoginIp,createdBy,createTime,updatedBy,updateTime,remark
+          body:
+          - type: group
+            id: row-loginType-extId
+            body:
+            - name: loginType_label
+              label: '@i18n:cell.NopAuthExtLogin.loginType,prop.label.NopAuthExtLogin.loginType|登录类型'
+              required: true
+              type: static
+            - name: extId
+              label: '@i18n:cell.NopAuthExtLogin.extId,prop.label.NopAuthExtLogin.extId|登录标识'
+              required: true
+              type: static
+          - type: group
+            id: row-credential-verified
+            body:
+            - name: credential
+              label: '@i18n:cell.NopAuthExtLogin.credential,prop.label.NopAuthExtLogin.credential|登录密码'
+              type: static
+            - name: verified
+              label: '@i18n:cell.NopAuthExtLogin.verified,prop.label.NopAuthExtLogin.verified|是否已验证'
+              required: true
+              type: static-mapping
+              map:
+                '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                ? ''
+                : ''
+          - type: group
+            id: row-lastLoginTime-lastLoginIp
+            body:
+            - name: lastLoginTime
+              label: '@i18n:cell.NopAuthExtLogin.lastLoginTime,prop.label.NopAuthExtLogin.lastLoginTime|上次登录时间'
+              type: static
+            - name: lastLoginIp
+              label: '@i18n:cell.NopAuthExtLogin.lastLoginIp,prop.label.NopAuthExtLogin.lastLoginIp|上次登录IP'
+              type: static
+          - type: group
+            id: row-createdBy-createTime
+            body:
+            - name: createdBy
+              label: '@i18n:cell.NopAuthExtLogin.createdBy,prop.label.NopAuthExtLogin.createdBy|创建人'
+              required: true
+              type: static
+            - name: createTime
+              label: '@i18n:cell.NopAuthExtLogin.createTime,prop.label.NopAuthExtLogin.createTime|创建时间'
+              required: true
+              type: static
+          - type: group
+            id: row-updatedBy-updateTime
+            body:
+            - name: updatedBy
+              label: '@i18n:cell.NopAuthExtLogin.updatedBy,prop.label.NopAuthExtLogin.updatedBy|修改人'
+              required: true
+              type: static
+            - name: updateTime
+              label: '@i18n:cell.NopAuthExtLogin.updateTime,prop.label.NopAuthExtLogin.updateTime|修改时间'
+              required: true
+              type: static
+          - type: group
+            id: row-remark
+            body:
+              name: remark
+              label: '@i18n:cell.NopAuthExtLogin.remark,prop.label.NopAuthExtLogin.remark|备注'
+              type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: md
+          title: '@i18n:NopAuthExtLogin.forms.edit.$title|编辑-扩展登录方式'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopAuthExtLogin__get?id=$id'
+              gql:selection: id,sid,loginType,loginType_label,extId,credential,verified,lastLoginTime,lastLoginIp,remark
+            api:
+              data:
+                loginType: $loginType
+                extId: $extId
+                credential: $credential
+                verified: $verified
+                lastLoginTime: $lastLoginTime
+                lastLoginIp: $lastLoginIp
+                remark: $remark
+              url: '@mutation:NopAuthExtLogin__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-loginType
+              body:
+                name: loginType_label
+                label: '@i18n:cell.NopAuthExtLogin.loginType,prop.label.NopAuthExtLogin.loginType|登录类型'
+                required: true
+                type: static
+            - type: group
+              id: row-extId
+              body:
+                name: extId
+                label: '@i18n:cell.NopAuthExtLogin.extId,prop.label.NopAuthExtLogin.extId|登录标识'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 50
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-credential
+              body:
+                name: credential
+                label: '@i18n:cell.NopAuthExtLogin.credential,prop.label.NopAuthExtLogin.credential|登录密码'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 50
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-verified
+              body:
+                name: verified
+                label: '@i18n:cell.NopAuthExtLogin.verified,prop.label.NopAuthExtLogin.verified|是否已验证'
+                required: true
+                type: switch
+                trueValue: 1
+                falseValue: 0
+                value: 0
+            - type: group
+              id: row-lastLoginTime
+              body:
+                name: lastLoginTime
+                label: '@i18n:cell.NopAuthExtLogin.lastLoginTime,prop.label.NopAuthExtLogin.lastLoginTime|上次登录时间'
+                type: input-datetime
+                format: YYYY-MM-DD HH:mm:ss
+            - type: group
+              id: row-lastLoginIp
+              body:
+                name: lastLoginIp
+                label: '@i18n:cell.NopAuthExtLogin.lastLoginIp,prop.label.NopAuthExtLogin.lastLoginIp|上次登录IP'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 20
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopAuthExtLogin.remark,prop.label.NopAuthExtLogin.remark|备注'
+                type: textarea
+                minRows: 3
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopAuthExtLogin__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button
+xui:js: '@include:NopAuthExtLogin.action.js'

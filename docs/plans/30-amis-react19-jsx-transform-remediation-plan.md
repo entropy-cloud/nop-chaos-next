@@ -180,7 +180,7 @@ Closure Audit Evidence:
 - Evidence:
   - Playwright test `tests/e2e/tmp-amis-jsx-warning.spec.ts::"Amis Preview no longer logs outdated JSX transform warning"` PASSED (1 passed, 9.2s) — confirms ESM build no longer triggers React 19 outdated JSX transform warning on the live Amis Preview route.
   - `docs/references/build-guide.md` confirmed updated with React 19 JSX runtime / ESM normalization notes (line 161).
-  - `libs/` confirmed contains fresh amis tgz files (amis-6.13.1.tgz, amis-core-6.13.1.tgz, amis-ui-6.13.1.tgz, amis-formula-6.13.1.tgz) all dated Jul 20 20:57.
+  - `libs/` confirmed contains fresh amis tgz files (amis-6.13.1-fix.0.tgz, amis-core-6.13.1-fix.0.tgz, amis-ui-6.13.1-fix.0.tgz, amis-formula-6.13.1-fix.0.tgz) all dated Jul 20 20:57.
   - `docs/logs/2026/07-20.md` records all 4 phases, verification results (pnpm typecheck/build/lint/test all green), and residual adjudication.
   - Five-point consistency: Plan Status `completed` / all Phase Status `completed` / all Exit Criteria `[x]` / Closure Gates all `[x]` (including this audit) / daily log entry present.
   - Deferred items properly classified as `watch-only residual` with clear non-blocking rationale.

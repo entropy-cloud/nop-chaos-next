@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:x="/nop/schema/xdsl.xdef" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       xmlns:ioc="ioc" xmlns:feature="feature" x:validated="true" x:schema="/nop/schema/beans.xdef">
+
+    <x:config>
+        <c:import class="io.nop.api.core.ApiConstants"/>
+    </x:config>
+
+    <bean id="nopTransactionManager" ioc:default="true" class="io.nop.dao.txn.impl.DefaultTransactionManager">
+        <property name="defaultFactory" ref="nopTransactionFactory"/>
+        <property name="dataSourceMap">
+            <ioc:collect-beans only-concrete-classes="true" as-map="true" name-prefix="nopDataSource_"/>
+        </property>
+        <property name="txnGroupMapConfig" value="@cfg:nop.dao.config.txn-group-map|"/>
+        <property name="transactionMetrics" ref="nopDaoMetrics"/>
+    </bean>
+
+    <bean id="nopTransactionFactory" ioc:default="true" class="io.nop.dao.jdbc.txn.JdbcTransactionFactory">
+        <constructor-arg index="0" ref="nopDataSource"/>
+    </bean>
+
+    <!--</bean>-->
+    <bean id="nopDataSource" ioc:default="true" class="com.zaxxer.hikari.HikariDataSource">
+        <constructor-arg index="0" ref="nopHikariConfig"/>
+        <ioc:condition>
+            <on-class>com.zaxxer.hikari.HikariDataSource</on-class>
+        </ioc:condition>
+    </bean>
+
+    <bean id="nopDataSourceFactory" ioc:default="true" class="io.nop.dao.jdbc.datasource.HikariDataSourceFactory">
+        <ioc:condition>
+            <on-class>com.zaxxer.hikari.HikariDataSource</on-class>
+        </ioc:condition>
+    </bean>
+
+    <!--数据源通用的配置使用nop.datasource.max-size等，而hikari独特的配置可以使用nop.datasource.hikari.xx-->
+    <bean id="nopHikariConfig" ioc:default="true" ioc:config-prefix="nop.datasource.hikari"
+          class="com.zaxxer.hikari.HikariConfig">
+        <ioc:condition>
+            <on-class>com.zaxxer.hikari.HikariDataSource</on-class>
+        </ioc:condition>
+        <property name="driverClassName" value="@cfg:nop.datasource.driver-class-name"/>
+        <property name="jdbcUrl" value="@cfg:nop.datasource.jdbc-url"/>
+        <property name="username" value="@cfg:nop.datasource.username"/>
+        <property name="password" value="@cfg:nop.datasource.password|"/>
+        <property name="maximumPoolSize" value="@cfg:nop.datasource.max-size|8"/>
+        <property name="minimumIdle" value="@cfg:nop.datasource.min-size|4"/>
+        <property name="connectionTimeout" value="@cfg:nop.datasource.connection-timeout|60000"/>
+        <property name="idleTimeout" value="@cfg:nop.datasource.idle-timeout|600000"/>
+        <property name="maxLifetime" value="@cfg:nop.datasource.max-lifetime|3600000"/>
+        <property name="metricRegistry">
+            <bean class="io.nop.commons.metrics.GlobalMeterRegistry" factory-method="instance"/>
+        </property>
+    </bean>
+
+    <bean id="nopTransactionTemplate" ioc:default="true" class="io.nop.dao.txn.impl.TransactionTemplateImpl"/>
+
+    <bean id="nopJdbcTemplate" ioc:default="true" class="io.nop.dao.jdbc.impl.JdbcTemplateImpl">
+        <property name="dialectProvider" ref="nopDialectProvider"/>
+        <property name="daoMetrics" ref="nopDaoMetrics"/>
+    </bean>
+
+    <bean id="nopDaoMetrics" class="io.nop.dao.metrics.DaoMetricsImpl" ioc:default="true"/>
+
+    <!--</bean>-->
+    <alias name="nopTransactionTemplate" alias="nopDialectProvider"/>
+
+    <bean id="nopTransactionalMethodInterceptor" ioc:default="true"
+          class="io.nop.dao.txn.interceptor.TransactionalMethodInterceptor">
+        <constructor-arg index="0" ref="nopTransactionTemplate"/>
+        <ioc:pointcut annotations="io.nop.api.core.annotations.txn.Transactional"
+                      order="#{ApiConstants.INTERCEPTOR_PRIORITY_TRANSACTIONAL}"/>
+    </bean>
+</beans>

@@ -16,9 +16,41 @@ export type { GraphQLResponse } from './GraphQlClient';
 export { RpcClient, loginRpc, rpc, resetAuth, setAuthToken } from './RpcClient';
 export type { RpcRequest, RpcResponse } from './RpcClient';
 
-export { navigateTo, loginAndNavigate } from './Navigation';
+export { login, navigateTo, loginAndNavigate, forceLocale } from './Navigation';
+export type { LoginOptions } from './Navigation';
 
-export { login, MockAuthAdapter, buildMockLoginResponse, defaultSiteMapResponse, defaultMenuResponse } from './MockAuthAdapter';
-export type { LoginVariant, LoginOptions } from './MockAuthAdapter';
+export {
+  login as mockLogin,
+  MockAuthAdapter,
+  buildMockLoginResponse,
+  defaultSiteMapResponse,
+  defaultMenuResponse,
+} from './MockAuthAdapter';
+export type { LoginVariant, LoginOptions as MockLoginOptions } from './MockAuthAdapter';
 
 export { test } from './fixtures';
+
+export {
+  dumpEnv,
+  dumpAuthState,
+  probeRpc,
+  probeProxy,
+  dumpMenuConfig,
+  dumpPageStructure,
+  diagnose,
+  formatReport,
+} from './debug';
+export type {
+  EnvDump,
+  AuthDump,
+  RpcProbeResult,
+  ProxyProbe,
+  MenuDump,
+  PageFieldInfo,
+  PageTableInfo,
+  PageDialogInfo,
+  PageButtonInfo,
+  PageStructureDump,
+  DiagnosticOptions,
+  DiagnosticReport,
+} from './debug';

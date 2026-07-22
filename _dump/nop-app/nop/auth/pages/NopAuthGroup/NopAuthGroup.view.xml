@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[2:2:0:0]/nop/auth/pages/NopAuthGroup/NopAuthGroup.view.xml
+ @bizObjName=[2:57:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml
+-->
+<view bizObjName="NopAuthGroup" xmlns:i18n-en="i18n-en" xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:c="c"
+      xmlns:gql="gql" xmlns:view-gen="view-gen" xmlns:xpl="xpl" x:validated="true" x:schema="/nop/schema/xui/xview.xdef">
+
+<!--LOC:[5:6:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml-->
+    <objMeta>/nop/auth/model/NopAuthGroup/NopAuthGroup.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <grids>
+<!--LOC:[18:10:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml
+ @id=[5:19:0:0]/nop/auth/pages/NopAuthGroup/NopAuthGroup.view.xml
+-->
+        <grid id="list">
+            <cols>
+
+                <!--名称-->
+                <col id="name" mandatory="true" sortable="true"/>
+
+                <!--父ID-->
+                <col id="parentId" sortable="true"/>
+
+                <!--所有者ID-->
+                <col id="ownerId" sortable="true"/>
+
+                <!--创建人-->
+                <col id="createdBy" mandatory="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+        </grid>
+        <grid id="tree-list">
+            <cols>
+
+                <!--名称-->
+                <col id="name" mandatory="true" sortable="true"/>
+
+                <!--父ID-->
+                <col id="parentId" sortable="true"/>
+
+                <!--所有者ID-->
+                <col id="ownerId" sortable="true"/>
+
+                <!--创建人-->
+                <col id="createdBy" mandatory="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+            <selection>children @TreeChildren(max:5)</selection>
+        </grid>
+<!--LOC:[18:10:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml
+ @id=[6:19:0:0]/nop/auth/pages/NopAuthGroup/NopAuthGroup.view.xml
+-->
+        <grid id="pick-list">
+            <cols>
+
+                <!--名称-->
+                <col id="name" mandatory="true" sortable="true"/>
+
+                <!--父ID-->
+                <col id="parentId" sortable="true"/>
+
+                <!--所有者ID-->
+                <col id="ownerId" sortable="true"/>
+
+                <!--创建人-->
+                <col id="createdBy" mandatory="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+        </grid>
+    </grids>
+
+    <forms>
+<!--LOC:[53:10:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml
+ @id=[10:19:0:0]/nop/auth/pages/NopAuthGroup/NopAuthGroup.view.xml
+-->
+        <form id="view" editMode="view" title="查看-用户组" i18n-en:title="View User Group">
+            <layout>
+ name[名称]
+ parentId[父ID]
+ ownerId[所有者ID]
+ createdBy[创建人]
+ createTime[创建时间]
+ updatedBy[修改人]
+ updateTime[修改时间]
+ remark[备注]
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-用户组" i18n-en:title="Add User Group">
+            <layout>
+ name[名称]
+ parentId[父ID]
+ ownerId[所有者ID]
+ remark[备注]
+</layout>
+        </form>
+<!--LOC:[66:10:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml
+ @id=[11:19:0:0]/nop/auth/pages/NopAuthGroup/NopAuthGroup.view.xml
+-->
+        <form id="edit" editMode="edit" title="编辑-用户组" i18n-en:title="Edit User Group">
+            <layout>
+ name[名称]
+ parentId[父ID]
+ ownerId[所有者ID]
+ remark[备注]
+</layout>
+        </form>
+    </forms>
+
+    <pages>
+<!--LOC:[85:10:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml
+ @name=[15:21:0:0]/nop/auth/pages/NopAuthGroup/NopAuthGroup.view.xml
+-->
+        <crud name="main" grid="tree-list" asideFilterForm="asideFilter" filterForm="query">
+            <table loadDataOnce="true" sortable="false" pager="none">
+                <api url="@query:NopAuthGroup__findList?filter_parentId=__null" gql:selection="{@listSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:NopAuthGroup__batchDelete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+                    <action id="row-add-child-button" label="@i18n:common.addChild">
+                        <dialog page="add-child"/>
+                    </action>
+                    <action id="row-delete-button" label="@i18n:common.delete">
+                        <api url="@mutation:NopAuthGroup__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+<!--LOC:[123:10:0:0]/nop/auth/pages/NopAuthGroup/_gen/_NopAuthGroup.view.xml
+ @name=[16:23:0:0]/nop/auth/pages/NopAuthGroup/NopAuthGroup.view.xml
+-->
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query">
+            <table noOperations="true">
+                <api url="@query:NopAuthGroup__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:NopAuthGroup__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <initApi url="@query:NopAuthGroup__get?id=$id" gql:selection="{@formSelection}"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:NopAuthGroup__get?id=$id" gql:selection="{@formSelection}"/>
+            <api url="@mutation:NopAuthGroup__update/id?id=$id" withFormData="true"/>
+        </simple>
+        <simple name="add-child" form="add">
+            <api url="@mutation:NopAuthGroup__save/id" withFormData="true"/>
+            <data>
+                <_ j:key="parentId">$id</_>
+            </data>
+        </simple>
+    </pages>
+</view>

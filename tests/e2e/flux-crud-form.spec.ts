@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test, getEngineType } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 import { setupFluxCrudApiInterception } from './support/flux-crud-mock-data';
 
 test.describe('flux crud form interactions', () => {

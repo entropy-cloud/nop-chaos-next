@@ -1,8 +1,10 @@
 import { expect } from '@playwright/test';
-import { login, test } from '@nop-chaos/e2e-shared';
+import { mockLogin as login, test } from '@nop-chaos/e2e-shared';
 
 test.describe('AMIS preview CRUD integration', () => {
-  test('row action buttons stay on one line and AMIS confirm uses compact radius', async ({ page }) => {
+  test('row action buttons stay on one line and AMIS confirm uses compact radius', async ({
+    page,
+  }) => {
     await login(page);
     await page.getByRole('button', { name: 'Amis Preview' }).click();
 

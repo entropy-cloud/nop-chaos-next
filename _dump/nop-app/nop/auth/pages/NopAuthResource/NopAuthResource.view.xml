@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[2:2:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+ @bizObjName=[2:57:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+-->
+<view bizObjName="NopAuthResource" xmlns:i18n-en="i18n-en" xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:c="c"
+      xmlns:gql="gql" xmlns:view-gen="view-gen" xmlns:xpl="xpl" x:validated="true" x:schema="/nop/schema/xui/xview.xdef">
+
+<!--LOC:[5:6:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+    <objMeta>/nop/auth/model/NopAuthResource/NopAuthResource.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <grids>
+<!--LOC:[18:10:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[6:19:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+        <grid id="list">
+            <cols>
+
+                <!--资源ID-->
+                <col id="resourceId" mandatory="true" sortable="true"/>
+
+                <!--站点ID-->
+<!--LOC:[25:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[8:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="siteId" mandatory="true" sortable="true" hidden="true"/>
+
+                <!--显示名称-->
+                <col id="displayName" mandatory="true" sortable="true"/>
+
+                <!--可以为字段指定宽度-->
+<!--LOC:[34:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[13:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="resourceType" mandatory="true" sortable="true" width="100px"/>
+
+                <!--图标-->
+<!--LOC:[40:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[14:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="icon" sortable="true" align="center">
+<!--LOC:[15:22:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+                    <gen-control>
+                        <vue-renderer vueComponent="icon">
+                            <props icon="${'$'}{icon}"/>
+                        </vue-renderer>
+                    </gen-control>
+                </col>
+
+                <!--前端路由-->
+<!--LOC:[43:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+                <col id="routePath" sortable="true"/>
+
+                <!--链接-->
+                <col id="url" sortable="true"/>
+
+                <!--组件名-->
+                <col id="component" sortable="true"/>
+
+                <!--链接目标-->
+                <col id="target" sortable="true"/>
+
+                <!--是否隐藏-->
+                <col id="hidden" mandatory="true" sortable="true"/>
+
+                <!--隐藏时保持状态-->
+                <col id="keepAlive" mandatory="true" sortable="true"/>
+
+                <!--不检查权限-->
+                <col id="noAuth" mandatory="true" sortable="true"/>
+
+                <!--状态-->
+<!--LOC:[70:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[22:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="status" mandatory="true" ui:number="true" sortable="true" width="50px"/>
+
+                <!--自动更新父节点的权限-->
+                <col id="authCascadeUp" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+
+            <!--
+                在列表字段基础上额外返回children字段，在前台成为Tree表格显示
+                Nop平台的GraphQL引擎对GraphQL进行了扩展，@TreeChildren表示嵌套返回子节点对象，子节点的属性列表与当前节点相同
+            -->
+<!--LOC:[28:14:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+            <selection>children @TreeChildren(max:5)</selection>
+        </grid>
+<!--LOC:[18:10:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+        <grid id="tree-list">
+            <cols>
+
+                <!--资源ID-->
+                <col id="resourceId" mandatory="true" sortable="true"/>
+
+                <!--站点ID-->
+<!--LOC:[25:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[8:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="siteId" mandatory="true" sortable="true" hidden="true"/>
+
+                <!--显示名称-->
+                <col id="displayName" mandatory="true" sortable="true"/>
+
+                <!--可以为字段指定宽度-->
+<!--LOC:[34:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[13:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="resourceType" mandatory="true" sortable="true" width="100px"/>
+
+                <!--图标-->
+<!--LOC:[40:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[14:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="icon" sortable="true" align="center">
+<!--LOC:[15:22:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+                    <gen-control>
+                        <vue-renderer vueComponent="icon">
+                            <props icon="${'$'}{icon}"/>
+                        </vue-renderer>
+                    </gen-control>
+                </col>
+
+                <!--前端路由-->
+<!--LOC:[43:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+                <col id="routePath" sortable="true"/>
+
+                <!--链接-->
+                <col id="url" sortable="true"/>
+
+                <!--组件名-->
+                <col id="component" sortable="true"/>
+
+                <!--链接目标-->
+                <col id="target" sortable="true"/>
+
+                <!--是否隐藏-->
+                <col id="hidden" mandatory="true" sortable="true"/>
+
+                <!--隐藏时保持状态-->
+                <col id="keepAlive" mandatory="true" sortable="true"/>
+
+                <!--不检查权限-->
+                <col id="noAuth" mandatory="true" sortable="true"/>
+
+                <!--状态-->
+<!--LOC:[70:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[22:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="status" mandatory="true" ui:number="true" sortable="true" width="50px"/>
+
+                <!--自动更新父节点的权限-->
+                <col id="authCascadeUp" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+
+            <!--
+                在列表字段基础上额外返回children字段，在前台成为Tree表格显示
+                Nop平台的GraphQL引擎对GraphQL进行了扩展，@TreeChildren表示嵌套返回子节点对象，子节点的属性列表与当前节点相同
+            -->
+<!--LOC:[28:14:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+            <selection>children @TreeChildren(max:5)</selection>
+        </grid>
+<!--LOC:[18:10:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[31:19:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+        <grid id="pick-list">
+            <cols>
+
+                <!--资源ID-->
+                <col id="resourceId" mandatory="true" sortable="true"/>
+
+                <!--站点ID-->
+<!--LOC:[25:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[8:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="siteId" mandatory="true" sortable="true" hidden="true"/>
+
+                <!--显示名称-->
+                <col id="displayName" mandatory="true" sortable="true"/>
+
+                <!--可以为字段指定宽度-->
+<!--LOC:[34:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[13:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="resourceType" mandatory="true" sortable="true" width="100px"/>
+
+                <!--图标-->
+<!--LOC:[40:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[14:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="icon" sortable="true" align="center">
+<!--LOC:[15:22:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+                    <gen-control>
+                        <vue-renderer vueComponent="icon">
+                            <props icon="${'$'}{icon}"/>
+                        </vue-renderer>
+                    </gen-control>
+                </col>
+
+                <!--前端路由-->
+<!--LOC:[43:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+                <col id="routePath" sortable="true"/>
+
+                <!--链接-->
+                <col id="url" sortable="true"/>
+
+                <!--组件名-->
+                <col id="component" sortable="true"/>
+
+                <!--链接目标-->
+                <col id="target" sortable="true"/>
+
+                <!--是否隐藏-->
+                <col id="hidden" mandatory="true" sortable="true"/>
+
+                <!--隐藏时保持状态-->
+                <col id="keepAlive" mandatory="true" sortable="true"/>
+
+                <!--不检查权限-->
+                <col id="noAuth" mandatory="true" sortable="true"/>
+
+                <!--状态-->
+<!--LOC:[70:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[22:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <col id="status" mandatory="true" ui:number="true" sortable="true" width="50px"/>
+
+                <!--自动更新父节点的权限-->
+                <col id="authCascadeUp" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+
+            <!--
+                在列表字段基础上额外返回children字段，在前台成为Tree表格显示
+                Nop平台的GraphQL引擎对GraphQL进行了扩展，@TreeChildren表示嵌套返回子节点对象，子节点的属性列表与当前节点相同
+            -->
+<!--LOC:[28:14:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+            <selection>children @TreeChildren(max:5)</selection>
+        </grid>
+    </grids>
+
+<!--LOC:[103:6:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+    <forms>
+<!--LOC:[137:10:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[35:19:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+        <form id="query" editMode="query" title="查询条件" i18n-en:title="Query Condition" submitOnInit="true"
+              wrapWithPanel="false">
+<!--LOC:[36:14:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+            <className>bg-gray-100 wrapper rounded</className>
+            <layout>
+                siteId
+            </layout>
+            <cells>
+                <cell id="siteId">
+
+                    <!--
+                        如果根据数据类型和domain推定的控件不满足要求，可以通过gen-control动态生成控件。
+                        gen-control函数是在后台执行的动态代码生成函数。它会取代control.xlib中定义的缺省控件生成器。
+                        它的执行上下文环境中具有propMeta, dispMeta等变量的定义.
+                    -->
+                    <gen-control>
+                        <button-group-select source="@dict:${propMeta.schema.dict}" value="main" placeholder=""
+                                             submitOnChange="@:true"/>
+                    </gen-control>
+                </cell>
+            </cells>
+        </form>
+
+        <!--x:abstract=true表示它仅仅作为模板来使用，执行完DeltaExtend操作后，此节点会被删除，不参与最终模型对象的解析。-->
+<!--LOC:[59:10:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+ @editMode=[104:35:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+-->
+        <form id="view" editMode="view" title="查看-菜单资源" i18n-en:title="View Menu Resource">
+            <layout>
+                resourceId[资源ID] siteId[站点ID]
+                displayName[显示名称] orderNo[排序]
+                resourceType[资源类型] parentId[父资源ID]
+                =====menuProps=============
+                icon[图标] routePath[前端路由]
+                url[链接] component[组件名]
+                target[链接目标] hidden[是否隐藏]
+                keepAlive[隐藏时保持状态] noAuth[不检查权限]
+                depends[依赖资源]
+                =====authProps============
+                permissions[权限标识]
+                =====otherProps===========
+                status[状态] remark[备注]
+            </layout>
+            <cells>
+                <cell id="parentId" clearValueOnHidden="true">
+                    <requiredOn>${resourceType != 'TOPM'}</requiredOn>
+                </cell>
+                <cell id="menuProps" clearValueOnHidden="true">
+                    <visibleOn>${resourceType != 'FNPT'}</visibleOn>
+                </cell>
+
+                <!--字段分组如果没有label，则仅起分组作用，不会显示为FieldSet-->
+                <cell id="authProps" clearValueOnHidden="true">
+                    <visibleOn>${resourceType == 'FNPT'}</visibleOn>
+                </cell>
+            </cells>
+        </form>
+
+        <!--x:abstract=true表示它仅仅作为模板来使用，执行完DeltaExtend操作后，此节点会被删除，不参与最终模型对象的解析。-->
+<!--LOC:[59:10:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+ @editMode=[122:35:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+-->
+        <form id="edit" editMode="edit" title="编辑-菜单资源" i18n-en:title="Edit Menu Resource">
+            <layout>
+                resourceId[资源ID] siteId[站点ID]
+                displayName[显示名称] orderNo[排序]
+                resourceType[资源类型] parentId[父资源ID]
+                =====menuProps=============
+                icon[图标] routePath[前端路由]
+                url[链接] component[组件名]
+                target[链接目标] hidden[是否隐藏]
+                keepAlive[隐藏时保持状态] noAuth[不检查权限]
+                depends[依赖资源]
+                =====authProps============
+                permissions[权限标识]
+                =====otherProps===========
+                status[状态] remark[备注]
+            </layout>
+            <cells>
+                <cell id="siteId" defaultValue="main"/>
+
+                <!--<cell id="resourceType" component="list-select" />-->
+                <cell id="parentId" clearValueOnHidden="true">
+                    <requiredOn>${resourceType != 'TOPM'}</requiredOn>
+                    <visibleOn>${resourceType != "TOPM"}</visibleOn>
+                    <gen-control>
+
+                        <!--支持五级菜单-->
+                        <tree-select clearable="@:true">
+                            <source>
+
+                                <!--Amis并不允许url中包含空格和回车。Nop平台为了简化代码编写，在后台通过WebPageHelper.fixPage函数进行了规范化处理-->
+                                <url>@query:NopAuthResource__findList/value:id,label:displayName,
+                                    children @TreeChildren(max:5)?filter_resourceType=TOPM&amp;filter_siteId=${'$'}{siteId}
+                                </url>
+                            </source>
+                        </tree-select>
+                    </gen-control>
+                </cell>
+                <cell id="icon">
+                    <gen-control>
+                        <vue-form-item vueComponent="icon-picker"/>
+                    </gen-control>
+                </cell>
+                <cell id="menuProps" clearValueOnHidden="true">
+                    <visibleOn>${resourceType != 'FNPT'}</visibleOn>
+                </cell>
+
+                <!--字段分组如果没有label，则仅起分组作用，不会显示为FieldSet-->
+                <cell id="authProps" clearValueOnHidden="true">
+                    <visibleOn>${resourceType == 'FNPT'}</visibleOn>
+                </cell>
+            </cells>
+        </form>
+
+        <!--x:abstract=true表示它仅仅作为模板来使用，执行完DeltaExtend操作后，此节点会被删除，不参与最终模型对象的解析。-->
+<!--LOC:[59:10:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+ @editMode=[121:34:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+-->
+        <form id="add" editMode="add" title="新增-菜单资源" i18n-en:title="Add Menu Resource">
+            <layout>
+                resourceId[资源ID] siteId[站点ID]
+                displayName[显示名称] orderNo[排序]
+                resourceType[资源类型] parentId[父资源ID]
+                =====menuProps=============
+                icon[图标] routePath[前端路由]
+                url[链接] component[组件名]
+                target[链接目标] hidden[是否隐藏]
+                keepAlive[隐藏时保持状态] noAuth[不检查权限]
+                depends[依赖资源]
+                =====authProps============
+                permissions[权限标识]
+                =====otherProps===========
+                status[状态] remark[备注]
+            </layout>
+            <cells>
+                <cell id="siteId" defaultValue="main"/>
+
+                <!--<cell id="resourceType" component="list-select" />-->
+                <cell id="parentId" clearValueOnHidden="true">
+                    <requiredOn>${resourceType != 'TOPM'}</requiredOn>
+                    <visibleOn>${resourceType != "TOPM"}</visibleOn>
+                    <gen-control>
+
+                        <!--支持五级菜单-->
+                        <tree-select clearable="@:true">
+                            <source>
+
+                                <!--Amis并不允许url中包含空格和回车。Nop平台为了简化代码编写，在后台通过WebPageHelper.fixPage函数进行了规范化处理-->
+                                <url>@query:NopAuthResource__findList/value:id,label:displayName,
+                                    children @TreeChildren(max:5)?filter_resourceType=TOPM&amp;filter_siteId=${'$'}{siteId}
+                                </url>
+                            </source>
+                        </tree-select>
+                    </gen-control>
+                </cell>
+                <cell id="icon">
+                    <gen-control>
+                        <vue-form-item vueComponent="icon-picker"/>
+                    </gen-control>
+                </cell>
+                <cell id="menuProps" clearValueOnHidden="true">
+                    <visibleOn>${resourceType != 'FNPT'}</visibleOn>
+                </cell>
+
+                <!--字段分组如果没有label，则仅起分组作用，不会显示为FieldSet-->
+                <cell id="authProps" clearValueOnHidden="true">
+                    <visibleOn>${resourceType == 'FNPT'}</visibleOn>
+                </cell>
+            </cells>
+            <data>
+                <siteId>${'$'}{siteId}</siteId>
+            </data>
+        </form>
+    </forms>
+
+<!--LOC:[142:6:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+    <pages>
+<!--LOC:[148:10:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @name=[143:21:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+        <crud name="main" grid="tree-list" asideFilterForm="asideFilter" filterForm="query">
+<!--LOC:[149:14:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @loadDataOnce=[145:34:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+            <table loadDataOnce="true" sortable="false" pager="none" initFetch="false">
+
+                <!--在url中可以通过{@gql:listSelection}来引用后台根据grid配置生成的字段选择列表-->
+<!--LOC:[150:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @url=[149:27:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <api url="@query:NopAuthResource__findList/{@listSelection}?filter_resourceType=TOPM"
+                     gql:selection="{@listSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:NopAuthResource__batchDelete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+<!--LOC:[153:18:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+                <action id="refreshSiteMapCache" label="@i18n:common.refreshCache">
+                    <api url="@query:NopAuthResource__refreshSiteMapCache"/>
+                    <messages>
+                        <success>@i18n:common.executeSucceed</success>
+                    </messages>
+                </action>
+            </listActions>
+<!--LOC:[161:14:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+<!--LOC:[172:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[162:34:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+<!--LOC:[176:22:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @id=[164:33:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                    <action id="row-add-child-button" label="@i18n:common.addChild">
+                        <dialog page="add-child"/>
+<!--LOC:[165:26:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+                        <visibleOn>${resourceType != 'FNPT'}</visibleOn>
+                    </action>
+<!--LOC:[179:22:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml-->
+                    <action id="row-delete-button" label="@i18n:common.delete">
+                        <api url="@mutation:NopAuthResource__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+<!--LOC:[201:10:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @name=[172:23:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+        <simple name="add-child" form="add">
+            <api url="@mutation:NopAuthResource__save/id" withFormData="true"/>
+            <data>
+<!--LOC:[174:18:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml-->
+                <parentId>${'$'}{id}</parentId>
+                <siteId>${'$'}{siteId}</siteId>
+                <resourceType>SUBM</resourceType>
+            </data>
+        </simple>
+<!--LOC:[186:10:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @name=[180:23:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query">
+<!--LOC:[187:14:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @loadDataOnce=[181:34:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+            <table noOperations="true" loadDataOnce="true" sortable="false">
+<!--LOC:[188:18:0:0]/nop/auth/pages/NopAuthResource/_gen/_NopAuthResource.view.xml
+ @url=[182:27:0:0]/nop/auth/pages/NopAuthResource/NopAuthResource.view.xml
+-->
+                <api
+                     url="@query:NopAuthResource__findList/{@listSelection}?filter_siteId=${'$'}{siteId}&amp;filter_resourceType=TOPM"
+                     gql:selection="{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:NopAuthResource__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <initApi url="@query:NopAuthResource__get?id=$id" gql:selection="{@formSelection}"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:NopAuthResource__get?id=$id" gql:selection="{@formSelection}"/>
+            <api url="@mutation:NopAuthResource__update/id?id=$id" withFormData="true"/>
+        </simple>
+    </pages>
+</view>

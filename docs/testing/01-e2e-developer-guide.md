@@ -3,6 +3,9 @@
 > 面向 nop-chaos-next 及其下游项目（nop-entropy-e2e、nop-app-erp）的 E2E 测试开发手册。
 >
 > 架构设计文档：`docs/design/e2e-shared-infrastructure.md`、`docs/design/e2e-frontend-mode.md`
+>
+> **调试下游项目（nop-entropy-e2e、nop-app-erp）的 E2E 测试？请先读 [`02-cross-project-e2e-debugging.md`](02-cross-project-e2e-debugging.md)。**
+> 核心规则：下游项目测试必须访问 nop-chaos-next 前端（4173）通过 Vite proxy 转发到后端（8080），**不能直接访问后端端口**。
 
 ## 目录
 
@@ -59,6 +62,7 @@
 | `engine.ts` | `engine.ts` | 引擎工厂：`getEngine()`、`createEngine()`、`resetEngine()` |
 | `fixtures.ts` | `fixtures.ts` | Playwright 自定义 fixtures：注入 `engine`、console error 捕获 |
 | `Navigation` | `Navigation.ts` | 登录 + 导航工具函数 |
+| `debug` | `debug.ts` | 诊断工具：`diagnose`、`dumpEnv`、`probeRpc`、`dumpPageStructure` 等 |
 
 ### EngineAdapter 接口
 
@@ -350,6 +354,9 @@ await dialog.submit();
 
 ## 6. 调试指南
 
+> **调试下游项目（nop-entropy-e2e、nop-app-erp）的 E2E？请先读 [`02-cross-project-e2e-debugging.md`](02-cross-project-e2e-debugging.md)。**
+> 本节仅覆盖本仓库（nop-chaos-next）的调试，下游项目需要额外的后端 + 前端 + Vite proxy 架构。
+
 ### 查看浏览器操作
 
 ```bash
@@ -408,6 +415,25 @@ SLOW_MO=500 pnpm test:e2e:headed
 shared fixtures 中的 `page` fixture 自动收集 console error。在 spec 结束时，如果 `E2E_ASSERT_NO_CONSOLE_ERRORS=true`，任何 console error 都会导致测试失败。
 
 **建议**：本地调试时关闭（不设环境变量），CI 中开启。
+
+### 诊断工具（e2e-shared debug helpers）
+
+`@nop-chaos/e2e-shared` 提供了一套 engine-agnostic 的诊断函数。在复杂问题（auth 失败、proxy 异常、页面不渲染、引擎选择错误）上先跑诊断比手动猜更快：
+
+```ts
+import { diagnose, formatReport, probeRpc, dumpPageStructure } from '@nop-chaos/e2e-shared';
+
+test('debug', async ({ page }) => {
+  await login(page);
+  const report = await diagnose(page, {
+    proxyProbes: ['/r/LoginApi__get'],
+    rpcProbes: [{ endpoint: 'LoginApi__login', payload: { loginType: 1, principalId: 'nop', principalSecret: '123' } }],
+  });
+  console.log(formatReport(report));
+});
+```
+
+完整 API 列表和用法见 [`02-cross-project-e2e-debugging.md` §5 Step 4](02-cross-project-e2e-debugging.md#step-4推荐运行-e2e-shared-诊断工具)。
 
 ---
 
@@ -470,6 +496,9 @@ A: Mock 模式使用 MSW（Mock Service Worker）在浏览器中拦截所有 HTT
 ---
 
 ## 8. 跨项目共享库
+
+> **完整调试下游项目 E2E 的步骤见 [`02-cross-project-e2e-debugging.md`](02-cross-project-e2e-debugging.md)。**
+> 本节仅描述共享库的分发机制。
 
 ### 仓库位置
 

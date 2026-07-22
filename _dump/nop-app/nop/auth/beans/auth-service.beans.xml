@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:x="/nop/schema/xdsl.xdef" xmlns:ioc="ioc" xmlns:feature="feature" x:validated="true"
+       x:schema="/nop/schema/beans.xdef">
+
+    <bean id="io.nop.auth.service.biz.LoginApiBizModel" ioc:type="@bean:id"/>
+
+    <bean id="io.nop.auth.service.biz.SiteMapApiBizModel" ioc:type="@bean:id"/>
+
+    <bean id="nopSiteMapProvider" class="io.nop.auth.service.sitemap.SiteMapProviderImpl">
+        <property name="enableActionAuth" value="@cfg:nop.auth.enable-action-auth|false"/>
+    </bean>
+
+    <bean id="nopActionAuthChecker" class="io.nop.auth.service.auth.DefaultActionAuthChecker" ioc:default="true"/>
+
+    <bean id="nopDataAuthChecker" class="io.nop.auth.service.auth.DefaultDataAuthChecker" ioc:default="true"
+          ioc:delay-method="lazyInit"/>
+
+    <bean id="nopLoginService" class="io.nop.auth.service.login.LoginServiceImpl" ioc:default="true"
+          ioc:delay-method="lazyInit"/>
+
+    <bean id="nopLoginSessionStore" class="io.nop.auth.service.login.DaoLoginSessionStore" ioc:default="true"/>
+
+    <bean id="nopGraphQLLogger" class="io.nop.auth.service.audit.GraphQLAuditLogger" ioc:default="true">
+        <ioc:condition>
+            <if-property name="nop.auth.graphql.enable-audit" enableIfMissing="false"/>
+        </ioc:condition>
+    </bean>
+
+    <bean id="nopUserContextCache" class="io.nop.auth.service.login.DaoUserContextCache">
+        <ioc:condition>
+            <if-property name="nop.auth.login.use-dao-user-context-cache"/>
+        </ioc:condition>
+    </bean>
+
+    <bean id="nopAuditService" class="io.nop.auth.service.audit.AuditServiceImpl"/>
+
+    <bean id="nopUserIdGenerator" class="io.nop.auth.dao.generator.DefaultUserIdGenerator" ioc:default="true"/>
+
+    <bean id="nopAuthHttpServerFilter" class="io.nop.auth.core.filter.AuthHttpServerFilter" ioc:default="true">
+        <ioc:condition>
+            <if-property name="nop.auth.http-server-filter.enabled" enableIfMissing="true"/>
+        </ioc:condition>
+    </bean>
+
+    <bean id="nopAuthFilterConfig" class="io.nop.auth.core.filter.AuthFilterConfig" ioc:default="true">
+
+        <!--未指定的情况下都是公开页面，主要是js/css/image等-->
+        <property name="defaultPublic" value="true"/>
+        <property name="publicPaths">
+            <list>
+                <value>/r/LoginApi_*</value>
+                <value>/q/health*</value>
+                <value>/q/metrics*</value>
+            </list>
+        </property>
+        <property name="authPaths">
+            <list>
+                <value>/graphql*</value>
+
+                <!--REST请求-->
+                <value>/r/*</value>
+
+                <!--quarkus内置管理页面-->
+                <value>/q/*</value>
+
+                <!--返回具有指定contentType的内容-->
+                <value>/p/*</value>
+
+                <!--文件上传下载-->
+                <value>/f/*</value>
+
+                <!--jsonrpc调用-->
+                <value>/jsonrpc</value>
+
+                <!--代理调用分布式服务-->
+                <value>/px/*</value>
+            </list>
+        </property>
+        <property name="servicePaths">
+            <list>
+                <value>/graphql*</value>
+
+                <!--REST请求-->
+                <value>/r/*</value>
+
+                <!--返回具有指定contentType的内容-->
+                <value>/p/*</value>
+
+                <!--文件上传下载-->
+                <value>/f/*</value>
+                <value>/jsonrpc</value>
+                <value>/px/*</value>
+            </list>
+        </property>
+
+        <!--单页应用总是跳转回首页，由首页中的js负责显示登录页面-->
+        <property name="loginUrl" value="@cfg:nop.auth.login-url|/index.html#/login"/>
+        <property name="logoutUrl" value="/r/LoginApi__logout"/>
+        <property name="servicePublic" value="@cfg:nop.auth.service-public|false"/>
+    </bean>
+</beans>

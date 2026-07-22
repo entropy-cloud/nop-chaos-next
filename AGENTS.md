@@ -227,6 +227,10 @@ Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run t
 
 **Docs live in `docs/`** and are the primary source of project knowledge. Always consult `docs/index.md` first for navigation. See `docs/logs/index.md` for log writing conventions and `docs/index.md` for directory roles.
 
+### Cross-Project E2E Debugging Rule
+
+**调试下游项目（nop-entropy-e2e、nop-app-erp）的 E2E 测试之前，必须先读 `docs/testing/02-cross-project-e2e-debugging.md`。** 核心规则：测试必须访问 nop-chaos-next 前端（4173）通过 Vite proxy 转发到后端（8080），**绝对不能直接访问后端端口**。错误的端口配置会导致测试假阳性失败。
+
 ### Mandatory Updates
 
 After completing any significant **CODE CHANGE**, you MUST:
@@ -236,6 +240,7 @@ After completing any significant **CODE CHANGE**, you MUST:
    - Package boundaries or ownership → `docs/design/`
    - Plugin system or bridge logic → `docs/design/plugin-system.md`
    - Routing, permissions, or shell behavior → relevant doc under `docs/design/`
+   - E2E infrastructure or cross-project testing → `docs/testing/`
 
 ### Plan Authoring And Execution
 

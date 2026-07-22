@@ -1,0 +1,69 @@
+type: picker
+valueField: id
+labelField: name
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  labelField: name
+  url: '@query:NopAuthGroup__findPage'
+  gql:selection: total,page,items{ id,groupId,name,parent{name},parentId,owner{userName},ownerId,createdBy,remark
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthGroup__findPage'
+    gql:selection: total,page,items{ id,groupId,name,parent{name},parentId,owner{userName},ownerId,createdBy,remark
+      }
+  labelTpl: ${name}
+  columns:
+  - name: name
+    label: '@i18n:col.NopAuthGroup.name,prop.label.NopAuthGroup.name|名称'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: parent.name
+    label: '@i18n:col.NopAuthGroup.parentId,prop.label.NopAuthGroup.parentId|父ID'
+    sortable: true
+    toggled: true
+    type: static
+  - name: owner.userName
+    label: '@i18n:col.NopAuthGroup.ownerId,prop.label.NopAuthGroup.ownerId|所有者ID'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopAuthGroup.createdBy,prop.label.NopAuthGroup.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopAuthGroup.remark,prop.label.NopAuthGroup.remark|备注'
+    sortable: true
+    toggled: true
+    type: static

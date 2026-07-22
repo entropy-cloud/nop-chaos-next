@@ -4,10 +4,10 @@ This directory stores the upstream tarball artifacts consumed by this repository
 
 Current expected files:
 
-- `amis-6.13.1.tgz`
-- `amis-core-6.13.1.tgz`
-- `amis-formula-6.13.1.tgz`
-- `amis-ui-6.13.1.tgz`
+- `amis-6.13.1-fix.0.tgz`
+- `amis-core-6.13.1-fix.0.tgz`
+- `amis-formula-6.13.1-fix.0.tgz`
+- `amis-ui-6.13.1-fix.0.tgz`
 - `office-viewer-0.3.14.tgz`
 - `nop-chaos-flux-0.1.0.tgz`
 

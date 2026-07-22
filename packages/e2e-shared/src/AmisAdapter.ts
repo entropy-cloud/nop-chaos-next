@@ -36,8 +36,12 @@ export class AmisAdapter implements EngineAdapter {
     return page.locator('.cxd-Modal, .cxd-Dialog').first();
   }
 
+  drawer(page: Page): Locator {
+    return page.locator('.cxd-Drawer, .cxd-Modal, .cxd-Dialog').first();
+  }
+
   formField(dialog: Locator, fieldName: string): Locator {
-    return dialog.locator(`input[name="${fieldName}"]`);
+    return dialog.locator(`input[name="${fieldName}"], textarea[name="${fieldName}"], select[name="${fieldName}"]`);
   }
 
   submitButton(dialog: Locator): Locator {

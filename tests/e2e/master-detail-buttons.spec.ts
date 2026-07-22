@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 
 function confirmDialog(page: import('@playwright/test').Page) {
   return page.locator('[role="alertdialog"]');
@@ -153,11 +153,7 @@ test.describe('master-detail list page', () => {
   });
 
   test('view button navigates to detail', async ({ page }) => {
-    await page
-      .locator('main table tbody tr')
-      .first()
-      .getByRole('button', { name: 'View' })
-      .click();
+    await page.locator('main table tbody tr').first().getByRole('button', { name: 'View' }).click();
     await expect(page).toHaveURL(/\/data-management\/master-detail\/\d+$/);
   });
 

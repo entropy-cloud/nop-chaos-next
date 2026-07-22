@@ -1,0 +1,7629 @@
+
+type DictBean{
+  
+  deprecated : Boolean
+  
+  description : String
+  
+  internal : Boolean
+  
+  label : String
+  
+  locale : String
+  
+  name : String
+  
+  normalized : Boolean
+  
+  options : [DictOptionBean]
+  
+  static : Boolean
+  
+  tagSet : [String]
+  
+  valueType : String
+}
+
+
+type DictOptionBean{
+  
+  code : String
+  
+  deprecated : Boolean
+  
+  description : String
+  
+  group : String
+  
+  internal : Boolean
+  
+  label : String
+  
+  value : Any
+}
+
+
+type FileStatusBean{
+  
+  externalPath : String
+  
+  fileId : String
+  
+  fileSize : String
+  
+  lastModified : Long
+  
+  name : String
+  
+  permissions : String
+  
+  previewPath : String
+  
+  size : Long
+}
+
+
+type GraphQLConnection{
+  
+  edges : [GraphQLEdgeBean]
+  
+  items : [Any]
+  
+  pageInfo : GraphQLPageInfo
+  
+  total : Long
+}
+
+
+type GraphQLConnection_NopAuthResource{
+  
+  edges : [GraphQLEdgeBean]
+  
+  items : [NopAuthResource]
+  
+  pageInfo : GraphQLPageInfo
+  
+  total : Long
+}
+
+
+type GraphQLEdgeBean{
+  
+  cursor : String
+  
+  node : GraphQLNode
+}
+
+
+type GraphQLNode{
+  
+  id : String
+}
+
+
+type GraphQLPageInfo{
+  
+  endCursor : String
+  
+  hasNextPage : Boolean
+  
+  hasPreviousPage : Boolean
+  
+  startCursor : String
+}
+
+
+input GroupFieldBeanInput{
+  
+  name : String
+  
+  owner : String
+}
+
+
+type NopAuthDept{
+  
+  id : ID
+  
+  "主键"
+  deptId : String!
+  
+  "名称"
+  deptName : String!
+  
+  "父ID"
+  parentId : String
+  
+  "排序"
+  orderNum : Int
+  
+  "类型"
+  deptType : String
+  
+  "部门负责人"
+  managerId : String
+  
+  "邮件"
+  email : String
+  
+  "电话"
+  phone : String
+  
+  "删除标识"
+  delFlag : Int
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "扩展标记"
+  extFlags : String
+  
+  "父资源"
+  parent : NopAuthDept
+  
+  "部门负责人"
+  manager : NopAuthUser
+  
+  "部门用户"
+  deptUsers : [NopAuthUser]
+  
+  "子资源"
+  children : [NopAuthDept]
+  
+  "分组映射"
+  groupMappings : [NopAuthGroupDept]
+  
+  "relatedGroupList"
+  relatedGroupList : [NopAuthGroup]
+  
+  "relatedGroupList"
+  relatedGroupList_ids : [String]
+  
+  "relatedGroupList"
+  relatedGroupList_label : String
+}
+
+
+type NopAuthExtLogin{
+  
+  id : ID
+  
+  "ID"
+  sid : String!
+  
+  "用户ID"
+  userId : String!
+  
+  "登录类型"
+  loginType : Int!
+  
+  "登录类型"
+  loginType_label : String
+  
+  "登录标识"
+  extId : String!
+  
+  "登录密码"
+  credential : String
+  
+  "是否已验证"
+  verified : Boolean!
+  
+  "上次登录时间"
+  lastLoginTime : String
+  
+  "上次登录IP"
+  lastLoginIp : String
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopAuthGroup{
+  
+  id : ID
+  
+  "主键"
+  groupId : String!
+  
+  "名称"
+  name : String!
+  
+  "父ID"
+  parentId : String
+  
+  "所有者ID"
+  ownerId : String
+  
+  "删除标识"
+  delFlag : Int
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "父分组"
+  parent : NopAuthGroup
+  
+  "所有者"
+  owner : NopAuthUser
+  
+  "子分组"
+  children : [NopAuthGroup]
+  
+  "部门映射"
+  deptMappings : [NopAuthGroupDept]
+  
+  "用户映射"
+  userMappings : [NopAuthGroupUser]
+  
+  "relatedDeptList"
+  relatedDeptList : [NopAuthDept]
+  
+  "relatedDeptList"
+  relatedDeptList_ids : [String]
+  
+  "relatedDeptList"
+  relatedDeptList_label : String
+  
+  "relatedUserList"
+  relatedUserList : [NopAuthUser]
+  
+  "relatedUserList"
+  relatedUserList_ids : [String]
+  
+  "relatedUserList"
+  relatedUserList_label : String
+}
+
+
+type NopAuthGroupDept{
+  
+  id : ID
+  
+  "部门ID"
+  deptId : String!
+  
+  "分组ID"
+  groupId : String!
+  
+  "是否包含下级"
+  includeChild : Int!
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "部门"
+  dept : NopAuthDept
+  
+  "分组"
+  group : NopAuthGroup
+}
+
+
+type NopAuthGroupUser{
+  
+  id : ID
+  
+  "用户ID"
+  userId : String!
+  
+  "分组ID"
+  groupId : String!
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "用户"
+  user : NopAuthUser
+  
+  "分组"
+  group : NopAuthGroup
+}
+
+
+type NopAuthOpLog{
+  
+  id : ID
+  
+  "主键"
+  logId : String!
+  
+  "用户名"
+  userName : String!
+  
+  "用户ID"
+  userId : String
+  
+  "会话ID"
+  sessionId : String
+  
+  "业务操作"
+  operation : String
+  
+  "操作描述"
+  description : String
+  
+  "操作时间"
+  actionTime : String!
+  
+  "操作时长"
+  usedTime : Long!
+  
+  "操作状态"
+  resultStatus : Int!
+  
+  "错误码"
+  errorCode : String
+  
+  "返回消息"
+  retMessage : String
+  
+  "请求参数"
+  opRequest : String
+  
+  "响应数据"
+  opResponse : String
+  
+  "会话"
+  session : NopAuthSession
+  
+  "用户"
+  user : NopAuthUser
+}
+
+
+type NopAuthPosition{
+  
+  id : ID
+  
+  "主键"
+  positionId : String!
+  
+  "名称"
+  name : String!
+  
+  "删除标识"
+  delFlag : Int
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopAuthResource{
+  
+  id : ID
+  
+  "资源ID"
+  resourceId : String!
+  
+  "站点ID"
+  siteId : String!
+  
+  "站点ID"
+  siteId_label : String
+  
+  "显示名称"
+  displayName : String!
+  
+  "排序"
+  orderNo : Int!
+  
+  "资源类型"
+  resourceType : String!
+  
+  "资源类型"
+  resourceType_label : String
+  
+  "父资源ID"
+  parentId : String
+  
+  "图标"
+  icon : String
+  
+  "前端路由"
+  routePath : String
+  
+  "链接"
+  url : String
+  
+  "组件名"
+  component : String
+  
+  "链接目标"
+  target : String
+  
+  "是否隐藏"
+  hidden : Int!
+  
+  "隐藏时保持状态"
+  keepAlive : Int!
+  
+  "权限标识"
+  permissions : String
+  
+  "不检查权限"
+  noAuth : Int!
+  
+  "依赖资源"
+  depends : String
+  
+  "是否叶子节点"
+  isLeaf : Int!
+  
+  "状态"
+  status : Int!
+  
+  "状态"
+  status_label : String
+  
+  "自动更新父节点的权限"
+  authCascadeUp : Int
+  
+  "扩展配置"
+  metaConfig : String
+  
+  "组件属性"
+  propsConfig : String
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "父资源"
+  parent : NopAuthResource
+  
+  "子系统"
+  site : NopAuthSite
+  
+  "子资源"
+  children : [NopAuthResource]
+  
+  "角色映射"
+  roleMappings : [NopAuthRoleResource]
+  
+  metaConfigComponent : String
+  
+  propsConfigComponent : String
+  
+  "relatedRoleList"
+  relatedRoleList : [NopAuthRole]
+  
+  "relatedRoleList"
+  relatedRoleList_ids : [String]
+  
+  "relatedRoleList"
+  relatedRoleList_label : String
+}
+
+
+type NopAuthResource_main{
+  
+  id : ID
+  
+  "资源ID"
+  resourceId : String!
+  
+  "站点ID"
+  siteId : String!
+  
+  "站点ID"
+  siteId_label : String
+  
+  "显示名称"
+  displayName : String!
+  
+  "排序"
+  orderNo : Int!
+  
+  "资源类型"
+  resourceType : String!
+  
+  "资源类型"
+  resourceType_label : String
+  
+  "父资源ID"
+  parentId : String
+  
+  "图标"
+  icon : String
+  
+  "前端路由"
+  routePath : String
+  
+  "链接"
+  url : String
+  
+  "组件名"
+  component : String
+  
+  "链接目标"
+  target : String
+  
+  "是否隐藏"
+  hidden : Int!
+  
+  "隐藏时保持状态"
+  keepAlive : Int!
+  
+  "权限标识"
+  permissions : String
+  
+  "不检查权限"
+  noAuth : Int!
+  
+  "依赖资源"
+  depends : String
+  
+  "是否叶子节点"
+  isLeaf : Int!
+  
+  "状态"
+  status : Int!
+  
+  "状态"
+  status_label : String
+  
+  "自动更新父节点的权限"
+  authCascadeUp : Int
+  
+  "扩展配置"
+  metaConfig : String
+  
+  "组件属性"
+  propsConfig : String
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "父资源"
+  parent : NopAuthResource
+  
+  "子系统"
+  site : NopAuthSite
+  
+  "子资源"
+  children : [NopAuthResource]
+  
+  "角色映射"
+  roleMappings : [NopAuthRoleResource]
+  
+  metaConfigComponent : String
+  
+  propsConfigComponent : String
+  
+  "relatedRoleList"
+  relatedRoleList : [NopAuthRole]
+  
+  "relatedRoleList"
+  relatedRoleList_ids : [String]
+  
+  "relatedRoleList"
+  relatedRoleList_label : String
+}
+
+
+type NopAuthRole{
+  
+  id : ID
+  
+  "角色ID"
+  roleId : String!
+  
+  "角色名"
+  roleName : String!
+  
+  "子角色"
+  childRoleIds : String
+  
+  "是否主角色"
+  isPrimary : Int
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "用户映射"
+  userMappings : [NopAuthUserRole]
+  
+  "资源映射"
+  resourceMappings : [NopAuthRoleResource]
+  
+  "relatedUserList"
+  relatedUserList : [NopAuthUser]
+  
+  "relatedUserList"
+  relatedUserList_ids : [String]
+  
+  "relatedUserList"
+  relatedUserList_label : String
+  
+  "relatedResourceList"
+  relatedResourceList : [NopAuthResource]
+  
+  "relatedResourceList"
+  relatedResourceList_ids : [String]
+  
+  "relatedResourceList"
+  relatedResourceList_label : String
+  
+  "具有此角色的用户"
+  roleUsers : [NopAuthUser]
+  
+  "角色拥有的资源"
+  roleResourceIds : [String]
+}
+
+
+type NopAuthRoleDataAuth{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "角色ID"
+  roleIds : String!
+  
+  "业务对象名"
+  bizObj : String
+  
+  "优先级"
+  priority : Int!
+  
+  "业务过滤条件"
+  filterConfig : String!
+  
+  "权限应用条件"
+  whenConfig : String
+  
+  "描述"
+  description : String
+  
+  "删除标识"
+  delFlag : Int
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopAuthRoleResource{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "角色ID"
+  roleId : String!
+  
+  "资源ID"
+  resourceId : String
+  
+  "删除标识"
+  delFlag : Int
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "角色"
+  role : NopAuthRole
+  
+  "资源"
+  resource : NopAuthResource
+}
+
+
+type NopAuthSession{
+  
+  id : ID
+  
+  "会话ID"
+  sessionId : String!
+  
+  "用户ID"
+  userId : String!
+  
+  "用户名"
+  userName : String!
+  
+  "租户ID"
+  tenantId : String!
+  
+  "登录地址"
+  loginAddr : String
+  
+  "登录设备"
+  loginDevice : String
+  
+  "应用程序"
+  loginApp : String
+  
+  "操作系统"
+  loginOs : String
+  
+  "登录时间"
+  loginTime : String!
+  
+  "登录方式"
+  loginType : Int!
+  
+  "登录方式"
+  loginType_label : String
+  
+  "退出时间"
+  logoutTime : String
+  
+  "退出方式"
+  logoutType : Int!
+  
+  "退出方式"
+  logoutType_label : String
+  
+  "退出操作人"
+  logoutBy : String
+  
+  "最后访问时间"
+  lastAccessTime : String
+  
+  "访问令牌"
+  accessToken : String
+  
+  "刷新令牌"
+  refreshToken : String
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "备注"
+  remark : String
+  
+  "用户"
+  user : NopAuthUser
+}
+
+
+type NopAuthSite{
+  
+  id : ID
+  
+  "站点ID"
+  siteId : String!
+  
+  "显示名称"
+  displayName : String!
+  
+  "排序"
+  orderNo : Int!
+  
+  "链接"
+  url : String
+  
+  "状态"
+  status : Int!
+  
+  "状态"
+  status_label : String
+  
+  "扩展配置"
+  extConfig : String
+  
+  "配置版本"
+  configVersion : String
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "资源列表"
+  resources : [NopAuthResource]
+  
+  "资源列表"
+  resourcesConnection(after:String,before:String,filter:Map,first:Int,last:Int,limit:Int,offset:Long
+  ,orderBy:[OrderFieldBeanInput],query:QueryBeanInput)  : GraphQLConnection_NopAuthResource
+  
+  extConfigComponent : String
+  
+  "资源列表"
+  resourcesList(after:String,before:String,filter:Map,first:Int,last:Int,limit:Int,offset:Long,
+  orderBy:[OrderFieldBeanInput],query:QueryBeanInput)  : [NopAuthResource]
+}
+
+
+type NopAuthTenant{
+  
+  id : ID
+  
+  "主键"
+  tenantId : String!
+  
+  "名称"
+  name : String!
+  
+  "开始时间"
+  beginTime : String
+  
+  "结束时间"
+  endTime : String
+  
+  "租户状态"
+  status : Int!
+  
+  "租户状态"
+  status_label : String
+  
+  "删除标识"
+  delFlag : Int
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopAuthUser{
+  
+  id : ID
+  
+  "用户ID"
+  userId : String!
+  
+  "用户名"
+  userName : String!
+  
+  "昵称"
+  nickName : String!
+  
+  "所属部门"
+  deptId : String
+  
+  "用户外部标识"
+  openId : String!
+  
+  "相关部门"
+  relDeptId : String
+  
+  "性别"
+  gender : Int!
+  
+  "性别"
+  gender_label : String
+  
+  "头像"
+  avatar : String
+  
+  "邮件"
+  email : String
+  
+  "邮件已验证"
+  emailVerified : Int
+  
+  "电话"
+  phone : String
+  
+  "电话已验证"
+  phoneVerified : Int
+  
+  "生日"
+  birthday : String
+  
+  "用户类型"
+  userType : Int!
+  
+  "用户类型"
+  userType_label : String
+  
+  "用户状态"
+  status : Int!
+  
+  "用户状态"
+  status_label : String
+  
+  "证件类型"
+  idType : String
+  
+  "证件号"
+  idNbr : String
+  
+  "用户过期时间"
+  expireAt : String
+  
+  "上次密码更新时间"
+  pwdUpdateTime : String
+  
+  "登陆后立刻修改密码"
+  changePwdAtLogin : Int
+  
+  "真实姓名"
+  realName : String
+  
+  "上级"
+  managerId : String
+  
+  "工号"
+  workNo : String
+  
+  "职务"
+  positionId : String
+  
+  "座机"
+  telephone : String
+  
+  "设备ID"
+  clientId : String
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Int!
+  
+  "租户ID"
+  tenantId : String!
+  
+  "租户ID"
+  tenantId_label : String
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "扩展标记"
+  extFlags : String
+  
+  "部门"
+  dept : NopAuthDept
+  
+  "部门"
+  relatedDept : NopAuthDept
+  
+  "岗位"
+  position : NopAuthPosition
+  
+  "上级"
+  manager : NopAuthUser
+  
+  "角色映射"
+  roleMappings : [NopAuthUserRole]
+  
+  "代理人映射"
+  substitutionMappings : [NopAuthUserSubstitution]
+  
+  "分组映射"
+  groupMappings : [NopAuthGroupUser]
+  
+  avatarComponentFileStatus : FileStatusBean
+  
+  "relatedRoleList"
+  relatedRoleList : [NopAuthRole]
+  
+  "relatedRoleList"
+  relatedRoleList_ids : [String]
+  
+  "relatedRoleList"
+  relatedRoleList_label : String
+  
+  "relatedGroupList"
+  relatedGroupList : [NopAuthGroup]
+  
+  "relatedGroupList"
+  relatedGroupList_ids : [String]
+  
+  "relatedGroupList"
+  relatedGroupList_label : String
+}
+
+
+type NopAuthUserRole{
+  
+  id : ID
+  
+  "用户ID"
+  userId : String!
+  
+  "角色ID"
+  roleId : String!
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "用户"
+  user : NopAuthUser
+  
+  "角色"
+  role : NopAuthRole
+}
+
+
+type NopAuthUserSubstitution{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "用户ID"
+  userId : String!
+  
+  "被代理的用户ID"
+  substitutedUserId : String!
+  
+  "工作范围"
+  workScope : String!
+  
+  "开始时间"
+  startTime : String
+  
+  "结束时间"
+  endTime : String
+  
+  "数据版本"
+  version : Int!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "用户"
+  user : NopAuthUser
+  
+  "被代理的用户"
+  substitutedUser : NopAuthUser
+}
+
+
+type NopAuthUser_tenant{
+  
+  id : ID
+  
+  "用户ID"
+  userId : String!
+  
+  "用户名"
+  userName : String!
+  
+  "昵称"
+  nickName : String!
+  
+  "所属部门"
+  deptId : String
+  
+  "用户外部标识"
+  openId : String!
+  
+  "相关部门"
+  relDeptId : String
+  
+  "性别"
+  gender : Int!
+  
+  "性别"
+  gender_label : String
+  
+  "头像"
+  avatar : String
+  
+  "邮件"
+  email : String
+  
+  "邮件已验证"
+  emailVerified : Int
+  
+  "电话"
+  phone : String
+  
+  "电话已验证"
+  phoneVerified : Int
+  
+  "生日"
+  birthday : String
+  
+  "用户类型"
+  userType : Int!
+  
+  "用户类型"
+  userType_label : String
+  
+  "用户状态"
+  status : Int!
+  
+  "用户状态"
+  status_label : String
+  
+  "证件类型"
+  idType : String
+  
+  "证件号"
+  idNbr : String
+  
+  "用户过期时间"
+  expireAt : String
+  
+  "上次密码更新时间"
+  pwdUpdateTime : String
+  
+  "登陆后立刻修改密码"
+  changePwdAtLogin : Int
+  
+  "真实姓名"
+  realName : String
+  
+  "上级"
+  managerId : String
+  
+  "工号"
+  workNo : String
+  
+  "职务"
+  positionId : String
+  
+  "座机"
+  telephone : String
+  
+  "设备ID"
+  clientId : String
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Int!
+  
+  "租户ID"
+  tenantId : String!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "扩展标记"
+  extFlags : String
+  
+  "部门"
+  dept : NopAuthDept
+  
+  "部门"
+  relatedDept : NopAuthDept
+  
+  "岗位"
+  position : NopAuthPosition
+  
+  "上级"
+  manager : NopAuthUser
+  
+  "角色映射"
+  roleMappings : [NopAuthUserRole]
+  
+  "代理人映射"
+  substitutionMappings : [NopAuthUserSubstitution]
+  
+  "分组映射"
+  groupMappings : [NopAuthGroupUser]
+  
+  avatarComponentFileStatus : FileStatusBean
+  
+  "relatedRoleList"
+  relatedRoleList : [NopAuthRole]
+  
+  "relatedRoleList"
+  relatedRoleList_ids : [String]
+  
+  "relatedRoleList"
+  relatedRoleList_label : String
+  
+  "relatedGroupList"
+  relatedGroupList : [NopAuthGroup]
+  
+  "relatedGroupList"
+  relatedGroupList_ids : [String]
+  
+  "relatedGroupList"
+  relatedGroupList_label : String
+}
+
+
+type NopSysBroadcastEvent{
+  
+  id : ID
+  
+  "事件ID"
+  eventId : String!
+  
+  "事件主题"
+  eventTopic : String!
+  
+  "事件名称"
+  eventName : String!
+  
+  "事件元数据"
+  eventHeaders : String!
+  
+  "数据"
+  eventData : String!
+  
+  "字段选择"
+  selection : String
+  
+  "事件时间"
+  eventTime : String!
+  
+  "业务对象名"
+  bizObjName : String
+  
+  "业务标识"
+  bizKey : String
+  
+  "业务日期"
+  bizDate : String!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+}
+
+
+type NopSysChangeLog{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "业务对象"
+  bizObjName : String!
+  
+  "对象ID"
+  objId : String!
+  
+  "业务键"
+  bizKey : String
+  
+  "业务操作"
+  operationName : String!
+  
+  "属性名"
+  propName : String!
+  
+  "旧值"
+  oldValue : String
+  
+  "新值"
+  newValue : String
+  
+  "变更时间"
+  changeTime : String!
+  
+  "应用ID"
+  appId : String
+  
+  "操作人"
+  operatorId : String!
+  
+  "审核人"
+  approverId : String
+}
+
+
+type NopSysCheckerRecord{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "业务对象名"
+  bizObjName : String!
+  
+  "业务对象ID"
+  bizObjId : String
+  
+  "请求发起人ID"
+  makerId : String!
+  
+  "请求发起人"
+  makerName : String!
+  
+  "请求操作"
+  requestAction : String!
+  
+  "请求数据"
+  requestData : String
+  
+  "请求时间"
+  requestTime : String!
+  
+  "审批人ID"
+  checkerId : String
+  
+  "审批人"
+  checkerName : String
+  
+  "审批时间"
+  checkTime : String
+  
+  "请求结果"
+  tryResult : String
+  
+  "输入页面"
+  inputPage : String
+  
+  "审批状态"
+  status : Int!
+  
+  "取消方法"
+  cancelAction : String
+  
+  "回调错误码"
+  cbErrCode : String
+  
+  "回调错误消息"
+  ceErrMsg : String
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysClusterLeader{
+  
+  id : ID
+  
+  "集群ID"
+  clusterId : String!
+  
+  "主服务器ID"
+  leaderId : String!
+  
+  "主服务器地址"
+  leaderAdder : String!
+  
+  "选举世代"
+  leaderEpoch : Long!
+  
+  "选举时间"
+  electTime : String!
+  
+  "过期时间"
+  expireAt : String!
+  
+  "刷新时间"
+  refreshTime : String!
+  
+  "修改版本"
+  version : Long!
+  
+  "应用名"
+  appName : String!
+}
+
+
+type NopSysCodeRule{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "名称"
+  name : String!
+  
+  "显示名称"
+  displayName : String!
+  
+  "编码模式"
+  codePattern : String!
+  
+  "序列号名称"
+  seqName : String
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysCompactExtField{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "实体名"
+  entityName : String!
+  
+  "属性名"
+  propName : String!
+  
+  "位置"
+  position : Int!
+  
+  "显示名"
+  displayName : String
+  
+  "字典名"
+  dictName : String
+  
+  "默认值"
+  defaultValue : String
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysDict{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "字典名"
+  dictName : String!
+  
+  "显示名"
+  displayName : String!
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysDictOption{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "字典ID"
+  dictId : String!
+  
+  "显示名"
+  label : String!
+  
+  "值"
+  value : String!
+  
+  "内部编码"
+  codeValue : String
+  
+  "分组名"
+  groupName : String
+  
+  "是否内部"
+  isInternal : Int!
+  
+  "是否已废弃"
+  isDeprecated : Int!
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+  
+  "字典"
+  dict : NopSysDict
+}
+
+
+type NopSysEvent{
+  
+  id : ID
+  
+  "事件ID"
+  eventId : String!
+  
+  "事件主题"
+  eventTopic : String!
+  
+  "事件名称"
+  eventName : String!
+  
+  "事件元数据"
+  eventHeaders : String!
+  
+  "数据"
+  eventData : String!
+  
+  "字段选择"
+  selection : String
+  
+  "事件时间"
+  eventTime : String!
+  
+  "事件状态"
+  eventStatus : Int!
+  
+  "事件状态"
+  eventStatus_label : String
+  
+  "处理时间"
+  processTime : String!
+  
+  "调度时间"
+  scheduleTime : String!
+  
+  "业务对象名"
+  bizObjName : String
+  
+  "业务标识"
+  bizKey : String
+  
+  "业务日期"
+  bizDate : String!
+  
+  "数据分区"
+  partitionIndex : Int!
+  
+  "重试次数"
+  retryTimes : Int!
+  
+  "租约持有者"
+  leaseOwner : String
+  
+  "租约过期时间"
+  leaseExpireTime : String
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+}
+
+
+type NopSysExtField{
+  
+  id : ID
+  
+  "实体名"
+  entityName : String!
+  
+  "实体ID"
+  entityId : String!
+  
+  "字段名"
+  fieldName : String!
+  
+  "字段类型"
+  fieldType : Int!
+  
+  "浮点精度"
+  decimalScale : Int
+  
+  "浮点值"
+  decimalValue : BigDecimal
+  
+  "日期值"
+  dateValue : String
+  
+  "时间点值"
+  timestampValue : String
+  
+  "字符串值"
+  stringValue : String
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysI18n{
+  
+  id : ID
+  
+  "字符串Key"
+  i18nKey : String!
+  
+  "语言"
+  i18nLocale : String!
+  
+  "语言"
+  i18nLocale_label : String
+  
+  "值"
+  value : String!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysLock{
+  
+  id : ID
+  
+  "锁名称"
+  lockName : String!
+  
+  "分组"
+  lockGroup : String!
+  
+  "锁定时间"
+  lockTime : String!
+  
+  "过期时间"
+  expireAt : String!
+  
+  "锁定原因"
+  lockReason : String
+  
+  "锁的持有者"
+  holderId : String!
+  
+  "持有者地址"
+  holderAdder : String!
+  
+  "应用ID"
+  appId : String!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+}
+
+
+type NopSysNoticeTemplate{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "名称"
+  name : String!
+  
+  "模板类型"
+  tplType : String!
+  
+  "模板内容"
+  content : String!
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysObjTag{
+  
+  id : ID
+  
+  "对象ID"
+  bizObjId : String!
+  
+  "对象名"
+  bizObjName : String!
+  
+  "标签ID"
+  tagId : String!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "标签"
+  tag : NopSysTag
+}
+
+
+type NopSysSequence{
+  
+  id : ID
+  
+  "名称"
+  seqName : String!
+  
+  "类型"
+  seqType : String
+  
+  "是否UUID"
+  isUuid : Int!
+  
+  "下一个值"
+  nextValue : Long!
+  
+  "步长"
+  stepSize : Int!
+  
+  "缓存个数"
+  cacheSize : Int
+  
+  "最大值"
+  maxValue : Long
+  
+  "重置方式"
+  resetType : Int
+  
+  "删除标识"
+  delFlag : Int!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysServiceInstance{
+  
+  id : ID
+  
+  "服务实例ID"
+  instanceId : String!
+  
+  "服务名"
+  serviceName : String!
+  
+  "集群名"
+  clusterName : String!
+  
+  "分组名"
+  groupName : String!
+  
+  "标签"
+  tagsText : String
+  
+  "服务地址"
+  serverAddr : String!
+  
+  "服务端口"
+  serverPort : Int!
+  
+  "权重"
+  weight : Int!
+  
+  "扩展数据"
+  metaData : String
+  
+  "是否健康"
+  isHealthy : Boolean!
+  
+  "是否启用"
+  isEnabled : Boolean!
+  
+  "是否临时"
+  isEphemeral : Boolean!
+  
+  "数据版本"
+  version : Long!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改时间"
+  updateTime : String!
+}
+
+
+type NopSysTag{
+  
+  id : ID
+  
+  "主键"
+  sid : String!
+  
+  "名称"
+  name : String!
+  
+  "描述"
+  description : String
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+}
+
+
+type NopSysUserVariable{
+  
+  id : ID
+  
+  "用户ID"
+  userId : String!
+  
+  "变量名"
+  varName : String!
+  
+  "变量值"
+  varValue : String
+  
+  "变量域"
+  stdDomain : String
+  
+  "变量类型"
+  varType : String
+  
+  "变量类型"
+  varType_label : String
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+type NopSysVariable{
+  
+  id : ID
+  
+  "变量名"
+  varName : String!
+  
+  "变量值"
+  varValue : String
+  
+  "变量域"
+  stdDomain : String
+  
+  "变量类型"
+  varType : String
+  
+  "数据版本"
+  version : Long!
+  
+  "创建人"
+  createdBy : String!
+  
+  "创建时间"
+  createTime : String!
+  
+  "修改人"
+  updatedBy : String!
+  
+  "修改时间"
+  updateTime : String!
+  
+  "备注"
+  remark : String
+}
+
+
+input OrderFieldBeanInput{
+  
+  desc : Boolean
+  
+  name : String
+  
+  nullsFirst : Boolean
+  
+  owner : String
+}
+
+
+type PageBean{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [Any]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthDept{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthDept]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthExtLogin{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthExtLogin]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthGroup{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthGroup]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthGroupDept{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthGroupDept]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthGroupUser{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthGroupUser]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthOpLog{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthOpLog]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthPosition{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthPosition]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthResource{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthResource]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthResource_main{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthResource_main]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthRole{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthRole]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthRoleDataAuth{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthRoleDataAuth]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthRoleResource{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthRoleResource]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthSession{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthSession]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthSite{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthSite]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthTenant{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthTenant]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthUser{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthUser]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthUserRole{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthUserRole]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthUserSubstitution{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthUserSubstitution]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopAuthUser_tenant{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopAuthUser_tenant]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysBroadcastEvent{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysBroadcastEvent]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysChangeLog{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysChangeLog]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysCheckerRecord{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysCheckerRecord]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysClusterLeader{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysClusterLeader]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysCodeRule{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysCodeRule]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysCompactExtField{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysCompactExtField]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysDict{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysDict]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysDictOption{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysDictOption]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysEvent{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysEvent]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysExtField{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysExtField]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysI18n{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysI18n]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysLock{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysLock]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysNoticeTemplate{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysNoticeTemplate]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysObjTag{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysObjTag]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysSequence{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysSequence]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysServiceInstance{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysServiceInstance]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysTag{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysTag]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysUserVariable{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysUserVariable]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_NopSysVariable{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [NopSysVariable]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+type PageBean_g_io_nop_api_core_beans_std_StdTreeEntity{
+  
+  extData : Map
+  
+  hasNext : Boolean
+  
+  hasPrev : Boolean
+  
+  items : [g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  limit : Int
+  
+  nextCursor : String
+  
+  offset : Long
+  
+  page : Long
+  
+  pageCount : Long
+  
+  prevCursor : String
+  
+  total : Long
+}
+
+
+input QueryBeanInput{
+  
+  aggregates : [i_io_nop_api_core_beans_query_QueryAggregateFieldBean]
+  
+  cursor : String
+  
+  dimFields : [String]
+  
+  disableLogicalDelete : Boolean
+  
+  distinct : Boolean
+  
+  fields : [QueryFieldBeanInput]
+  
+  filter : Map
+  
+  findPrev : Boolean
+  
+  groupBy : [GroupFieldBeanInput]
+  
+  joins : [QuerySourceBeanInput]
+  
+  leftJoinProps : [String]
+  
+  limit : Int
+  
+  name : String
+  
+  offset : Long
+  
+  orderBy : [OrderFieldBeanInput]
+  
+  sourceName : String
+  
+  timeout : Int
+}
+
+
+input QueryFieldBeanInput{
+  
+  aggFunc : String
+  
+  alias : String
+  
+  expression : Map
+  
+  formula : String
+  
+  internal : Boolean
+  
+  name : String
+  
+  owner : String
+}
+
+
+input QuerySourceBeanInput{
+  
+  alias : String
+  
+  conditions : [i_io_nop_api_core_beans_query_QueryJoinConditionBean]
+  
+  dimFields : [String]
+  
+  filter : Map
+  
+  joinType : String
+  
+  sourceName : String
+}
+
+
+type WebContentBean{
+  
+  autoCleanResource : Boolean
+  
+  content : Any
+  
+  contentType : String
+  
+  fileName : String
+}
+
+
+type g_io_nop_api_core_beans_ErrorBean{
+  
+  bizFatal : Boolean
+  
+  cause : g_io_nop_api_core_beans_ErrorBean
+  
+  description : String
+  
+  details : Map
+  
+  errorCode : String
+  
+  errorStack : String
+  
+  forPublic : Boolean
+  
+  params : Map
+  
+  severity : Int
+  
+  sourceLocation : String
+  
+  status : Int
+}
+
+
+type g_io_nop_api_core_beans_std_StdTreeEntity{
+  
+  displayName : String
+  
+  id : String
+  
+  joinId : String
+  
+  level : Int
+  
+  parentId : String
+}
+
+
+type g_io_nop_auth_api_messages_LoginResult{
+  
+  accessToken : String
+  
+  attrs : Map
+  
+  expiresIn : Long
+  
+  refreshExpiresIn : Long
+  
+  refreshToken : String
+  
+  scope : String
+  
+  sessionState : String
+  
+  tokenType : String
+  
+  userInfo : g_io_nop_auth_api_messages_LoginUserInfo
+}
+
+
+type g_io_nop_auth_api_messages_LoginUserInfo{
+  
+  attrs : Map
+  
+  avatar : String
+  
+  deptId : String
+  
+  deptName : String
+  
+  homePath : String
+  
+  locale : String
+  
+  nickName : String
+  
+  openId : String
+  
+  roleInfos : [g_io_nop_auth_api_messages_RoleInfo]
+  
+  tenantId : String
+  
+  timeZone : String
+  
+  userId : String
+  
+  userName : String
+}
+
+
+type g_io_nop_auth_api_messages_RoleInfo{
+  
+  primary : Boolean
+  
+  roleId : String
+  
+  roleName : String
+}
+
+
+type g_io_nop_auth_api_messages_SiteMapBean{
+  
+  children : [g_io_nop_auth_api_messages_SiteResourceBean]
+  
+  configVersion : String
+  
+  displayName : String
+  
+  id : String
+  
+  locale : String
+  
+  resources : [g_io_nop_auth_api_messages_SiteResourceBean]
+  
+  supportDebug : Boolean
+}
+
+
+type g_io_nop_auth_api_messages_SiteResourceBean{
+  
+  authCascadeUp : Boolean
+  
+  children : [g_io_nop_auth_api_messages_SiteResourceBean]
+  
+  component : String
+  
+  depends : [String]
+  
+  description : String
+  
+  displayName : String
+  
+  hidden : Boolean
+  
+  icon : String
+  
+  id : String
+  
+  keepAlive : Boolean
+  
+  meta : Map
+  
+  noAuth : Boolean
+  
+  orderNo : Int
+  
+  permissions : [String]
+  
+  props : Map
+  
+  resourceType : String
+  
+  roles : [String]
+  
+  routePath : String
+  
+  status : Int
+  
+  target : String
+  
+  url : String
+}
+
+
+type g_io_nop_biz_dev_beans_ConfigVarBean{
+  
+  defaultValue : String
+  
+  description : String
+  
+  location : String
+  
+  name : String
+  
+  type : String
+  
+  value : String
+}
+
+
+type g_io_nop_biz_dev_beans_FunctionArgBean{
+  
+  description : String
+  
+  name : String
+  
+  type : String
+}
+
+
+type g_io_nop_biz_dev_beans_FunctionDefBean{
+  
+  args : [g_io_nop_biz_dev_beans_FunctionArgBean]
+  
+  declaringClass : String
+  
+  description : String
+  
+  macro : Boolean
+  
+  name : String
+  
+  returnType : String
+}
+
+
+type g_io_nop_biz_dev_beans_GlobalVariableDefBean{
+  
+  description : String
+  
+  methods : [g_io_nop_biz_dev_beans_FunctionDefBean]
+  
+  name : String
+  
+  staticClass : Boolean
+  
+  type : String
+}
+
+
+type g_io_nop_core_stat_JdbcSqlStatValue{
+  
+  blobOpenCount : Long
+  
+  clobOpenCount : Long
+  
+  concurrentMax : Int
+  
+  dataSource : String
+  
+  dbType : String
+  
+  executeAndResultHoldTimeHistogramValues : [Long]
+  
+  executeAndResultHoldTime_0_1 : Long
+  
+  executeAndResultHoldTime_1000000_more : Int
+  
+  executeAndResultHoldTime_100000_1000000 : Int
+  
+  executeAndResultHoldTime_10000_100000 : Int
+  
+  executeAndResultHoldTime_1000_10000 : Int
+  
+  executeAndResultHoldTime_100_1000 : Int
+  
+  executeAndResultHoldTime_10_100 : Int
+  
+  executeAndResultHoldTime_1_10 : Long
+  
+  executeAndResultSetHoldTimeMilis : Long
+  
+  executeAndResultSetHoldTimeNano : Long
+  
+  executeAvgTime : Long
+  
+  executeBatchSizeMax : Int
+  
+  executeBatchSizeTotal : Long
+  
+  executeCount : Long
+  
+  executeErrorCount : Long
+  
+  executeErrorLast : g_io_nop_api_core_beans_ErrorBean
+  
+  executeErrorLastTime : Long
+  
+  executeLastStartTime : Long
+  
+  executeNanoSpanMaxOccurTime : Long
+  
+  executeSpanNanoMax : Long
+  
+  executeSpanNanoTotal : Long
+  
+  executeSuccessCount : Long
+  
+  fetchRowCount : Long
+  
+  fetchRowCountHistogramValues : [Long]
+  
+  fetchRowCountMax : Long
+  
+  fetchRowCount_0_1 : Long
+  
+  fetchRowCount_10000_more : Int
+  
+  fetchRowCount_1000_10000 : Int
+  
+  fetchRowCount_100_1000 : Int
+  
+  fetchRowCount_10_100 : Long
+  
+  fetchRowCount_1_10 : Long
+  
+  file : String
+  
+  histogramValues : [Long]
+  
+  histogram_0_1 : Long
+  
+  histogram_1000000_more : Int
+  
+  histogram_100000_1000000 : Int
+  
+  histogram_10000_100000 : Int
+  
+  histogram_1000_10000 : Int
+  
+  histogram_100_1000 : Int
+  
+  histogram_10_100 : Int
+  
+  histogram_1_10 : Long
+  
+  id : Long
+  
+  inTransactionCount : Long
+  
+  inputStreamOpenCount : Long
+  
+  lastSlowParameters : String
+  
+  name : String
+  
+  readBytesLength : Long
+  
+  readStringLength : Long
+  
+  readerOpenCount : Long
+  
+  resultSetHoldTimeMilis : Long
+  
+  resultSetHoldTimeNano : Long
+  
+  runningCount : Int
+  
+  sql : String
+  
+  updateCount : Long
+  
+  updateCountHistogramValues : [Long]
+  
+  updateCountMax : Long
+  
+  updateCount_0_1 : Long
+  
+  updateCount_10000_more : Int
+  
+  updateCount_1000_10000 : Int
+  
+  updateCount_100_1000 : Int
+  
+  updateCount_10_100 : Long
+  
+  updateCount_1_10 : Long
+  
+  updateHistogram : [Long]
+}
+
+
+type g_io_nop_core_stat_RpcClientStat{
+  
+  concurrentMax : Int
+  
+  executeAvgTime : Long
+  
+  executeCount : Long
+  
+  executeErrorCount : Long
+  
+  executeErrorLast : g_io_nop_api_core_beans_ErrorBean
+  
+  executeErrorLastTime : Long
+  
+  executeLastStartTime : Long
+  
+  executeNanoSpanMaxOccurTime : Long
+  
+  executeSpanNanoMax : Long
+  
+  executeSpanNanoTotal : Long
+  
+  executeSuccessCount : Long
+  
+  fullServiceName : String
+  
+  histogramValues : [Long]
+  
+  histogram_0_1 : Long
+  
+  histogram_1000000_more : Int
+  
+  histogram_100000_1000000 : Int
+  
+  histogram_10000_100000 : Int
+  
+  histogram_1000_10000 : Int
+  
+  histogram_100_1000 : Int
+  
+  histogram_10_100 : Int
+  
+  histogram_1_10 : Long
+  
+  runningCount : Int
+  
+  serviceAction : String
+  
+  serviceName : String
+}
+
+
+type g_io_nop_core_stat_RpcServerStat{
+  
+  concurrentMax : Int
+  
+  executeAvgTime : Long
+  
+  executeCount : Long
+  
+  executeErrorCount : Long
+  
+  executeErrorLast : g_io_nop_api_core_beans_ErrorBean
+  
+  executeErrorLastTime : Long
+  
+  executeLastStartTime : Long
+  
+  executeNanoSpanMaxOccurTime : Long
+  
+  executeSpanNanoMax : Long
+  
+  executeSpanNanoTotal : Long
+  
+  executeSuccessCount : Long
+  
+  histogramValues : [Long]
+  
+  histogram_0_1 : Long
+  
+  histogram_1000000_more : Int
+  
+  histogram_100000_1000000 : Int
+  
+  histogram_10000_100000 : Int
+  
+  histogram_1000_10000 : Int
+  
+  histogram_100_1000 : Int
+  
+  histogram_10_100 : Int
+  
+  histogram_1_10 : Long
+  
+  operationName : String
+  
+  runningCount : Int
+}
+
+
+type g_io_nop_file_core_UploadResponseBean{
+  
+  filename : String
+  
+  url : String
+  
+  value : String
+}
+
+
+input i_io_nop_api_core_beans_query_QueryAggregateFieldBean{
+  
+  aggFunc : String
+  
+  filter : Map
+  
+  formula : String
+  
+  name : String
+  
+  sourceField : String
+}
+
+
+input i_io_nop_api_core_beans_query_QueryJoinConditionBean{
+  
+  joinOp : String
+  
+  leftField : String
+  
+  leftValue : Any
+  
+  rightField : String
+  
+  rightValue : Any
+}
+
+
+extend type Query{
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthResource_main__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthResource_main__findFirst(query:QueryBeanInput)  : NopAuthResource_main
+  
+  NopAuthResource_main__getMenuTree(siteId:String!)  : [NopAuthResource]
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthResource_main__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthResource_main
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthResource_main__get(id:String!,ignoreUnknown:Boolean)  : NopAuthResource_main
+  
+  "分页查询树状结构"
+  NopAuthResource_main__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthResource_main__findPage(query:QueryBeanInput)  : PageBean_NopAuthResource_main
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthResource_main__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthResource_main
+  
+  "查询树状结构"
+  NopAuthResource_main__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthResource_main__findRoots(query:QueryBeanInput)  : [NopAuthResource_main]
+  
+  "分页查询树状结构"
+  NopAuthResource_main__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthResource
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthResource_main__asDict : DictBean
+  
+  NopAuthResource_main__refreshSiteMapCache : Void
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthResource_main__findList(query:QueryBeanInput)  : [NopAuthResource_main]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthResource_main__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthResource_main]
+  
+  "查询树状结构"
+  NopAuthResource_main__findListForTree(query:QueryBeanInput!)  : [NopAuthResource]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysLock__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysLock__findFirst(query:QueryBeanInput)  : NopSysLock
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysLock__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysLock
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysLock__get(id:String!,ignoreUnknown:Boolean)  : NopSysLock
+  
+  "分页查询树状结构"
+  NopSysLock__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysLock__findPage(query:QueryBeanInput)  : PageBean_NopSysLock
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysLock__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysLock
+  
+  "查询树状结构"
+  NopSysLock__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysLock__findRoots(query:QueryBeanInput)  : [NopSysLock]
+  
+  "分页查询树状结构"
+  NopSysLock__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysLock
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysLock__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysLock__findList(query:QueryBeanInput)  : [NopSysLock]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysLock__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysLock]
+  
+  "查询树状结构"
+  NopSysLock__findListForTree(query:QueryBeanInput!)  : [NopSysLock]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysChangeLog__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysChangeLog__findFirst(query:QueryBeanInput)  : NopSysChangeLog
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysChangeLog__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysChangeLog
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysChangeLog__get(id:String!,ignoreUnknown:Boolean)  : NopSysChangeLog
+  
+  "分页查询树状结构"
+  NopSysChangeLog__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysChangeLog__findPage(query:QueryBeanInput)  : PageBean_NopSysChangeLog
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysChangeLog__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysChangeLog
+  
+  "查询树状结构"
+  NopSysChangeLog__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysChangeLog__findRoots(query:QueryBeanInput)  : [NopSysChangeLog]
+  
+  "分页查询树状结构"
+  NopSysChangeLog__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysChangeLog
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysChangeLog__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysChangeLog__findList(query:QueryBeanInput)  : [NopSysChangeLog]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysChangeLog__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysChangeLog]
+  
+  "查询树状结构"
+  NopSysChangeLog__findListForTree(query:QueryBeanInput!)  : [NopSysChangeLog]
+  
+  "获取字典"
+  DictProvider__getDict(dictName:String!)  : DictBean
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthUserSubstitution__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthUserSubstitution__findFirst(query:QueryBeanInput)  : NopAuthUserSubstitution
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthUserSubstitution__deleted_findPage(query:QueryBeanInput)  : 
+  PageBean_NopAuthUserSubstitution
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthUserSubstitution__get(id:String!,ignoreUnknown:Boolean)  : NopAuthUserSubstitution
+  
+  "分页查询树状结构"
+  NopAuthUserSubstitution__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthUserSubstitution__findPage(query:QueryBeanInput)  : PageBean_NopAuthUserSubstitution
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthUserSubstitution__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthUserSubstitution
+  
+  "查询树状结构"
+  NopAuthUserSubstitution__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthUserSubstitution__findRoots(query:QueryBeanInput)  : [NopAuthUserSubstitution]
+  
+  "分页查询树状结构"
+  NopAuthUserSubstitution__findPageForTree(query:QueryBeanInput!)  : 
+  PageBean_NopAuthUserSubstitution
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthUserSubstitution__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthUserSubstitution__findList(query:QueryBeanInput)  : [NopAuthUserSubstitution]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthUserSubstitution__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthUserSubstitution
+  ]
+  
+  "查询树状结构"
+  NopAuthUserSubstitution__findListForTree(query:QueryBeanInput!)  : [NopAuthUserSubstitution]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysExtField__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysExtField__findFirst(query:QueryBeanInput)  : NopSysExtField
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysExtField__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysExtField
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysExtField__get(id:String!,ignoreUnknown:Boolean)  : NopSysExtField
+  
+  "分页查询树状结构"
+  NopSysExtField__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysExtField__findPage(query:QueryBeanInput)  : PageBean_NopSysExtField
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysExtField__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysExtField
+  
+  "查询树状结构"
+  NopSysExtField__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysExtField__findRoots(query:QueryBeanInput)  : [NopSysExtField]
+  
+  "分页查询树状结构"
+  NopSysExtField__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysExtField
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysExtField__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysExtField__findList(query:QueryBeanInput)  : [NopSysExtField]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysExtField__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysExtField]
+  
+  "查询树状结构"
+  NopSysExtField__findListForTree(query:QueryBeanInput!)  : [NopSysExtField]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthUser_tenant__findCount(query:QueryBeanInput)  : Long
+  
+  NopAuthUser_tenant__getUserByOpenId(openId:String!)  : NopAuthUser
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthUser_tenant__findFirst(query:QueryBeanInput)  : NopAuthUser_tenant
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthUser_tenant__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthUser_tenant
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthUser_tenant__get(id:String!,ignoreUnknown:Boolean)  : NopAuthUser_tenant
+  
+  "分页查询树状结构"
+  NopAuthUser_tenant__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthUser_tenant__findPage(query:QueryBeanInput)  : PageBean_NopAuthUser_tenant
+  
+  NopAuthUser_tenant__active_findPage(query:QueryBeanInput)  : PageBean_NopAuthUser
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthUser_tenant__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthUser_tenant
+  
+  "查询树状结构"
+  NopAuthUser_tenant__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthUser_tenant__findRoots(query:QueryBeanInput)  : [NopAuthUser_tenant]
+  
+  "分页查询树状结构"
+  NopAuthUser_tenant__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthUser
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthUser_tenant__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthUser_tenant__findList(query:QueryBeanInput)  : [NopAuthUser_tenant]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthUser_tenant__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthUser_tenant]
+  
+  "查询树状结构"
+  NopAuthUser_tenant__findListForTree(query:QueryBeanInput!)  : [NopAuthUser]
+  
+  SiteMapApi__getSiteMap(siteId:String,includeFunctionPoints:Boolean)  : 
+  g_io_nop_auth_api_messages_SiteMapBean
+  
+  "全局函数列表"
+  DevDoc__globalFunctions : [g_io_nop_biz_dev_beans_FunctionDefBean]
+  
+  "Ioc容器中的bean定义"
+  DevDoc__beans : WebContentBean
+  
+  "graphql模型定义"
+  DevDoc__graphql : String
+  
+  "所有配置变量的当前值"
+  DevDoc__configVars : [g_io_nop_biz_dev_beans_ConfigVarBean]
+  
+  "全局变量"
+  DevDoc__globalVars : [g_io_nop_biz_dev_beans_GlobalVariableDefBean]
+  
+  "模型文件的依赖文件"
+  DevDoc__dependsSet(path:String!)  : String
+  
+  "rpc客户端调用的统计信息"
+  DevStat__rpcClientStats(orderByAvgTime:Boolean)  : [g_io_nop_core_stat_RpcClientStat]
+  
+  "jdbc调用的统计信息"
+  DevStat__jdbcSqlStats(orderByAvgTime:Boolean)  : [g_io_nop_core_stat_JdbcSqlStatValue]
+  
+  "rpc服务调用的统计信息"
+  DevStat__rpcServerStats(orderByAvgTime:Boolean)  : [g_io_nop_core_stat_RpcServerStat]
+  
+  "清空所有统计信息"
+  DevStat__clearStats : Void
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysClusterLeader__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysClusterLeader__findFirst(query:QueryBeanInput)  : NopSysClusterLeader
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysClusterLeader__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysClusterLeader
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysClusterLeader__get(id:String!,ignoreUnknown:Boolean)  : NopSysClusterLeader
+  
+  "分页查询树状结构"
+  NopSysClusterLeader__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysClusterLeader__findPage(query:QueryBeanInput)  : PageBean_NopSysClusterLeader
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysClusterLeader__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysClusterLeader
+  
+  "查询树状结构"
+  NopSysClusterLeader__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysClusterLeader__findRoots(query:QueryBeanInput)  : [NopSysClusterLeader]
+  
+  "分页查询树状结构"
+  NopSysClusterLeader__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysClusterLeader
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysClusterLeader__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysClusterLeader__findList(query:QueryBeanInput)  : [NopSysClusterLeader]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysClusterLeader__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysClusterLeader]
+  
+  "查询树状结构"
+  NopSysClusterLeader__findListForTree(query:QueryBeanInput!)  : [NopSysClusterLeader]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysDict__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysDict__findFirst(query:QueryBeanInput)  : NopSysDict
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysDict__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysDict
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysDict__get(id:String!,ignoreUnknown:Boolean)  : NopSysDict
+  
+  "分页查询树状结构"
+  NopSysDict__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysDict__findPage(query:QueryBeanInput)  : PageBean_NopSysDict
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysDict__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysDict
+  
+  "查询树状结构"
+  NopSysDict__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysDict__findRoots(query:QueryBeanInput)  : [NopSysDict]
+  
+  "分页查询树状结构"
+  NopSysDict__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysDict
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysDict__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysDict__findList(query:QueryBeanInput)  : [NopSysDict]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysDict__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysDict]
+  
+  "查询树状结构"
+  NopSysDict__findListForTree(query:QueryBeanInput!)  : [NopSysDict]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthUser__findCount(query:QueryBeanInput)  : Long
+  
+  NopAuthUser__getUserByOpenId(openId:String!)  : NopAuthUser
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthUser__findFirst(query:QueryBeanInput)  : NopAuthUser
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthUser__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthUser
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthUser__get(id:String!,ignoreUnknown:Boolean)  : NopAuthUser
+  
+  "分页查询树状结构"
+  NopAuthUser__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthUser__findPage(query:QueryBeanInput)  : PageBean_NopAuthUser
+  
+  NopAuthUser__active_findPage(query:QueryBeanInput)  : PageBean_NopAuthUser
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthUser__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthUser
+  
+  "查询树状结构"
+  NopAuthUser__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthUser__findRoots(query:QueryBeanInput)  : [NopAuthUser]
+  
+  "分页查询树状结构"
+  NopAuthUser__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthUser
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthUser__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthUser__findList(query:QueryBeanInput)  : [NopAuthUser]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthUser__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthUser]
+  
+  "查询树状结构"
+  NopAuthUser__findListForTree(query:QueryBeanInput!)  : [NopAuthUser]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysCodeRule__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysCodeRule__findFirst(query:QueryBeanInput)  : NopSysCodeRule
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysCodeRule__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysCodeRule
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysCodeRule__get(id:String!,ignoreUnknown:Boolean)  : NopSysCodeRule
+  
+  "分页查询树状结构"
+  NopSysCodeRule__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysCodeRule__findPage(query:QueryBeanInput)  : PageBean_NopSysCodeRule
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysCodeRule__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysCodeRule
+  
+  "查询树状结构"
+  NopSysCodeRule__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysCodeRule__findRoots(query:QueryBeanInput)  : [NopSysCodeRule]
+  
+  "分页查询树状结构"
+  NopSysCodeRule__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysCodeRule
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysCodeRule__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysCodeRule__findList(query:QueryBeanInput)  : [NopSysCodeRule]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysCodeRule__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysCodeRule]
+  
+  "查询树状结构"
+  NopSysCodeRule__findListForTree(query:QueryBeanInput!)  : [NopSysCodeRule]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthGroup__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthGroup__findFirst(query:QueryBeanInput)  : NopAuthGroup
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthGroup__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthGroup
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthGroup__get(id:String!,ignoreUnknown:Boolean)  : NopAuthGroup
+  
+  "分页查询树状结构"
+  NopAuthGroup__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthGroup__findPage(query:QueryBeanInput)  : PageBean_NopAuthGroup
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthGroup__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthGroup
+  
+  "查询树状结构"
+  NopAuthGroup__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthGroup__findRoots(query:QueryBeanInput)  : [NopAuthGroup]
+  
+  "分页查询树状结构"
+  NopAuthGroup__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthGroup
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthGroup__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthGroup__findList(query:QueryBeanInput)  : [NopAuthGroup]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthGroup__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthGroup]
+  
+  "查询树状结构"
+  NopAuthGroup__findListForTree(query:QueryBeanInput!)  : [NopAuthGroup]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthTenant__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthTenant__findFirst(query:QueryBeanInput)  : NopAuthTenant
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthTenant__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthTenant
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthTenant__get(id:String!,ignoreUnknown:Boolean)  : NopAuthTenant
+  
+  "分页查询树状结构"
+  NopAuthTenant__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthTenant__findPage(query:QueryBeanInput)  : PageBean_NopAuthTenant
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthTenant__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthTenant
+  
+  "查询树状结构"
+  NopAuthTenant__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthTenant__findRoots(query:QueryBeanInput)  : [NopAuthTenant]
+  
+  "分页查询树状结构"
+  NopAuthTenant__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthTenant
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthTenant__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthTenant__findList(query:QueryBeanInput)  : [NopAuthTenant]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthTenant__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthTenant]
+  
+  "查询树状结构"
+  NopAuthTenant__findListForTree(query:QueryBeanInput!)  : [NopAuthTenant]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysEvent__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysEvent__findFirst(query:QueryBeanInput)  : NopSysEvent
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysEvent__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysEvent
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysEvent__get(id:String!,ignoreUnknown:Boolean)  : NopSysEvent
+  
+  "分页查询树状结构"
+  NopSysEvent__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysEvent__findPage(query:QueryBeanInput)  : PageBean_NopSysEvent
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysEvent__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysEvent
+  
+  "查询树状结构"
+  NopSysEvent__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysEvent__findRoots(query:QueryBeanInput)  : [NopSysEvent]
+  
+  "分页查询树状结构"
+  NopSysEvent__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysEvent
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysEvent__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysEvent__findList(query:QueryBeanInput)  : [NopSysEvent]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysEvent__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysEvent]
+  
+  "查询树状结构"
+  NopSysEvent__findListForTree(query:QueryBeanInput!)  : [NopSysEvent]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthRoleDataAuth__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthRoleDataAuth__findFirst(query:QueryBeanInput)  : NopAuthRoleDataAuth
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthRoleDataAuth__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthRoleDataAuth
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthRoleDataAuth__get(id:String!,ignoreUnknown:Boolean)  : NopAuthRoleDataAuth
+  
+  "分页查询树状结构"
+  NopAuthRoleDataAuth__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthRoleDataAuth__findPage(query:QueryBeanInput)  : PageBean_NopAuthRoleDataAuth
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthRoleDataAuth__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthRoleDataAuth
+  
+  "查询树状结构"
+  NopAuthRoleDataAuth__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthRoleDataAuth__findRoots(query:QueryBeanInput)  : [NopAuthRoleDataAuth]
+  
+  "分页查询树状结构"
+  NopAuthRoleDataAuth__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthRoleDataAuth
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthRoleDataAuth__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthRoleDataAuth__findList(query:QueryBeanInput)  : [NopAuthRoleDataAuth]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthRoleDataAuth__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthRoleDataAuth]
+  
+  "查询树状结构"
+  NopAuthRoleDataAuth__findListForTree(query:QueryBeanInput!)  : [NopAuthRoleDataAuth]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthSession__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthSession__findFirst(query:QueryBeanInput)  : NopAuthSession
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthSession__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthSession
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthSession__get(id:String!,ignoreUnknown:Boolean)  : NopAuthSession
+  
+  "分页查询树状结构"
+  NopAuthSession__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthSession__findPage(query:QueryBeanInput)  : PageBean_NopAuthSession
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthSession__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthSession
+  
+  "查询树状结构"
+  NopAuthSession__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthSession__findRoots(query:QueryBeanInput)  : [NopAuthSession]
+  
+  "分页查询树状结构"
+  NopAuthSession__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthSession
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthSession__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthSession__findList(query:QueryBeanInput)  : [NopAuthSession]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthSession__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthSession]
+  
+  "查询树状结构"
+  NopAuthSession__findListForTree(query:QueryBeanInput!)  : [NopAuthSession]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysServiceInstance__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysServiceInstance__findFirst(query:QueryBeanInput)  : NopSysServiceInstance
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysServiceInstance__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysServiceInstance
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysServiceInstance__get(id:String!,ignoreUnknown:Boolean)  : NopSysServiceInstance
+  
+  "分页查询树状结构"
+  NopSysServiceInstance__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysServiceInstance__findPage(query:QueryBeanInput)  : PageBean_NopSysServiceInstance
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysServiceInstance__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysServiceInstance
+  
+  "查询树状结构"
+  NopSysServiceInstance__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysServiceInstance__findRoots(query:QueryBeanInput)  : [NopSysServiceInstance]
+  
+  "分页查询树状结构"
+  NopSysServiceInstance__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysServiceInstance
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysServiceInstance__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysServiceInstance__findList(query:QueryBeanInput)  : [NopSysServiceInstance]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysServiceInstance__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysServiceInstance]
+  
+  "查询树状结构"
+  NopSysServiceInstance__findListForTree(query:QueryBeanInput!)  : [NopSysServiceInstance]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthExtLogin__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthExtLogin__findFirst(query:QueryBeanInput)  : NopAuthExtLogin
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthExtLogin__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthExtLogin
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthExtLogin__get(id:String!,ignoreUnknown:Boolean)  : NopAuthExtLogin
+  
+  "分页查询树状结构"
+  NopAuthExtLogin__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthExtLogin__findPage(query:QueryBeanInput)  : PageBean_NopAuthExtLogin
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthExtLogin__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthExtLogin
+  
+  "查询树状结构"
+  NopAuthExtLogin__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthExtLogin__findRoots(query:QueryBeanInput)  : [NopAuthExtLogin]
+  
+  "分页查询树状结构"
+  NopAuthExtLogin__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthExtLogin
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthExtLogin__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthExtLogin__findList(query:QueryBeanInput)  : [NopAuthExtLogin]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthExtLogin__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthExtLogin]
+  
+  "查询树状结构"
+  NopAuthExtLogin__findListForTree(query:QueryBeanInput!)  : [NopAuthExtLogin]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthOpLog__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthOpLog__findFirst(query:QueryBeanInput)  : NopAuthOpLog
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthOpLog__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthOpLog
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthOpLog__get(id:String!,ignoreUnknown:Boolean)  : NopAuthOpLog
+  
+  "分页查询树状结构"
+  NopAuthOpLog__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthOpLog__findPage(query:QueryBeanInput)  : PageBean_NopAuthOpLog
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthOpLog__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthOpLog
+  
+  "查询树状结构"
+  NopAuthOpLog__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthOpLog__findRoots(query:QueryBeanInput)  : [NopAuthOpLog]
+  
+  "分页查询树状结构"
+  NopAuthOpLog__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthOpLog
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthOpLog__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthOpLog__findList(query:QueryBeanInput)  : [NopAuthOpLog]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthOpLog__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthOpLog]
+  
+  "查询树状结构"
+  NopAuthOpLog__findListForTree(query:QueryBeanInput!)  : [NopAuthOpLog]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthGroupDept__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthGroupDept__findFirst(query:QueryBeanInput)  : NopAuthGroupDept
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthGroupDept__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthGroupDept
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthGroupDept__get(id:String!,ignoreUnknown:Boolean)  : NopAuthGroupDept
+  
+  "分页查询树状结构"
+  NopAuthGroupDept__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthGroupDept__findPage(query:QueryBeanInput)  : PageBean_NopAuthGroupDept
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthGroupDept__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthGroupDept
+  
+  "查询树状结构"
+  NopAuthGroupDept__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthGroupDept__findRoots(query:QueryBeanInput)  : [NopAuthGroupDept]
+  
+  "分页查询树状结构"
+  NopAuthGroupDept__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthGroupDept
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthGroupDept__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthGroupDept__findList(query:QueryBeanInput)  : [NopAuthGroupDept]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthGroupDept__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthGroupDept]
+  
+  "查询树状结构"
+  NopAuthGroupDept__findListForTree(query:QueryBeanInput!)  : [NopAuthGroupDept]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthRole__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthRole__findFirst(query:QueryBeanInput)  : NopAuthRole
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthRole__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthRole
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthRole__get(id:String!,ignoreUnknown:Boolean)  : NopAuthRole
+  
+  "分页查询树状结构"
+  NopAuthRole__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthRole__findPage(query:QueryBeanInput)  : PageBean_NopAuthRole
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthRole__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthRole
+  
+  "查询树状结构"
+  NopAuthRole__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthRole__findRoots(query:QueryBeanInput)  : [NopAuthRole]
+  
+  "分页查询树状结构"
+  NopAuthRole__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthRole
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthRole__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthRole__findList(query:QueryBeanInput)  : [NopAuthRole]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthRole__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthRole]
+  
+  "查询树状结构"
+  NopAuthRole__findListForTree(query:QueryBeanInput!)  : [NopAuthRole]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthRoleResource__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthRoleResource__findFirst(query:QueryBeanInput)  : NopAuthRoleResource
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthRoleResource__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthRoleResource
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthRoleResource__get(id:String!,ignoreUnknown:Boolean)  : NopAuthRoleResource
+  
+  "分页查询树状结构"
+  NopAuthRoleResource__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthRoleResource__findPage(query:QueryBeanInput)  : PageBean_NopAuthRoleResource
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthRoleResource__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthRoleResource
+  
+  "查询树状结构"
+  NopAuthRoleResource__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthRoleResource__findRoots(query:QueryBeanInput)  : [NopAuthRoleResource]
+  
+  "分页查询树状结构"
+  NopAuthRoleResource__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthRoleResource
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthRoleResource__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthRoleResource__findList(query:QueryBeanInput)  : [NopAuthRoleResource]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthRoleResource__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthRoleResource]
+  
+  "查询树状结构"
+  NopAuthRoleResource__findListForTree(query:QueryBeanInput!)  : [NopAuthRoleResource]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthGroupUser__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthGroupUser__findFirst(query:QueryBeanInput)  : NopAuthGroupUser
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthGroupUser__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthGroupUser
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthGroupUser__get(id:String!,ignoreUnknown:Boolean)  : NopAuthGroupUser
+  
+  "分页查询树状结构"
+  NopAuthGroupUser__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthGroupUser__findPage(query:QueryBeanInput)  : PageBean_NopAuthGroupUser
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthGroupUser__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthGroupUser
+  
+  "查询树状结构"
+  NopAuthGroupUser__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthGroupUser__findRoots(query:QueryBeanInput)  : [NopAuthGroupUser]
+  
+  "分页查询树状结构"
+  NopAuthGroupUser__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthGroupUser
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthGroupUser__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthGroupUser__findList(query:QueryBeanInput)  : [NopAuthGroupUser]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthGroupUser__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthGroupUser]
+  
+  "查询树状结构"
+  NopAuthGroupUser__findListForTree(query:QueryBeanInput!)  : [NopAuthGroupUser]
+  
+  SystemJsProvider__getJsSource(path:String!)  : WebContentBean
+  
+  SystemJsProvider__getJs(path:String!)  : WebContentBean
+  
+  NopFileStore__download(fileId:String!,contentType:String)  : WebContentBean
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysTag__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysTag__findFirst(query:QueryBeanInput)  : NopSysTag
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysTag__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysTag
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysTag__get(id:String!,ignoreUnknown:Boolean)  : NopSysTag
+  
+  "分页查询树状结构"
+  NopSysTag__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysTag__findPage(query:QueryBeanInput)  : PageBean_NopSysTag
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysTag__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysTag
+  
+  "查询树状结构"
+  NopSysTag__findTreeEntityList(query:QueryBeanInput!)  : [g_io_nop_api_core_beans_std_StdTreeEntity
+  ]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysTag__findRoots(query:QueryBeanInput)  : [NopSysTag]
+  
+  "分页查询树状结构"
+  NopSysTag__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysTag
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysTag__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysTag__findList(query:QueryBeanInput)  : [NopSysTag]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysTag__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysTag]
+  
+  "查询树状结构"
+  NopSysTag__findListForTree(query:QueryBeanInput!)  : [NopSysTag]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysUserVariable__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysUserVariable__findFirst(query:QueryBeanInput)  : NopSysUserVariable
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysUserVariable__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysUserVariable
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysUserVariable__get(id:String!,ignoreUnknown:Boolean)  : NopSysUserVariable
+  
+  "分页查询树状结构"
+  NopSysUserVariable__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysUserVariable__findPage(query:QueryBeanInput)  : PageBean_NopSysUserVariable
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysUserVariable__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysUserVariable
+  
+  "查询树状结构"
+  NopSysUserVariable__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysUserVariable__findRoots(query:QueryBeanInput)  : [NopSysUserVariable]
+  
+  "分页查询树状结构"
+  NopSysUserVariable__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysUserVariable
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysUserVariable__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysUserVariable__findList(query:QueryBeanInput)  : [NopSysUserVariable]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysUserVariable__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysUserVariable]
+  
+  NopSysUserVariable__getVar(varName:String!)  : NopSysUserVariable
+  
+  "查询树状结构"
+  NopSysUserVariable__findListForTree(query:QueryBeanInput!)  : [NopSysUserVariable]
+  
+  Sys__cancel(data:Any,reqId:String)  : Boolean
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysCompactExtField__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysCompactExtField__findFirst(query:QueryBeanInput)  : NopSysCompactExtField
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysCompactExtField__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysCompactExtField
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysCompactExtField__get(id:String!,ignoreUnknown:Boolean)  : NopSysCompactExtField
+  
+  "分页查询树状结构"
+  NopSysCompactExtField__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysCompactExtField__findPage(query:QueryBeanInput)  : PageBean_NopSysCompactExtField
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysCompactExtField__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysCompactExtField
+  
+  "查询树状结构"
+  NopSysCompactExtField__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysCompactExtField__findRoots(query:QueryBeanInput)  : [NopSysCompactExtField]
+  
+  "分页查询树状结构"
+  NopSysCompactExtField__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysCompactExtField
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysCompactExtField__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysCompactExtField__findList(query:QueryBeanInput)  : [NopSysCompactExtField]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysCompactExtField__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysCompactExtField]
+  
+  "查询树状结构"
+  NopSysCompactExtField__findListForTree(query:QueryBeanInput!)  : [NopSysCompactExtField]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysVariable__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysVariable__findFirst(query:QueryBeanInput)  : NopSysVariable
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysVariable__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysVariable
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysVariable__get(id:String!,ignoreUnknown:Boolean)  : NopSysVariable
+  
+  "分页查询树状结构"
+  NopSysVariable__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysVariable__findPage(query:QueryBeanInput)  : PageBean_NopSysVariable
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysVariable__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysVariable
+  
+  "查询树状结构"
+  NopSysVariable__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysVariable__findRoots(query:QueryBeanInput)  : [NopSysVariable]
+  
+  "分页查询树状结构"
+  NopSysVariable__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysVariable
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysVariable__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysVariable__findList(query:QueryBeanInput)  : [NopSysVariable]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysVariable__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysVariable]
+  
+  "查询树状结构"
+  NopSysVariable__findListForTree(query:QueryBeanInput!)  : [NopSysVariable]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthSite__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthSite__findFirst(query:QueryBeanInput)  : NopAuthSite
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthSite__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthSite
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthSite__get(id:String!,ignoreUnknown:Boolean)  : NopAuthSite
+  
+  "分页查询树状结构"
+  NopAuthSite__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthSite__findPage(query:QueryBeanInput)  : PageBean_NopAuthSite
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthSite__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthSite
+  
+  "查询树状结构"
+  NopAuthSite__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthSite__findRoots(query:QueryBeanInput)  : [NopAuthSite]
+  
+  "分页查询树状结构"
+  NopAuthSite__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthSite
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthSite__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthSite__findList(query:QueryBeanInput)  : [NopAuthSite]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthSite__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthSite]
+  
+  "查询树状结构"
+  NopAuthSite__findListForTree(query:QueryBeanInput!)  : [NopAuthSite]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysNoticeTemplate__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysNoticeTemplate__findFirst(query:QueryBeanInput)  : NopSysNoticeTemplate
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysNoticeTemplate__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysNoticeTemplate
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysNoticeTemplate__get(id:String!,ignoreUnknown:Boolean)  : NopSysNoticeTemplate
+  
+  "分页查询树状结构"
+  NopSysNoticeTemplate__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysNoticeTemplate__findPage(query:QueryBeanInput)  : PageBean_NopSysNoticeTemplate
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysNoticeTemplate__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysNoticeTemplate
+  
+  "查询树状结构"
+  NopSysNoticeTemplate__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysNoticeTemplate__findRoots(query:QueryBeanInput)  : [NopSysNoticeTemplate]
+  
+  "分页查询树状结构"
+  NopSysNoticeTemplate__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysNoticeTemplate
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysNoticeTemplate__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysNoticeTemplate__findList(query:QueryBeanInput)  : [NopSysNoticeTemplate]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysNoticeTemplate__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysNoticeTemplate]
+  
+  "查询树状结构"
+  NopSysNoticeTemplate__findListForTree(query:QueryBeanInput!)  : [NopSysNoticeTemplate]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthDept__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthDept__findFirst(query:QueryBeanInput)  : NopAuthDept
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthDept__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthDept
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthDept__get(id:String!,ignoreUnknown:Boolean)  : NopAuthDept
+  
+  "分页查询树状结构"
+  NopAuthDept__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthDept__findPage(query:QueryBeanInput)  : PageBean_NopAuthDept
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthDept__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthDept
+  
+  "查询树状结构"
+  NopAuthDept__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthDept__findRoots(query:QueryBeanInput)  : [NopAuthDept]
+  
+  "分页查询树状结构"
+  NopAuthDept__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthDept
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthDept__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthDept__findList(query:QueryBeanInput)  : [NopAuthDept]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthDept__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthDept]
+  
+  "查询树状结构"
+  NopAuthDept__findListForTree(query:QueryBeanInput!)  : [NopAuthDept]
+  
+  PageProvider__getPageSource(path:String!)  : Map
+  
+  PageProvider__getPage(path:String!)  : Map
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthResource__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthResource__findFirst(query:QueryBeanInput)  : NopAuthResource
+  
+  NopAuthResource__getMenuTree(siteId:String!)  : [NopAuthResource]
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthResource__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthResource
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthResource__get(id:String!,ignoreUnknown:Boolean)  : NopAuthResource
+  
+  "分页查询树状结构"
+  NopAuthResource__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthResource__findPage(query:QueryBeanInput)  : PageBean_NopAuthResource
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthResource__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthResource
+  
+  "查询树状结构"
+  NopAuthResource__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthResource__findRoots(query:QueryBeanInput)  : [NopAuthResource]
+  
+  "分页查询树状结构"
+  NopAuthResource__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthResource
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthResource__asDict : DictBean
+  
+  NopAuthResource__refreshSiteMapCache : Void
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthResource__findList(query:QueryBeanInput)  : [NopAuthResource]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthResource__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthResource]
+  
+  "查询树状结构"
+  NopAuthResource__findListForTree(query:QueryBeanInput!)  : [NopAuthResource]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthPosition__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthPosition__findFirst(query:QueryBeanInput)  : NopAuthPosition
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthPosition__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthPosition
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthPosition__get(id:String!,ignoreUnknown:Boolean)  : NopAuthPosition
+  
+  "分页查询树状结构"
+  NopAuthPosition__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthPosition__findPage(query:QueryBeanInput)  : PageBean_NopAuthPosition
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthPosition__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthPosition
+  
+  "查询树状结构"
+  NopAuthPosition__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthPosition__findRoots(query:QueryBeanInput)  : [NopAuthPosition]
+  
+  "分页查询树状结构"
+  NopAuthPosition__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthPosition
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthPosition__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthPosition__findList(query:QueryBeanInput)  : [NopAuthPosition]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthPosition__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthPosition]
+  
+  "查询树状结构"
+  NopAuthPosition__findListForTree(query:QueryBeanInput!)  : [NopAuthPosition]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysI18n__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysI18n__findFirst(query:QueryBeanInput)  : NopSysI18n
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysI18n__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysI18n
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysI18n__get(id:String!,ignoreUnknown:Boolean)  : NopSysI18n
+  
+  "分页查询树状结构"
+  NopSysI18n__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysI18n__findPage(query:QueryBeanInput)  : PageBean_NopSysI18n
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysI18n__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysI18n
+  
+  "查询树状结构"
+  NopSysI18n__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysI18n__findRoots(query:QueryBeanInput)  : [NopSysI18n]
+  
+  "分页查询树状结构"
+  NopSysI18n__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysI18n
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysI18n__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysI18n__findList(query:QueryBeanInput)  : [NopSysI18n]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysI18n__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysI18n]
+  
+  "查询树状结构"
+  NopSysI18n__findListForTree(query:QueryBeanInput!)  : [NopSysI18n]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysObjTag__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysObjTag__findFirst(query:QueryBeanInput)  : NopSysObjTag
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysObjTag__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysObjTag
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysObjTag__get(id:String!,ignoreUnknown:Boolean)  : NopSysObjTag
+  
+  "分页查询树状结构"
+  NopSysObjTag__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysObjTag__findPage(query:QueryBeanInput)  : PageBean_NopSysObjTag
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysObjTag__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysObjTag
+  
+  "查询树状结构"
+  NopSysObjTag__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysObjTag__findRoots(query:QueryBeanInput)  : [NopSysObjTag]
+  
+  "分页查询树状结构"
+  NopSysObjTag__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysObjTag
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysObjTag__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysObjTag__findList(query:QueryBeanInput)  : [NopSysObjTag]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysObjTag__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysObjTag]
+  
+  "查询树状结构"
+  NopSysObjTag__findListForTree(query:QueryBeanInput!)  : [NopSysObjTag]
+  
+  LoginApi__generateVerifyCode(verifySecret:String!)  : String
+  
+  LoginApi__getLoginUserInfo(accessToken:String,clientId:String,clientSecret:String)  : 
+  g_io_nop_auth_api_messages_LoginUserInfo
+  
+  LoginApi__getLoginResult(accessCode:String,clientId:String,clientSecret:String)  : 
+  g_io_nop_auth_api_messages_LoginResult
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopAuthUserRole__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopAuthUserRole__findFirst(query:QueryBeanInput)  : NopAuthUserRole
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopAuthUserRole__deleted_findPage(query:QueryBeanInput)  : PageBean_NopAuthUserRole
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopAuthUserRole__get(id:String!,ignoreUnknown:Boolean)  : NopAuthUserRole
+  
+  "分页查询树状结构"
+  NopAuthUserRole__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopAuthUserRole__findPage(query:QueryBeanInput)  : PageBean_NopAuthUserRole
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopAuthUserRole__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopAuthUserRole
+  
+  "查询树状结构"
+  NopAuthUserRole__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopAuthUserRole__findRoots(query:QueryBeanInput)  : [NopAuthUserRole]
+  
+  "分页查询树状结构"
+  NopAuthUserRole__findPageForTree(query:QueryBeanInput!)  : PageBean_NopAuthUserRole
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopAuthUserRole__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopAuthUserRole__findList(query:QueryBeanInput)  : [NopAuthUserRole]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopAuthUserRole__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopAuthUserRole]
+  
+  "查询树状结构"
+  NopAuthUserRole__findListForTree(query:QueryBeanInput!)  : [NopAuthUserRole]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysDictOption__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysDictOption__findFirst(query:QueryBeanInput)  : NopSysDictOption
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysDictOption__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysDictOption
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysDictOption__get(id:String!,ignoreUnknown:Boolean)  : NopSysDictOption
+  
+  "分页查询树状结构"
+  NopSysDictOption__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysDictOption__findPage(query:QueryBeanInput)  : PageBean_NopSysDictOption
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysDictOption__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysDictOption
+  
+  "查询树状结构"
+  NopSysDictOption__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysDictOption__findRoots(query:QueryBeanInput)  : [NopSysDictOption]
+  
+  "分页查询树状结构"
+  NopSysDictOption__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysDictOption
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysDictOption__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysDictOption__findList(query:QueryBeanInput)  : [NopSysDictOption]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysDictOption__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysDictOption]
+  
+  "查询树状结构"
+  NopSysDictOption__findListForTree(query:QueryBeanInput!)  : [NopSysDictOption]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysBroadcastEvent__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysBroadcastEvent__findFirst(query:QueryBeanInput)  : NopSysBroadcastEvent
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysBroadcastEvent__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysBroadcastEvent
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysBroadcastEvent__get(id:String!,ignoreUnknown:Boolean)  : NopSysBroadcastEvent
+  
+  "分页查询树状结构"
+  NopSysBroadcastEvent__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysBroadcastEvent__findPage(query:QueryBeanInput)  : PageBean_NopSysBroadcastEvent
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysBroadcastEvent__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysBroadcastEvent
+  
+  "查询树状结构"
+  NopSysBroadcastEvent__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysBroadcastEvent__findRoots(query:QueryBeanInput)  : [NopSysBroadcastEvent]
+  
+  "分页查询树状结构"
+  NopSysBroadcastEvent__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysBroadcastEvent
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysBroadcastEvent__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysBroadcastEvent__findList(query:QueryBeanInput)  : [NopSysBroadcastEvent]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysBroadcastEvent__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysBroadcastEvent]
+  
+  "查询树状结构"
+  NopSysBroadcastEvent__findListForTree(query:QueryBeanInput!)  : [NopSysBroadcastEvent]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysCheckerRecord__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysCheckerRecord__findFirst(query:QueryBeanInput)  : NopSysCheckerRecord
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysCheckerRecord__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysCheckerRecord
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysCheckerRecord__get(id:String!,ignoreUnknown:Boolean)  : NopSysCheckerRecord
+  
+  "分页查询树状结构"
+  NopSysCheckerRecord__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysCheckerRecord__findPage(query:QueryBeanInput)  : PageBean_NopSysCheckerRecord
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysCheckerRecord__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysCheckerRecord
+  
+  "查询树状结构"
+  NopSysCheckerRecord__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysCheckerRecord__findRoots(query:QueryBeanInput)  : [NopSysCheckerRecord]
+  
+  "分页查询树状结构"
+  NopSysCheckerRecord__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysCheckerRecord
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysCheckerRecord__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysCheckerRecord__findList(query:QueryBeanInput)  : [NopSysCheckerRecord]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysCheckerRecord__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysCheckerRecord]
+  
+  "查询树状结构"
+  NopSysCheckerRecord__findListForTree(query:QueryBeanInput!)  : [NopSysCheckerRecord]
+  
+  "@i18n:biz.findCount|获取记录总数"
+  NopSysSequence__findCount(query:QueryBeanInput)  : Long
+  
+  "@i18n:biz.findFirst|返回符合条件的第一条数据"
+  NopSysSequence__findFirst(query:QueryBeanInput)  : NopSysSequence
+  
+  "@i18n:biz.deleted_findPage|分页查询已删除记录"
+  NopSysSequence__deleted_findPage(query:QueryBeanInput)  : PageBean_NopSysSequence
+  
+  "@i18n:biz.get|根据id获取单条数据"
+  NopSysSequence__get(id:String!,ignoreUnknown:Boolean)  : NopSysSequence
+  
+  "分页查询树状结构"
+  NopSysSequence__findTreeEntityPage(query:QueryBeanInput!)  : 
+  PageBean_g_io_nop_api_core_beans_std_StdTreeEntity
+  
+  "@i18n:biz.findPage|分页查询"
+  NopSysSequence__findPage(query:QueryBeanInput)  : PageBean_NopSysSequence
+  
+  "@i18n:biz.get|根据id获取已经被逻辑删除的单条数据"
+  NopSysSequence__deleted_get(id:String!,ignoreUnknown:Boolean)  : NopSysSequence
+  
+  "查询树状结构"
+  NopSysSequence__findTreeEntityList(query:QueryBeanInput!)  : [
+  g_io_nop_api_core_beans_std_StdTreeEntity]
+  
+  "@i18n:biz.findRoots|根据查询条件返回树形结构的根节点列表"
+  NopSysSequence__findRoots(query:QueryBeanInput)  : [NopSysSequence]
+  
+  "分页查询树状结构"
+  NopSysSequence__findPageForTree(query:QueryBeanInput!)  : PageBean_NopSysSequence
+  
+  "@i18n:biz.asDict|将实体记录作为字典项返回"
+  NopSysSequence__asDict : DictBean
+  
+  "@i18n:biz.findList|根据查询条件返回列表数据。与findPage的不同在于,findPage返回PageBean类型，支持分页，而这个函数返回List类型，而且缺省不分页"
+  NopSysSequence__findList(query:QueryBeanInput)  : [NopSysSequence]
+  
+  "@i18n:biz.batchGet|根据主键批量获取对象"
+  NopSysSequence__batchGet(ids:[String]!,ignoreUnknown:Boolean)  : [NopSysSequence]
+  
+  "查询树状结构"
+  NopSysSequence__findListForTree(query:QueryBeanInput!)  : [NopSysSequence]
+}
+
+
+extend type Mutation{
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthResource_main__copyForNew(data:Map!)  : NopAuthResource_main
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthResource_main__recoverDeleted(id:String!)  : NopAuthResource_main
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthResource_main__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthResource_main__save(data:Map!)  : NopAuthResource_main
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthResource_main__update(data:Map!)  : NopAuthResource_main
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthResource_main__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthResource_main__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthResource_main__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthResource_main__saveOrUpdate(data:Map!)  : NopAuthResource
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthResource_main__save_update(data:Map!)  : NopAuthResource
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthResource_main__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthResource_main__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthResource_main__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthResource_main__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthResource_main__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysLock__copyForNew(data:Map!)  : NopSysLock
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysLock__recoverDeleted(id:String!)  : NopSysLock
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysLock__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysLock__save(data:Map!)  : NopSysLock
+  
+  "@i18n:biz.update|更新数据"
+  NopSysLock__update(data:Map!)  : NopSysLock
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysLock__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysLock__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysLock__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysLock__saveOrUpdate(data:Map!)  : NopSysLock
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysLock__save_update(data:Map!)  : NopSysLock
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysLock__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)  : 
+  Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysLock__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysLock__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysLock__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysLock__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysChangeLog__copyForNew(data:Map!)  : NopSysChangeLog
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysChangeLog__recoverDeleted(id:String!)  : NopSysChangeLog
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysChangeLog__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysChangeLog__save(data:Map!)  : NopSysChangeLog
+  
+  "@i18n:biz.update|更新数据"
+  NopSysChangeLog__update(data:Map!)  : NopSysChangeLog
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysChangeLog__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysChangeLog__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysChangeLog__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysChangeLog__saveOrUpdate(data:Map!)  : NopSysChangeLog
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysChangeLog__save_update(data:Map!)  : NopSysChangeLog
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysChangeLog__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysChangeLog__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysChangeLog__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysChangeLog__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysChangeLog__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthUserSubstitution__copyForNew(data:Map!)  : NopAuthUserSubstitution
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthUserSubstitution__recoverDeleted(id:String!)  : NopAuthUserSubstitution
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthUserSubstitution__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthUserSubstitution__save(data:Map!)  : NopAuthUserSubstitution
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthUserSubstitution__update(data:Map!)  : NopAuthUserSubstitution
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthUserSubstitution__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthUserSubstitution__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthUserSubstitution__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthUserSubstitution__saveOrUpdate(data:Map!)  : NopAuthUserSubstitution
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthUserSubstitution__save_update(data:Map!)  : NopAuthUserSubstitution
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthUserSubstitution__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthUserSubstitution__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!
+  ,filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthUserSubstitution__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthUserSubstitution__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthUserSubstitution__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!
+  ,filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysExtField__copyForNew(data:Map!)  : NopSysExtField
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysExtField__recoverDeleted(id:String!)  : NopSysExtField
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysExtField__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysExtField__save(data:Map!)  : NopSysExtField
+  
+  "@i18n:biz.update|更新数据"
+  NopSysExtField__update(data:Map!)  : NopSysExtField
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysExtField__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysExtField__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysExtField__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysExtField__saveOrUpdate(data:Map!)  : NopSysExtField
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysExtField__save_update(data:Map!)  : NopSysExtField
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysExtField__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysExtField__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysExtField__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysExtField__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysExtField__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthUser_tenant__copyForNew(data:Map!)  : NopAuthUser_tenant
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthUser_tenant__recoverDeleted(id:String!)  : NopAuthUser_tenant
+  
+  "@i18n:common.resetUserPassword"
+  NopAuthUser_tenant__resetUserPassword(userId:String!,password:String!)  : Void
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthUser_tenant__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthUser_tenant__save(data:Map!)  : NopAuthUser_tenant
+  
+  "修改自己的密码"
+  NopAuthUser_tenant__changeSelfPassword(oldPassword:String!,newPassword:String!)  : Void
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthUser_tenant__update(data:Map!)  : NopAuthUser_tenant
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthUser_tenant__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthUser_tenant__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthUser_tenant__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthUser_tenant__saveOrUpdate(data:Map!)  : NopAuthUser
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthUser_tenant__save_update(data:Map!)  : NopAuthUser
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthUser_tenant__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthUser_tenant__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthUser_tenant__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:common.enableUser"
+  NopAuthUser_tenant__enableUser(userId:String!)  : Void
+  
+  "@i18n:common.disableUser"
+  NopAuthUser_tenant__disableUser(userId:String!)  : Void
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthUser_tenant__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthUser_tenant__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "刷新虚拟文件系统"
+  DevTool__refreshVirtualFileSystem : Void
+  
+  "清空组件缓存"
+  DevTool__clearComponentCache : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysClusterLeader__copyForNew(data:Map!)  : NopSysClusterLeader
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysClusterLeader__recoverDeleted(id:String!)  : NopSysClusterLeader
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysClusterLeader__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysClusterLeader__save(data:Map!)  : NopSysClusterLeader
+  
+  "@i18n:biz.update|更新数据"
+  NopSysClusterLeader__update(data:Map!)  : NopSysClusterLeader
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysClusterLeader__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysClusterLeader__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysClusterLeader__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysClusterLeader__saveOrUpdate(data:Map!)  : NopSysClusterLeader
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysClusterLeader__save_update(data:Map!)  : NopSysClusterLeader
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysClusterLeader__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysClusterLeader__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysClusterLeader__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysClusterLeader__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysClusterLeader__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysDict__copyForNew(data:Map!)  : NopSysDict
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysDict__recoverDeleted(id:String!)  : NopSysDict
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysDict__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysDict__save(data:Map!)  : NopSysDict
+  
+  "@i18n:biz.update|更新数据"
+  NopSysDict__update(data:Map!)  : NopSysDict
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysDict__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysDict__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysDict__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysDict__saveOrUpdate(data:Map!)  : NopSysDict
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysDict__save_update(data:Map!)  : NopSysDict
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysDict__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)  : 
+  Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysDict__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysDict__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysDict__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysDict__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthUser__copyForNew(data:Map!)  : NopAuthUser
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthUser__recoverDeleted(id:String!)  : NopAuthUser
+  
+  "@i18n:common.resetUserPassword"
+  NopAuthUser__resetUserPassword(userId:String!,password:String!)  : Void
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthUser__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthUser__save(data:Map!)  : NopAuthUser
+  
+  "修改自己的密码"
+  NopAuthUser__changeSelfPassword(oldPassword:String!,newPassword:String!)  : Void
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthUser__update(data:Map!)  : NopAuthUser
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthUser__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthUser__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthUser__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthUser__saveOrUpdate(data:Map!)  : NopAuthUser
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthUser__save_update(data:Map!)  : NopAuthUser
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthUser__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthUser__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthUser__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:common.enableUser"
+  NopAuthUser__enableUser(userId:String!)  : Void
+  
+  "@i18n:common.disableUser"
+  NopAuthUser__disableUser(userId:String!)  : Void
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthUser__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthUser__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysCodeRule__copyForNew(data:Map!)  : NopSysCodeRule
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysCodeRule__recoverDeleted(id:String!)  : NopSysCodeRule
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysCodeRule__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysCodeRule__save(data:Map!)  : NopSysCodeRule
+  
+  "@i18n:biz.update|更新数据"
+  NopSysCodeRule__update(data:Map!)  : NopSysCodeRule
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysCodeRule__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysCodeRule__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysCodeRule__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysCodeRule__saveOrUpdate(data:Map!)  : NopSysCodeRule
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysCodeRule__save_update(data:Map!)  : NopSysCodeRule
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysCodeRule__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysCodeRule__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysCodeRule__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysCodeRule__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysCodeRule__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthGroup__copyForNew(data:Map!)  : NopAuthGroup
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthGroup__recoverDeleted(id:String!)  : NopAuthGroup
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthGroup__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthGroup__save(data:Map!)  : NopAuthGroup
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthGroup__update(data:Map!)  : NopAuthGroup
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthGroup__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthGroup__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthGroup__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthGroup__saveOrUpdate(data:Map!)  : NopAuthGroup
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthGroup__save_update(data:Map!)  : NopAuthGroup
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthGroup__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthGroup__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthGroup__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthGroup__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthGroup__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthTenant__copyForNew(data:Map!)  : NopAuthTenant
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthTenant__recoverDeleted(id:String!)  : NopAuthTenant
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthTenant__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthTenant__save(data:Map!)  : NopAuthTenant
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthTenant__update(data:Map!)  : NopAuthTenant
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthTenant__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthTenant__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthTenant__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthTenant__saveOrUpdate(data:Map!)  : NopAuthTenant
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthTenant__save_update(data:Map!)  : NopAuthTenant
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthTenant__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthTenant__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthTenant__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthTenant__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthTenant__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysEvent__copyForNew(data:Map!)  : NopSysEvent
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysEvent__recoverDeleted(id:String!)  : NopSysEvent
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysEvent__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysEvent__save(data:Map!)  : NopSysEvent
+  
+  "@i18n:biz.update|更新数据"
+  NopSysEvent__update(data:Map!)  : NopSysEvent
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysEvent__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysEvent__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysEvent__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysEvent__saveOrUpdate(data:Map!)  : NopSysEvent
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysEvent__save_update(data:Map!)  : NopSysEvent
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysEvent__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysEvent__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysEvent__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysEvent__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysEvent__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthRoleDataAuth__copyForNew(data:Map!)  : NopAuthRoleDataAuth
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthRoleDataAuth__recoverDeleted(id:String!)  : NopAuthRoleDataAuth
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthRoleDataAuth__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthRoleDataAuth__save(data:Map!)  : NopAuthRoleDataAuth
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthRoleDataAuth__update(data:Map!)  : NopAuthRoleDataAuth
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthRoleDataAuth__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthRoleDataAuth__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthRoleDataAuth__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthRoleDataAuth__saveOrUpdate(data:Map!)  : NopAuthRoleDataAuth
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthRoleDataAuth__save_update(data:Map!)  : NopAuthRoleDataAuth
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthRoleDataAuth__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthRoleDataAuth__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthRoleDataAuth__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthRoleDataAuth__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthRoleDataAuth__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthSession__copyForNew(data:Map!)  : NopAuthSession
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthSession__recoverDeleted(id:String!)  : NopAuthSession
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthSession__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthSession__save(data:Map!)  : NopAuthSession
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthSession__update(data:Map!)  : NopAuthSession
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthSession__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthSession__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthSession__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthSession__saveOrUpdate(data:Map!)  : NopAuthSession
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthSession__save_update(data:Map!)  : NopAuthSession
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthSession__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthSession__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthSession__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthSession__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthSession__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysServiceInstance__copyForNew(data:Map!)  : NopSysServiceInstance
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysServiceInstance__recoverDeleted(id:String!)  : NopSysServiceInstance
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysServiceInstance__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysServiceInstance__save(data:Map!)  : NopSysServiceInstance
+  
+  "@i18n:biz.update|更新数据"
+  NopSysServiceInstance__update(data:Map!)  : NopSysServiceInstance
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysServiceInstance__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysServiceInstance__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysServiceInstance__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysServiceInstance__saveOrUpdate(data:Map!)  : NopSysServiceInstance
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysServiceInstance__save_update(data:Map!)  : NopSysServiceInstance
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysServiceInstance__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysServiceInstance__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysServiceInstance__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysServiceInstance__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysServiceInstance__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthExtLogin__copyForNew(data:Map!)  : NopAuthExtLogin
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthExtLogin__recoverDeleted(id:String!)  : NopAuthExtLogin
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthExtLogin__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthExtLogin__save(data:Map!)  : NopAuthExtLogin
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthExtLogin__update(data:Map!)  : NopAuthExtLogin
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthExtLogin__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthExtLogin__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthExtLogin__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthExtLogin__saveOrUpdate(data:Map!)  : NopAuthExtLogin
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthExtLogin__save_update(data:Map!)  : NopAuthExtLogin
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthExtLogin__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthExtLogin__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthExtLogin__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthExtLogin__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthExtLogin__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthOpLog__copyForNew(data:Map!)  : NopAuthOpLog
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthOpLog__recoverDeleted(id:String!)  : NopAuthOpLog
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthOpLog__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthOpLog__save(data:Map!)  : NopAuthOpLog
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthOpLog__update(data:Map!)  : NopAuthOpLog
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthOpLog__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthOpLog__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthOpLog__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthOpLog__saveOrUpdate(data:Map!)  : NopAuthOpLog
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthOpLog__save_update(data:Map!)  : NopAuthOpLog
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthOpLog__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthOpLog__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthOpLog__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthOpLog__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthOpLog__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthGroupDept__copyForNew(data:Map!)  : NopAuthGroupDept
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthGroupDept__recoverDeleted(id:String!)  : NopAuthGroupDept
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthGroupDept__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthGroupDept__save(data:Map!)  : NopAuthGroupDept
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthGroupDept__update(data:Map!)  : NopAuthGroupDept
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthGroupDept__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthGroupDept__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthGroupDept__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthGroupDept__saveOrUpdate(data:Map!)  : NopAuthGroupDept
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthGroupDept__save_update(data:Map!)  : NopAuthGroupDept
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthGroupDept__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthGroupDept__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthGroupDept__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthGroupDept__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthGroupDept__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthRole__copyForNew(data:Map!)  : NopAuthRole
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthRole__recoverDeleted(id:String!)  : NopAuthRole
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthRole__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthRole__save(data:Map!)  : NopAuthRole
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthRole__update(data:Map!)  : NopAuthRole
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthRole__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthRole__batchDelete(ids:[String]!)  : [String]
+  
+  NopAuthRole__addRoleUsers(roleId:String!,userIds:[String]!)  : Void
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthRole__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  NopAuthRole__removeRoleUsers(roleId:String!,userIds:[String]!)  : Void
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthRole__saveOrUpdate(data:Map!)  : NopAuthRole
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthRole__save_update(data:Map!)  : NopAuthRole
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthRole__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthRole__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthRole__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  NopAuthRole__updateRoleResources(roleId:String!,siteId:String!,resourceIds:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthRole__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthRole__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthRoleResource__copyForNew(data:Map!)  : NopAuthRoleResource
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthRoleResource__recoverDeleted(id:String!)  : NopAuthRoleResource
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthRoleResource__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthRoleResource__save(data:Map!)  : NopAuthRoleResource
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthRoleResource__update(data:Map!)  : NopAuthRoleResource
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthRoleResource__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthRoleResource__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthRoleResource__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthRoleResource__saveOrUpdate(data:Map!)  : NopAuthRoleResource
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthRoleResource__save_update(data:Map!)  : NopAuthRoleResource
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthRoleResource__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthRoleResource__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthRoleResource__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthRoleResource__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthRoleResource__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthGroupUser__copyForNew(data:Map!)  : NopAuthGroupUser
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthGroupUser__recoverDeleted(id:String!)  : NopAuthGroupUser
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthGroupUser__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthGroupUser__save(data:Map!)  : NopAuthGroupUser
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthGroupUser__update(data:Map!)  : NopAuthGroupUser
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthGroupUser__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthGroupUser__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthGroupUser__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthGroupUser__saveOrUpdate(data:Map!)  : NopAuthGroupUser
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthGroupUser__save_update(data:Map!)  : NopAuthGroupUser
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthGroupUser__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthGroupUser__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthGroupUser__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthGroupUser__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthGroupUser__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  SystemJsProvider__saveJsSource(path:String!,source:String!)  : Void
+  
+  SystemJsProvider__rollbackJsSource(path:String!)  : Void
+  
+  NopFileStore__upload(bizObjId:String,bizObjName:String,fieldName:String,fileName:String,
+  lastModified:Long,length:Long,mimeType:String)  : g_io_nop_file_core_UploadResponseBean
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysTag__copyForNew(data:Map!)  : NopSysTag
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysTag__recoverDeleted(id:String!)  : NopSysTag
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysTag__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysTag__save(data:Map!)  : NopSysTag
+  
+  "@i18n:biz.update|更新数据"
+  NopSysTag__update(data:Map!)  : NopSysTag
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysTag__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysTag__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysTag__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysTag__saveOrUpdate(data:Map!)  : NopSysTag
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysTag__save_update(data:Map!)  : NopSysTag
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysTag__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)  : 
+  Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysTag__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysTag__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysTag__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysTag__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysUserVariable__copyForNew(data:Map!)  : NopSysUserVariable
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysUserVariable__recoverDeleted(id:String!)  : NopSysUserVariable
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysUserVariable__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysUserVariable__save(data:Map!)  : NopSysUserVariable
+  
+  "@i18n:biz.update|更新数据"
+  NopSysUserVariable__update(data:Map!)  : NopSysUserVariable
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysUserVariable__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysUserVariable__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysUserVariable__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysUserVariable__saveOrUpdate(data:Map!)  : NopSysUserVariable
+  
+  NopSysUserVariable__setVar(varName:String!,varValue:String!,varType:String!,stdDomain:String!)  : 
+  Void
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysUserVariable__save_update(data:Map!)  : NopSysUserVariable
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysUserVariable__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysUserVariable__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysUserVariable__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysUserVariable__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysUserVariable__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysCompactExtField__copyForNew(data:Map!)  : NopSysCompactExtField
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysCompactExtField__recoverDeleted(id:String!)  : NopSysCompactExtField
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysCompactExtField__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysCompactExtField__save(data:Map!)  : NopSysCompactExtField
+  
+  "@i18n:biz.update|更新数据"
+  NopSysCompactExtField__update(data:Map!)  : NopSysCompactExtField
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysCompactExtField__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysCompactExtField__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysCompactExtField__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysCompactExtField__saveOrUpdate(data:Map!)  : NopSysCompactExtField
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysCompactExtField__save_update(data:Map!)  : NopSysCompactExtField
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysCompactExtField__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysCompactExtField__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysCompactExtField__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysCompactExtField__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysCompactExtField__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysVariable__copyForNew(data:Map!)  : NopSysVariable
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysVariable__recoverDeleted(id:String!)  : NopSysVariable
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysVariable__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysVariable__save(data:Map!)  : NopSysVariable
+  
+  "@i18n:biz.update|更新数据"
+  NopSysVariable__update(data:Map!)  : NopSysVariable
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysVariable__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysVariable__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysVariable__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysVariable__saveOrUpdate(data:Map!)  : NopSysVariable
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysVariable__save_update(data:Map!)  : NopSysVariable
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysVariable__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysVariable__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysVariable__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysVariable__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysVariable__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthSite__copyForNew(data:Map!)  : NopAuthSite
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthSite__recoverDeleted(id:String!)  : NopAuthSite
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthSite__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthSite__save(data:Map!)  : NopAuthSite
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthSite__update(data:Map!)  : NopAuthSite
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthSite__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthSite__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthSite__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthSite__saveOrUpdate(data:Map!)  : NopAuthSite
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthSite__save_update(data:Map!)  : NopAuthSite
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthSite__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthSite__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthSite__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthSite__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthSite__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysNoticeTemplate__copyForNew(data:Map!)  : NopSysNoticeTemplate
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysNoticeTemplate__recoverDeleted(id:String!)  : NopSysNoticeTemplate
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysNoticeTemplate__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysNoticeTemplate__save(data:Map!)  : NopSysNoticeTemplate
+  
+  "@i18n:biz.update|更新数据"
+  NopSysNoticeTemplate__update(data:Map!)  : NopSysNoticeTemplate
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysNoticeTemplate__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysNoticeTemplate__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysNoticeTemplate__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysNoticeTemplate__saveOrUpdate(data:Map!)  : NopSysNoticeTemplate
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysNoticeTemplate__save_update(data:Map!)  : NopSysNoticeTemplate
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysNoticeTemplate__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysNoticeTemplate__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysNoticeTemplate__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysNoticeTemplate__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysNoticeTemplate__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthDept__copyForNew(data:Map!)  : NopAuthDept
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthDept__recoverDeleted(id:String!)  : NopAuthDept
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthDept__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthDept__save(data:Map!)  : NopAuthDept
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthDept__update(data:Map!)  : NopAuthDept
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthDept__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthDept__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthDept__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthDept__saveOrUpdate(data:Map!)  : NopAuthDept
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthDept__save_update(data:Map!)  : NopAuthDept
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthDept__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthDept__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthDept__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthDept__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthDept__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  PageProvider__rollbackPageSource(path:String!)  : Void
+  
+  PageProvider__savePageSource(path:String!,data:Map!)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthResource__copyForNew(data:Map!)  : NopAuthResource
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthResource__recoverDeleted(id:String!)  : NopAuthResource
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthResource__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthResource__save(data:Map!)  : NopAuthResource
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthResource__update(data:Map!)  : NopAuthResource
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthResource__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthResource__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthResource__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthResource__saveOrUpdate(data:Map!)  : NopAuthResource
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthResource__save_update(data:Map!)  : NopAuthResource
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthResource__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthResource__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthResource__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthResource__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthResource__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthPosition__copyForNew(data:Map!)  : NopAuthPosition
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthPosition__recoverDeleted(id:String!)  : NopAuthPosition
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthPosition__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthPosition__save(data:Map!)  : NopAuthPosition
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthPosition__update(data:Map!)  : NopAuthPosition
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthPosition__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthPosition__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthPosition__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthPosition__saveOrUpdate(data:Map!)  : NopAuthPosition
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthPosition__save_update(data:Map!)  : NopAuthPosition
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthPosition__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthPosition__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthPosition__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthPosition__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthPosition__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysI18n__copyForNew(data:Map!)  : NopSysI18n
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysI18n__recoverDeleted(id:String!)  : NopSysI18n
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysI18n__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysI18n__save(data:Map!)  : NopSysI18n
+  
+  "@i18n:biz.update|更新数据"
+  NopSysI18n__update(data:Map!)  : NopSysI18n
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysI18n__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysI18n__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysI18n__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysI18n__saveOrUpdate(data:Map!)  : NopSysI18n
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysI18n__save_update(data:Map!)  : NopSysI18n
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysI18n__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)  : 
+  Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysI18n__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysI18n__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysI18n__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysI18n__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysObjTag__copyForNew(data:Map!)  : NopSysObjTag
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysObjTag__recoverDeleted(id:String!)  : NopSysObjTag
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysObjTag__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysObjTag__save(data:Map!)  : NopSysObjTag
+  
+  "@i18n:biz.update|更新数据"
+  NopSysObjTag__update(data:Map!)  : NopSysObjTag
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysObjTag__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysObjTag__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysObjTag__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysObjTag__saveOrUpdate(data:Map!)  : NopSysObjTag
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysObjTag__save_update(data:Map!)  : NopSysObjTag
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysObjTag__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map) 
+   : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysObjTag__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysObjTag__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysObjTag__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysObjTag__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  LoginApi__logout(accessToken:String)  : Void
+  
+  LoginApi__login(appName:String,attrs:Map,certId:String,clientId:String,deviceId:String,deviceOs:
+  String,deviceType:String,locale:String,loginType:Int,primaryRoleId:String,principalId:String,
+  principalSecret:String,rememberMe:Boolean,signUp:Boolean,ssoToken:String,timeZone:String,
+  verifyCode:String,verifySecret:String)  : g_io_nop_auth_api_messages_LoginResult
+  
+  LoginApi__refreshToken(clientId:String,clientSecret:String,refreshToken:String)  : 
+  g_io_nop_auth_api_messages_LoginResult
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopAuthUserRole__copyForNew(data:Map!)  : NopAuthUserRole
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopAuthUserRole__recoverDeleted(id:String!)  : NopAuthUserRole
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopAuthUserRole__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopAuthUserRole__save(data:Map!)  : NopAuthUserRole
+  
+  "@i18n:biz.update|更新数据"
+  NopAuthUserRole__update(data:Map!)  : NopAuthUserRole
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopAuthUserRole__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopAuthUserRole__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopAuthUserRole__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopAuthUserRole__saveOrUpdate(data:Map!)  : NopAuthUserRole
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopAuthUserRole__save_update(data:Map!)  : NopAuthUserRole
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopAuthUserRole__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map
+  )  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopAuthUserRole__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopAuthUserRole__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopAuthUserRole__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopAuthUserRole__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysDictOption__copyForNew(data:Map!)  : NopSysDictOption
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysDictOption__recoverDeleted(id:String!)  : NopSysDictOption
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysDictOption__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysDictOption__save(data:Map!)  : NopSysDictOption
+  
+  "@i18n:biz.update|更新数据"
+  NopSysDictOption__update(data:Map!)  : NopSysDictOption
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysDictOption__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysDictOption__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysDictOption__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysDictOption__saveOrUpdate(data:Map!)  : NopSysDictOption
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysDictOption__save_update(data:Map!)  : NopSysDictOption
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysDictOption__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysDictOption__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysDictOption__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysDictOption__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysDictOption__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysBroadcastEvent__copyForNew(data:Map!)  : NopSysBroadcastEvent
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysBroadcastEvent__recoverDeleted(id:String!)  : NopSysBroadcastEvent
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysBroadcastEvent__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysBroadcastEvent__save(data:Map!)  : NopSysBroadcastEvent
+  
+  "@i18n:biz.update|更新数据"
+  NopSysBroadcastEvent__update(data:Map!)  : NopSysBroadcastEvent
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysBroadcastEvent__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysBroadcastEvent__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysBroadcastEvent__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysBroadcastEvent__saveOrUpdate(data:Map!)  : NopSysBroadcastEvent
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysBroadcastEvent__save_update(data:Map!)  : NopSysBroadcastEvent
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysBroadcastEvent__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysBroadcastEvent__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysBroadcastEvent__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysBroadcastEvent__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysBroadcastEvent__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysCheckerRecord__copyForNew(data:Map!)  : NopSysCheckerRecord
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysCheckerRecord__recoverDeleted(id:String!)  : NopSysCheckerRecord
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysCheckerRecord__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysCheckerRecord__save(data:Map!)  : NopSysCheckerRecord
+  
+  "@i18n:biz.update|更新数据"
+  NopSysCheckerRecord__update(data:Map!)  : NopSysCheckerRecord
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysCheckerRecord__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysCheckerRecord__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysCheckerRecord__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysCheckerRecord__saveOrUpdate(data:Map!)  : NopSysCheckerRecord
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysCheckerRecord__save_update(data:Map!)  : NopSysCheckerRecord
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysCheckerRecord__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter
+  :Map)  : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysCheckerRecord__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysCheckerRecord__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysCheckerRecord__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysCheckerRecord__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,
+  filter:Map)  : Void
+  
+  "@i18n:biz.copyForNew|复制新建"
+  NopSysSequence__copyForNew(data:Map!)  : NopSysSequence
+  
+  "@i18n:biz.recoverDeleted|恢复已删除记录"
+  NopSysSequence__recoverDeleted(id:String!)  : NopSysSequence
+  
+  "@i18n:biz.batchUpdate|批量修改"
+  NopSysSequence__batchUpdate(ids:[String]!,data:Map!,ignoreUnknown:Boolean)  : Void
+  
+  "@i18n:biz.save|保存数据"
+  NopSysSequence__save(data:Map!)  : NopSysSequence
+  
+  "@i18n:biz.update|更新数据"
+  NopSysSequence__update(data:Map!)  : NopSysSequence
+  
+  "@i18n:biz.delete|根据主键删除指定对象"
+  NopSysSequence__delete(id:String!)  : Boolean
+  
+  "@i18n:biz.batchDelete|根据主键批量删除对象"
+  NopSysSequence__batchDelete(ids:[String]!)  : [String]
+  
+  "根据查询条件获取一批实体数据，然后删除这些实体"
+  NopSysSequence__deleteByQuery(query:QueryBeanInput!)  : Int
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录"
+  NopSysSequence__saveOrUpdate(data:Map!)  : NopSysSequence
+  
+  "@i18n:biz.saveOrUpdate|如果没有id就修改记录，否则就新增记录。已经被saveOrUpdate取代"
+  NopSysSequence__save_update(data:Map!)  : NopSysSequence
+  
+  "@i18n:biz.addManyToMany|新增多对多关联"
+  NopSysSequence__addManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:Map)
+    : Void
+  
+  "@i18n:biz.updateManyToMany|更新多对多关联"
+  NopSysSequence__updateManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+  
+  "根据查询条件获取一批实体数据，然后对每个实体更新指定属性。返回查询得到的实体个数"
+  NopSysSequence__updateByQuery(query:QueryBeanInput!,data:Map!)  : Int
+  
+  "@i18n:biz.batchModify|批量增删改"
+  NopSysSequence__batchModify(data:[Map]!,common:Map,delIds:[String])  : Void
+  
+  "@i18n:biz.removeManyToMany|删除多对多关联"
+  NopSysSequence__removeManyToManyRelations(id:String!,propName:String!,relValues:[String]!,filter:
+  Map)  : Void
+}
+

@@ -31,7 +31,9 @@ test('Amis Preview no longer logs outdated JSX transform warning', async ({ page
   await page.waitForTimeout(1_000);
 
   const outdatedJsxLogs = consoleMessages.filter((entry) =>
-    entry.text.includes('Your app (or one of its dependencies) is using an outdated JSX transform.'),
+    entry.text.includes(
+      'Your app (or one of its dependencies) is using an outdated JSX transform.',
+    ),
   );
 
   expect(outdatedJsxLogs, JSON.stringify(outdatedJsxLogs, null, 2)).toHaveLength(0);

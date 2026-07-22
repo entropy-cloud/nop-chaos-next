@@ -191,6 +191,15 @@
           "componentId": "help-guide"
         }
       ]
+    },
+    {
+      "id": "amis-tabs-test",
+      "title": "AMIS Tabs Test",
+      "path": "/amis-tabs-test",
+      "pageType": "amis",
+      "schemaPath": "/data/amis-tabs-test.json",
+      "icon": "list",
+      "sort": 999
     }
   ]
 }

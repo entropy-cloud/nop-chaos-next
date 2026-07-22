@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test, login } from '@nop-chaos/e2e-shared';
+import { test, mockLogin as login } from '@nop-chaos/e2e-shared';
 
 const fluxEnabledSiteMapResponse = {
   status: 0,
@@ -92,7 +92,11 @@ async function waitForRouteRegistration(page: import('@playwright/test').Page, n
   await expect(page.getByRole('button', { name })).toBeVisible({ timeout: 15_000 });
 }
 
-async function openMenuRoute(page: import('@playwright/test').Page, name: string, expectedUrl: RegExp) {
+async function openMenuRoute(
+  page: import('@playwright/test').Page,
+  name: string,
+  expectedUrl: RegExp,
+) {
   await waitForRouteRegistration(page, name);
   await page.getByRole('button', { name }).click();
   await expect(page).toHaveURL(expectedUrl);
@@ -240,7 +244,9 @@ test.describe('Flux lazy loading optimization', () => {
     expect(initialFluxChunks).toHaveLength(0);
 
     await openMenuRoute(page, 'Flux Demo', /\/flux-demo$/);
-    await expect(page.getByRole('main')).toContainText('Current Flux schemaPath: /data/flux-demo.json');
+    await expect(page.getByRole('main')).toContainText(
+      'Current Flux schemaPath: /data/flux-demo.json',
+    );
     await expect(page.getByRole('main')).toContainText('Flux JSON CRUD Demo');
     await expect(page.getByRole('main')).toContainText('Query: none');
     await expect(page.getByRole('main')).toContainText('Alice');

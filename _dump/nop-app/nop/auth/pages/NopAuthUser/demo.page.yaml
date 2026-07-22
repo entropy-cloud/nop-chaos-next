@@ -1,0 +1,1017 @@
+type: page
+name: main
+aside:
+- type: form
+  wrapWithPanel: false
+  target: crud-grid
+  name: aside
+  submitOnChange: true
+  rules: [
+    ]
+  body:
+  - type: fieldSet
+    id: dept
+    collapsable: false
+    collapsed: false
+    title: '@i18n:forms.NopAuthUser.asideFilter.dept|部门'
+    visibleOn: null
+    body:
+      type: group
+      id: row-deptId
+      body:
+        name: filter_deptId
+        placeholder: '@i18n:cell.NopAuthUser.deptId,prop.label.NopAuthUser.deptId|所属部门'
+        label: false
+        clearValueOnHidden: false
+        submitOnChange: true
+        type: input-tree
+        source: '@query:NopAuthDept__findList/value:id,label:deptName,children @TreeChildren(max:5)?filter_parentId=__null'
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopAuthUser__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: lg
+      title: '@i18n:NopAuthUser.forms.add.$title|新增-用户'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopAuthUser__save/id'
+        body:
+        - type: tabs
+          id: add-tabs
+          tabs:
+          - title: '@i18n:forms.NopAuthUser.add.baseInfo|基本信息'
+            name: baseInfo
+            visibleOn: null
+            tab:
+            - type: group
+              id: row-userName-status
+              body:
+              - name: userName
+                label: '@i18n:cell.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 50
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+              - name: status
+                label: '@i18n:cell.NopAuthUser.status,prop.label.NopAuthUser.status|用户状态'
+                required: true
+                type: select
+                searchable: true
+                clearable: true
+                multiple: false
+                source: '@dict:auth/user-status'
+            - type: group
+              id: row-nickName-deptId
+              body:
+              - name: nickName
+                label: '@i18n:cell.NopAuthUser.nickName,prop.label.NopAuthUser.nickName|昵称'
+                required: true
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 50
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+              - name: deptId
+                label: '@i18n:cell.NopAuthUser.deptId,prop.label.NopAuthUser.deptId|所属部门'
+                type: tree-select
+                clearable: true
+                source:
+                  url: "@query:NopAuthDept__findList/value:id,label:deptName,\n  \
+                    \                          children @TreeChildren(max:5)?filter_parentId=__null\n\
+                    \                        "
+            - type: group
+              id: row-avatar
+              body:
+                name: avatar
+                label: '@i18n:cell.NopAuthUser.avatar,prop.label.NopAuthUser.avatar|头像'
+                type: input-file
+                accept: image/*
+                receiver: /f/upload?bizObjName=NopAuthUser&fieldName=avatar
+                useChunk: false
+            - type: group
+              id: row-userType-gender
+              body:
+              - name: userType
+                label: '@i18n:cell.NopAuthUser.userType,prop.label.NopAuthUser.userType|用户类型'
+                required: true
+                type: select
+                searchable: true
+                clearable: true
+                multiple: false
+                source: '@dict:auth/user-type'
+              - name: gender
+                label: '@i18n:cell.NopAuthUser.gender,prop.label.NopAuthUser.gender|性别'
+                required: true
+                type: select
+                searchable: true
+                clearable: true
+                multiple: false
+                source: '@dict:auth/gender'
+            - type: group
+              id: row-password-__password2
+              body:
+              - name: password
+                label: '@i18n:cell.NopAuthUser.password,prop.label.NopAuthUser.password|密码'
+                required: true
+                type: input-password
+              - name: __password2
+                label: '@i18n:cell.NopAuthUser.__password2|重复密码'
+                required: true
+                clearValueOnHidden: false
+                type: input-password
+                validations:
+                  equalsField: password
+            - type: group
+              id: row-email-phone
+              body:
+              - name: email
+                label: '@i18n:cell.NopAuthUser.email,prop.label.NopAuthUser.email|邮件'
+                type: input-text
+                clearable: true
+                validations:
+                  isEmail: true
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+              - name: phone
+                label: '@i18n:cell.NopAuthUser.phone,prop.label.NopAuthUser.phone|电话'
+                type: input-text
+                clearable: true
+                validations:
+                  isPhoneNumber: true
+                  maxLength: 50
+                  minLength: null
+                  matchRegexp: null
+            - type: group
+              id: row-expireAt-changePwdAtLogin
+              body:
+              - name: expireAt
+                label: '@i18n:cell.NopAuthUser.expireAt,prop.label.NopAuthUser.expireAt|用户过期时间'
+                type: input-datetime
+                format: YYYY-MM-DD HH:mm:ss
+              - name: changePwdAtLogin
+                label: '@i18n:cell.NopAuthUser.changePwdAtLogin,prop.label.NopAuthUser.changePwdAtLogin|登陆后立刻修改密码'
+                type: switch
+                trueValue: 1
+                falseValue: 0
+                value: '0'
+            - type: group
+              id: row-tenantId
+              body:
+                name: tenantId
+                label: '@i18n:cell.NopAuthUser.tenantId,prop.label.NopAuthUser.tenantId|租户ID'
+                clearValueOnHidden: false
+                type: select
+                searchable: true
+                clearable: true
+                multiple: false
+                source: '@dict:obj/NopAuthTenant'
+          - title: '@i18n:forms.NopAuthUser.add.extInfo|扩展信息'
+            name: extInfo
+            visibleOn: null
+            tab:
+            - type: group
+              id: row-idType-idNbr
+              body:
+              - name: idType
+                label: '@i18n:cell.NopAuthUser.idType,prop.label.NopAuthUser.idType|证件类型'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 10
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+              - name: idNbr
+                label: '@i18n:cell.NopAuthUser.idNbr,prop.label.NopAuthUser.idNbr|证件号'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-birthday-workNo
+              body:
+              - name: birthday
+                label: '@i18n:cell.NopAuthUser.birthday,prop.label.NopAuthUser.birthday|生日'
+                type: input-date
+                format: YYYY-MM-DD
+              - name: workNo
+                label: '@i18n:cell.NopAuthUser.workNo,prop.label.NopAuthUser.workNo|工号'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 100
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-positionId-telephone
+              body:
+              - type: picker
+                valueField: positionId
+                labelField: name
+                size: lg
+                modalSize: lg
+                source:
+                  valueField: positionId
+                  labelField: name
+                  url: '@query:NopAuthPosition__findPage'
+                  gql:selection: total,page,items{ id,positionId,name,createdBy,remark
+                    }
+                pickerSchema:
+                  name: crud-grid
+                  syncLocation: false
+                  footable: false
+                  bulkActions: [
+                    ]
+                  itemActions: [
+                    ]
+                  headerToolbar:
+                  - type: filter-toggler
+                    id: filter-toggler
+                  - type: bulkActions
+                    id: bulkActions
+                  - type: columns-toggler
+                    align: right
+                    id: columns-toggler
+                  - type: reload
+                    align: right
+                    id: reload
+                  footerToolbar:
+                  - type: statistics
+                    id: statistics
+                  - type: switch-per-page
+                    id: switch-per-page
+                  - type: pagination
+                    id: pagination
+                  api:
+                    url: '@query:NopAuthPosition__findPage'
+                    gql:selection: total,page,items{ id,positionId,name,createdBy,remark
+                      }
+                  labelTpl: ${name}
+                  columns:
+                  - name: name
+                    label: '@i18n:col.NopAuthPosition.name,prop.label.NopAuthPosition.name|名称'
+                    sortable: true
+                    toggled: true
+                    fixed: left
+                    type: static
+                  - name: createdBy
+                    label: '@i18n:col.NopAuthPosition.createdBy,prop.label.NopAuthPosition.createdBy|创建人'
+                    sortable: true
+                    toggled: true
+                    type: static
+                  - name: remark
+                    label: '@i18n:col.NopAuthPosition.remark,prop.label.NopAuthPosition.remark|备注'
+                    sortable: true
+                    toggled: true
+                    type: static
+                name: positionId
+                label: '@i18n:cell.NopAuthUser.positionId,prop.label.NopAuthUser.positionId|职务'
+                joinValues: false
+                extractValue: true
+                multiple: false
+              - name: telephone
+                label: '@i18n:cell.NopAuthUser.telephone,prop.label.NopAuthUser.telephone|座机'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 50
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopAuthUser.remark,prop.label.NopAuthUser.remark|备注'
+                type: textarea
+                minRows: 3
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthUser__findPage'
+    gql:selection: total,page,items{ id,userId,userName,nickName,dept{deptName},deptId,gender,gender_label,phone,userType,userType_label,status,status_label
+      }
+  labelTpl: ${userName}
+  autoGenerateFilter:
+    columnsNum: 2
+    showBtnToolbar: false
+  columns:
+  - name: userName
+    label: '@i18n:col.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+    sortable: true
+    toggled: true
+    fixed: left
+    searchable:
+      name: filter_userName__contains
+      placeholder: null
+      label: '@i18n:cell.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+      required: null
+      hint: null
+      disabledOn: null
+      visibleOn: null
+      staticOn: null
+      requiredOn: null
+      clearValueOnHidden: null
+      columnRatio: null
+      submitOnChange: null
+      desc: null
+      type: input-text
+      clearable: true
+    type: static
+  - name: nickName
+    label: '@i18n:col.NopAuthUser.nickName,prop.label.NopAuthUser.nickName|昵称'
+    sortable: true
+    toggled: true
+    searchable:
+      name: filter_nickName
+      placeholder: null
+      label: '@i18n:cell.NopAuthUser.nickName,prop.label.NopAuthUser.nickName|昵称'
+      required: null
+      hint: null
+      disabledOn: null
+      visibleOn: null
+      staticOn: null
+      requiredOn: null
+      clearValueOnHidden: null
+      columnRatio: null
+      submitOnChange: null
+      desc: null
+      type: input-text
+      clearable: true
+    type: static
+  - name: dept.deptName
+    label: '@i18n:col.NopAuthUser.deptId,prop.label.NopAuthUser.deptId|所属部门'
+    sortable: true
+    toggled: true
+    type: static
+  - name: gender_label
+    label: '@i18n:col.NopAuthUser.gender,prop.label.NopAuthUser.gender|性别'
+    sortable: true
+    toggled: true
+    searchable:
+      name: filter_gender
+      placeholder: null
+      label: '@i18n:cell.NopAuthUser.gender,prop.label.NopAuthUser.gender|性别'
+      required: null
+      hint: null
+      disabledOn: null
+      visibleOn: null
+      staticOn: null
+      requiredOn: null
+      clearValueOnHidden: null
+      columnRatio: null
+      submitOnChange: null
+      desc: null
+      type: select
+      searchable: true
+      clearable: true
+      multiple: false
+      selectFirst: null
+      source: '@dict:auth/gender'
+      value: null
+    type: static
+  - name: phone
+    label: '@i18n:col.NopAuthUser.phone,prop.label.NopAuthUser.phone|电话'
+    sortable: true
+    toggled: true
+    searchable:
+      name: filter_phone
+      placeholder: null
+      label: '@i18n:cell.NopAuthUser.phone,prop.label.NopAuthUser.phone|电话'
+      required: null
+      hint: null
+      disabledOn: null
+      visibleOn: null
+      staticOn: null
+      requiredOn: null
+      clearValueOnHidden: null
+      columnRatio: null
+      submitOnChange: null
+      desc: null
+      type: input-text
+      clearable: true
+    type: static
+  - name: userType_label
+    label: '@i18n:col.NopAuthUser.userType,prop.label.NopAuthUser.userType|用户类型'
+    sortable: true
+    toggled: true
+    type: static
+  - name: status_label
+    label: '@i18n:col.NopAuthUser.status,prop.label.NopAuthUser.status|用户状态'
+    sortable: true
+    toggled: true
+    searchable:
+      name: filter_status
+      placeholder: null
+      label: '@i18n:cell.NopAuthUser.status,prop.label.NopAuthUser.status|用户状态'
+      required: null
+      hint: null
+      disabledOn: null
+      visibleOn: null
+      staticOn: null
+      requiredOn: null
+      clearValueOnHidden: null
+      columnRatio: null
+      submitOnChange: null
+      desc: null
+      type: select
+      searchable: true
+      clearable: true
+      multiple: false
+      selectFirst: null
+      source: '@dict:auth/user-status'
+      value: null
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: lg
+        title: '@i18n:NopAuthUser.forms.view.$title|查看-用户'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopAuthUser__get?id=$id'
+            gql:selection: id,userId,userName,status,status_label,nickName,dept{deptName},deptId,avatar,avatarComponentFileStatus{externalPath,fileId,fileSize,lastModified,name,permissions,previewPath,size},userType,userType_label,gender,gender_label,email,phone,openId,expireAt,changePwdAtLogin,tenantId,tenantId_label,idType,idNbr,birthday,workNo,position{name},positionId,telephone,remark,createdBy,createTime,updatedBy,updateTime
+          body:
+          - type: fieldSet
+            id: baseInfo
+            collapsable: true
+            collapsed: false
+            title: '@i18n:forms.NopAuthUser.view.baseInfo|基本信息'
+            visibleOn: null
+            body:
+            - type: group
+              id: row-userName-status
+              body:
+              - name: userName
+                label: '@i18n:cell.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+                required: true
+                type: static
+              - name: status_label
+                label: '@i18n:cell.NopAuthUser.status,prop.label.NopAuthUser.status|用户状态'
+                required: true
+                type: static
+            - type: group
+              id: row-nickName-deptId
+              body:
+              - name: nickName
+                label: '@i18n:cell.NopAuthUser.nickName,prop.label.NopAuthUser.nickName|昵称'
+                required: true
+                type: static
+              - name: dept.deptName
+                label: '@i18n:cell.NopAuthUser.deptId,prop.label.NopAuthUser.deptId|所属部门'
+                type: static
+            - type: group
+              id: row-avatar
+              body:
+                name: avatar
+                label: '@i18n:cell.NopAuthUser.avatar,prop.label.NopAuthUser.avatar|头像'
+                type: static-image
+                enlargeAble: true
+            - type: group
+              id: row-userType-gender
+              body:
+              - name: userType_label
+                label: '@i18n:cell.NopAuthUser.userType,prop.label.NopAuthUser.userType|用户类型'
+                required: true
+                type: static
+              - name: gender_label
+                label: '@i18n:cell.NopAuthUser.gender,prop.label.NopAuthUser.gender|性别'
+                required: true
+                type: static
+            - type: group
+              id: row-email-phone
+              body:
+              - name: email
+                label: '@i18n:cell.NopAuthUser.email,prop.label.NopAuthUser.email|邮件'
+                type: static
+              - name: phone
+                label: '@i18n:cell.NopAuthUser.phone,prop.label.NopAuthUser.phone|电话'
+                type: static
+            - type: group
+              id: row-openId
+              body:
+                name: openId
+                label: '@i18n:cell.NopAuthUser.openId,prop.label.NopAuthUser.openId|用户外部标识'
+                required: true
+                type: static
+            - type: group
+              id: row-expireAt-changePwdAtLogin
+              body:
+              - name: expireAt
+                label: '@i18n:cell.NopAuthUser.expireAt,prop.label.NopAuthUser.expireAt|用户过期时间'
+                type: static
+              - name: changePwdAtLogin
+                label: '@i18n:cell.NopAuthUser.changePwdAtLogin,prop.label.NopAuthUser.changePwdAtLogin|登陆后立刻修改密码'
+                type: static-mapping
+                map:
+                  '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                  '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                  'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                  'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                  ? ''
+                  : ''
+            - type: group
+              id: row-tenantId
+              body:
+                name: tenantId_label
+                label: '@i18n:cell.NopAuthUser.tenantId,prop.label.NopAuthUser.tenantId|租户ID'
+                required: true
+                type: static
+          - type: fieldSet
+            id: extInfo
+            collapsable: true
+            collapsed: false
+            title: '@i18n:forms.NopAuthUser.view.extInfo|扩展信息'
+            visibleOn: null
+            body:
+            - type: group
+              id: row-idType-idNbr
+              body:
+              - name: idType
+                label: '@i18n:cell.NopAuthUser.idType,prop.label.NopAuthUser.idType|证件类型'
+                type: static
+              - name: idNbr
+                label: '@i18n:cell.NopAuthUser.idNbr,prop.label.NopAuthUser.idNbr|证件号'
+                type: static
+            - type: group
+              id: row-birthday-workNo
+              body:
+              - name: birthday
+                label: '@i18n:cell.NopAuthUser.birthday,prop.label.NopAuthUser.birthday|生日'
+                type: static
+              - name: workNo
+                label: '@i18n:cell.NopAuthUser.workNo,prop.label.NopAuthUser.workNo|工号'
+                type: static
+            - type: group
+              id: row-positionId-telephone
+              body:
+              - name: position.name
+                label: '@i18n:cell.NopAuthUser.positionId,prop.label.NopAuthUser.positionId|职务'
+                type: static
+              - name: telephone
+                label: '@i18n:cell.NopAuthUser.telephone,prop.label.NopAuthUser.telephone|座机'
+                type: static
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopAuthUser.remark,prop.label.NopAuthUser.remark|备注'
+                type: static
+            - type: group
+              id: row-createdBy-createTime
+              body:
+              - name: createdBy
+                label: '@i18n:cell.NopAuthUser.createdBy,prop.label.NopAuthUser.createdBy|创建人'
+                required: true
+                type: static
+              - name: createTime
+                label: '@i18n:cell.NopAuthUser.createTime,prop.label.NopAuthUser.createTime|创建时间'
+                required: true
+                type: static
+            - type: group
+              id: row-updatedBy-updateTime
+              body:
+              - name: updatedBy
+                label: '@i18n:cell.NopAuthUser.updatedBy,prop.label.NopAuthUser.updatedBy|修改人'
+                required: true
+                type: static
+              - name: updateTime
+                label: '@i18n:cell.NopAuthUser.updateTime,prop.label.NopAuthUser.updateTime|修改时间'
+                required: true
+                type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: md
+          title: '@i18n:NopAuthUser.forms.edit.$title|编辑-用户'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopAuthUser__get?id=$id'
+              gql:selection: id,userId,userName,status,status_label,nickName,dept{deptName},deptId,avatar,avatarComponentFileStatus{externalPath,fileId,fileSize,lastModified,name,permissions,previewPath,size},userType,userType_label,gender,gender_label,email,phone,expireAt,changePwdAtLogin,idType,idNbr,birthday,workNo,position{name},positionId,telephone,remark
+            api:
+              data:
+                userName: $userName
+                status: $status
+                nickName: $nickName
+                deptId: $deptId
+                avatar: $avatar
+                userType: $userType
+                gender: $gender
+                email: $email
+                phone: $phone
+                expireAt: $expireAt
+                changePwdAtLogin: $changePwdAtLogin
+                idType: $idType
+                idNbr: $idNbr
+                birthday: $birthday
+                workNo: $workNo
+                positionId: $positionId
+                telephone: $telephone
+                remark: $remark
+              url: '@mutation:NopAuthUser__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: tabs
+              id: edit-tabs
+              tabs:
+              - title: '@i18n:forms.NopAuthUser.edit.baseInfo|基本信息'
+                name: baseInfo
+                visibleOn: null
+                tab:
+                - type: group
+                  id: row-userName-status
+                  body:
+                  - name: userName
+                    label: '@i18n:cell.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+                    required: true
+                    type: static
+                  - name: status
+                    label: '@i18n:cell.NopAuthUser.status,prop.label.NopAuthUser.status|用户状态'
+                    required: true
+                    type: select
+                    searchable: true
+                    clearable: true
+                    multiple: false
+                    source: '@dict:auth/user-status'
+                - type: group
+                  id: row-nickName-deptId
+                  body:
+                  - name: nickName
+                    label: '@i18n:cell.NopAuthUser.nickName,prop.label.NopAuthUser.nickName|昵称'
+                    required: true
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 50
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                  - name: deptId
+                    label: '@i18n:cell.NopAuthUser.deptId,prop.label.NopAuthUser.deptId|所属部门'
+                    type: tree-select
+                    clearable: true
+                    source:
+                      url: "@query:NopAuthDept__findList/value:id,label:deptName,\n\
+                        \                            children @TreeChildren(max:5)?filter_parentId=__null\n\
+                        \                        "
+                - type: group
+                  id: row-avatar
+                  body:
+                    name: avatar
+                    label: '@i18n:cell.NopAuthUser.avatar,prop.label.NopAuthUser.avatar|头像'
+                    type: input-file
+                    accept: image/*
+                    receiver: /f/upload?bizObjName=NopAuthUser&fieldName=avatar
+                    useChunk: false
+                - type: group
+                  id: row-userType-gender
+                  body:
+                  - name: userType
+                    label: '@i18n:cell.NopAuthUser.userType,prop.label.NopAuthUser.userType|用户类型'
+                    required: true
+                    type: select
+                    searchable: true
+                    clearable: true
+                    multiple: false
+                    source: '@dict:auth/user-type'
+                  - name: gender
+                    label: '@i18n:cell.NopAuthUser.gender,prop.label.NopAuthUser.gender|性别'
+                    required: true
+                    type: select
+                    searchable: true
+                    clearable: true
+                    multiple: false
+                    source: '@dict:auth/gender'
+                - type: group
+                  id: row-email-phone
+                  body:
+                  - name: email
+                    label: '@i18n:cell.NopAuthUser.email,prop.label.NopAuthUser.email|邮件'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      isEmail: true
+                      maxLength: 100
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                  - name: phone
+                    label: '@i18n:cell.NopAuthUser.phone,prop.label.NopAuthUser.phone|电话'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      isPhoneNumber: true
+                      maxLength: 50
+                      minLength: null
+                      matchRegexp: null
+                - type: group
+                  id: row-expireAt-changePwdAtLogin
+                  body:
+                  - name: expireAt
+                    label: '@i18n:cell.NopAuthUser.expireAt,prop.label.NopAuthUser.expireAt|用户过期时间'
+                    type: input-datetime
+                    format: YYYY-MM-DD HH:mm:ss
+                  - name: changePwdAtLogin
+                    label: '@i18n:cell.NopAuthUser.changePwdAtLogin,prop.label.NopAuthUser.changePwdAtLogin|登陆后立刻修改密码'
+                    type: switch
+                    trueValue: 1
+                    falseValue: 0
+              - title: '@i18n:forms.NopAuthUser.edit.extInfo|扩展信息'
+                name: extInfo
+                visibleOn: null
+                tab:
+                - type: group
+                  id: row-idType-idNbr
+                  body:
+                  - name: idType
+                    label: '@i18n:cell.NopAuthUser.idType,prop.label.NopAuthUser.idType|证件类型'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 10
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                  - name: idNbr
+                    label: '@i18n:cell.NopAuthUser.idNbr,prop.label.NopAuthUser.idNbr|证件号'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 100
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                - type: group
+                  id: row-birthday-workNo
+                  body:
+                  - name: birthday
+                    label: '@i18n:cell.NopAuthUser.birthday,prop.label.NopAuthUser.birthday|生日'
+                    type: input-date
+                    format: YYYY-MM-DD
+                  - name: workNo
+                    label: '@i18n:cell.NopAuthUser.workNo,prop.label.NopAuthUser.workNo|工号'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 100
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                - type: group
+                  id: row-positionId-telephone
+                  body:
+                  - type: picker
+                    valueField: positionId
+                    labelField: name
+                    size: lg
+                    modalSize: lg
+                    source:
+                      valueField: positionId
+                      labelField: name
+                      url: '@query:NopAuthPosition__findPage'
+                      gql:selection: total,page,items{ id,positionId,name,createdBy,remark
+                        }
+                    pickerSchema:
+                      name: crud-grid
+                      syncLocation: false
+                      footable: false
+                      bulkActions: [
+                        ]
+                      itemActions: [
+                        ]
+                      headerToolbar:
+                      - type: filter-toggler
+                        id: filter-toggler
+                      - type: bulkActions
+                        id: bulkActions
+                      - type: columns-toggler
+                        align: right
+                        id: columns-toggler
+                      - type: reload
+                        align: right
+                        id: reload
+                      footerToolbar:
+                      - type: statistics
+                        id: statistics
+                      - type: switch-per-page
+                        id: switch-per-page
+                      - type: pagination
+                        id: pagination
+                      api:
+                        url: '@query:NopAuthPosition__findPage'
+                        gql:selection: total,page,items{ id,positionId,name,createdBy,remark
+                          }
+                      labelTpl: ${name}
+                      columns:
+                      - name: name
+                        label: '@i18n:col.NopAuthPosition.name,prop.label.NopAuthPosition.name|名称'
+                        sortable: true
+                        toggled: true
+                        fixed: left
+                        type: static
+                      - name: createdBy
+                        label: '@i18n:col.NopAuthPosition.createdBy,prop.label.NopAuthPosition.createdBy|创建人'
+                        sortable: true
+                        toggled: true
+                        type: static
+                      - name: remark
+                        label: '@i18n:col.NopAuthPosition.remark,prop.label.NopAuthPosition.remark|备注'
+                        sortable: true
+                        toggled: true
+                        type: static
+                    name: positionId
+                    label: '@i18n:cell.NopAuthUser.positionId,prop.label.NopAuthUser.positionId|职务'
+                    joinValues: false
+                    extractValue: true
+                    multiple: false
+                  - name: telephone
+                    label: '@i18n:cell.NopAuthUser.telephone,prop.label.NopAuthUser.telephone|座机'
+                    type: input-text
+                    clearable: true
+                    validations:
+                      maxLength: 50
+                      minLength: null
+                      matchRegexp: null
+                    transform:
+                      upperCase: null
+                      lowerCase: null
+                - type: group
+                  id: row-remark
+                  body:
+                    name: remark
+                    label: '@i18n:cell.NopAuthUser.remark,prop.label.NopAuthUser.remark|备注'
+                    type: textarea
+                    minRows: 3
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopAuthUser__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button
+      - actionType: dialog
+        dialog:
+          type: page
+          name: resetUserPassword
+          size: md
+          title: '@i18n:common.resetUserPassword'
+          body:
+            type: form
+            name: resetUserPassword
+            mode: horizontal
+            rules: [
+              ]
+            api:
+              data:
+                password: ${'$'}{password}
+              url: '@mutation:NopAuthUser__resetUserPassword?userId=${''$''}{id}'
+            body:
+            - type: group
+              id: row-userName
+              body:
+                name: userName
+                label: '@i18n:cell.NopAuthUser.userName,prop.label.NopAuthUser.userName|用户名'
+                required: true
+                type: static
+            - type: group
+              id: row-password
+              body:
+                name: password
+                label: '@i18n:cell.NopAuthUser.password,prop.label.NopAuthUser.password|密码'
+                required: true
+                clearValueOnHidden: false
+                type: input-password
+        id: reset-password-button
+        label: '@i18n:common.resetUserPassword'
+        type: button
+      - actionType: ajax
+        api:
+          data:
+            userId: ${'$'}{id}
+          url: '@mutation:NopAuthUser__disableUser'
+        confirmText: '@i18n:common.confirmDisableUser'
+        id: disable-user-button
+        label: '@i18n:common.disableUser'
+        type: button
+        visibleOn: ${status == 1}
+      - actionType: ajax
+        api:
+          data:
+            userId: ${'$'}{id}
+          url: '@mutation:NopAuthUser__enableUser'
+        confirmText: '@i18n:common.confirmEnableUser'
+        id: enable-user-button
+        label: '@i18n:common.enableUser'
+        type: button
+        visibleOn: ${status == 0}

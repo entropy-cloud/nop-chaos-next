@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:x="/nop/schema/xdsl.xdef" xmlns:ioc="ioc" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       x:validated="true" x:schema="/nop/schema/beans.xdef">
+
+    <bean id="io.nop.auth.dao.mapper.NopAuthRoleMapper" class="io.nop.orm.sql_lib.proxy.SqlLibProxyFactoryBean"
+          ioc:type="@bean:id" ioc:bean-method="build">
+        <property name="mapperClass" value="@bean:type"/>
+    </bean>
+
+    <bean id="io.nop.auth.dao.mapper.NopAuthUserMapper" class="io.nop.orm.sql_lib.proxy.SqlLibProxyFactoryBean"
+          ioc:type="@bean:id" ioc:bean-method="build">
+        <property name="mapperClass" value="@bean:type"/>
+    </bean>
+</beans>

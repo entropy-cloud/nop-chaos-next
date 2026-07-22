@@ -1,0 +1,99 @@
+type: picker
+valueField: id
+labelField: id
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  url: '@query:NopAuthRoleDataAuth__findPage'
+  gql:selection: total,page,items{ id,sid,roleIds,bizObj,priority,filterConfig,whenConfig,description,createdBy,createTime,updatedBy,updateTime,remark
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthRoleDataAuth__findPage'
+    gql:selection: total,page,items{ id,sid,roleIds,bizObj,priority,filterConfig,whenConfig,description,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  columns:
+  - name: roleIds
+    label: '@i18n:col.NopAuthRoleDataAuth.roleIds,prop.label.NopAuthRoleDataAuth.roleIds|角色ID'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: bizObj
+    label: '@i18n:col.NopAuthRoleDataAuth.bizObj,prop.label.NopAuthRoleDataAuth.bizObj|业务对象名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: priority
+    label: '@i18n:col.NopAuthRoleDataAuth.priority,prop.label.NopAuthRoleDataAuth.priority|优先级'
+    sortable: true
+    toggled: true
+    type: static
+  - name: filterConfig
+    label: '@i18n:col.NopAuthRoleDataAuth.filterConfig,prop.label.NopAuthRoleDataAuth.filterConfig|业务过滤条件'
+    sortable: true
+    toggled: true
+    type: static
+  - name: whenConfig
+    label: '@i18n:col.NopAuthRoleDataAuth.whenConfig,prop.label.NopAuthRoleDataAuth.whenConfig|权限应用条件'
+    sortable: true
+    toggled: true
+    type: static
+  - name: description
+    label: '@i18n:col.NopAuthRoleDataAuth.description,prop.label.NopAuthRoleDataAuth.description|描述'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopAuthRoleDataAuth.createdBy,prop.label.NopAuthRoleDataAuth.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopAuthRoleDataAuth.createTime,prop.label.NopAuthRoleDataAuth.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopAuthRoleDataAuth.updatedBy,prop.label.NopAuthRoleDataAuth.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopAuthRoleDataAuth.updateTime,prop.label.NopAuthRoleDataAuth.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopAuthRoleDataAuth.remark,prop.label.NopAuthRoleDataAuth.remark|备注'
+    sortable: true
+    toggled: true
+    type: static

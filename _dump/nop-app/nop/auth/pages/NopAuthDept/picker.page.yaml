@@ -1,0 +1,89 @@
+type: picker
+valueField: id
+labelField: deptName
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  labelField: deptName
+  url: '@query:NopAuthDept__findPage'
+  gql:selection: total,page,items{ id,deptId,deptName,parent{deptName},parentId,orderNum,deptType,manager{userName},managerId,email,phone,createdBy,remark
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthDept__findPage'
+    gql:selection: total,page,items{ id,deptId,deptName,parent{deptName},parentId,orderNum,deptType,manager{userName},managerId,email,phone,createdBy,remark
+      }
+  labelTpl: ${deptName}
+  columns:
+  - name: deptName
+    label: '@i18n:col.NopAuthDept.deptName,prop.label.NopAuthDept.deptName|名称'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: parent.deptName
+    label: '@i18n:col.NopAuthDept.parentId,prop.label.NopAuthDept.parentId|父ID'
+    sortable: true
+    toggled: true
+    type: static
+  - name: orderNum
+    label: '@i18n:col.NopAuthDept.orderNum,prop.label.NopAuthDept.orderNum|排序'
+    sortable: true
+    toggled: true
+    type: static
+  - name: deptType
+    label: '@i18n:col.NopAuthDept.deptType,prop.label.NopAuthDept.deptType|类型'
+    sortable: true
+    toggled: true
+    type: static
+  - name: manager.userName
+    label: '@i18n:col.NopAuthDept.managerId,prop.label.NopAuthDept.managerId|部门负责人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: email
+    label: '@i18n:col.NopAuthDept.email,prop.label.NopAuthDept.email|邮件'
+    sortable: true
+    toggled: true
+    type: static
+  - name: phone
+    label: '@i18n:col.NopAuthDept.phone,prop.label.NopAuthDept.phone|电话'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopAuthDept.createdBy,prop.label.NopAuthDept.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopAuthDept.remark,prop.label.NopAuthDept.remark|备注'
+    sortable: true
+    toggled: true
+    type: static

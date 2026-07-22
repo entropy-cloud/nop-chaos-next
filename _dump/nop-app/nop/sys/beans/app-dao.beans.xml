@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:x="/nop/schema/xdsl.xdef" xmlns:ioc="ioc" xmlns:feature="feature" x:validated="true"
+       x:schema="/nop/schema/beans.xdef">
+
+    <import resource="_dao.beans.xml"/>
+
+    <bean id="io.nop.sys.dao.dict.SysDictLoader" ioc:type="@bean:id" ioc:before="nopBizObjectManager"/>
+
+    <bean id="io.nop.sys.dao.i18n.SysI18nMessageLoader" ioc:type="@bean:id"/>
+
+    <bean id="nopSequenceGenerator" class="io.nop.sys.dao.seq.SysSequenceGenerator" ioc:delay-method="lazyInit"/>
+
+    <bean id="nopCodeRuleGenerator" class="io.nop.sys.dao.coderule.SysCodeRuleGenerator" ioc:default="true"/>
+
+    <bean id="nopSysCalendar" class="io.nop.api.core.time.DefaultSysCalendar" factory-method="instance"/>
+
+    <bean id="nopCodeRule" class="io.nop.sys.dao.coderule.DefaultCodeRule">
+        <property name="variables">
+            <ioc:collect-beans as-map="true" name-prefix="nopCodeRuleVariable_"
+                               by-type="io.nop.dao.coderule.ICodeRuleVariable"/>
+        </property>
+    </bean>
+
+    <bean id="nopSysDaoResourceLockManager" class="io.nop.sys.dao.lock.SysDaoResourceLockManager" ioc:default="true"/>
+
+    <bean id="nopSysDaoLeaderElector" class="io.nop.sys.dao.elector.SysDaoLeaderElector" ioc:default="true">
+        <ioc:condition>
+            <if-property name="nop.cluster.leader-elector.sys-dao-elector.enabled"/>
+        </ioc:condition>
+    </bean>
+
+    <bean id="nopSysDaoMessageService" class="io.nop.sys.dao.message.SysDaoMessageService" ioc:default="true">
+        <ioc:condition>
+            <if-property name="nop.cluster.message-service.sys-dao-message-service.enabled"/>
+        </ioc:condition>
+        <property name="nonBroadcastAutoScanEnabled" value="@cfg:nop.sys.message.non-broadcast-auto-scan-enabled|true"/>
+        <property name="topicRetryPolicies">
+            <ioc:collect-beans as-map="true" name-prefix="nopTopicRetryPolicy_"
+                               by-type="io.nop.commons.util.retry.IRetryPolicy"/>
+        </property>
+    </bean>
+
+    <bean id="nopOrmEntityChangeLogInterceptor" class="io.nop.sys.dao.log.OrmEntityChangeLogInterceptor"/>
+
+    <bean id="nopNamingService" class="io.nop.sys.dao.naming.SysDaoNamingService" ioc:default="true">
+        <ioc:condition>
+            <if-property name="nop.cluster.discovery.sys-dao-naming-service.enabled" enableIfMissing="false"/>
+        </ioc:condition>
+        <property name="autoUpdateInterval" value="@cfg:nop.cluster.registration.auto-update-interval|30s"/>
+        <property name="cleanupInterval" value="@cfg:nop.cluster.registration.cleanup-interval|60s"/>
+        <property name="autoCleanup" value="@cfg:nop.cluster.discovery.sys-dao-naming-service.auto-cleanup|"/>
+    </bean>
+</beans>

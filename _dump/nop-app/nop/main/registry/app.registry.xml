@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<registry xmlns:x="/nop/schema/xdsl.xdef" x:validated="true" x:schema="/nop/schema/registry.xdef">
+
+    <models>
+<!--LOC:[1:2:0:0]/nop/core/registry/api.register-model.xml-->
+        <model name="api">
+            <loaders>
+                <xlsx-loader fileType="api.xlsx" impPath="/nop/rpc/imp/api.imp.xml"/>
+                <xdsl-loader fileType="api.xml" schemaPath="/nop/schema/api.xdef"/>
+                <loader fileType="proto" class="io.nop.rpc.model.proto.ProtoApiModelLoader"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/css.register-model.xml-->
+        <model name="css">
+            <loaders>
+                <loader fileType="css" class="io.nop.web.page.DynamicCssModelLoader"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/dialect.register-model.xml-->
+        <model name="dialect">
+            <loaders>
+                <loader fileType="dialect.xml" class="io.nop.dao.dialect.loader.DialectModelLoader"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/dict.register-model.xml-->
+        <model name="dict">
+            <loaders>
+                <xdsl-loader fileType="dict.xml" schemaPath="/nop/schema/orm/dict.xdef"/>
+                <xdsl-loader fileType="dict.yaml" schemaPath="/nop/schema/orm/dict.xdef"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/fsm.register-model.xml-->
+        <model name="state-machine">
+            <loaders>
+                <xdsl-loader fileType="fsm.xml" schemaPath="/nop/schema/biz/state-machine.xdef"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/js.register-model.xml-->
+        <model name="js">
+            <loaders>
+                <loader fileType="js" class="io.nop.web.page.DynamicJsModelLoader"/>
+                <loader fileType="mjs" class="io.nop.web.page.DynamicJsModelLoader"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/orm.register-model.xml-->
+        <model name="orm">
+            <loaders>
+                <xdsl-loader fileType="orm.xml" schemaPath="/nop/schema/orm/orm.xdef"/>
+                <xdsl-loader fileType="orm.json" schemaPath="/nop/schema/orm/orm.xdef"/>
+                <xdsl-loader fileType="orm.yaml" schemaPath="/nop/schema/orm/orm.xdef"/>
+                <xlsx-loader fileType="orm.xlsx" impPath="/nop/orm/imp/orm.imp.xml"/>
+                <loader fileType="orm.md" mappingName="orm.Md_to_OrmModel" optional="true"
+                        class="io.nop.record_mapping.md.MarkdownDslResourceLoaderFactory"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/page.register-model.xml-->
+        <model name="xpage">
+            <loaders>
+                <loader fileType="page.xml" class="io.nop.web.page.PageModelLoaderFactory"/>
+                <loader fileType="page.json" class="io.nop.web.page.PageModelLoaderFactory"/>
+                <loader fileType="page.json5" class="io.nop.web.page.PageModelLoaderFactory"/>
+                <loader fileType="page.yaml" class="io.nop.web.page.PageModelLoaderFactory"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/sql-lib.register-model.xml-->
+        <model name="sql-lib">
+            <loaders>
+                <xdsl-loader fileType="sql-lib.xml" schemaPath="/nop/schema/orm/sql-lib.xdef"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/table-validator.register-model.xml-->
+        <model name="table-validator">
+            <loaders>
+                <xdsl-loader fileType="table-validator.xml" schemaPath="/nop/schema/table-validator.xdef"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/validator.register-model.xml-->
+        <model name="validator">
+            <loaders>
+                <xdsl-loader fileType="validator.xml" schemaPath="/nop/schema/validator.xdef"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/view.register-model.xml-->
+        <model name="xview" xdefPath="/nop/schema/xui/xview.xdef">
+            <loaders>
+                <loader fileType="view.xml" class="io.nop.web.page.ViewModelLoaderFactory"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/xlib.register-model.xml-->
+        <model name="xlib">
+            <loaders>
+                <xdsl-loader fileType="xlib" schemaPath="/nop/schema/xlib.xdef"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/xmeta.register-model.xml-->
+        <model name="xmeta">
+            <loaders>
+                <xdsl-loader fileType="xmeta" schemaPath="/nop/schema/xmeta.xdef"/>
+                <loader fileType="xjava" class="io.nop.xlang.xmeta.xjava.JavaObjMetaLoader" optional="true"/>
+            </loaders>
+            <transformers>
+                <transformer target="xdef" class="io.nop.xlang.xmeta.impl.ObjMetaToXDef"/>
+            </transformers>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/xpl.register-model.xml-->
+        <model name="xpl">
+            <loaders>
+                <loader fileType="xpl" class="io.nop.xlang.xpl.loader.HtmlXplModelLoader"/>
+                <loader fileType="xgen" class="io.nop.xlang.xpl.loader.HtmlXplModelLoader"/>
+                <loader fileType="xrun" class="io.nop.xlang.xpl.loader.NoneXplModelLoader"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/xt.register-model.xml-->
+        <model name="xt">
+            <loaders>
+                <xdsl-loader fileType="xt.xml" schemaPath="/nop/schema/xt.xdef"/>
+            </loaders>
+        </model>
+<!--LOC:[1:2:0:0]/nop/core/registry/xtask.register-model.xml-->
+        <model name="xtask">
+            <loaders>
+                <loader fileType="xtask" class="io.nop.xlang.xpl.impl.XplTaskLoader"/>
+            </loaders>
+        </model>
+    </models>
+</registry>

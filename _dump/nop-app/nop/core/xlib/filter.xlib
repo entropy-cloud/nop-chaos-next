@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lib xmlns:x="/nop/schema/xdsl.xdef" x:validated="true" x:schema="/nop/schema/xlib.xdef">
+
+    <tags>
+        <sql outputMode="node">
+            <slot name="default" outputMode="sql"/>
+            <source>
+                <sql value="${slot_default()}"/>
+            </source>
+        </sql>
+    </tags>
+</lib>

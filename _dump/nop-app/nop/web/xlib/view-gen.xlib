@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lib xmlns:x="/nop/schema/xdsl.xdef" xmlns:c="c" x:validated="true" x:schema="/nop/schema/xlib.xdef">
+
+    <tags>
+        <DefaultViewGenExtends outputMode="node">
+            <attr name="_dsl_root" implicit="true"/>
+            <source/>
+        </DefaultViewGenExtends>
+        <DefaultViewPostExtends outputMode="node">
+            <attr name="_dsl_root" implicit="true"/>
+            <source>
+                <c:script>
+                    let renderMode = $config.var('nop.web.render-mode', 'amis');
+                    if (renderMode == 'flux') {
+                        let child = _dsl_root.childByTag('controlLib');
+                        if (child != null) {
+                            child.content('/nop/web/xlib/flux-control.xlib');
+                        }
+                    }
+                </c:script>
+            </source>
+        </DefaultViewPostExtends>
+        <GenViewFromMeta outputMode="node">
+            <attr name="path" stdDomain="v-path"/>
+            <description>
+                根据XDef元模型定义自动生成编辑所用的XView模型
+            </description>
+            <source>
+                <c:include src="view-gen/impl_GenFromMeta.xpl"/>
+            </source>
+        </GenViewFromMeta>
+        <GenForm outputMode="node">
+            <attr name="schema" mandatory="true"/>
+            <attr name="formId" mandatory="true"/>
+            <description>
+                根据schema元模型定义自动生成编辑所用的表单模型
+            </description>
+            <source>
+                <form id="${formId}" editMode="edit">
+                    <layout>
+                        <c:for var="prop" items="${schema.props}">
+                            <c:script>
+                                if(prop.internal) continue;
+                                if(prop.name == 'id' &amp;&amp; prop.tagSet?.contains('seq-default')) continue;
+                            </c:script>
+                            ${prop.name}[${prop.displayName || prop.name}]
+                        </c:for>
+                    </layout>
+                    <cells>
+                        <c:for var="prop" items="${schema.props}">
+                            <cell id="${prop.name}" label="${prop.displayName || prop.name}"
+                                  mandatory="${prop.mandatory?true:null}" stdDomain="${prop.schema.stdDomain}"
+                                  dict="${prop.schema.dict}"/>
+                        </c:for>
+                    </cells>
+                </form>
+            </source>
+        </GenForm>
+        <GenGrid outputMode="node">
+            <attr name="schema" mandatory="true"/>
+            <attr name="gridId" mandatory="true"/>
+            <description>
+                根据schema元模型定义自动生成编辑所用的表格模型
+            </description>
+            <source>
+                <grid id="${gridId}" editMode="edit">
+                    <cols>
+                        <c:for var="prop" items="${schema.props}">
+                            <col id="${prop.name}" label="${prop.displayName || prop.name}"
+                                 xdsl:abstract="${prop.internal?true:null}" mandatory="${prop.mandatory?true:null}"
+                                 stdDomain="${prop.schema.stdDomain}" dict="${prop.schema.dict}"/>
+                        </c:for>
+                    </cols>
+                </grid>
+            </source>
+        </GenGrid>
+    </tags>
+</lib>

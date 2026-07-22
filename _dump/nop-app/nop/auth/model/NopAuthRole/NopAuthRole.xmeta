@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[2:2:0:0]/nop/auth/model/NopAuthRole/NopAuthRole.xmeta
+ @xmlns:i18n-en=[2:88:0:0]/nop/auth/model/NopAuthRole/_NopAuthRole.xmeta
+-->
+<meta xmlns:x="/nop/schema/xdsl.xdef" xmlns:i18n-en="i18n-en" xmlns:ext="ext" xmlns:xpl="xpl" ext:model="orm"
+      ext:icon="shield" ext:web-renderer="" xmlns:c="c" xmlns:graphql="graphql" xmlns:meta-gen="meta-gen"
+      xmlns:biz="biz" displayName="角色" i18n-en:displayName="Role" tagSet="mapper" xmlns:ui="ui" xmlns:orm="orm"
+      x:validated="true" x:schema="/nop/schema/xmeta.xdef">
+
+<!--LOC:[11:22:0:0]/nop/core/xlib/meta-gen.xlib#/nop/auth/model/NopAuthRole/_NopAuthRole.xmeta-->
+    <x:config>
+        <c:import from="/nop/core/xlib/filter.xlib"/>
+    </x:config>
+
+<!--LOC:[7:6:0:0]/nop/auth/model/NopAuthRole/_NopAuthRole.xmeta-->
+    <entityName>io.nop.auth.dao.entity.NopAuthRole</entityName>
+
+    <primaryKey>roleId</primaryKey>
+
+    <displayProp>roleName</displayProp>
+
+    <keys>
+        <key name="roleNameKey" props="roleName"/>
+    </keys>
+
+    <props>
+        <prop name="roleId" displayName="角色ID" propId="1" i18n-en:displayName="Role ID" mandatory="true"
+              queryable="true" sortable="true" insertable="true" updatable="false">
+            <schema type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="roleName" displayName="角色名" propId="2" i18n-en:displayName="Role Name" tagSet="disp"
+              mandatory="true" queryable="true" sortable="true" insertable="true" updatable="true">
+            <schema type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="childRoleIds" displayName="子角色" propId="3" i18n-en:displayName="Child Role IDs" queryable="true"
+              sortable="true" insertable="true" updatable="true" internal="true" ui:show="X">
+            <schema type="java.lang.String" precision="500"/>
+        </prop>
+        <prop name="isPrimary" displayName="是否主角色" propId="4" i18n-en:displayName="Is Primary" queryable="true"
+              sortable="true" insertable="true" updatable="true" defaultValue="0">
+            <schema domain="boolFlag" type="java.lang.Byte" precision="1"/>
+        </prop>
+        <prop name="delFlag" displayName="删除标识" propId="5" i18n-en:displayName="Deleted" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="true" internal="true" ui:show="X">
+            <schema stdDomain="boolFlag" domain="delFlag" type="java.lang.Byte"/>
+        </prop>
+        <prop name="version" displayName="数据版本" propId="6" i18n-en:displayName="Version" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" internal="true" ui:show="X">
+            <schema domain="version" type="java.lang.Integer"/>
+        </prop>
+        <prop name="createdBy" displayName="创建人" propId="7" i18n-en:displayName="Created By" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="R">
+            <schema domain="createdBy" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="createTime" displayName="创建时间" propId="8" i18n-en:displayName="Create Time" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="R">
+            <schema domain="createTime" type="java.sql.Timestamp"/>
+        </prop>
+        <prop name="updatedBy" displayName="修改人" propId="9" i18n-en:displayName="Updated By" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="R">
+            <schema domain="updatedBy" type="java.lang.String" precision="50"/>
+        </prop>
+        <prop name="updateTime" displayName="修改时间" propId="10" i18n-en:displayName="Update Time" mandatory="true"
+              queryable="true" sortable="true" insertable="false" updatable="false" ui:show="R">
+            <schema domain="updateTime" type="java.sql.Timestamp"/>
+        </prop>
+        <prop name="remark" displayName="备注" propId="11" i18n-en:displayName="Remark" queryable="true" sortable="true"
+              insertable="true" updatable="true" ui:show="S">
+            <schema domain="remark" type="java.lang.String" precision="200"/>
+        </prop>
+        <prop name="userMappings" displayName="用户映射" i18n-en:displayName="UserMappings"
+              tagSet="pub,cascade-delete,insertable,updatable" ext:kind="to-many" internal="true"
+              ext:joinLeftProp="roleId" ext:joinRightProp="roleId" orm:manyToManyRefProp="userId" insertable="true"
+              updatable="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthUserRole"/>
+            </schema>
+        </prop>
+        <prop name="resourceMappings" displayName="资源映射" i18n-en:displayName="Resources"
+              tagSet="pub,cascade-delete,insertable,updatable" ext:kind="to-many" internal="true"
+              ext:joinLeftProp="roleId" ext:joinRightProp="roleId" orm:manyToManyRefProp="resourceId" insertable="true"
+              updatable="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthRoleResource"/>
+            </schema>
+        </prop>
+        <prop name="relatedUserList" displayName="relatedUserList" insertable="true" updatable="true"
+              tagSet="pub,cascade-delete,insertable,updatable" depends="~userMappings" internal="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthUser"/>
+            </schema>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefProps(
+                                entity["userMappings"], "user");
+                        </getter>
+        </prop>
+        <prop name="relatedUserList_ids" displayName="relatedUserList" insertable="true" updatable="true"
+              graphql:labelProp="relatedUserList_label" lazy="true"
+              ui:pickerUrl="/nop/auth/pages/NopAuthUser/picker.page.yaml" ui:refLabelProp="id" internal="true"
+              depends="~userMappings">
+            <schema type="List&lt;String&gt;" domain="ref-ids"/>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefIds(
+                                 entity["userMappings"], "user");
+                        </getter>
+            <setter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            OrmEntityHelper.setRefIds(
+                                 entity["userMappings"], "user",value);
+                        </setter>
+        </prop>
+        <prop name="relatedUserList_label" displayName="relatedUserList" internal="true" depends="~userMappings"
+              lazy="true">
+            <schema type="String"/>
+            <getter>
+                    import io.nop.orm.support.OrmEntityHelper;
+                    return OrmEntityHelper.getLabelForRefProps(
+                         entity["userMappings"], "user");
+                </getter>
+        </prop>
+        <prop name="relatedResourceList" displayName="relatedResourceList" insertable="true" updatable="true"
+              tagSet="pub,cascade-delete,insertable,updatable" depends="~resourceMappings" internal="true" lazy="true">
+            <schema>
+                <item bizObjName="NopAuthResource"/>
+            </schema>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefProps(
+                                entity["resourceMappings"], "resource");
+                        </getter>
+        </prop>
+        <prop name="relatedResourceList_ids" displayName="relatedResourceList" insertable="true" updatable="true"
+              graphql:labelProp="relatedResourceList_label" lazy="true"
+              ui:pickerUrl="/nop/auth/pages/NopAuthResource/picker.page.yaml" ui:refLabelProp="id" internal="true"
+              depends="~resourceMappings">
+            <schema type="List&lt;String&gt;" domain="ref-ids"/>
+            <getter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            return OrmEntityHelper.getRefIds(
+                                 entity["resourceMappings"], "resource");
+                        </getter>
+            <setter>
+                            import io.nop.orm.support.OrmEntityHelper;
+                            OrmEntityHelper.setRefIds(
+                                 entity["resourceMappings"], "resource",value);
+                        </setter>
+        </prop>
+        <prop name="relatedResourceList_label" displayName="relatedResourceList" internal="true"
+              depends="~resourceMappings" lazy="true">
+            <schema type="String"/>
+            <getter>
+                    import io.nop.orm.support.OrmEntityHelper;
+                    return OrmEntityHelper.getLabelForRefProps(
+                         entity["resourceMappings"], "resource");
+                </getter>
+        </prop>
+<!--LOC:[4:10:0:0]/nop/auth/model/NopAuthRole/NopAuthRole.xmeta-->
+        <prop name="roleUsers" displayName="具有此角色的用户" lazy="true" internal="true">
+            <schema>
+                <item bizObjName="NopAuthUser"/>
+            </schema>
+        </prop>
+        <prop name="roleResourceIds" lazy="true" displayName="角色拥有的资源" internal="true">
+            <schema type="List&lt;String&gt;"/>
+        </prop>
+    </props>
+</meta>

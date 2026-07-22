@@ -34,6 +34,10 @@ export class FluxAdapter implements EngineAdapter {
     return page.locator('[data-slot="dialog-surface"]').first();
   }
 
+  drawer(page: Page): Locator {
+    return page.locator('[data-slot="dialog-surface"], [data-slot="drawer-surface"]').first();
+  }
+
   formField(dialog: Locator, fieldName: string): Locator {
     return dialog.getByLabel(fieldName);
   }

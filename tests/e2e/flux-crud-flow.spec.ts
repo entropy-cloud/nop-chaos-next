@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test, getEngineType } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 import { setupFluxCrudApiInterception } from './support/flux-crud-mock-data';
 
 test.describe('flux crud full flow', () => {
@@ -28,7 +28,9 @@ test.describe('flux crud full flow', () => {
   });
 
   test('edit flow: open edit dialog → modify → submit → close', async ({ page }) => {
-    const editBtn = page.locator('tbody tr[data-slot="table-row"]').first()
+    const editBtn = page
+      .locator('tbody tr[data-slot="table-row"]')
+      .first()
       .getByRole('button', { name: 'Edit Form' });
     await editBtn.click();
 

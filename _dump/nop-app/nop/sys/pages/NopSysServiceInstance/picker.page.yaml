@@ -1,0 +1,135 @@
+type: picker
+valueField: id
+labelField: id
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  url: '@query:NopSysServiceInstance__findPage'
+  gql:selection: total,page,items{ id,instanceId,serviceName,clusterName,groupName,tagsText,serverAddr,serverPort,weight,metaData,isHealthy,isEnabled,isEphemeral,createTime,updateTime
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysServiceInstance__findPage'
+    gql:selection: total,page,items{ id,instanceId,serviceName,clusterName,groupName,tagsText,serverAddr,serverPort,weight,metaData,isHealthy,isEnabled,isEphemeral,createTime,updateTime
+      }
+  columns:
+  - name: instanceId
+    label: '@i18n:col.NopSysServiceInstance.instanceId,prop.label.NopSysServiceInstance.instanceId|服务实例ID'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: serviceName
+    label: '@i18n:col.NopSysServiceInstance.serviceName,prop.label.NopSysServiceInstance.serviceName|服务名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: clusterName
+    label: '@i18n:col.NopSysServiceInstance.clusterName,prop.label.NopSysServiceInstance.clusterName|集群名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: groupName
+    label: '@i18n:col.NopSysServiceInstance.groupName,prop.label.NopSysServiceInstance.groupName|分组名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: tagsText
+    label: '@i18n:col.NopSysServiceInstance.tagsText,prop.label.NopSysServiceInstance.tagsText|标签'
+    sortable: true
+    toggled: true
+    type: static
+  - name: serverAddr
+    label: '@i18n:col.NopSysServiceInstance.serverAddr,prop.label.NopSysServiceInstance.serverAddr|服务地址'
+    sortable: true
+    toggled: true
+    type: static
+  - name: serverPort
+    label: '@i18n:col.NopSysServiceInstance.serverPort,prop.label.NopSysServiceInstance.serverPort|服务端口'
+    sortable: true
+    toggled: true
+    type: static
+  - name: weight
+    label: '@i18n:col.NopSysServiceInstance.weight,prop.label.NopSysServiceInstance.weight|权重'
+    sortable: true
+    toggled: true
+    type: static
+  - name: metaData
+    label: '@i18n:col.NopSysServiceInstance.metaData,prop.label.NopSysServiceInstance.metaData|扩展数据'
+    sortable: true
+    toggled: true
+    type: static
+  - name: isHealthy
+    label: '@i18n:col.NopSysServiceInstance.isHealthy,prop.label.NopSysServiceInstance.isHealthy|是否健康'
+    sortable: true
+    toggled: true
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: isEnabled
+    label: '@i18n:col.NopSysServiceInstance.isEnabled,prop.label.NopSysServiceInstance.isEnabled|是否启用'
+    sortable: true
+    toggled: true
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: isEphemeral
+    label: '@i18n:col.NopSysServiceInstance.isEphemeral,prop.label.NopSysServiceInstance.isEphemeral|是否临时'
+    sortable: true
+    toggled: true
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: createTime
+    label: '@i18n:col.NopSysServiceInstance.createTime,prop.label.NopSysServiceInstance.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysServiceInstance.updateTime,prop.label.NopSysServiceInstance.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static

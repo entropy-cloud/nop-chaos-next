@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test, login } from '@nop-chaos/e2e-shared';
+import { test, mockLogin as login } from '@nop-chaos/e2e-shared';
 
 test.skip(
   process.env.PLAYWRIGHT_APP_MODE !== 'extension-demo',

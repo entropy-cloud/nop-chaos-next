@@ -1,0 +1,81 @@
+type: picker
+valueField: id
+labelField: displayName
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  labelField: displayName
+  url: '@query:NopSysDict__findPage'
+  gql:selection: total,page,items{ id,sid,dictName,displayName,createdBy,createTime,updatedBy,updateTime,remark
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysDict__findPage'
+    gql:selection: total,page,items{ id,sid,dictName,displayName,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  labelTpl: ${displayName}
+  columns:
+  - name: dictName
+    label: '@i18n:col.NopSysDict.dictName,prop.label.NopSysDict.dictName|字典名'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: displayName
+    label: '@i18n:col.NopSysDict.displayName,prop.label.NopSysDict.displayName|显示名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysDict.createdBy,prop.label.NopSysDict.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysDict.createTime,prop.label.NopSysDict.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysDict.updatedBy,prop.label.NopSysDict.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysDict.updateTime,prop.label.NopSysDict.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopSysDict.remark,prop.label.NopSysDict.remark|备注'
+    sortable: true
+    toggled: true
+    type: static

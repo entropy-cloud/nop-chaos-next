@@ -1,0 +1,458 @@
+type: page
+name: main
+body:
+  type: crud
+  name: crud-grid
+  autoFillHeight: true
+  syncLocation: false
+  footable: false
+  bulkActions:
+  - type: action
+    id: batch-delete-button
+    actionType: ajax
+    api:
+      url: '@mutation:NopSysSequence__batchDelete?ids=$ids'
+    batch: true
+    confirmText: '@i18n:common.confirmBatchDelete'
+    label: '@i18n:common.batchDelete'
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: action
+    id: add-button
+    actionType: dialog
+    dialog:
+      type: page
+      name: add
+      size: md
+      title: '@i18n:NopSysSequence.forms.add.$title|新增-序列号'
+      body:
+        type: form
+        name: add
+        mode: horizontal
+        rules: [
+          ]
+        api:
+          url: '@mutation:NopSysSequence__save/id'
+        body:
+        - type: group
+          id: row-seqName
+          body:
+            name: seqName
+            label: '@i18n:cell.NopSysSequence.seqName,prop.label.NopSysSequence.seqName|名称'
+            required: true
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 150
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-seqType
+          body:
+            name: seqType
+            label: '@i18n:cell.NopSysSequence.seqType,prop.label.NopSysSequence.seqType|类型'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 10
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+        - type: group
+          id: row-isUuid
+          body:
+            name: isUuid
+            label: '@i18n:cell.NopSysSequence.isUuid,prop.label.NopSysSequence.isUuid|是否UUID'
+            required: true
+            type: switch
+            trueValue: 1
+            falseValue: 0
+            value: '0'
+        - type: group
+          id: row-nextValue
+          body:
+            name: nextValue
+            label: '@i18n:cell.NopSysSequence.nextValue,prop.label.NopSysSequence.nextValue|下一个值'
+            required: true
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-stepSize
+          body:
+            name: stepSize
+            label: '@i18n:cell.NopSysSequence.stepSize,prop.label.NopSysSequence.stepSize|步长'
+            required: true
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-cacheSize
+          body:
+            name: cacheSize
+            label: '@i18n:cell.NopSysSequence.cacheSize,prop.label.NopSysSequence.cacheSize|缓存个数'
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-maxValue
+          body:
+            name: maxValue
+            label: '@i18n:cell.NopSysSequence.maxValue,prop.label.NopSysSequence.maxValue|最大值'
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-resetType
+          body:
+            name: resetType
+            label: '@i18n:cell.NopSysSequence.resetType,prop.label.NopSysSequence.resetType|重置方式'
+            type: input-text
+            validations: isInt
+        - type: group
+          id: row-remark
+          body:
+            name: remark
+            label: '@i18n:cell.NopSysSequence.remark,prop.label.NopSysSequence.remark|备注'
+            type: input-text
+            clearable: true
+            validations:
+              maxLength: 200
+              minLength: null
+              matchRegexp: null
+            transform:
+              upperCase: null
+              lowerCase: null
+    icon: fa fa-plus pull-left
+    label: '@i18n:common.add'
+    level: primary
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysSequence__findPage'
+    gql:selection: total,page,items{ id,seqName,seqType,isUuid,nextValue,stepSize,cacheSize,maxValue,resetType,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  labelTpl: ${seqName}
+  columns:
+  - name: seqName
+    label: '@i18n:col.NopSysSequence.seqName,prop.label.NopSysSequence.seqName|名称'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: seqType
+    label: '@i18n:col.NopSysSequence.seqType,prop.label.NopSysSequence.seqType|类型'
+    sortable: true
+    toggled: true
+    type: static
+  - name: isUuid
+    label: '@i18n:col.NopSysSequence.isUuid,prop.label.NopSysSequence.isUuid|是否UUID'
+    sortable: true
+    toggled: true
+    align: center
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: nextValue
+    label: '@i18n:col.NopSysSequence.nextValue,prop.label.NopSysSequence.nextValue|下一个值'
+    sortable: true
+    toggled: true
+    type: static
+  - name: stepSize
+    label: '@i18n:col.NopSysSequence.stepSize,prop.label.NopSysSequence.stepSize|步长'
+    sortable: true
+    toggled: true
+    type: static
+  - name: cacheSize
+    label: '@i18n:col.NopSysSequence.cacheSize,prop.label.NopSysSequence.cacheSize|缓存个数'
+    sortable: true
+    toggled: true
+    type: static
+  - name: maxValue
+    label: '@i18n:col.NopSysSequence.maxValue,prop.label.NopSysSequence.maxValue|最大值'
+    sortable: true
+    toggled: true
+    type: static
+  - name: resetType
+    label: '@i18n:col.NopSysSequence.resetType,prop.label.NopSysSequence.resetType|重置方式'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysSequence.createdBy,prop.label.NopSysSequence.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysSequence.createTime,prop.label.NopSysSequence.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysSequence.updatedBy,prop.label.NopSysSequence.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysSequence.updateTime,prop.label.NopSysSequence.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopSysSequence.remark,prop.label.NopSysSequence.remark|备注'
+    sortable: true
+    toggled: true
+    type: static
+  - type: operation
+    label: '@i18n:common.operation'
+    id: operation
+    width: 140
+    toggled: true
+    fixed: right
+    labelClassName: text-center
+    buttons:
+    - type: action
+      id: row-view-button
+      actionType: dialog
+      dialog:
+        type: page
+        name: view
+        size: md
+        title: '@i18n:NopSysSequence.forms.view.$title|查看-序列号'
+        body:
+          type: form
+          name: view
+          mode: horizontal
+          rules: [
+            ]
+          initApi:
+            url: '@query:NopSysSequence__get?id=$id'
+            gql:selection: id,seqName,seqType,isUuid,nextValue,stepSize,cacheSize,maxValue,resetType,createdBy,createTime,updatedBy,updateTime,remark
+          body:
+          - type: group
+            id: row-seqName-seqType
+            body:
+            - name: seqName
+              label: '@i18n:cell.NopSysSequence.seqName,prop.label.NopSysSequence.seqName|名称'
+              required: true
+              type: static
+            - name: seqType
+              label: '@i18n:cell.NopSysSequence.seqType,prop.label.NopSysSequence.seqType|类型'
+              type: static
+          - type: group
+            id: row-isUuid-nextValue
+            body:
+            - name: isUuid
+              label: '@i18n:cell.NopSysSequence.isUuid,prop.label.NopSysSequence.isUuid|是否UUID'
+              required: true
+              type: static-mapping
+              map:
+                '1': <span class='label label-success'>{@i18n:common.yes}</span>
+                '0': <span class='label label-warning'>{@i18n:common.no}</span>
+                'true': <span class='label label-success'>{@i18n:common.yes}</span>
+                'false': <span class='label label-warning'>{@i18n:common.no}</span>
+                ? ''
+                : ''
+            - name: nextValue
+              label: '@i18n:cell.NopSysSequence.nextValue,prop.label.NopSysSequence.nextValue|下一个值'
+              required: true
+              type: static
+          - type: group
+            id: row-stepSize-cacheSize
+            body:
+            - name: stepSize
+              label: '@i18n:cell.NopSysSequence.stepSize,prop.label.NopSysSequence.stepSize|步长'
+              required: true
+              type: static
+            - name: cacheSize
+              label: '@i18n:cell.NopSysSequence.cacheSize,prop.label.NopSysSequence.cacheSize|缓存个数'
+              type: static
+          - type: group
+            id: row-maxValue-resetType
+            body:
+            - name: maxValue
+              label: '@i18n:cell.NopSysSequence.maxValue,prop.label.NopSysSequence.maxValue|最大值'
+              type: static
+            - name: resetType
+              label: '@i18n:cell.NopSysSequence.resetType,prop.label.NopSysSequence.resetType|重置方式'
+              type: static
+          - type: group
+            id: row-createdBy-createTime
+            body:
+            - name: createdBy
+              label: '@i18n:cell.NopSysSequence.createdBy,prop.label.NopSysSequence.createdBy|创建人'
+              required: true
+              type: static
+            - name: createTime
+              label: '@i18n:cell.NopSysSequence.createTime,prop.label.NopSysSequence.createTime|创建时间'
+              required: true
+              type: static
+          - type: group
+            id: row-updatedBy-updateTime
+            body:
+            - name: updatedBy
+              label: '@i18n:cell.NopSysSequence.updatedBy,prop.label.NopSysSequence.updatedBy|修改人'
+              required: true
+              type: static
+            - name: updateTime
+              label: '@i18n:cell.NopSysSequence.updateTime,prop.label.NopSysSequence.updateTime|修改时间'
+              required: true
+              type: static
+          - type: group
+            id: row-remark
+            body:
+              name: remark
+              label: '@i18n:cell.NopSysSequence.remark,prop.label.NopSysSequence.remark|备注'
+              type: static
+      label: '@i18n:common.view'
+      level: primary
+    - type: dropdown-button
+      id: row-more-button
+      label: '@i18n:common.more'
+      level: primary
+      buttons:
+      - actionType: dialog
+        dialog:
+          type: page
+          name: update
+          size: md
+          title: '@i18n:NopSysSequence.forms.edit.$title|编辑-序列号'
+          body:
+            type: form
+            name: edit
+            mode: horizontal
+            rules: [
+              ]
+            initApi:
+              url: '@query:NopSysSequence__get?id=$id'
+              gql:selection: id,seqName,seqType,isUuid,nextValue,stepSize,cacheSize,maxValue,resetType,remark
+            api:
+              data:
+                seqName: $seqName
+                seqType: $seqType
+                isUuid: $isUuid
+                nextValue: $nextValue
+                stepSize: $stepSize
+                cacheSize: $cacheSize
+                maxValue: $maxValue
+                resetType: $resetType
+                remark: $remark
+              url: '@mutation:NopSysSequence__update/id?id=$id'
+              withFormData: true
+            body:
+            - type: group
+              id: row-seqName
+              body:
+                name: seqName
+                label: '@i18n:cell.NopSysSequence.seqName,prop.label.NopSysSequence.seqName|名称'
+                required: true
+                type: static
+            - type: group
+              id: row-seqType
+              body:
+                name: seqType
+                label: '@i18n:cell.NopSysSequence.seqType,prop.label.NopSysSequence.seqType|类型'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 10
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+            - type: group
+              id: row-isUuid
+              body:
+                name: isUuid
+                label: '@i18n:cell.NopSysSequence.isUuid,prop.label.NopSysSequence.isUuid|是否UUID'
+                required: true
+                type: switch
+                trueValue: 1
+                falseValue: 0
+                value: 0
+            - type: group
+              id: row-nextValue
+              body:
+                name: nextValue
+                label: '@i18n:cell.NopSysSequence.nextValue,prop.label.NopSysSequence.nextValue|下一个值'
+                required: true
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-stepSize
+              body:
+                name: stepSize
+                label: '@i18n:cell.NopSysSequence.stepSize,prop.label.NopSysSequence.stepSize|步长'
+                required: true
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-cacheSize
+              body:
+                name: cacheSize
+                label: '@i18n:cell.NopSysSequence.cacheSize,prop.label.NopSysSequence.cacheSize|缓存个数'
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-maxValue
+              body:
+                name: maxValue
+                label: '@i18n:cell.NopSysSequence.maxValue,prop.label.NopSysSequence.maxValue|最大值'
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-resetType
+              body:
+                name: resetType
+                label: '@i18n:cell.NopSysSequence.resetType,prop.label.NopSysSequence.resetType|重置方式'
+                type: input-text
+                validations: isInt
+            - type: group
+              id: row-remark
+              body:
+                name: remark
+                label: '@i18n:cell.NopSysSequence.remark,prop.label.NopSysSequence.remark|备注'
+                type: input-text
+                clearable: true
+                validations:
+                  maxLength: 200
+                  minLength: null
+                  matchRegexp: null
+                transform:
+                  upperCase: null
+                  lowerCase: null
+        id: row-update-button
+        label: '@i18n:common.edit'
+        type: button
+      - actionType: ajax
+        api:
+          url: '@mutation:NopSysSequence__delete?id=$id'
+        confirmText: '@i18n:common.confirmDelete'
+        id: row-delete-button
+        label: '@i18n:common.delete'
+        type: button

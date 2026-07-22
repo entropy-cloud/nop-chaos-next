@@ -35,3 +35,15 @@ docs/testing/
 | AMIS Prototype | `pnpm test:e2e:amis-prototype` |
 | Flux Prototype | `pnpm test:e2e:flux-prototype` |
 | **Extension Demo** | `pnpm test:e2e:extension-demo` |
+
+## E2E Developer Guides
+
+- [01-e2e-developer-guide.md](01-e2e-developer-guide.md) — 本仓库 E2E 测试开发手册（架构、编写、引擎切换、调试）
+- **[02-cross-project-e2e-debugging.md](02-cross-project-e2e-debugging.md)** — **调试下游项目（nop-entropy-e2e、nop-app-erp）E2E 时必读**。核心规则：测试必须访问 nop-chaos-next 前端（4173）通过 Vite proxy 转发到后端（8080），**不能直接访问后端端口**。
+
+## Quick Rule for Cross-Project E2E
+
+```
+✅ BASE_URL=http://localhost:4173   (nop-chaos-next frontend + Vite proxy)
+❌ BASE_URL=http://localhost:8080   (backend direct — bypasses proxy, stale frontend)
+```

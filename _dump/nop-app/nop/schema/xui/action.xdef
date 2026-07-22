@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    @onClick 点击事件的响应函数，内容为js代码。上下文中存在props变量
+    @link actionType=link时起作用。用来指定跳转地址，跟 url 不同的是，这是单页跳转方式，不会渲染浏览器，请指定 amis 平台内的页面。可用 ${xxx} 取值。
+    @url actionType=url时，url和blank参数起作用，用于浏览器整体跳转
+-->
+<action xmlns:x="/nop/schema/xdsl.xdef" xmlns:xui="xui" xmlns:xdef="/nop/schema/xdef.xdef" id="!string" label="string"
+        icon="string" iconClassName="string" iconOnly="boolean" rightIcon="string" rightIconClassName="string"
+        batch="boolean" active="boolean" activeLevel="string" activeClassName="string" block="boolean"
+        actionType="string" close="boolean-or-string" xui:role="csv-set" xui:permissions="csv-set" tooltip="string"
+        disabledTip="string" tooltipPlacement="string" onClick="string" hotKey="string" level="string" size="string"
+        required="csv-list" target="string" redirect="string" reload="string" countDown="int" countDownTpl="string"
+        link="string" url="string" blank="boolean" copyFormat="string" content="string"
+        xdef:bean-package="io.nop.xui.model" xdef:name="UiActionModel" xdef:bean-tag-prop="type" xdef:check-ns="xui,gql"
+        x:validated="true" x:schema="/nop/schema/xdef.xdef">
+
+    <confirmText>string</confirmText>
+
+    <disabledOn>string</disabledOn>
+
+    <visibleOn>string</visibleOn>
+
+    <!--可以通过body定制按钮的显示-->
+    <body>xjson</body>
+
+    <api xdef:ref="api.xdef"/>
+
+    <initApi xdef:ref="api.xdef"/>
+
+    <messages xdef:bean-class="java.util.Map">
+        <success>string</success>
+        <failed>string</failed>
+    </messages>
+
+    <!--@size sm/lg/xl/full控制不同的大小。full表示全屏-->
+    <dialog page="!name-or-v-path" height="string" width="string" size="string" closeOnEsc="boolean"
+            closeOnOutside="boolean" showCloseButton="boolean" noActions="boolean" title="string"
+            xdef:name="UiDialogModel">
+        <data>xjson</data>
+        <actions xdef:body-type="list" xdef:key-attr="id"
+                 xdef:bean-body-type="List&lt;io.nop.xui.model.IUiActionModel&gt;">
+            <action id="!string" xdef:ref="UiActionModel"/>
+            <actionGroup id="!string" icon="string" label="string" batch="boolean" level="string"
+                         xdef:bean-tag-prop="type" className="string" btnClassName="string" block="boolean"
+                         size="string" iconOnly="boolean" defaultIsOpened="boolean" closeOnClick="boolean"
+                         closeOnOutside="boolean" trigger="string" hideCaret="boolean" xdef:name="UiActionGroupModel"
+                         xui:role="csv-set" xui:permissions="csv-set">
+                <disabledOn>string</disabledOn>
+                <visibleOn>string</visibleOn>
+                <action id="!string" xdef:ref="UiActionModel" xdef:unique-attr="id"/>
+            </actionGroup>
+        </actions>
+    </dialog>
+
+    <drawer xdef:ref="UiDialogModel"/>
+
+    <feedback xdef:ref="UiDialogModel"/>
+
+    <!--AMIS框架专用，Flux不使用-->
+    <onEvent>xjson-map</onEvent>
+
+    <!--flux框架使用，不使用onEvent-->
+    <onClick>xjson-map</onClick>
+</action>

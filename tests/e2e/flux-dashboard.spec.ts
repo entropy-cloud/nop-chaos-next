@@ -1,12 +1,14 @@
 import { expect } from '@playwright/test';
 import { test, getEngineType } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 
 test.describe('flux dashboard page', () => {
   test.beforeEach(async ({ page }) => {
     test.skip(getEngineType() !== 'flux', 'Flux-only test');
     await login(page, { mockMenuRoutes: false });
-    await expect(page.getByRole('button', { name: 'Flux Dashboard' })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole('button', { name: 'Flux Dashboard' })).toBeVisible({
+      timeout: 15_000,
+    });
     await page.getByRole('button', { name: 'Flux Dashboard' }).click();
     await expect(page.getByText('Flux Dashboard Demo')).toBeVisible({ timeout: 15_000 });
   });

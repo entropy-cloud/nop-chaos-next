@@ -1,0 +1,96 @@
+type: picker
+valueField: id
+labelField: displayName
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  labelField: displayName
+  url: '@query:NopSysCodeRule__findPage'
+  gql:selection: total,page,items{ id,sid,name,displayName,codePattern,seqName,createdBy,createTime,updatedBy,updateTime,remark
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysCodeRule__findPage'
+    gql:selection: total,page,items{ id,sid,name,displayName,codePattern,seqName,createdBy,createTime,updatedBy,updateTime,remark
+      }
+  labelTpl: ${displayName}
+  columns:
+  - name: sid
+    label: '@i18n:col.NopSysCodeRule.sid,prop.label.NopSysCodeRule.sid|主键'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: name
+    label: '@i18n:col.NopSysCodeRule.name,prop.label.NopSysCodeRule.name|名称'
+    sortable: true
+    toggled: true
+    type: static
+  - name: displayName
+    label: '@i18n:col.NopSysCodeRule.displayName,prop.label.NopSysCodeRule.displayName|显示名称'
+    sortable: true
+    toggled: true
+    type: static
+  - name: codePattern
+    label: '@i18n:col.NopSysCodeRule.codePattern,prop.label.NopSysCodeRule.codePattern|编码模式'
+    sortable: true
+    toggled: true
+    type: static
+  - name: seqName
+    label: '@i18n:col.NopSysCodeRule.seqName,prop.label.NopSysCodeRule.seqName|序列号名称'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysCodeRule.createdBy,prop.label.NopSysCodeRule.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysCodeRule.createTime,prop.label.NopSysCodeRule.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysCodeRule.updatedBy,prop.label.NopSysCodeRule.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysCodeRule.updateTime,prop.label.NopSysCodeRule.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: remark
+    label: '@i18n:col.NopSysCodeRule.remark,prop.label.NopSysCodeRule.remark|备注'
+    sortable: true
+    toggled: true
+    type: static

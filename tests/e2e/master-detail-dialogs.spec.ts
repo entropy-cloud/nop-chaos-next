@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 
 function failOnUnexpectedNativeDialog(page: import('@playwright/test').Page) {
   const dialogs: Array<{ type: string; message: string }> = [];
@@ -173,7 +173,9 @@ test('canceling logistics deletion allows reopening confirm', async ({ page }) =
   await assertNoNativeDialogs();
 });
 
-test('confirming logistics deletion removes the record without leftover overlay', async ({ page }) => {
+test('confirming logistics deletion removes the record without leftover overlay', async ({
+  page,
+}) => {
   const assertNoNativeDialogs = failOnUnexpectedNativeDialog(page);
   await navigateToDetail(page);
 

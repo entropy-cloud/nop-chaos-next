@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[2:2:0:0]/nop/auth/pages/NopAuthPosition/NopAuthPosition.view.xml
+ @bizObjName=[2:57:0:0]/nop/auth/pages/NopAuthPosition/_gen/_NopAuthPosition.view.xml
+-->
+<view bizObjName="NopAuthPosition" xmlns:i18n-en="i18n-en" xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:c="c"
+      xmlns:gql="gql" xmlns:view-gen="view-gen" xmlns:xpl="xpl" x:validated="true" x:schema="/nop/schema/xui/xview.xdef">
+
+<!--LOC:[5:6:0:0]/nop/auth/pages/NopAuthPosition/_gen/_NopAuthPosition.view.xml-->
+    <objMeta>/nop/auth/model/NopAuthPosition/NopAuthPosition.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <grids>
+<!--LOC:[18:10:0:0]/nop/auth/pages/NopAuthPosition/_gen/_NopAuthPosition.view.xml
+ @id=[5:19:0:0]/nop/auth/pages/NopAuthPosition/NopAuthPosition.view.xml
+-->
+        <grid id="list">
+            <cols>
+
+                <!--名称-->
+                <col id="name" mandatory="true" sortable="true"/>
+
+                <!--创建人-->
+                <col id="createdBy" mandatory="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+        </grid>
+<!--LOC:[18:10:0:0]/nop/auth/pages/NopAuthPosition/_gen/_NopAuthPosition.view.xml
+ @id=[6:19:0:0]/nop/auth/pages/NopAuthPosition/NopAuthPosition.view.xml
+-->
+        <grid id="pick-list">
+            <cols>
+
+                <!--名称-->
+                <col id="name" mandatory="true" sortable="true"/>
+
+                <!--创建人-->
+                <col id="createdBy" mandatory="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+        </grid>
+    </grids>
+
+    <forms>
+<!--LOC:[44:10:0:0]/nop/auth/pages/NopAuthPosition/_gen/_NopAuthPosition.view.xml
+ @id=[10:19:0:0]/nop/auth/pages/NopAuthPosition/NopAuthPosition.view.xml
+-->
+        <form id="view" editMode="view" title="查看-岗位" i18n-en:title="View Position">
+            <layout>
+ name[名称]
+ createdBy[创建人]
+ createTime[创建时间]
+ updatedBy[修改人]
+ updateTime[修改时间]
+ remark[备注]
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-岗位" i18n-en:title="Add Position">
+            <layout>
+ name[名称]
+ remark[备注]
+</layout>
+        </form>
+        <form id="edit" editMode="edit" title="编辑-岗位" i18n-en:title="Edit Position">
+            <layout>
+ name[名称]
+ remark[备注]
+</layout>
+        </form>
+    </forms>
+
+    <!--
+        <form id="edit" >
+        <layout>
+        name[名称]
+        remark[备注]
+        </layout>
+        <cells>
+        <cell id="remark">
+        <gen-control>
+        return {
+        type: 'input-text',
+        value: "${a + b}"
+        }
+        </gen-control>
+        </cell>
+        </cells>
+        </form>
+    -->
+    <pages>
+<!--LOC:[72:10:0:0]/nop/auth/pages/NopAuthPosition/_gen/_NopAuthPosition.view.xml
+ @name=[32:21:0:0]/nop/auth/pages/NopAuthPosition/NopAuthPosition.view.xml
+-->
+        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query">
+            <table autoFillHeight="true">
+                <api url="@query:NopAuthPosition__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:NopAuthPosition__batchDelete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+                    <action id="row-delete-button" label="@i18n:common.delete">
+                        <api url="@mutation:NopAuthPosition__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+<!--LOC:[107:10:0:0]/nop/auth/pages/NopAuthPosition/_gen/_NopAuthPosition.view.xml
+ @name=[33:23:0:0]/nop/auth/pages/NopAuthPosition/NopAuthPosition.view.xml
+-->
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query">
+            <table noOperations="true">
+                <api url="@query:NopAuthPosition__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:NopAuthPosition__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <initApi url="@query:NopAuthPosition__get?id=$id" gql:selection="{@formSelection}"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:NopAuthPosition__get?id=$id" gql:selection="{@formSelection}"/>
+            <api url="@mutation:NopAuthPosition__update/id?id=$id" withFormData="true"/>
+        </simple>
+    </pages>
+</view>

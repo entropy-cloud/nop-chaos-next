@@ -1,0 +1,182 @@
+type: picker
+valueField: id
+labelField: displayName
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  labelField: displayName
+  url: '@query:NopAuthResource__findList/id,resourceId,siteId_label,siteId,displayName,resourceType,resourceType_label,icon,routePath,url,component,target,hidden,keepAlive,noAuth,status,status_label,authCascadeUp,remark,children
+    @TreeChildren(max:5)?filter_siteId=${''$''}{siteId}&filter_resourceType=TOPM'
+  gql:selection: total,page,items{ id,resourceId,siteId_label,siteId,displayName,resourceType,resourceType_label,icon,routePath,url,component,target,hidden,keepAlive,noAuth,status,status_label,authCascadeUp,remark,children
+    @TreeChildren(max:5) }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthResource__findList/id,resourceId,siteId_label,siteId,displayName,resourceType,resourceType_label,icon,routePath,url,component,target,hidden,keepAlive,noAuth,status,status_label,authCascadeUp,remark,children
+      @TreeChildren(max:5)?filter_siteId=${''$''}{siteId}&filter_resourceType=TOPM'
+    gql:selection: total,page,items{ id,resourceId,siteId_label,siteId,displayName,resourceType,resourceType_label,icon,routePath,url,component,target,hidden,keepAlive,noAuth,status,status_label,authCascadeUp,remark,children
+      @TreeChildren(max:5) }
+  labelTpl: ${displayName}
+  filter:
+    id: crud-filter
+    mode: horizontal
+    className: bg-gray-100 wrapper rounded
+    submitOnInit: true
+    wrapWithPanel: false
+    rules: [
+      ]
+    body:
+    - type: group
+      id: row-siteId
+      body:
+        name: filter_siteId
+        placeholder: ''
+        label: '@i18n:cell.NopAuthResource.siteId,prop.label.NopAuthResource.siteId|站点ID'
+        clearValueOnHidden: false
+        submitOnChange: true
+        type: button-group-select
+        source: '@dict:obj/NopAuthSite'
+        value: main
+    actions:
+    - type: reset
+      label: '@i18n:common.reset'
+      id: reset-button
+    - type: submit
+      label: '@i18n:common.query'
+      level: primary
+      id: submit-button
+  columns:
+  - name: resourceId
+    label: '@i18n:col.NopAuthResource.resourceId,prop.label.NopAuthResource.resourceId|资源ID'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: displayName
+    label: '@i18n:col.NopAuthResource.displayName,prop.label.NopAuthResource.displayName|显示名称'
+    sortable: true
+    toggled: true
+    type: static
+  - name: resourceType_label
+    label: '@i18n:col.NopAuthResource.resourceType,prop.label.NopAuthResource.resourceType|资源类型'
+    sortable: true
+    width: 100px
+    toggled: true
+    type: static
+  - name: icon
+    label: '@i18n:col.NopAuthResource.icon,prop.label.NopAuthResource.icon|图标'
+    sortable: true
+    toggled: true
+    align: center
+    type: vue-renderer
+    vueComponent: icon
+    props:
+      icon: ${icon}
+  - name: routePath
+    label: '@i18n:col.NopAuthResource.routePath,prop.label.NopAuthResource.routePath|前端路由'
+    sortable: true
+    toggled: true
+    type: static
+  - name: url
+    label: '@i18n:col.NopAuthResource.url,prop.label.NopAuthResource.url|链接'
+    sortable: true
+    toggled: true
+    type: static
+  - name: component
+    label: '@i18n:col.NopAuthResource.component,prop.label.NopAuthResource.component|组件名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: target
+    label: '@i18n:col.NopAuthResource.target,prop.label.NopAuthResource.target|链接目标'
+    sortable: true
+    toggled: true
+    type: static
+  - name: hidden
+    label: '@i18n:col.NopAuthResource.hidden,prop.label.NopAuthResource.hidden|是否隐藏'
+    sortable: true
+    toggled: true
+    align: center
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: keepAlive
+    label: '@i18n:col.NopAuthResource.keepAlive,prop.label.NopAuthResource.keepAlive|隐藏时保持状态'
+    sortable: true
+    toggled: true
+    align: center
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: noAuth
+    label: '@i18n:col.NopAuthResource.noAuth,prop.label.NopAuthResource.noAuth|不检查权限'
+    sortable: true
+    toggled: true
+    align: center
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: status_label
+    label: '@i18n:col.NopAuthResource.status,prop.label.NopAuthResource.status|状态'
+    sortable: true
+    width: 50px
+    toggled: true
+    type: static
+  - name: authCascadeUp
+    label: '@i18n:col.NopAuthResource.authCascadeUp,prop.label.NopAuthResource.authCascadeUp|自动更新父节点的权限'
+    sortable: true
+    toggled: true
+    align: center
+    type: static-mapping
+    map:
+      '1': <span class='label label-success'>{@i18n:common.yes}</span>
+      '0': <span class='label label-warning'>{@i18n:common.no}</span>
+      'true': <span class='label label-success'>{@i18n:common.yes}</span>
+      'false': <span class='label label-warning'>{@i18n:common.no}</span>
+      ? ''
+      : ''
+  - name: remark
+    label: '@i18n:col.NopAuthResource.remark,prop.label.NopAuthResource.remark|备注'
+    sortable: true
+    toggled: true
+    type: static

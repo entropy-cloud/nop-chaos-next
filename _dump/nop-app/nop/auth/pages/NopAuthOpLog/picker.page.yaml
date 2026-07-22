@@ -1,0 +1,113 @@
+type: picker
+valueField: id
+labelField: id
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  url: '@query:NopAuthOpLog__findPage'
+  gql:selection: total,page,items{ id,logId,userName,user{userName},userId,sessionId,session{loginAddr},operation,description,actionTime,usedTime,resultStatus,errorCode,retMessage,opRequest,opResponse
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopAuthOpLog__findPage'
+    gql:selection: total,page,items{ id,logId,userName,user{userName},userId,sessionId,session{loginAddr},operation,description,actionTime,usedTime,resultStatus,errorCode,retMessage,opRequest,opResponse
+      }
+  columns:
+  - name: logId
+    label: '@i18n:col.NopAuthOpLog.logId,prop.label.NopAuthOpLog.logId|主键'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: userName
+    label: '@i18n:col.NopAuthOpLog.userName,prop.label.NopAuthOpLog.userName|用户名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: user.userName
+    label: '@i18n:col.NopAuthOpLog.userId,prop.label.NopAuthOpLog.userId|用户ID'
+    sortable: true
+    toggled: true
+    type: static
+  - name: sessionId
+    label: '@i18n:col.NopAuthOpLog.sessionId,prop.label.NopAuthOpLog.sessionId|会话ID'
+    sortable: true
+    toggled: true
+    type: static
+  - name: session.loginAddr
+    label: '@i18n:col.NopAuthOpLog.session.loginAddr,prop.label.NopAuthOpLog.session.loginAddr|登录地址'
+    sortable: true
+    toggled: true
+    type: static
+  - name: operation
+    label: '@i18n:col.NopAuthOpLog.operation,prop.label.NopAuthOpLog.operation|业务操作'
+    sortable: true
+    toggled: true
+    type: static
+  - name: description
+    label: '@i18n:col.NopAuthOpLog.description,prop.label.NopAuthOpLog.description|操作描述'
+    sortable: true
+    toggled: true
+    type: static
+  - name: actionTime
+    label: '@i18n:col.NopAuthOpLog.actionTime,prop.label.NopAuthOpLog.actionTime|操作时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: usedTime
+    label: '@i18n:col.NopAuthOpLog.usedTime,prop.label.NopAuthOpLog.usedTime|操作时长'
+    sortable: true
+    toggled: true
+    type: static
+  - name: resultStatus
+    label: '@i18n:col.NopAuthOpLog.resultStatus,prop.label.NopAuthOpLog.resultStatus|操作状态'
+    sortable: true
+    toggled: true
+    type: static
+  - name: errorCode
+    label: '@i18n:col.NopAuthOpLog.errorCode,prop.label.NopAuthOpLog.errorCode|错误码'
+    sortable: true
+    toggled: true
+    type: static
+  - name: retMessage
+    label: '@i18n:col.NopAuthOpLog.retMessage,prop.label.NopAuthOpLog.retMessage|返回消息'
+    sortable: true
+    toggled: true
+    type: static
+  - name: opRequest
+    label: '@i18n:col.NopAuthOpLog.opRequest,prop.label.NopAuthOpLog.opRequest|请求参数'
+    sortable: true
+    toggled: true
+    type: static
+  - name: opResponse
+    label: '@i18n:col.NopAuthOpLog.opResponse,prop.label.NopAuthOpLog.opResponse|响应数据'
+    sortable: true
+    toggled: true
+    type: static

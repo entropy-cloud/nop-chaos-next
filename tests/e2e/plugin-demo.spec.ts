@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test, login } from '@nop-chaos/e2e-shared';
+import { test, mockLogin as login } from '@nop-chaos/e2e-shared';
 import { demoRoutesMenuResponse, useSeededDemoMenu } from './support/demoRoutes';
 
 test('plugin demo reuses host navigation and shared shell context with seeded demo routes', async ({

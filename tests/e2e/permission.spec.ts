@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 const restrictedSiteMapResponse = {
   status: 0,
   data: {

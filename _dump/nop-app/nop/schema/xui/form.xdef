@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    表单模型
+    @title 表单作为弹出页面使用时对应的对话框标题
+    @editMode [控件编辑模式] edit:编辑模式, add:新增模式, view:查看模式, query:查询条件。不同的模式下使用的控件可能不同
+    @layoutControl 如果设置为wizard，则表示采用向导布局来组织页面。如果设置为tabs，则采用标签页来组织页面。
+    @resetAfterSubmit 提交表单成功后，重置当前表单至初始状态
+    @persistData 表单默认在重置之后（切换页面、弹框中表单关闭表单），会自动清空掉表单中的所有数据，
+    如果你想持久化保留当前表单项的数据而不清空它，那么通过 Form 配置 persistData: "xxx"，指定一个 key ，来实现数据持久化保存
+
+    @preventEnterSubmit 表单默认情况下回车就会提交，如果想阻止这个行为，可以设置为false
+    @interval initApi的调用间隔。Form 支持轮询初始化接口。
+    @checkInterval 轮询请求的时间间隔，默认为 3 秒。设置 asyncApi 才有效
+    @initCheckInterval 设置了 initAsyncApi 以后，默认拉取的时间间隔
+    @initFetch 设置了 initApi 或者 initAsyncApi 后，默认会开始就发请求，设置为 false 后就不会起始就请求接口
+    @silentPolling 配置刷新时是否显示加载动画
+-->
+<form id="string" title="string" label="string" editMode="xml-name" layoutMode="var-name" layoutControl="xml-name"
+      size="string" defaultColumnRatio="int" submitOnChange="boolean" submitOnInit="boolean" resetAfterSubmit="boolean"
+      reload="string" target="string" redirect="string" persistData="string" persistDataKeys="csv-set"
+      preventEnterSubmit="boolean" labelAlign="string" labelWidth="string" submitText="string" wrapWithPanel="boolean"
+      inheritData="boolean" promptPageLeave="boolean" interval="int" checkInterval="int" initCheckInterval="int"
+      initFetch="boolean" silentPolling="boolean" canAccessSuperData="boolean" xdef:name="UiFormModel"
+      xdef:bean-package="io.nop.xui.model" xmlns:x="/nop/schema/xdsl.xdef" xmlns:xdef="/nop/schema/xdef.xdef"
+      x:validated="true" x:schema="/nop/schema/xdef.xdef">
+
+    <objMeta>v-path</objMeta>
+
+    <className>string</className>
+
+    <bodyClassName>string</bodyClassName>
+
+    <panelClassName>string</panelClassName>
+
+    <layout>form-layout</layout>
+
+    <renderer>xpl-xjson</renderer>
+
+    <!--表单的静态初始化数据-->
+    <data>xjson</data>
+
+    <api xdef:ref="api.xdef"/>
+
+    <messages xdef:body-type="map">
+        <xdef:unknown-tag>string</xdef:unknown-tag>
+    </messages>
+
+    <!--<saveFailed>string</saveFailed>-->
+    <initApi xdef:ref="api.xdef"/>
+
+    <!--设置此属性后，表单提交发送保存接口后，还会继续轮询请求该接口，直到返回 finished 属性为 true 才 结束。-->
+    <asyncApi xdef:ref="api.xdef"/>
+
+    <!--Form 用来获取初始数据的 api,与 initApi 不同的是，会一直轮询请求该接口，直到返回 finished 属性为 true 才 结束。-->
+    <initAsyncApi xdef:ref="api.xdef"/>
+
+    <!--用表达式来配置-->
+    <initFetchOn>string</initFetchOn>
+
+    <!--通过表达式来配置停止刷新的条件-->
+    <stopAutoRefreshWhen>string</stopAutoRefreshWhen>
+
+    <rules xdef:body-type="list" xdef:key-attr="id">
+
+        <!--@name 验证失败时需要高亮的表单项-->
+        <rule id="!string" rule="string" message="string" name="csv-set" xdef:name="UiFormRuleModel"/>
+    </rules>
+
+    <cells xdef:body-type="list" xdef:key-attr="id">
+
+        <!--
+            @notSubmit 仅用于前台控制，不提交到后台
+            @custom 如果设置为true，则不要求该字段在meta中定义。否则一般情况下view模型会与某个objMeta绑定，所有字段都会继承meta中定义的属性，如显示名称，类型信息等。
+            @submitOnChange 只要控件值发生改变就会自动触发表单提交。
+            @clearValueOnHidden 单元格被隐藏的时候自动从scope中删除变量
+        -->
+        <cell id="!string" notSubmit="!boolean=false" custom="!boolean=false" columnRatio="int" collapseTitle="string"
+              titlePosition="string" submitOnChange="boolean" readonly="boolean" mandatory="boolean"
+              clearValueOnHidden="!boolean=false" xdef:name="UiFormCellModel" xdef:ref="disp.xdef"/>
+    </cells>
+
+    <selection>field-selection</selection>
+</form>

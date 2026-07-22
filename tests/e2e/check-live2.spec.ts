@@ -1,15 +1,49 @@
 import { test } from '@playwright/test';
 
 const fluxEnabledSiteMapResponse = {
-  status: 0, data: { children: [
-    { id: 'dashboard', displayName: 'Dashboard', routePath: '/dashboard', component: 'dashboard', hidden: false, meta: { sort: 1 } },
-    { id: 'flux-demo', displayName: 'Flux Demo', routePath: '/flux-demo', component: 'FLUX', hidden: false, meta: { sort: 7, schemaPath: '/data/flux-demo.json' } },
-  ]},
+  status: 0,
+  data: {
+    children: [
+      {
+        id: 'dashboard',
+        displayName: 'Dashboard',
+        routePath: '/dashboard',
+        component: 'dashboard',
+        hidden: false,
+        meta: { sort: 1 },
+      },
+      {
+        id: 'flux-demo',
+        displayName: 'Flux Demo',
+        routePath: '/flux-demo',
+        component: 'FLUX',
+        hidden: false,
+        meta: { sort: 7, schemaPath: '/data/flux-demo.json' },
+      },
+    ],
+  },
 };
 const fluxEnabledMenuResponse = {
-  home: '/dashboard', items: [
-    { id: 'dashboard', titleKey: 'menu.dashboard', path: '/dashboard', icon: 'layout-dashboard', pageType: 'builtin', componentId: 'dashboard', sort: 1 },
-    { id: 'flux-demo', title: 'Flux Demo', path: '/flux-demo', icon: 'sparkles', pageType: 'flux', schemaPath: '/data/flux-demo.json', sort: 7 },
+  home: '/dashboard',
+  items: [
+    {
+      id: 'dashboard',
+      titleKey: 'menu.dashboard',
+      path: '/dashboard',
+      icon: 'layout-dashboard',
+      pageType: 'builtin',
+      componentId: 'dashboard',
+      sort: 1,
+    },
+    {
+      id: 'flux-demo',
+      title: 'Flux Demo',
+      path: '/flux-demo',
+      icon: 'sparkles',
+      pageType: 'flux',
+      schemaPath: '/data/flux-demo.json',
+      sort: 7,
+    },
   ],
 };
 
@@ -18,13 +52,25 @@ test('check live 4173', async ({ page }) => {
 
   // Mock login API
   await page.route(BASE + '/r/LoginApi__login*', async (route) => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 0, data: { token: 'mock-token' } }) });
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ status: 0, data: { token: 'mock-token' } }),
+    });
   });
   await page.route(BASE + '/r/SiteMapApi__getSiteMap', async (route) => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fluxEnabledSiteMapResponse) });
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(fluxEnabledSiteMapResponse),
+    });
   });
   await page.route(BASE + '/data/menu-config.json', async (route) => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fluxEnabledMenuResponse) });
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(fluxEnabledMenuResponse),
+    });
   });
 
   await page.goto(BASE + '/#/auth/login');
@@ -51,12 +97,13 @@ test('check live 4173', async ({ page }) => {
     if (!crud) return { error: 'no nop-crud' };
     const crudStyle = window.getComputedStyle(crud);
 
-    const children = Array.from(crud.children).map(c => {
+    const children = Array.from(crud.children).map((c) => {
       const r = c.getBoundingClientRect();
       const s = window.getComputedStyle(c);
       return {
         slot: c.getAttribute('data-slot') || c.className.substring(0, 30),
-        top: Math.round(r.top), bottom: Math.round(r.bottom),
+        top: Math.round(r.top),
+        bottom: Math.round(r.bottom),
         className: c.className.substring(0, 60),
       };
     });
@@ -66,23 +113,30 @@ test('check live 4173', async ({ page }) => {
     if (fa) {
       const faRect = fa.getBoundingClientRect();
       const faStyle = window.getComputedStyle(fa);
-      const btns = Array.from(fa.children).map(b => ({
+      const btns = Array.from(fa.children).map((b) => ({
         text: b.textContent?.trim() || '',
         left: Math.round(b.getBoundingClientRect().left),
         right: Math.round(b.getBoundingClientRect().right),
         parentRight: Math.round(faRect.right),
       }));
       faInfo = {
-        left: Math.round(faRect.left), right: Math.round(faRect.right),
-        justifyContent: faStyle.justifyContent, display: faStyle.display,
+        left: Math.round(faRect.left),
+        right: Math.round(faRect.right),
+        justifyContent: faStyle.justifyContent,
+        display: faStyle.display,
         buttons: btns,
       };
     }
 
     return {
       crudClass: crud.className,
-      crudStyle: { display: crudStyle.display, flexDirection: crudStyle.flexDirection, gap: crudStyle.gap },
-      gapBetweenQueryAndToolbar: children.length >= 2 ? children[1].top - children[0].bottom : 'N/A',
+      crudStyle: {
+        display: crudStyle.display,
+        flexDirection: crudStyle.flexDirection,
+        gap: crudStyle.gap,
+      },
+      gapBetweenQueryAndToolbar:
+        children.length >= 2 ? children[1].top - children[0].bottom : 'N/A',
       children,
       formActions: faInfo,
     };

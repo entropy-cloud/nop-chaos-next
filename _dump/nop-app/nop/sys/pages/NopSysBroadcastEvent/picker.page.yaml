@@ -1,0 +1,115 @@
+type: picker
+valueField: id
+labelField: id
+size: lg
+modalSize: lg
+source:
+  valueField: id
+  url: '@query:NopSysBroadcastEvent__findPage'
+  gql:selection: total,page,items{ id,eventId,eventTopic,eventName,eventHeaders,eventData,selection,eventTime,bizObjName,bizKey,bizDate,createdBy,createTime,updatedBy,updateTime
+    }
+pickerSchema:
+  name: crud-grid
+  syncLocation: false
+  footable: false
+  bulkActions: [
+    ]
+  itemActions: [
+    ]
+  headerToolbar:
+  - type: filter-toggler
+    id: filter-toggler
+  - type: bulkActions
+    id: bulkActions
+  - type: columns-toggler
+    align: right
+    id: columns-toggler
+  - type: reload
+    align: right
+    id: reload
+  footerToolbar:
+  - type: statistics
+    id: statistics
+  - type: switch-per-page
+    id: switch-per-page
+  - type: pagination
+    id: pagination
+  api:
+    url: '@query:NopSysBroadcastEvent__findPage'
+    gql:selection: total,page,items{ id,eventId,eventTopic,eventName,eventHeaders,eventData,selection,eventTime,bizObjName,bizKey,bizDate,createdBy,createTime,updatedBy,updateTime
+      }
+  columns:
+  - name: eventId
+    label: '@i18n:col.NopSysBroadcastEvent.eventId,prop.label.NopSysBroadcastEvent.eventId|事件ID'
+    sortable: true
+    toggled: true
+    fixed: left
+    type: static
+  - name: eventTopic
+    label: '@i18n:col.NopSysBroadcastEvent.eventTopic,prop.label.NopSysBroadcastEvent.eventTopic|事件主题'
+    sortable: true
+    toggled: true
+    type: static
+  - name: eventName
+    label: '@i18n:col.NopSysBroadcastEvent.eventName,prop.label.NopSysBroadcastEvent.eventName|事件名称'
+    sortable: true
+    toggled: true
+    type: static
+  - name: eventHeaders
+    label: '@i18n:col.NopSysBroadcastEvent.eventHeaders,prop.label.NopSysBroadcastEvent.eventHeaders|事件元数据'
+    sortable: true
+    toggled: true
+    type: static
+  - name: eventData
+    label: '@i18n:col.NopSysBroadcastEvent.eventData,prop.label.NopSysBroadcastEvent.eventData|数据'
+    sortable: true
+    toggled: true
+    type: static
+  - name: selection
+    label: '@i18n:col.NopSysBroadcastEvent.selection,prop.label.NopSysBroadcastEvent.selection|字段选择'
+    sortable: true
+    toggled: true
+    type: static
+  - name: eventTime
+    label: '@i18n:col.NopSysBroadcastEvent.eventTime,prop.label.NopSysBroadcastEvent.eventTime|事件时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: bizObjName
+    label: '@i18n:col.NopSysBroadcastEvent.bizObjName,prop.label.NopSysBroadcastEvent.bizObjName|业务对象名'
+    sortable: true
+    toggled: true
+    type: static
+  - name: bizKey
+    label: '@i18n:col.NopSysBroadcastEvent.bizKey,prop.label.NopSysBroadcastEvent.bizKey|业务标识'
+    sortable: true
+    toggled: true
+    type: static
+  - name: bizDate
+    label: '@i18n:col.NopSysBroadcastEvent.bizDate,prop.label.NopSysBroadcastEvent.bizDate|业务日期'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createdBy
+    label: '@i18n:col.NopSysBroadcastEvent.createdBy,prop.label.NopSysBroadcastEvent.createdBy|创建人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: createTime
+    label: '@i18n:col.NopSysBroadcastEvent.createTime,prop.label.NopSysBroadcastEvent.createTime|创建时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static
+  - name: updatedBy
+    label: '@i18n:col.NopSysBroadcastEvent.updatedBy,prop.label.NopSysBroadcastEvent.updatedBy|修改人'
+    sortable: true
+    toggled: true
+    type: static
+  - name: updateTime
+    label: '@i18n:col.NopSysBroadcastEvent.updateTime,prop.label.NopSysBroadcastEvent.updateTime|修改时间'
+    sortable: true
+    width: 160px
+    toggled: true
+    type: static

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--LOC:[2:2:0:0]/nop/sys/pages/NopSysCompactExtField/NopSysCompactExtField.view.xml
+ @bizObjName=[2:57:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml
+-->
+<view bizObjName="NopSysCompactExtField" xmlns:i18n-en="i18n-en" xmlns:x="/nop/schema/xdsl.xdef" xmlns:j="j" xmlns:c="c"
+      xmlns:gql="gql" xmlns:view-gen="view-gen" xmlns:xpl="xpl" x:validated="true" x:schema="/nop/schema/xui/xview.xdef">
+
+<!--LOC:[5:6:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml-->
+    <objMeta>/nop/sys/model/NopSysCompactExtField/NopSysCompactExtField.xmeta</objMeta>
+
+    <controlLib>/nop/web/xlib/control.xlib</controlLib>
+
+    <grids>
+<!--LOC:[18:10:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml
+ @id=[6:19:0:0]/nop/sys/pages/NopSysCompactExtField/NopSysCompactExtField.view.xml
+-->
+        <grid id="list">
+            <cols>
+
+                <!--实体名-->
+                <col id="entityName" mandatory="true" sortable="true"/>
+
+                <!--属性名-->
+                <col id="propName" mandatory="true" sortable="true"/>
+
+                <!--位置-->
+                <col id="position" mandatory="true" ui:number="true" sortable="true"/>
+
+                <!--显示名-->
+                <col id="displayName" sortable="true"/>
+
+                <!--字典名-->
+                <col id="dictName" sortable="true"/>
+
+                <!--默认值-->
+                <col id="defaultValue" sortable="true"/>
+
+                <!--创建人-->
+                <col id="createdBy" mandatory="true" sortable="true"/>
+
+                <!--创建时间-->
+                <col id="createTime" mandatory="true" sortable="true"/>
+
+                <!--修改人-->
+                <col id="updatedBy" mandatory="true" sortable="true"/>
+
+                <!--修改时间-->
+                <col id="updateTime" mandatory="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+        </grid>
+<!--LOC:[18:10:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml
+ @id=[7:19:0:0]/nop/sys/pages/NopSysCompactExtField/NopSysCompactExtField.view.xml
+-->
+        <grid id="pick-list">
+            <cols>
+
+                <!--实体名-->
+                <col id="entityName" mandatory="true" sortable="true"/>
+
+                <!--属性名-->
+                <col id="propName" mandatory="true" sortable="true"/>
+
+                <!--位置-->
+                <col id="position" mandatory="true" ui:number="true" sortable="true"/>
+
+                <!--显示名-->
+                <col id="displayName" sortable="true"/>
+
+                <!--字典名-->
+                <col id="dictName" sortable="true"/>
+
+                <!--默认值-->
+                <col id="defaultValue" sortable="true"/>
+
+                <!--创建人-->
+                <col id="createdBy" mandatory="true" sortable="true"/>
+
+                <!--创建时间-->
+                <col id="createTime" mandatory="true" sortable="true"/>
+
+                <!--修改人-->
+                <col id="updatedBy" mandatory="true" sortable="true"/>
+
+                <!--修改时间-->
+                <col id="updateTime" mandatory="true" sortable="true"/>
+
+                <!--备注-->
+                <col id="remark" sortable="true"/>
+            </cols>
+        </grid>
+    </grids>
+
+    <forms>
+<!--LOC:[59:10:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml
+ @id=[11:19:0:0]/nop/sys/pages/NopSysCompactExtField/NopSysCompactExtField.view.xml
+-->
+        <form id="view" editMode="view" title="查看-紧凑扩展字段配置" i18n-en:title="View Compact Ext Field">
+            <layout>
+ entityName[实体名] propName[属性名]
+ position[位置] displayName[显示名]
+ dictName[字典名] defaultValue[默认值]
+ createdBy[创建人] createTime[创建时间]
+ updatedBy[修改人] updateTime[修改时间]
+ remark[备注] 
+</layout>
+        </form>
+        <form id="add" editMode="add" title="新增-紧凑扩展字段配置" i18n-en:title="Add Compact Ext Field">
+            <layout>
+ entityName[实体名]
+ propName[属性名]
+ position[位置]
+ displayName[显示名]
+ dictName[字典名]
+ defaultValue[默认值]
+ remark[备注]
+</layout>
+        </form>
+<!--LOC:[70:10:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml
+ @id=[12:19:0:0]/nop/sys/pages/NopSysCompactExtField/NopSysCompactExtField.view.xml
+-->
+        <form id="edit" editMode="edit" title="编辑-紧凑扩展字段配置" i18n-en:title="Edit Compact Ext Field">
+            <layout>
+ entityName[实体名]
+ propName[属性名]
+ position[位置]
+ displayName[显示名]
+ dictName[字典名]
+ defaultValue[默认值]
+ remark[备注]
+</layout>
+        </form>
+    </forms>
+
+    <pages>
+<!--LOC:[93:10:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml
+ @name=[16:21:0:0]/nop/sys/pages/NopSysCompactExtField/NopSysCompactExtField.view.xml
+-->
+        <crud name="main" grid="list" asideFilterForm="asideFilter" filterForm="query">
+            <table autoFillHeight="true">
+                <api url="@query:NopSysCompactExtField__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+            <listActions>
+                <action id="batch-delete-button" label="@i18n:common.batchDelete" batch="true">
+                    <api url="@mutation:NopSysCompactExtField__batchDelete?ids=$ids"/>
+                    <confirmText>@i18n:common.confirmBatchDelete</confirmText>
+                </action>
+                <action id="add-button" level="primary" label="@i18n:common.add" icon="fa fa-plus pull-left">
+                    <dialog page="add"/>
+                </action>
+            </listActions>
+            <rowActions>
+                <action id="row-view-button" level="primary" label="@i18n:common.view">
+                    <dialog page="view"/>
+                </action>
+                <actionGroup id="row-more-button" label="@i18n:common.more" level="primary">
+                    <action id="row-update-button" label="@i18n:common.edit">
+                        <dialog page="update"/>
+                    </action>
+                    <action id="row-delete-button" label="@i18n:common.delete">
+                        <api url="@mutation:NopSysCompactExtField__delete?id=$id"/>
+                        <confirmText>@i18n:common.confirmDelete</confirmText>
+                    </action>
+                </actionGroup>
+            </rowActions>
+        </crud>
+<!--LOC:[128:10:0:0]/nop/sys/pages/NopSysCompactExtField/_gen/_NopSysCompactExtField.view.xml
+ @name=[17:23:0:0]/nop/sys/pages/NopSysCompactExtField/NopSysCompactExtField.view.xml
+-->
+        <picker name="picker" grid="pick-list" asideFilterForm="asideFilter" filterForm="query">
+            <table noOperations="true">
+                <api url="@query:NopSysCompactExtField__findPage" gql:selection="{@pageSelection}"/>
+            </table>
+        </picker>
+        <simple name="add" form="add">
+            <api url="@mutation:NopSysCompactExtField__save/id"/>
+        </simple>
+        <simple name="view" form="view">
+            <initApi url="@query:NopSysCompactExtField__get?id=$id" gql:selection="{@formSelection}"/>
+        </simple>
+        <simple name="update" form="edit">
+            <initApi url="@query:NopSysCompactExtField__get?id=$id" gql:selection="{@formSelection}"/>
+            <api url="@mutation:NopSysCompactExtField__update/id?id=$id" withFormData="true"/>
+        </simple>
+    </pages>
+</view>

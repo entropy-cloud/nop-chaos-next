@@ -49,9 +49,9 @@
 `nop-chaos-next` 依赖的是本地 tgz 包，而不是从 npm 直接安装的官方发布版本：
 
 - `apps/main/package.json`
-  - `amis`: `file:../../../amis-react19/dist-packages/amis-6.13.1.tgz`
-  - `amis-core`: `file:../../../amis-react19/dist-packages/amis-core-6.13.1.tgz`
-  - `amis-ui`: `file:../../../amis-react19/dist-packages/amis-ui-6.13.1.tgz`
+  - `amis`: `file:../../../amis-react19/dist-packages/amis-6.13.1-fix.0.tgz`
+  - `amis-core`: `file:../../../amis-react19/dist-packages/amis-core-6.13.1-fix.0.tgz`
+  - `amis-ui`: `file:../../../amis-react19/dist-packages/amis-ui-6.13.1-fix.0.tgz`
 - `packages/amis-react/package.json`
   - 同样依赖 `../../../amis-react19/dist-packages/*.tgz`
 

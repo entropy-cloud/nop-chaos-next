@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '@nop-chaos/e2e-shared';
-import { login } from '@nop-chaos/e2e-shared';
+import { mockLogin as login } from '@nop-chaos/e2e-shared';
 
 function confirmDialog(page: import('@playwright/test').Page) {
   return page.locator('[role="alertdialog"]');
@@ -105,7 +105,10 @@ test('english translations persist after sidebar interactions and logout', async
   await page.locator('aside').getByRole('button', { name: 'Flow Editor' }).click();
   await expect(page.locator('aside').getByRole('button', { name: 'Flow Library' })).toBeVisible();
 
-  const sidebarToggle = page.locator('button').filter({ has: page.locator('svg.lucide-chevron-left, svg.lucide-chevron-right') }).first();
+  const sidebarToggle = page
+    .locator('button')
+    .filter({ has: page.locator('svg.lucide-chevron-left, svg.lucide-chevron-right') })
+    .first();
   await sidebarToggle.click();
   await expect(page.locator('aside')).toBeVisible();
   await sidebarToggle.click();
@@ -141,7 +144,9 @@ test('english translations persist after visiting Flux Demo and logging out', as
 
   await page.locator('aside').getByRole('button', { name: 'Flux Demo' }).click();
   await expect(page).toHaveURL(/#\/flux-demo$/);
-  await expect(page.getByRole('main')).toContainText('Current Flux schemaPath: /data/flux-demo.json');
+  await expect(page.getByRole('main')).toContainText(
+    'Current Flux schemaPath: /data/flux-demo.json',
+  );
 
   await page.locator('aside').getByRole('button', { name: 'Dashboard' }).click();
   await expect(page).toHaveURL(/#\/dashboard$/);

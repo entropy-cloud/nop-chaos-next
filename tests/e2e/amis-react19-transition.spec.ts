@@ -20,7 +20,7 @@
  */
 
 import { expect } from '@playwright/test';
-import { login, test } from '@nop-chaos/e2e-shared';
+import { mockLogin as login, test } from '@nop-chaos/e2e-shared';
 
 test.describe('amis-ui Transition components – React 19 findDOMNode regression', () => {
   test.beforeEach(async ({ page }) => {
