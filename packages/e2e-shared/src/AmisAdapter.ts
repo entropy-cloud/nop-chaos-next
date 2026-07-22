@@ -27,6 +27,10 @@ export class AmisAdapter implements EngineAdapter {
     return page.locator('button:has(.fa-plus)').first();
   }
 
+  queryButton(page: Page): Locator {
+    return page.locator('button:has-text("查询"), button:has-text("搜索"), button:has-text("Query")').first();
+  }
+
   async rowAction(row: Locator, actionNamePattern: RegExp): Promise<void> {
     const button = row.locator('button').filter({ hasText: actionNamePattern }).first();
     await button.click();

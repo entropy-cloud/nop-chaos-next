@@ -2415,6 +2415,14 @@
         </constructor-arg>
     </bean>
 
+    <bean class="io.nop.biz.dev.DevDocBizModel" id="nopDevDocBizModel" ioc:aop="false">
+        <property name="graphQLEngine" ext:autowired="true">
+            <ref bean="nopGraphQLEngine" ext:resolved-loc="[6:6:0:0]/nop/biz/beans/biz-defaults.beans.xml"/>
+        </property>
+    </bean>
+
+    <bean class="io.nop.biz.dev.DevStatBizModel" id="nopDevStatBizModel" ioc:aop="false"/>
+
     <bean class="io.nop.biz.dev.DevToolBizModel" id="io.nop.biz.dev.DevToolBizModel" ioc:aop="false"
           ioc:type="io.nop.biz.dev.DevToolBizModel">
         <property name="graphQLEngine" ext:autowired="true">
@@ -2422,18 +2430,11 @@
         </property>
     </bean>
 
-<!--LOC:[39:6:0:0]/nop/web/beans/web-defaults.beans.xml-->
-    <bean class="io.nop.web.page.PageModelValidator" id="io.nop.web.page.PageModelValidator" ioc:aop="false"
-          ioc:type="io.nop.web.page.PageModelValidator" init-method="validate">
-        <property name="pageProvider" ext:autowired="true">
-            <ref bean="io.nop.web.page.PageProvider" ext:resolved-loc="[11:6:0:0]/nop/web/beans/web-defaults.beans.xml"/>
-        </property>
-    </bean>
-
-<!--LOC:[119:6:0:0]/nop/biz/beans/biz-defaults.beans.xml-->
-    <bean class="io.nop.biz.dev.DevDocBizModel" id="nopDevDocBizModel" ioc:aop="false">
-        <property name="graphQLEngine" ext:autowired="true">
-            <ref bean="nopGraphQLEngine" ext:resolved-loc="[6:6:0:0]/nop/biz/beans/biz-defaults.beans.xml"/>
+    <bean class="io.nop.biz.dict.ObjDictLoader" depends-on="nopOrmTemplate" id="nopObjDictLoader" ioc:aop="false"
+          ioc:before="nopBizObjectManager" init-method="init" destroy-method="destroy">
+        <property name="bizObjectManager" ext:autowired="true">
+            <ref bean="nopBizObjectManager" ioc:ignore-depends="true"
+                 ext:resolved-loc="[50:6:0:0]/nop/biz/beans/biz-defaults.beans.xml"/>
         </property>
     </bean>
 
@@ -2453,40 +2454,6 @@
         <property name="dataAuthChecker" ext:autowired="true">
             <ref bean="$DEFAULT$nopDataAuthChecker" ext:resolved-loc="[16:6:0:0]/nop/auth/beans/auth-service.beans.xml"
                  ext:resolved-trace="/nop/auth/beans/app-service.beans.xml"/>
-        </property>
-    </bean>
-
-<!--LOC:[16:6:0:0]/nop/quarkus/beans/quarkus-defaults.beans.xml-->
-    <bean class="io.nop.quarkus.core.dao.AgroalDataSourceFactoryBean"
-          id="io.nop.quarkus.core.dao.AgroalDataSourceFactoryBean" ioc:aop="false"
-          ioc:type="io.nop.quarkus.core.dao.AgroalDataSourceFactoryBean" name="nopDataSource" ioc:bean-method="get"
-          init-method="init" destroy-method="destroy">
-        <property name="config">
-            <ref bean="$GEN$io.nop.dao.jdbc.datasource.DataSourceConfig$2"
-                 ext:resolved-loc="[23:14:0:0]/nop/quarkus/beans/quarkus-defaults.beans.xml"/>
-        </property>
-    </bean>
-
-<!--LOC:[42:6:0:0]/nop/auth/beans/auth-service.beans.xml-->
-    <bean class="io.nop.auth.core.filter.AuthHttpServerFilter" id="$DEFAULT$nopAuthHttpServerFilter" ioc:aop="false"
-          name="nopAuthHttpServerFilter" init-method="init">
-        <property name="autoRefreshToken" value="@cfg:nop.auth.auto-refresh-token|true" ext:autowired="true"/>
-        <property name="config" ext:autowired="true">
-            <ref bean="$DEFAULT$nopAuthFilterConfig" ext:resolved-loc="[48:6:0:0]/nop/auth/beans/auth-service.beans.xml"
-                 ext:resolved-trace="/nop/auth/beans/app-service.beans.xml"/>
-        </property>
-        <property name="loginService" ext:autowired="true">
-            <ref bean="$DEFAULT$nopLoginService" ext:resolved-loc="[18:6:0:0]/nop/auth/beans/auth-service.beans.xml"
-                 ext:resolved-trace="/nop/auth/beans/app-service.beans.xml"/>
-        </property>
-    </bean>
-
-<!--LOC:[37:6:0:0]/nop/auth/beans/auth-core-defaults.beans.xml-->
-    <bean class="io.nop.auth.core.login.LocalUserContextCache" id="$DEFAULT$nopUserContextCache" ioc:aop="false"
-          name="nopUserContextCache" ioc:refresh-config="refreshConfig" init-method="init">
-        <property name="userContextConfig" ext:autowired="true">
-            <ref bean="io.nop.auth.core.login.UserContextConfig"
-                 ext:resolved-loc="[41:6:0:0]/nop/auth/beans/auth-core-defaults.beans.xml"/>
         </property>
     </bean>
 
@@ -2523,12 +2490,58 @@
         </property>
     </bean>
 
-<!--LOC:[100:6:0:0]/nop/biz/beans/biz-defaults.beans.xml-->
-    <bean class="io.nop.biz.dict.ObjDictLoader" depends-on="nopOrmTemplate" id="nopObjDictLoader" ioc:aop="false"
-          ioc:before="nopBizObjectManager" init-method="init" destroy-method="destroy">
-        <property name="bizObjectManager" ext:autowired="true">
-            <ref bean="nopBizObjectManager" ioc:ignore-depends="true"
-                 ext:resolved-loc="[50:6:0:0]/nop/biz/beans/biz-defaults.beans.xml"/>
+<!--LOC:[86:6:0:0]/nop/biz/beans/biz-defaults.beans.xml-->
+    <bean class="io.nop.graphql.orm.OrmBizInitializer" id="nopOrmBizInitializer" ioc:aop="false">
+        <property name="daoProvider" ext:autowired="true">
+            <ref bean="$DEFAULT$nopDaoProvider" ext:resolved-loc="[54:6:0:0]/nop/orm/beans/orm-defaults.beans.xml"/>
+        </property>
+        <property name="ormTemplate" ext:autowired="true">
+            <ref bean="$DEFAULT$nopOrmTemplate" ext:resolved-loc="[51:6:0:0]/nop/orm/beans/orm-defaults.beans.xml"/>
+        </property>
+    </bean>
+
+<!--LOC:[42:6:0:0]/nop/auth/beans/auth-service.beans.xml-->
+    <bean class="io.nop.auth.core.filter.AuthHttpServerFilter" id="$DEFAULT$nopAuthHttpServerFilter" ioc:aop="false"
+          name="nopAuthHttpServerFilter" init-method="init">
+        <property name="autoRefreshToken" value="@cfg:nop.auth.auto-refresh-token|true" ext:autowired="true"/>
+        <property name="config" ext:autowired="true">
+            <ref bean="$DEFAULT$nopAuthFilterConfig" ext:resolved-loc="[48:6:0:0]/nop/auth/beans/auth-service.beans.xml"
+                 ext:resolved-trace="/nop/auth/beans/app-service.beans.xml"/>
+        </property>
+        <property name="loginService" ext:autowired="true">
+            <ref bean="$DEFAULT$nopLoginService" ext:resolved-loc="[18:6:0:0]/nop/auth/beans/auth-service.beans.xml"
+                 ext:resolved-trace="/nop/auth/beans/app-service.beans.xml"/>
+        </property>
+    </bean>
+
+<!--LOC:[37:6:0:0]/nop/auth/beans/auth-core-defaults.beans.xml-->
+    <bean class="io.nop.auth.core.login.LocalUserContextCache" id="$DEFAULT$nopUserContextCache" ioc:aop="false"
+          name="nopUserContextCache" ioc:refresh-config="refreshConfig" init-method="init">
+        <property name="userContextConfig" ext:autowired="true">
+            <ref bean="io.nop.auth.core.login.UserContextConfig"
+                 ext:resolved-loc="[41:6:0:0]/nop/auth/beans/auth-core-defaults.beans.xml"/>
+        </property>
+    </bean>
+
+<!--LOC:[7:6:0:0]/nop/file/beans/app-file-core.beans.xml-->
+    <bean class="io.nop.file.core.NopFileStoreBizModel" id="$DEFAULT$io.nop.file.core.NopFileStoreBizModel"
+          ioc:aop="false" ioc:type="io.nop.file.core.NopFileStoreBizModel" name="io.nop.file.core.NopFileStoreBizModel">
+        <property name="allowedFileExts" value="@cfg:nop.file.upload.allowed-file-exts|" ext:autowired="true"/>
+        <property name="bizAuthChecker" ext:autowired="true">
+            <ref bean="$DEFAULT$nopBizAuthChecker" ioc:optional="true"
+                 ext:resolved-loc="[84:6:0:0]/nop/biz/beans/biz-defaults.beans.xml"/>
+        </property>
+        <property name="fileStore">
+            <ref bean="nopFileStore" ext:resolved-loc="[9:6:0:0]/nop/file/beans/app-file-dao.beans.xml"/>
+        </property>
+        <property name="maxFileSize" value="@cfg:nop.file.upload.max-size|16777216" ext:autowired="true"/>
+    </bean>
+
+<!--LOC:[39:6:0:0]/nop/web/beans/web-defaults.beans.xml-->
+    <bean class="io.nop.web.page.PageModelValidator" id="io.nop.web.page.PageModelValidator" ioc:aop="false"
+          ioc:type="io.nop.web.page.PageModelValidator" init-method="validate">
+        <property name="pageProvider" ext:autowired="true">
+            <ref bean="io.nop.web.page.PageProvider" ext:resolved-loc="[11:6:0:0]/nop/web/beans/web-defaults.beans.xml"/>
         </property>
     </bean>
 
@@ -2544,18 +2557,15 @@
         </property>
     </bean>
 
-<!--LOC:[76:6:0:0]/nop/orm/beans/orm-defaults.beans.xml-->
-    <bean class="io.nop.orm.initialize.DataBaseSchemaInitializer" depends-on="nopOrmSessionFactory"
-          id="io.nop.orm.initialize.DataBaseSchemaInitializer" ioc:after="nopOrmSessionFactory" ioc:aop="false"
-          ioc:type="io.nop.orm.initialize.DataBaseSchemaInitializer" init-method="init">
-        <property name="jdbcTemplate" ext:autowired="true">
-            <ref bean="$DEFAULT$nopJdbcTemplate" ext:resolved-loc="[80:6:0:0]/nop/dao/beans/dao-defaults.beans.xml"/>
+<!--LOC:[16:6:0:0]/nop/quarkus/beans/quarkus-defaults.beans.xml-->
+    <bean class="io.nop.quarkus.core.dao.AgroalDataSourceFactoryBean"
+          id="io.nop.quarkus.core.dao.AgroalDataSourceFactoryBean" ioc:aop="false"
+          ioc:type="io.nop.quarkus.core.dao.AgroalDataSourceFactoryBean" name="nopDataSource" ioc:bean-method="get"
+          init-method="init" destroy-method="destroy">
+        <property name="config">
+            <ref bean="$GEN$io.nop.dao.jdbc.datasource.DataSourceConfig$2"
+                 ext:resolved-loc="[23:14:0:0]/nop/quarkus/beans/quarkus-defaults.beans.xml"/>
         </property>
-        <property name="ormSessionFactory" ext:autowired="true">
-            <ref bean="$DEFAULT$nopOrmSessionFactory" ext:resolved-loc="[36:6:0:0]/nop/orm/beans/orm-defaults.beans.xml"/>
-        </property>
-        <property name="specifyQuerySpaces" value="@cfg:nop.orm.db-differ.auto-upgrade-database-specify-query-spaces|"
-                  ext:autowired="true"/>
     </bean>
 
 <!--LOC:[72:6:0:0]/nop/biz/beans/biz-defaults.beans.xml-->
@@ -2575,20 +2585,17 @@
         </property>
     </bean>
 
-<!--LOC:[7:6:0:0]/nop/file/beans/app-file-core.beans.xml-->
-    <bean class="io.nop.file.core.NopFileStoreBizModel" id="$DEFAULT$io.nop.file.core.NopFileStoreBizModel"
-          ioc:aop="false" ioc:type="io.nop.file.core.NopFileStoreBizModel" name="io.nop.file.core.NopFileStoreBizModel">
-        <property name="allowedFileExts" value="@cfg:nop.file.upload.allowed-file-exts|" ext:autowired="true"/>
-        <property name="bizAuthChecker" ext:autowired="true">
-            <ref bean="$DEFAULT$nopBizAuthChecker" ioc:optional="true"
-                 ext:resolved-loc="[84:6:0:0]/nop/biz/beans/biz-defaults.beans.xml"/>
+<!--LOC:[76:6:0:0]/nop/orm/beans/orm-defaults.beans.xml-->
+    <bean class="io.nop.orm.initialize.DataBaseSchemaInitializer" depends-on="nopOrmSessionFactory"
+          id="io.nop.orm.initialize.DataBaseSchemaInitializer" ioc:after="nopOrmSessionFactory" ioc:aop="false"
+          ioc:type="io.nop.orm.initialize.DataBaseSchemaInitializer" init-method="init">
+        <property name="jdbcTemplate" ext:autowired="true">
+            <ref bean="$DEFAULT$nopJdbcTemplate" ext:resolved-loc="[80:6:0:0]/nop/dao/beans/dao-defaults.beans.xml"/>
         </property>
-        <property name="fileStore">
-            <ref bean="nopFileStore" ext:resolved-loc="[9:6:0:0]/nop/file/beans/app-file-dao.beans.xml"/>
+        <property name="ormSessionFactory" ext:autowired="true">
+            <ref bean="$DEFAULT$nopOrmSessionFactory" ext:resolved-loc="[36:6:0:0]/nop/orm/beans/orm-defaults.beans.xml"/>
         </property>
-        <property name="maxFileSize" value="@cfg:nop.file.upload.max-size|16777216" ext:autowired="true"/>
+        <property name="specifyQuerySpaces" value="@cfg:nop.orm.db-differ.auto-upgrade-database-specify-query-spaces|"
+                  ext:autowired="true"/>
     </bean>
-
-<!--LOC:[131:6:0:0]/nop/biz/beans/biz-defaults.beans.xml-->
-    <bean class="io.nop.biz.dev.DevStatBizModel" id="nopDevStatBizModel" ioc:aop="false"/>
 </beans>
