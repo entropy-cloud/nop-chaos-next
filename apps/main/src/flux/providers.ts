@@ -1,6 +1,6 @@
 import { isMockEnabled } from '../config/env';
 import { fetchPageSchema } from '../services/pageApi';
-import { ajaxQuery } from '../services/http';
+import { nopRpcRequest } from '../services/http';
 import type { FluxSchema } from '@nop-chaos/flux';
 
 interface DictOption {
@@ -57,11 +57,16 @@ export async function fetchFluxDict(
     throw signal.reason instanceof Error ? signal.reason : new Error('Dict fetch aborted');
   }
 
-  const options = await ajaxQuery<DictOption[]>(
-    '@query:DictProvider__getDict/static,options{value,label}',
-    { dictName },
-    { signal },
-  );
+  // REST RPC 无需 @selection，DictProvider 返回完整 DictBean
+  const response = await nopRpcRequest<DictBean>({
+    url: '@query:DictProvider__getDict',
+    data: { dictName },
+    signal,
+  });
 
-  return { name: dictName, options };
+  if (!response.ok) {
+    throw new Error(response.msg || `Dict fetch failed: ${response.status}`);
+  }
+
+  return response.data ?? { name: dictName, options: [] };
 }

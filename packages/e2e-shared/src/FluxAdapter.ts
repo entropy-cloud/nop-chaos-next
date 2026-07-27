@@ -166,9 +166,7 @@ export class FluxAdapter implements EngineAdapter {
   }
 
   submitButton(dialog: Locator): Locator {
-    return dialog
-      .getByRole('button', { name: /确定|确认|保存|Submit|Save|提交/ })
-      .first();
+    return dialog.locator('button').filter({ hasText: /确定|确认|保存|Submit|Save|提交/ }).first();
   }
 
   async selectOption(

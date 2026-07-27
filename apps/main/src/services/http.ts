@@ -7,6 +7,7 @@ import {
   setRefreshTokenFetcher,
   unwrapApiPayload,
 } from '@nop-chaos/shared';
+import { resolveNopRpcUrl } from './nopRpcResolver';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
 import { refreshAccessToken as requestRefreshAccessToken } from './authApi';
@@ -157,4 +158,107 @@ export async function ajaxQuery<T>(
     method: options.method ?? 'POST',
     data,
   });
+}
+
+interface NopRpcRequestOptions {
+  url: string;
+  method?: string;
+  data?: unknown;
+  headers?: Record<string, string>;
+  signal?: AbortSignal;
+}
+
+interface NopRpcResponse<T> {
+  ok: boolean;
+  status: number;
+  code?: string;
+  msg?: string;
+  data: T | null;
+  headers: Record<string, string>;
+  raw: unknown;
+}
+
+/**
+ * flux 模式的 RPC 请求：识别 nop 的 @query:/@mutation:/@rpc: 等 url，
+ * 统一转换为 /r/{Entity__method} RPC 调用（不走 graphql）。
+ * 返回后端 raw envelope {status, code, msg, data}（status 是 RPC 状态码 0/-1，
+ * 不是 HTTP status）；flux runtime 会按 status===0 计算 ok，业务控件用 response.data。
+ */
+export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<NopRpcResponse<T>> {
+  const resolution = resolveNopRpcUrl(options.url, options.data);
+  if (options.url?.includes('NopAuthUser__save')) {
+    // eslint-disable-next-line no-console
+    console.log('[nopRpc] save URL:', options.url, 'resolved:', !!resolution, 'data keys:', Object.keys(options.data as object || {}));
+  }
+  if (resolution) {
+    // @query: / @mutation: URL 由 resolveNopRpcUrl 处理
+    try {
+      const response = await mainHttpClient.request<T>({
+        url: resolution.url,
+        method: resolution.method,
+        data: resolution.data,
+        headers: options.headers,
+        signal: options.signal,
+      });
+      if (response.status < 200 || response.status >= 300) {
+        const msg = typeof response.data === 'object' && response.data !== null
+          ? ((response.data as Record<string, unknown>).msg as string) ?? `Request failed: ${response.status}`
+          : `Request failed: ${response.status}`;
+        const error = new Error(msg) as Error & { status?: number };
+        error.status = response.status;
+        throw error;
+      }
+      const body = response.data as unknown as {
+        status?: number;
+        code?: string;
+        msg?: string;
+        data?: unknown;
+      };
+      const rpcStatus = body.status ?? -1;
+      return {
+        ok: rpcStatus === 0,
+        status: rpcStatus,
+        code: body?.code,
+        msg: body?.msg,
+        data: (body?.data as T | undefined) ?? null,
+        headers: response.headers,
+        raw: response,
+      };
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      const status = (error as Error & { status?: number }).status ?? 0;
+      return { ok: false, status, data: null, headers: {}, raw: error };
+    }
+  }
+
+  // 非 @query:/@mutation: URL，直接透传
+  let url = options.url;
+  let method = options.method ?? 'GET';
+  try {
+    const response = await mainHttpClient.request<T>({
+      url, method, data: options.data, headers: options.headers, signal: options.signal,
+    });
+    const body = response.data as unknown as {
+      status?: number;
+      code?: string;
+      msg?: string;
+      data?: unknown;
+    };
+    const hasEnvelope = body && typeof body === 'object' && 'status' in body;
+    const rpcStatus = hasEnvelope ? (body.status ?? -1) : response.status;
+    const rpcData = (hasEnvelope ? body.data : body) as T;
+    return {
+      ok: rpcStatus === 0,
+      status: rpcStatus,
+      code: body?.code,
+      msg: body?.msg,
+      data: rpcData,
+      headers: response.headers,
+      raw: response,
+    };
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err));
+    const status = (error as Error & { status?: number }).status ?? 0;
+    return { ok: false, status, data: null, headers: {}, raw: error };
+  }
 }

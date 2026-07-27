@@ -1,12 +1,45 @@
 import type { FluxApiRequest, FluxApiRequestContext, FluxRendererEnv } from '@nop-chaos/flux';
-import { applyPageTransformers } from '@nop-chaos/extension-host';
+import { applyPageTransformers, registerPageTransformer } from '@nop-chaos/extension-host';
 import { toast } from '@nop-chaos/ui';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
 import { confirmInApp } from '../services/confirm';
-import { mainHttpClient } from '../services/http';
+import { nopRpcRequest } from '../services/http';
 import { withPageCache, withDictCache } from './cache';
 import { fetchFluxPage, fetchFluxDict } from './providers';
+
+// ── Schema 兼容性转换 ──
+
+function walkSchema(node: unknown, fn: (obj: Record<string, unknown>) => void): void {
+  if (!node || typeof node !== 'object') return;
+  if (Array.isArray(node)) { node.forEach((n) => walkSchema(n, fn)); return; }
+  const obj = node as Record<string, unknown>;
+  fn(obj);
+  for (const val of Object.values(obj)) walkSchema(val, fn);
+}
+
+// 后端 XPL（GenLayoutTabs）生成 items[i].tab，但 TabsSchema 用 items[i].body，
+// 在运行时统一转换，避免改后端 XPL（body 是 XPL 保留字）。
+registerPageTransformer({
+  id: 'flux:tabs-items-body',
+  order: 50,
+  transform: (schema) => {
+    walkSchema(schema, (node) => {
+      if (node.type === 'tabs' && Array.isArray(node.items)) {
+        node.items.forEach((item: unknown) => {
+          if (item && typeof item === 'object') {
+            const o = item as Record<string, unknown>;
+            if ('tab' in o && !('body' in o)) {
+              o.body = o.tab;
+              delete o.tab;
+            }
+          }
+        });
+      }
+    });
+    return schema;
+  },
+});
 
 interface CreateMainFluxEnvOptions {
   navigate: (to: string | number, options?: { replace?: boolean }) => void;
@@ -16,22 +49,27 @@ type FluxNotifyLevel = 'info' | 'success' | 'warning' | 'error';
 
 export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxRendererEnv {
   return {
-    fetcher: async <T,>(api: FluxApiRequest, ctx: FluxApiRequestContext) => {
-      const response = await mainHttpClient.request<T>({
+    // flux dispatch 的 per-fire AbortController 在 cancel-previous（deps 变化/新 dispatch）
+    // 时会 abort ctx.signal。flux 自身通过 useCrudLoadAction 的 cancelled flag
+    // （crud-renderer-state.ts 的 useEffect cleanup）已正确处理语义取消，fetcher 监听
+    // signal 是冗余的带宽优化。但 mainHttpClient（client.ts:188）当前把无 reason 的
+    // parent abort 误判为 timeout 并抛错，导致 crud loadAction 收到空结果。
+    // 因此这里刻意不传 ctx.signal —— 让请求自然完成，由 flux cancelled flag 决定是否丢弃。
+    fetcher: (api: FluxApiRequest, _ctx: FluxApiRequestContext) =>
+      nopRpcRequest({
         url: api.url,
-        method: api.method ?? 'GET',
+        method: api.method,
         data: api.data,
         headers: api.headers,
-        signal: ctx.signal,
-      });
-
-      return {
-        ok: response.status >= 200 && response.status < 300,
-        status: response.status,
-        data: response.data,
-        headers: response.headers,
-        raw: response,
-      };
+      }),
+    monitor: {
+      onError: (payload: { phase: string; error: unknown }) => {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '[flux] error phase=' + payload.phase +
+          ' err=' + (payload.error instanceof Error ? payload.error.message : String(payload.error?.toString?.() ?? payload.error)),
+        );
+      },
     },
     notify: (level: FluxNotifyLevel, message: string) => {
       if (level === 'success') {

@@ -1,3 +1,9 @@
+// 开启 flux 严格校验模式：未知 schema 字段（如 tabs 而非 items）升级为 error 级 diagnostic；
+// __FLUX_FAIL_ON_SCHEMA_DIAGNOSTICS__ 让诊断被收集到 runtime（SchemaRenderer 路径不 throw
+// 但 severity 已升级，console 可见）。
+(globalThis as unknown as Record<string, unknown>).__FLUX_STRICT_VALIDATION__ = true;
+(globalThis as unknown as Record<string, unknown>).__FLUX_FAIL_ON_SCHEMA_DIAGNOSTICS__ = true;
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
