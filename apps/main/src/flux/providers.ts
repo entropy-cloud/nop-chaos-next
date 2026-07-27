@@ -1,5 +1,5 @@
 import { isMockEnabled } from '../config/env';
-import { loadSchemaAsset } from '../services/schemaAsset';
+import { fetchPageSchema } from '../services/pageApi';
 import { ajaxQuery } from '../services/http';
 import type { FluxSchema } from '@nop-chaos/flux';
 
@@ -22,17 +22,7 @@ export async function fetchFluxPage(
   schemaPath: string,
   signal?: AbortSignal,
 ): Promise<FluxSchema> {
-  let value: unknown;
-
-  if (
-    isMockEnabled() ||
-    schemaPath.startsWith('/mock') ||
-    schemaPath.endsWith('.json')
-  ) {
-    value = await loadSchemaAsset(schemaPath, { signal });
-  } else {
-    throw new Error(`Unsupported Flux schema path: ${schemaPath}`);
-  }
+  const value = await fetchPageSchema(schemaPath, signal);
 
   if (!(value && typeof value === 'object' && 'type' in value)) {
     throw new Error(

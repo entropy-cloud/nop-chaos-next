@@ -57,22 +57,23 @@ export function clearAmisPageCache() {
   pageCache.clear();
 }
 
-export async function fetchAmisPage(schemaPath: string) {
+// 通用页面 schema 获取：三段式后端逻辑（mock/JSON → /p/ 直连 → PageProvider__getPage RPC）。
+// amis 和 flux provider 共用；后端在 -Dnop.web.render-mode=flux 时通过同一条路径返回 flux 格式 schema。
+export async function fetchPageSchema(
+  schemaPath: string,
+  signal?: AbortSignal,
+): Promise<unknown> {
   if (isMockEnabled() || schemaPath.startsWith('/mock') || schemaPath.endsWith('.json')) {
-    return withPageCache(schemaPath, () => loadSchemaAsset(schemaPath));
+    return loadSchemaAsset(schemaPath, { signal });
   }
 
   if (schemaPath.startsWith('/p/')) {
-    return withPageCache(schemaPath, () =>
-      ajaxFetch<unknown>(schemaPath, {
-        method: 'GET',
-      }),
-    );
+    return ajaxFetch<unknown>(schemaPath, { method: 'GET', signal });
   }
 
-  return withPageCache(schemaPath, () =>
-    ajaxQuery<unknown>('@query:PageProvider__getPage', {
-      path: schemaPath,
-    }),
-  );
+  return ajaxQuery<unknown>('@query:PageProvider__getPage', { path: schemaPath }, { signal });
+}
+
+export async function fetchAmisPage(schemaPath: string) {
+  return withPageCache(schemaPath, () => fetchPageSchema(schemaPath));
 }
