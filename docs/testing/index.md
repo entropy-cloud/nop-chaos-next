@@ -39,7 +39,7 @@ docs/testing/
 ## E2E Developer Guides
 
 - [01-e2e-developer-guide.md](01-e2e-developer-guide.md) — 本仓库 E2E 测试开发手册（架构、编写、引擎切换、调试）
-- **[02-cross-project-e2e-debugging.md](02-cross-project-e2e-debugging.md)** — **调试下游项目（nop-entropy-e2e、nop-app-erp）E2E 时必读**。核心规则：测试必须访问 nop-chaos-next 前端（4173）通过 Vite proxy 转发到后端（8080），**不能直接访问后端端口**。
+- **[02-cross-project-e2e-debugging.md](02-cross-project-e2e-debugging.md)** — **调试下游项目（nop-entropy-e2e、nop-app-erp）E2E 时必读**。核心规则：测试必须访问 nop-chaos-next 前端（4173）通过 Vite proxy 转发到后端（8080），**不能直接访问后端端口**。**注意：本手册只覆盖跨项目链路；下游项目自身的 E2E 调试知识（RPC 错误处理、SiteMapApi 陷阱、render-mode 等）在 `../nop-entropy/docs-for-ai/` 下，调试前也必须读。**
 
 ## Quick Rule for Cross-Project E2E
 

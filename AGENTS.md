@@ -229,7 +229,13 @@ Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run t
 
 ### Cross-Project E2E Debugging Rule
 
-**调试下游项目（nop-entropy-e2e、nop-app-erp）的 E2E 测试之前，必须先读 `docs/testing/02-cross-project-e2e-debugging.md`。** 核心规则：测试必须访问 nop-chaos-next 前端（4173）通过 Vite proxy 转发到后端（8080），**绝对不能直接访问后端端口**。错误的端口配置会导致测试假阳性失败。
+**调试下游项目（nop-entropy-e2e、nop-app-erp）的 E2E 测试之前，必须先读：**
+
+1. 本仓库 `docs/testing/02-cross-project-e2e-debugging.md`（跨项目链路：端口/proxy/前端模式）
+2. 下游项目自己的 AI 必读文档（**不可用本仓库文档替代**）：
+   - **nop-entropy**：`../nop-entropy/docs-for-ai/00-required-reading-e2e-testing.md`（E2E 必读索引，agent 必须逐个打开通读）+ `../nop-entropy/docs-for-ai/02-core-guides/e2e-testing-troubleshooting.md`（排障指南：Nop RPC 错误处理总是 HTTP 200、SiteMapApi `children:null` 崩溃、`waitForMenuLoaded` 引擎选择器、`render-mode` 匹配、`page.content()` 不猜先看 DOM 等关键陷阱）
+
+核心规则：测试必须访问 nop-chaos-next 前端（4173）通过 Vite proxy 转发到后端（8080），**绝对不能直接访问后端端口**。错误的端口配置会导致测试假阳性失败。
 
 ### Mandatory Updates
 

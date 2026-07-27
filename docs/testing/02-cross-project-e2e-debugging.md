@@ -2,6 +2,13 @@
 
 > 调试 nop-entropy-e2e、nop-app-erp 等下游项目 E2E 测试时的必读手册。
 >
+> **⚠️ 边界说明：本手册只覆盖跨项目链路（端口/proxy/前后端启动/引擎切换）。下游项目自身的 E2E 调试知识（Nop RPC 错误处理、SiteMapApi `children:null` 崩溃、`waitForMenuLoaded` 选择器、`page.content()` 调试法等）在下游项目自己的 AI 必读文档中，调试前必须一并通读：**
+>
+> - **nop-entropy**（调试 nop-entropy-e2e 必读）：
+>   - `../nop-entropy/docs-for-ai/00-required-reading-e2e-testing.md` — E2E 必读索引（nop-entropy 自己声明 agent 必须逐个打开通读）
+>   - `../nop-entropy/docs-for-ai/02-core-guides/e2e-testing-troubleshooting.md` — 排障指南（含 Nop RPC 总是 HTTP 200、`.catch(() => {})` 吞不掉业务错误、RPC 创建资源在 CRUD 表不可见等关键陷阱）
+>   - `../nop-entropy/docs-for-ai/02-core-guides/e2e-testing.md` — E2E 测试模式（Playwright 模式、RPC 调用、AMIS 字段名映射）
+>
 > 配套文档：`docs/testing/01-e2e-developer-guide.md`（本仓库 E2E 总指南）、`docs/design/e2e-frontend-mode.md`（前端模式设计）。
 
 ## ⚠️ 核心规则（先读这一段）
@@ -216,6 +223,97 @@ SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 npx playwright test
 
 ---
 
+## 2.5 切换到 Flux 引擎模式（关键：双侧切换）
+
+> ⚠️ 上述方式 A/B/C 默认都是 AMIS 引擎。切换到 Flux 需要 **测试侧 + 后端侧 双管齐下**，只设 `E2E_ENGINE=flux` 不够——这是最容易踩的坑。
+
+### 双侧切换原理
+
+| 层 | AMIS 模式 | Flux 模式 | 控制方式 |
+|----|----------|----------|---------|
+| 测试侧 DOM 选择器 | `AmisAdapter`（`.cxd-*`、`input[name]`） | `FluxAdapter`（`[data-slot]`、`.nop-crud`） | env `E2E_ENGINE=flux` |
+| 后端返回的页面 schema | amis JSON | flux JSON | JVM 参数 `-Dnop.web.render-mode=flux` |
+| 前端 `RouteRenderer` 分发 | `pageType: 'amis'` → AMIS 渲染器 | `pageType: 'flux'` → `FluxRouteRenderer` | 由后端菜单决定，前端无需额外 env |
+
+**关键事实**：`E2E_ENGINE=flux` **只切换测试侧 Adapter**。如果后端仍返回 amis schema，前端会渲染 amis DOM（`.cxd-*`），而 `FluxAdapter` 全部使用 `[data-slot="..."]` 选择器（见 `packages/e2e-shared/src/FluxAdapter.ts`），**一个元素都匹配不到**，所有浏览器测试会大面积 `TimeoutError`。
+
+**注入逻辑来源**：`packages/nop-auth-e2e/playwright.config.ts:47`：
+
+```ts
+command: `mvn quarkus:dev -Dquarkus.http.port=${backendPort} -Dquarkus.profile=dev${
+  engineType === 'flux' ? ' -Dnop.web.render-mode=flux' : ''
+}`,
+```
+
+即：playwright config 检测到 `E2E_ENGINE=flux` 时，**自动**在 mvn 命令后追加 `-Dnop.web.render-mode=flux`。但这个自动注入**只在方式 A（全自动 webServer）生效**；方式 B/C 的 java/mvn 命令必须**手动**加该参数。
+
+### 各方式下的 Flux 启用方法
+
+#### 方式 A（全自动）— 最简单
+
+```bash
+# 一条命令搞定：playwright.config.ts 自动注入后端 render-mode 参数
+E2E_ENGINE=flux FRONTEND_DEV_MODE=true pnpm --filter nop-auth-e2e test
+
+# 单个 spec + 有头
+E2E_ENGINE=flux FRONTEND_DEV_MODE=true \
+  pnpm --filter nop-auth-e2e exec playwright test tests/auth-user.spec.ts --headed
+```
+
+#### 方式 B（预编译 JAR）— JAR 启动命令必须手动加参数
+
+```bash
+# ── 1. 启动后端：JAR 命令显式加 -Dnop.web.render-mode=flux ──
+java -Dquarkus.profile=dev -Dnop.web.render-mode=flux \
+  -Dquarkus.http.port=8080 \
+  -jar /tmp/nop-auth-backend/quarkus-run.jar
+
+# ── 2. 启动前端（无需特殊参数，跟随菜单 pageType） ──
+cd ../nop-chaos-next && pnpm dev
+
+# ── 3. 跑测试：测试侧也要 E2E_ENGINE=flux ──
+cd ../nop-entropy/nop-entropy-e2e/packages/nop-auth-e2e
+SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 E2E_ENGINE=flux \
+  npx playwright test
+```
+
+#### 方式 C（手动 dev）— mvn 命令必须手动加参数
+
+```bash
+# Terminal 1: 后端加 -Dnop.web.render-mode=flux
+cd ../nop-entropy/nop-auth/nop-auth-app
+mvn quarkus:dev -Dquarkus.http.port=8080 -Dquarkus.profile=dev -Dnop.web.render-mode=flux
+
+# Terminal 2: 前端（无需特殊参数）
+cd ../nop-chaos-next && pnpm dev
+
+# Terminal 3: 测试加 E2E_ENGINE=flux
+cd ../nop-entropy/nop-entropy-e2e/packages/nop-auth-e2e
+SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 E2E_ENGINE=flux \
+  npx playwright test
+```
+
+### 验证 Flux 渲染是否真的生效
+
+跑测试前用 `dumpPageStructure` 诊断（见 §5 Step 4），通过 DOM 标记判断：
+
+| 信号 | 含义 |
+|------|------|
+| `fluxSlotCount > 0` 且 `cxdClassCount === 0` | ✅ 页面完全用 Flux 渲染，可跑 FluxAdapter 测试 |
+| `cxdClassCount > 0` 且 `fluxSlotCount === 0` | ❌ 后端没切 render-mode，仍返回 amis schema。检查 java/mvn 命令是否漏了 `-Dnop.web.render-mode=flux` |
+| 两者都为 0 | ❌ 页面根本没渲染（路由/登录/菜单问题） |
+
+也可直接在浏览器 DevTools 跑：`document.querySelectorAll('[data-slot]').length`（应 > 0）vs `document.querySelectorAll('.cxd-Page').length`（应 === 0）。
+
+### 适用范围与限制
+
+- **nop-entropy-e2e**：auth/code/job 三个模块的 `playwright.config.ts` 已实现 `E2E_ENGINE=flux` 注入逻辑，方式 A 可直接用。
+- **nop-app-erp**：需先检查其 `playwright.config.ts` 是否有相同的 render-mode 注入；若没有，方式 A 不会自动加参数，必须用方式 B/C 手动加。
+- **本仓库 nop-chaos-next（mock 模式）**：Flux 测试走 `PLAYWRIGHT_APP_MODE=flux-prototype`，与本节"真实后端 + Flux"链路不同，参见 `01-e2e-developer-guide.md` §4。
+- **后端是否真正支持 Flux 渲染**：`-Dnop.web.render-mode=flux` 是 nop-entropy Quarkus 后端的开关；如果后端版本不支持该属性，或某些页面没有对应的 flux schema，即使加了参数页面仍可能渲染 amis。验证方法同上（看 DOM 标记）。
+
+---
+
 ## 3. 调试步骤：nop-app-erp
 
 nop-app-erp 使用 npm（不是 pnpm），路径约定略有不同。
@@ -264,6 +362,17 @@ BASE_URL (env)  >  playwright.config.ts 计算值
 ```
 
 `BASE_URL` 一旦设置，会覆盖 `FRONTEND_DEV_MODE` 的计算逻辑。手动启动场景下应该同时设置 `BASE_URL=http://localhost:4173` 和 `SKIP_WEBSERVER=true`。
+
+### 后端 JVM 参数（Flux 模式必需）
+
+除上面的 env var，java/mvn 命令行还可传 JVM 系统属性（非 env var）：
+
+| 参数 | 作用 | 何时需要 |
+|------|------|---------|
+| `-Dnop.web.render-mode=flux` | 让后端返回 Flux schema 而非 amis | **`E2E_ENGINE=flux` 时必需**；方式 A 自动注入，方式 B/C 必须手动加（见 §2.5） |
+| `-Dquarkus.profile=dev` | 用 H2 内存库 + 自动建表 | 本地调试总是需要（见 §2 方式 B/C） |
+
+> ⚠️ 漏掉 `-Dnop.web.render-mode=flux` 是 Flux 模式调试最常见的失败原因：测试侧切到 FluxAdapter，但页面仍是 amis DOM，所有 `[data-slot]` 选择器找不到元素。
 
 ---
 
@@ -361,6 +470,92 @@ test('diagnose environment', async ({ page }) => {
 | Page Structure `has404: true` | 路由不存在或菜单未加载 |
 | cxdClassCount > 0 | 页面用 AMIS 引擎渲染 |
 | fluxSlotCount > 0 | 页面用 Flux 引擎渲染 |
+
+---
+
+## 5.5 调试方法论：任何 `waitFor` 超时，第一步用 `page.content()`
+
+> **核心原则：不要盲目重跑，不要猜选择器。** 任何 `locator.waitFor` 超时，第一步永远是抓取实际 DOM，确认页面到底渲染了什么。
+>
+> 这是 `../nop-entropy/docs-for-ai/02-core-guides/e2e-testing-troubleshooting.md` §0 的方法论，适用于所有 E2E 调试场景。本仓库之前只在边界说明里"引用"了它，但没内化成本仓库自己的步骤——导致调试时容易退回"试 10 种 selector"的反模式。
+
+### 为什么不能猜
+
+测试超时的根因可能完全不是选择器写错：
+
+- 后端返回了错误的 schema（`render-mode` 没切，见 §2.5）
+- 前端 JS 加载失败（CJS/ESM 互操作、module not found、external 包 host 没装）
+- React error boundary 吞掉了渲染错误（页面静默空白）
+- 登录/session 失效，页面停在登录页
+- 引擎选错（amis 页面用 FluxAdapter 测，或反之）
+
+**先看 DOM，5 秒定位真因；不看 DOM 瞎猜，可能耗一整天。**
+
+### 最小诊断 spec 模板
+
+写一个临时 spec（下划线前缀，跑完删除），**只做一件事：登录 → goto → 抓 DOM**：
+
+```ts
+import { test } from '@nop-entropy/e2e-shared';
+import { login } from '@nop-entropy/e2e-shared';
+import { writeFileSync } from 'node:fs';
+
+test('debug — page.content() first', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+  page.on('pageerror', (e) => errors.push(`PAGEERROR: ${e.message}`));
+  page.on('requestfailed', (r) => errors.push(`REQFAIL: ${r.url()} - ${r.failure()?.errorText}`));
+
+  await login(page, { username: 'nop', password: '123' });
+  await page.goto('#/NopAuthUser-main');
+  await page.waitForTimeout(5000);
+
+  // 1. dump 完整 HTML 到文件（可下载查看，搜索 error/ErrorBoundary 关键词）
+  writeFileSync('/tmp/debug.html', await page.content());
+
+  // 2. 统计关键 DOM 标记
+  const counts = await page.evaluate(() => ({
+    fluxSlots: document.querySelectorAll('[data-slot]').length,
+    nopCrud: document.querySelectorAll('.nop-crud').length,
+    cxdPage: document.querySelectorAll('.cxd-Page').length,
+    errBoundary: document.querySelectorAll('[class*="error" i], [class*="ErrorBoundary"]').length,
+  }));
+  console.log('DOM counts:', JSON.stringify(counts));
+
+  // 3. 看 main 区域的 innerHTML（精确定位渲染中断点 / error boundary 文案）
+  const mainHTML = await page.evaluate(() => {
+    const m = document.querySelector('#main-content, main, .nop-flux-root');
+    return m ? m.innerHTML.slice(0, 2000) : '(no main element)';
+  });
+  console.log('main innerHTML:', mainHTML);
+
+  // 4. console / pageerror / requestfailed（JS 加载与运行错误）
+  console.log('Errors:', errors.length ? errors.slice(0, 5) : '(none)');
+});
+```
+
+跑（**只跑这一个 spec，不要跑全套**）：
+
+```bash
+SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 E2E_ENGINE=flux \
+  npx playwright test tests/_debug.spec.ts --reporter=list
+```
+
+### 判断矩阵
+
+| 信号 | 含义 | 下一步 |
+|------|------|--------|
+| `fluxSlots > 0` 且 `nopCrud > 0` | Flux 渲染正常，选择器该能找到 | 检查测试代码本身（PO 选择器、等待时机） |
+| `fluxSlots > 0` 但 `nopCrud === 0` | Flux 渲染部分启动，CRUD 没出来 | 看 console errors（JS 错误中断了渲染链） |
+| `cxdPage > 0` | 后端没切 render-mode，页面是 amis | 检查后端 `-Dnop.web.render-mode=flux`（§2.5） |
+| `errBoundary > 0` 或 mainHTML 含 `Error` | 渲染崩溃，error boundary 接管 | 看 innerHTML 找崩溃组件/信息 |
+| console 有 `Failed to resolve module "xxx"` | 前端依赖缺失（external 包 host 没装） | 检查 vite.config `external` 策略 + host 是否真的有该包 |
+| console 有 `Calling "require" for "react"` | flux dist 含 CJS polyfill | 见 `docs/bugs/26-flux-tarball-runtime-require-mismatch.md`（以及其变体） |
+| `mainHTML` 显示登录页 | 登录/session 失效 | 检查 `login()` 是否真成功、token 是否设置 |
+
+### 单一职责：跑一个，不跑全套
+
+调试时**只跑一个测试函数**（`-g "测试名"` 或单独 spec 文件），**不要跑整个 spec**。失败立即用上述诊断 spec 抓 DOM，分析清楚根因后再决定下一步。盲目重跑全套只会把同一个 30s 超时重复 N 遍，浪费时间和信号。
 
 ---
 
@@ -484,7 +679,7 @@ npx playwright test tests/auth-user.spec.ts -g "创建新用户" --headed --debu
 | 前端 | Playwright 自动启动 Vite preview | 手动启动或 `FRONTEND_DEV_MODE=true` |
 | 默认 baseURL | `http://127.0.0.1:4175` | 4173（dev mode）或 8080（CI mode） |
 | 登录方式 | `MockAuthAdapter`（MSW） | 真实后端登录或 RPC login |
-| 引擎 | `amis` / `flux` / mock 都支持 | 通常 `amis`（nop-entropy）/ `amis`（nop-app-erp） |
+| 引擎 | `amis` / `flux` / mock 都支持 | nop-entropy：`amis`（默认）/ `flux`（需 `-Dnop.web.render-mode=flux`，见 §2.5）；nop-app-erp：`amis` |
 | PageObject | `CrudListPage` + `FormDialog` | 同上（共享库）+ 项目专属 PO |
 
 **核心差异**：本仓库用 Mock，下游项目必须接真实后端。下游项目调试时务必走 nop-chaos-next 前端 + Vite proxy 的链路。
@@ -518,6 +713,12 @@ SKIP_WEBSERVER=true npx playwright test   # ← 少了 BASE_URL！
 # → click 可能静默失败（不报错但事件未触发），删除操作无效
 await page.locator('[role="alertdialog"] button:has-text("Confirm")').click();
 # → 应改用 page.evaluate() 原生 DOM click
+
+# ❌ 反模式 8：只设 E2E_ENGINE=flux，没设后端 -Dnop.web.render-mode=flux
+# → 测试侧切到 FluxAdapter，但后端仍返回 amis schema，前端渲染 .cxd-* DOM
+# → FluxAdapter 的 [data-slot] 选择器一个元素都找不到，测试全部超时失败
+SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 E2E_ENGINE=flux npx playwright test
+# ← 缺后端 -Dnop.web.render-mode=flux！必须双侧切换，见 §2.5
 ```
 
 ---
@@ -529,4 +730,10 @@ await page.locator('[role="alertdialog"] button:has-text("Confirm")').click();
 - 前端模式设计：`docs/design/e2e-frontend-mode.md`
 - Vite proxy 配置：`apps/main/vite.config.ts:88-109`
 - 下游 playwright 配置示例：`../nop-entropy/nop-entropy-e2e/packages/nop-auth-e2e/playwright.config.ts`
+- **下游项目 E2E 必读（nop-entropy，调试前必读）**：
+  - `../nop-entropy/docs-for-ai/00-required-reading-e2e-testing.md` — E2E 必读索引
+  - `../nop-entropy/docs-for-ai/02-core-guides/e2e-testing.md` — E2E 测试模式
+  - `../nop-entropy/docs-for-ai/02-core-guides/e2e-testing-troubleshooting.md` — E2E 排障指南
+- Flux 引擎 DOM 选择器源码：`packages/e2e-shared/src/FluxAdapter.ts`
+- AMIS/Flux 双渲染引擎集成：`docs/design/amis-flux-rendering-engine-integration.md`
 - Mission roadmap：`docs/backlog/e2e-upgrade-roadmap.md`
