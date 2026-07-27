@@ -15,6 +15,10 @@ vi.mock('@nop-chaos/shared', () => ({
   setTokens: (...args: unknown[]) => mockSetTokens(...args),
   getValidToken: (...args: unknown[]) => mockGetValidToken(...args),
   unwrapApiPayload: (...args: unknown[]) => mockUnwrapApiPayload(...args),
+  isApiPayload: (value: unknown) =>
+    typeof value === 'object' &&
+    value !== null &&
+    ('status' in value || 'msg' in value || 'data' in value),
 }));
 
 vi.mock('./authApi', () => ({
@@ -175,5 +179,61 @@ describe('http ajaxFetch/ajaxQuery', () => {
     } catch (error) {
       expect((error as Error & { status?: number }).status).toBe(422);
     }
+  });
+});
+
+describe('nopRpcRequest error handling', () => {
+  beforeEach(() => {
+    useAuthStore.setState({
+      user: null,
+      isAuthenticated: false,
+      token: undefined,
+      tokens: undefined,
+      bootstrapStatus: 'idle',
+    });
+    mockRequest.mockReset();
+    mockCreateHttpClient.mockImplementation(() => ({ request: mockRequest }));
+  });
+
+  it('preserves envelope msg/errors on HTTP non-2xx with ApiPayload body', async () => {
+    mockRequest.mockResolvedValue({
+      status: 500,
+      data: { status: -1, msg: 'validation failed', errors: { name: 'required' } },
+      headers: {},
+    });
+    const { nopRpcRequest } = await import('./http');
+    const result = await nopRpcRequest({ url: '@query:X__findPage' });
+    expect(result.ok).toBe(false);
+    expect(result.msg).toBe('validation failed');
+    expect(result.errors).toEqual({ name: 'required' });
+  });
+
+  it('returns status -1 for non-2xx without envelope body', async () => {
+    mockRequest.mockResolvedValue({ status: 502, data: null, headers: {} });
+    const { nopRpcRequest } = await import('./http');
+    const result = await nopRpcRequest({ url: '@query:X__findPage' });
+    expect(result.ok).toBe(false);
+    expect(result.status).toBe(-1);
+  });
+
+  it('catch path returns status -1 not HTTP status', async () => {
+    mockRequest.mockRejectedValue(Object.assign(new Error('network fail'), { status: 500 }));
+    const { nopRpcRequest } = await import('./http');
+    const result = await nopRpcRequest({ url: '@query:X__findPage' });
+    expect(result.ok).toBe(false);
+    expect(result.status).toBe(-1);
+    expect(result.raw).toBeInstanceOf(Error);
+  });
+
+  it('parses successful envelope with data', async () => {
+    mockRequest.mockResolvedValue({
+      status: 200,
+      data: { status: 0, msg: '', data: { id: 1 } },
+      headers: {},
+    });
+    const { nopRpcRequest } = await import('./http');
+    const result = await nopRpcRequest({ url: '@query:X__get', method: 'POST' });
+    expect(result.ok).toBe(true);
+    expect(result.data).toEqual({ id: 1 });
   });
 });

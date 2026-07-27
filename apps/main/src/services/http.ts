@@ -4,10 +4,12 @@ import {
   getAccessToken,
   getRefreshToken as getManagedRefreshToken,
   getValidToken,
+  isApiPayload,
   setRefreshTokenFetcher,
   unwrapApiPayload,
 } from '@nop-chaos/shared';
 import { resolveNopRpcUrl } from './nopRpcResolver';
+import { normalizeBlobData } from './httpBlob';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
 import { refreshAccessToken as requestRefreshAccessToken } from './authApi';
@@ -166,6 +168,9 @@ interface NopRpcRequestOptions {
   data?: unknown;
   headers?: Record<string, string>;
   signal?: AbortSignal;
+  selection?: string;
+  responseType?: 'json' | 'blob' | 'text';
+  downloadFileName?: string;
 }
 
 interface NopRpcResponse<T> {
@@ -174,6 +179,7 @@ interface NopRpcResponse<T> {
   code?: string;
   msg?: string;
   data: T | null;
+  errors?: Record<string, string>;
   headers: Record<string, string>;
   raw: unknown;
 }
@@ -185,11 +191,7 @@ interface NopRpcResponse<T> {
  * 不是 HTTP status）；flux runtime 会按 status===0 计算 ok，业务控件用 response.data。
  */
 export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<NopRpcResponse<T>> {
-  const resolution = resolveNopRpcUrl(options.url, options.data);
-  if (options.url?.includes('NopAuthUser__save')) {
-    // eslint-disable-next-line no-console
-    console.log('[nopRpc] save URL:', options.url, 'resolved:', !!resolution, 'data keys:', Object.keys(options.data as object || {}));
-  }
+  const resolution = resolveNopRpcUrl(options.url, options.data, options.selection);
   if (resolution) {
     // @query: / @mutation: URL 由 resolveNopRpcUrl 处理
     try {
@@ -199,8 +201,29 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
         data: resolution.data,
         headers: options.headers,
         signal: options.signal,
+        responseType: options.responseType,
       });
       if (response.status < 200 || response.status >= 300) {
+        if (isApiPayload(response.data)) {
+          const errorEnvelope = response.data as {
+            status?: number;
+            code?: string;
+            msg?: string;
+            data?: unknown;
+            errors?: Record<string, string>;
+          };
+          const errorStatus = Number(errorEnvelope.status ?? -1);
+          return {
+            ok: errorStatus === 0,
+            status: errorStatus,
+            code: errorEnvelope.code,
+            msg: errorEnvelope.msg,
+            data: (errorEnvelope.data as T | undefined) ?? null,
+            errors: errorEnvelope.errors,
+            headers: response.headers,
+            raw: response,
+          };
+        }
         const msg = typeof response.data === 'object' && response.data !== null
           ? ((response.data as Record<string, unknown>).msg as string) ?? `Request failed: ${response.status}`
           : `Request failed: ${response.status}`;
@@ -208,32 +231,52 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
         error.status = response.status;
         throw error;
       }
-      const body = response.data as unknown as {
+
+      let body = response.data as unknown;
+      if (options.responseType === 'blob' && body instanceof Blob) {
+        const blobResult = await normalizeBlobData(body, {
+          downloadFileName: options.downloadFileName,
+          headers: response.headers,
+        });
+        if (blobResult instanceof Blob) {
+          return {
+            ok: true,
+            status: 0,
+            data: blobResult as T,
+            headers: response.headers,
+            raw: response,
+          };
+        }
+        body = blobResult;
+      }
+
+      const envelope = body as {
         status?: number;
         code?: string;
         msg?: string;
         data?: unknown;
+        errors?: Record<string, string>;
       };
-      const rpcStatus = body.status ?? -1;
+      const rpcStatus = envelope.status ?? -1;
       return {
         ok: rpcStatus === 0,
         status: rpcStatus,
-        code: body?.code,
-        msg: body?.msg,
-        data: (body?.data as T | undefined) ?? null,
+        code: envelope?.code,
+        msg: envelope?.msg,
+        data: (envelope?.data as T | undefined) ?? null,
+        errors: envelope?.errors,
         headers: response.headers,
         raw: response,
       };
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
-      const status = (error as Error & { status?: number }).status ?? 0;
-      return { ok: false, status, data: null, headers: {}, raw: error };
+      return { ok: false, status: -1, data: null, headers: {}, raw: error };
     }
   }
 
   // 非 @query:/@mutation: URL，直接透传
-  let url = options.url;
-  let method = options.method ?? 'GET';
+  const url = options.url;
+  const method = options.method ?? 'GET';
   try {
     const response = await mainHttpClient.request<T>({
       url, method, data: options.data, headers: options.headers, signal: options.signal,
@@ -243,6 +286,7 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
       code?: string;
       msg?: string;
       data?: unknown;
+      errors?: Record<string, string>;
     };
     const hasEnvelope = body && typeof body === 'object' && 'status' in body;
     const rpcStatus = hasEnvelope ? (body.status ?? -1) : response.status;
@@ -253,12 +297,12 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
       code: body?.code,
       msg: body?.msg,
       data: rpcData,
+      errors: body?.errors,
       headers: response.headers,
       raw: response,
     };
   } catch (err) {
     const error = err instanceof Error ? err : new Error(String(err));
-    const status = (error as Error & { status?: number }).status ?? 0;
-    return { ok: false, status, data: null, headers: {}, raw: error };
+    return { ok: false, status: -1, data: null, headers: {}, raw: error };
   }
 }

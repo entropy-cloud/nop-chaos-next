@@ -61,10 +61,12 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
         method: api.method,
         data: api.data,
         headers: api.headers,
+        selection: api.selection || undefined,
+        responseType: api.responseType,
+        downloadFileName: api.downloadFileName,
       }),
     monitor: {
       onError: (payload: { phase: string; error: unknown }) => {
-        // eslint-disable-next-line no-console
         console.warn(
           '[flux] error phase=' + payload.phase +
           ' err=' + (payload.error instanceof Error ? payload.error.message : String(payload.error?.toString?.() ?? payload.error)),

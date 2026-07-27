@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mockAjaxQuery = vi.fn();
+const mockNopRpcRequest = vi.fn();
 
 vi.mock('../services/http', () => ({
-  ajaxQuery: (...args: unknown[]) => mockAjaxQuery(...args),
+  nopRpcRequest: (...args: unknown[]) => mockNopRpcRequest(...args),
 }));
 
 describe('fetchFluxDict', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllEnvs();
-    mockAjaxQuery.mockReset();
+    mockNopRpcRequest.mockReset();
   });
 
   it('returns mock role dict when mock mode is enabled', async () => {
@@ -53,20 +53,24 @@ describe('fetchFluxDict', () => {
     expect(result).toEqual({ name: 'nonexistent', options: [] });
   });
 
-  it('calls ajaxQuery with correct GraphQL endpoint in production mode', async () => {
+  it('calls nopRpcRequest with correct REST RPC endpoint in production mode', async () => {
     vi.stubEnv('VITE_ENABLE_MOCK', 'false');
-    mockAjaxQuery.mockResolvedValue([
-      { label: 'Admin', value: 'admin' },
-    ]);
+    mockNopRpcRequest.mockResolvedValue({
+      ok: true,
+      data: {
+        name: 'role',
+        options: [{ label: 'Admin', value: 'admin' }],
+      },
+    });
     const { fetchFluxDict } = await import('./providers');
 
     const result = await fetchFluxDict('role');
 
-    expect(mockAjaxQuery).toHaveBeenCalledWith(
-      '@query:DictProvider__getDict/static,options{value,label}',
-      { dictName: 'role' },
-      { signal: undefined },
-    );
+    expect(mockNopRpcRequest).toHaveBeenCalledWith({
+      url: '@query:DictProvider__getDict',
+      data: { dictName: 'role' },
+      signal: undefined,
+    });
     expect(result).toEqual({
       name: 'role',
       options: [{ label: 'Admin', value: 'admin' }],
@@ -81,6 +85,6 @@ describe('fetchFluxDict', () => {
     controller.abort(new Error('Cancelled by test'));
 
     await expect(fetchFluxDict('role', controller.signal)).rejects.toThrow('Cancelled by test');
-    expect(mockAjaxQuery).not.toHaveBeenCalled();
+    expect(mockNopRpcRequest).not.toHaveBeenCalled();
   });
 });

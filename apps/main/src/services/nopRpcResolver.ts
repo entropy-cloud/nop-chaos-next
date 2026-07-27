@@ -9,6 +9,20 @@
  *                   （后端 GraphQL mutation 的参数名固定为 data）
  */
 
+function filterSpecialFields(data: unknown): unknown {
+  if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+    return data;
+  }
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data as Record<string, unknown>)) {
+    if (key.startsWith('__') || key.startsWith('@') || key.startsWith('v_')) {
+      continue;
+    }
+    result[key] = value;
+  }
+  return result;
+}
+
 export interface NopRpcResolution {
   url: string;
   method: string;
@@ -20,6 +34,7 @@ export interface NopRpcResolution {
 export function resolveNopRpcUrl(
   rawUrl: string,
   rawData: unknown,
+  selection?: string,
 ): NopRpcResolution | null {
   const nopMatch = rawUrl.match(/^@[a-zA-Z]+:([^/?]+)(?:\/([^?]+))?/);
   if (!nopMatch) return null;
@@ -31,14 +46,18 @@ export function resolveNopRpcUrl(
   let url = '/r/' + operationName;
   let data = rawData;
 
-  // @mutation 操作需要把数据包裹为 {data: originalData}
   if (prefix === '@mutation' && data != null) {
-    data = { data };
+    data = { data: filterSpecialFields(data) };
   }
 
-  // 从 URL 路径中提取 selection（@query:DictProvider__getDict/options 中的 /options 部分）
-  if (selectionPath) {
-    url += '?@selection=' + encodeURIComponent(selectionPath);
+  const resolvedSelection = selection || selectionPath;
+
+  if (resolvedSelection) {
+    url +=
+      '?' +
+      encodeURIComponent('@selection') +
+      '=' +
+      encodeURIComponent(resolvedSelection);
   }
 
   return {
@@ -46,6 +65,6 @@ export function resolveNopRpcUrl(
     method: 'POST',
     data,
     operationName,
-    selection: selectionPath,
+    selection: resolvedSelection,
   };
 }

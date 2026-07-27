@@ -144,7 +144,37 @@
 
 ---
 
-## 9. 联调检查清单
+## 9. Flux 模式 ajax 链路（REST RPC）
+
+Flux 渲染引擎不走 GraphQL，所有 `@query:`/`@mutation:` 请求经 `nopRpcRequest`（`apps/main/src/services/http.ts`）转换为 REST RPC（`POST /r/{OperationName}`），返回 `NopRpcResponse`（对齐 flux `ApiResponse`）。
+
+### 请求转换（`resolveNopRpcUrl`，`nopRpcResolver.ts`）
+
+- `@query:X__method` → `POST /r/X__method`，data 原样透传。
+- `@mutation:X__method` → `POST /r/X__method`，data 包装为 `{data: filteredData}`（过滤 `__`/`@`/`v_` 前缀字段，与 amis `argDataMap` 对齐）。
+- **selection**：flux schema 用独立 `selection` 属性声明字段投影（不在 URL 路径）。`adapter.ts` fetcher 透传 `api.selection` 到 `nopRpcRequest`，最终经 `?@selection=` URL query param 传递（参数名和值都 `encodeURIComponent`）。URL 路径 `/sel` 形式仅作兼容兜底。
+
+### 响应归一化（`NopRpcResponse`）
+
+```ts
+interface NopRpcResponse<T> {
+  ok: boolean;              // status === 0
+  status: number;           // RPC 状态码（0=成功，-1=失败）；catch 路径统一 -1
+  code?: string;
+  msg?: string;
+  data: T | null;
+  errors?: Record<string,string>;  // 字段级校验错误
+  headers: Record<string,string>;
+  raw: unknown;
+}
+```
+
+- HTTP 非 2xx 但 body 是标准 ApiPayload（含 `status`/`msg`/`data`）时，保留业务 `msg`/`errors`/`code` 走 envelope 解析，不降级为通用错误。
+- `responseType: 'blob'` 时，经 `httpBlob.ts` 三分支归一化：attachment 触发浏览器下载 + 合成成功；JSON content-type 恢复错误 envelope（JSON-in-blob）；其他原样返回 Blob。
+
+---
+
+## 10. 联调检查清单
 
 推荐先验证：
 
