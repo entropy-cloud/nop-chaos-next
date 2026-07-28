@@ -145,7 +145,7 @@ test.describe('AMIS lazy loading optimization', () => {
     });
 
     const amisPreloads = (await getPreloadLinks(page)).filter((href) =>
-      /\/assets\/(?:vendor|host)-amis|\/assets\/AmisRouteRenderer-/i.test(href),
+      /\/assets\/(?:vendor|host)-amis|\/assets\/host-amis-route/i.test(href),
     );
 
     expect(amisPreloads.length).toBeGreaterThan(0);
@@ -153,11 +153,11 @@ test.describe('AMIS lazy loading optimization', () => {
 
   test('AMIS route renders after menu registration and loads bridge assets', async ({ page }) => {
     const initialAmisAssets = (await getAssetResources(page)).filter((resource) =>
-      /\/assets\/(?:vendor|host)-amis|\/assets\/AmisRouteRenderer-/i.test(resource.name),
+      /\/assets\/(?:vendor|host)-amis|\/assets\/host-amis-route/i.test(resource.name),
     );
 
     const initialAmisRouteAssets = initialAmisAssets.filter((resource) =>
-      /\/assets\/AmisRouteRenderer-/i.test(resource.name),
+      /\/assets\/host-amis-route/i.test(resource.name),
     );
 
     // Shell bootstrap should not need to eagerly download AMIS bridge/runtime chunks.
@@ -171,12 +171,12 @@ test.describe('AMIS lazy loading optimization', () => {
     });
 
     const loadedAmisAssets = (await getAssetResources(page)).filter((resource) =>
-      /\/assets\/(?:vendor|host)-amis|\/assets\/AmisRouteRenderer-/i.test(resource.name),
+      /\/assets\/(?:vendor|host)-amis|\/assets\/host-amis-route/i.test(resource.name),
     );
 
     expect(loadedAmisAssets.length).toBeGreaterThan(0);
     expect(
-      loadedAmisAssets.some((resource) => /\/assets\/AmisRouteRenderer-/i.test(resource.name)),
+      loadedAmisAssets.some((resource) => /\/assets\/host-amis-route/i.test(resource.name)),
     ).toBe(true);
   });
 
@@ -225,20 +225,23 @@ test.describe('Flux lazy loading optimization', () => {
   });
 
   test('shell bootstrap does not preload dedicated Flux renderer chunks', async ({ page }) => {
+    // TODO: flux package is currently eagerly loaded as part of shell bootstrap.
+    // Re-enable when lazy-loading optimization is implemented.
     const fluxRequests = await page.evaluate(() => {
       return performance
         .getEntriesByType('resource')
-        .filter((entry) => /FluxRouteRenderer-/i.test((entry as any).name ?? ''));
+        .filter((entry) => /\/assets\/pkg-nop-chaos-flux/i.test((entry as any).name ?? ''));
     });
 
     expect(fluxRequests).toHaveLength(0);
   });
 
   test('Flux route loads its renderer chunk and renders seeded schema path', async ({ page }) => {
+    // TODO: flux package is currently eagerly loaded; re-enable when lazy-loading is implemented.
     const initialResources = await getAssetResources(page);
 
     const initialFluxChunks = initialResources.filter((resource) =>
-      /FluxRouteRenderer-/i.test(resource.name),
+      /\/assets\/pkg-nop-chaos-flux/i.test(resource.name),
     );
 
     expect(initialFluxChunks).toHaveLength(0);
@@ -254,7 +257,7 @@ test.describe('Flux lazy loading optimization', () => {
 
     const newResources = await getAssetResources(page);
 
-    const fluxChunks = newResources.filter((resource) => /FluxRouteRenderer-/i.test(resource.name));
+    const fluxChunks = newResources.filter((resource) => /\/assets\/pkg-nop-chaos-flux/i.test(resource.name));
 
     expect(fluxChunks.length).toBeGreaterThan(0);
   });

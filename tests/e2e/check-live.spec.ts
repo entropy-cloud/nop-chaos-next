@@ -1,6 +1,12 @@
 import { test } from '@playwright/test';
 import { login } from './support/auth';
 
+test.describe('check live (manual debug)', () => {
+  test.skip(
+    () => !process.env.E2E_RUN_DEBUG_SCRIPTS,
+    'Manual debug script — set E2E_RUN_DEBUG_SCRIPTS=1 to run',
+  );
+
 const fluxEnabledSiteMapResponse = {
   status: 0,
   data: {
@@ -135,4 +141,5 @@ test('check live page layout', async ({ page }) => {
   });
 
   console.log('LIVE:' + JSON.stringify(data, null, 2));
+});
 });

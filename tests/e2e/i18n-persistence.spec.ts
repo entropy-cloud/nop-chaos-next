@@ -1,6 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from '@nop-chaos/e2e-shared';
-import { mockLogin as login } from '@nop-chaos/e2e-shared';
+import { test, mockLogin as login, waitForSidebar, openMenuRoute } from '@nop-chaos/e2e-shared';
 
 function confirmDialog(page: import('@playwright/test').Page) {
   return page.locator('[role="alertdialog"]');
@@ -99,10 +98,9 @@ test('english translations persist after sidebar interactions and logout', async
 
   await login(page);
 
-  const dashboardButton = page.locator('aside').getByRole('button', { name: 'Dashboard' });
-  await expect(dashboardButton).toBeVisible();
+  await waitForSidebar(page);
 
-  await page.locator('aside').getByRole('button', { name: 'Flow Editor' }).click();
+  await openMenuRoute(page, 'Flow Editor');
   await expect(page.locator('aside').getByRole('button', { name: 'Flow Library' })).toBeVisible();
 
   const sidebarToggle = page
@@ -112,7 +110,7 @@ test('english translations persist after sidebar interactions and logout', async
   await sidebarToggle.click();
   await expect(page.locator('aside')).toBeVisible();
   await sidebarToggle.click();
-  await expect(dashboardButton).toBeVisible();
+  await waitForSidebar(page);
 
   await expect(page.locator('aside').getByRole('button', { name: 'Settings' })).toBeVisible();
 
@@ -139,7 +137,7 @@ test('english translations persist after visiting Flux Demo and logging out', as
   await login(page, { setup: () => useFluxEnabledMenu(page) });
   await page.waitForLoadState('networkidle');
 
-  await expect(page.locator('aside').getByRole('button', { name: 'Dashboard' })).toBeVisible();
+  await waitForSidebar(page);
   await expect(page.locator('aside').getByRole('button', { name: 'Settings' })).toBeVisible();
 
   await page.locator('aside').getByRole('button', { name: 'Flux Demo' }).click();
@@ -148,7 +146,7 @@ test('english translations persist after visiting Flux Demo and logging out', as
     'Current Flux schemaPath: /data/flux-demo.json',
   );
 
-  await page.locator('aside').getByRole('button', { name: 'Dashboard' }).click();
+  await openMenuRoute(page, 'Dashboard', /#\/dashboard$/);
   await expect(page).toHaveURL(/#\/dashboard$/);
   await expect(page.locator('aside').getByRole('button', { name: 'Settings' })).toBeVisible();
   await expect(page.locator('aside')).not.toContainText('menu.dashboard');

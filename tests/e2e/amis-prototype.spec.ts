@@ -1,6 +1,12 @@
 import { expect } from '@playwright/test';
 import { test, mockLogin as login } from '@nop-chaos/e2e-shared';
 
+test.describe('amis prototype', () => {
+  test.skip(
+    () => process.env.PLAYWRIGHT_APP_MODE !== 'amis-prototype',
+    'Requires PLAYWRIGHT_APP_MODE=amis-prototype',
+  );
+
 test('prototype menu loads two-level navigation with CRUD pages', async ({ page }) => {
   await login(page, { username: 'proto', mockMenuRoutes: false });
 
@@ -61,4 +67,5 @@ test('second group 内容管理 shows articles CRUD', async ({ page }) => {
 
   await expect(page.getByRole('button', { name: '新增文章' })).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText('AMIS 入门指南')).toBeVisible({ timeout: 10_000 });
+});
 });

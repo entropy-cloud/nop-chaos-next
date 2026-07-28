@@ -108,6 +108,31 @@ export async function navigateTo(page: PlaywrightPage, hashRoute: string): Promi
 }
 
 /**
+ * Click a sidebar menu button by exact title and wait for navigation.
+ * Handles exact matching to avoid ambiguity (e.g. "Dashboard" vs "Flux Dashboard").
+ */
+export async function openMenuRoute(
+  page: PlaywrightPage,
+  menuTitle: string,
+  urlPattern?: RegExp,
+): Promise<void> {
+  const btn = page.locator('aside, nav').getByRole('button', { name: menuTitle, exact: true }).first();
+  await btn.click();
+  if (urlPattern) {
+    await page.waitForURL(urlPattern, { timeout: 10_000 });
+  }
+  await page.waitForLoadState('networkidle');
+}
+
+/**
+ * Wait for the sidebar to be visible and contain at least the Dashboard entry.
+ * Use after login to confirm the app shell has rendered.
+ */
+export async function waitForSidebar(page: PlaywrightPage, timeoutMs = 15_000): Promise<void> {
+  await page.locator('aside, nav').first().waitFor({ state: 'visible', timeout: timeoutMs });
+}
+
+/**
  * Force the nop-chaos-next locale by writing to localStorage.
  * Useful in tests that need a specific language without going through login.
  */

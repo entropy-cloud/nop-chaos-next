@@ -48,9 +48,6 @@ export default function App() {
     import('./amis/init').then(({ ensureAmisRuntime }) => {
       ensureAmisRuntime().catch(() => {});
     });
-    import('./flux/init').then(({ ensureFluxRuntime }) => {
-      ensureFluxRuntime().catch(() => {});
-    });
   }, []);
 
   const pluginThemeConfig = useMemo(

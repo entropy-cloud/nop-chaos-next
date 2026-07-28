@@ -1,6 +1,12 @@
 import { expect } from '@playwright/test';
 import { test, mockLogin as login } from '@nop-chaos/e2e-shared';
 
+test.describe('flux prototype', () => {
+  test.skip(
+    () => process.env.PLAYWRIGHT_APP_MODE !== 'flux-prototype',
+    'Requires PLAYWRIGHT_APP_MODE=flux-prototype',
+  );
+
 test('flux prototype menu loads two-level navigation with CRUD pages', async ({ page }) => {
   await login(page, { username: 'proto', mockMenuRoutes: false });
 
@@ -39,4 +45,5 @@ test('flux prototype second group shows articles CRUD', async ({ page }) => {
 
   await expect(page.getByText('Flux 入门指南')).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText('产品迭代计划')).toBeVisible();
+});
 });

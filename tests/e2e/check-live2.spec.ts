@@ -1,5 +1,11 @@
 import { test } from '@playwright/test';
 
+test.describe('check live 4173 (manual debug)', () => {
+  test.skip(
+    () => !process.env.E2E_RUN_DEBUG_SCRIPTS,
+    'Manual debug script — set E2E_RUN_DEBUG_SCRIPTS=1 to run',
+  );
+
 const fluxEnabledSiteMapResponse = {
   status: 0,
   data: {
@@ -143,4 +149,5 @@ test('check live 4173', async ({ page }) => {
   });
 
   console.log('LIVE4173:' + JSON.stringify(data));
+});
 });
