@@ -46,6 +46,46 @@ export function resolveNopRpcUrl(
   let url = '/r/' + operationName;
   let data = rawData;
 
+  // Extract URL query params (e.g. ?id=${id}) and merge into POST body.
+  // CRUD dialog forms put entity id as URL query (@query:NopAuthUser__get?id=${id}).
+  // The Flux runtime resolves ${id} before reaching the fetcher; query params
+  // must be forwarded as POST body so the backend receives them.
+  const qmarkIdx = rawUrl.indexOf('?');
+  if (qmarkIdx >= 0) {
+    const params = new URLSearchParams(rawUrl.slice(qmarkIdx));
+    const paramObj: Record<string, string> = {};
+    for (const [k, v] of params) {
+      if (k !== '@selection') {
+        paramObj[k] = v;
+      }
+    }
+    if (Object.keys(paramObj).length > 0) {
+      data = typeof data === 'object' && data !== null && !Array.isArray(data)
+        ? { ...(data as Record<string, unknown>), ...paramObj }
+        : paramObj;
+    }
+  }
+
+  // Convert CRUD pagination params for __findPage operations.
+  // Flux CRUD sends {page, perPage, filter_xxx} but Nop REST RPC endpoint
+  // expects {query: {offset, limit, filter_xxx, ...}}.
+  if (data && typeof data === 'object' && !Array.isArray(data) && operationName.endsWith('__findPage')) {
+    const obj = data as Record<string, unknown>;
+    const query: Record<string, unknown> = {};
+    const pageNum = obj['page'] != null ? Number(obj['page']) : NaN;
+    const perPageNum = obj['perPage'] != null ? Number(obj['perPage']) : NaN;
+    if (!Number.isNaN(pageNum) && !Number.isNaN(perPageNum)) {
+      query.offset = (pageNum - 1) * perPageNum;
+      query.limit = perPageNum;
+    }
+    for (const [key, val] of Object.entries(obj)) {
+      if (key !== 'page' && key !== 'perPage') {
+        query[key] = val;
+      }
+    }
+    data = { query };
+  }
+
   if (prefix === '@mutation' && data != null) {
     data = { data: filterSpecialFields(data) };
   }
