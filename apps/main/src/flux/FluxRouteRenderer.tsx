@@ -72,6 +72,10 @@ export function FluxRouteRenderer({ schemaPath, title }: FluxRouteRendererProps)
     };
   }, [schemaPath, t]);
 
+  const strictValidation = !import.meta.env.DEV
+    ? false
+    : import.meta.env.VITE_FLUX_STRICT_VALIDATION === 'true';
+
   if (visibleError) {
     return (
       <Card className="theme-card border-destructive/40">
@@ -94,5 +98,5 @@ export function FluxRouteRenderer({ schemaPath, title }: FluxRouteRendererProps)
     );
   }
 
-  return <FluxSchemaRenderer schema={visibleSchema} schemaUrl={schemaPath} env={env} />;
+  return <FluxSchemaRenderer schema={visibleSchema} schemaUrl={schemaPath} env={env} strictValidation={strictValidation} />;
 }

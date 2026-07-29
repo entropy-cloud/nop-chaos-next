@@ -473,73 +473,129 @@ test('diagnose environment', async ({ page }) => {
 
 ---
 
-## 5.5 调试方法论：任何 `waitFor` 超时，第一步用 `page.content()`
+## 5.5 调试方法论：不猜，直接查
 
-> **核心原则：不要盲目重跑，不要猜选择器。** 任何 `locator.waitFor` 超时，第一步永远是抓取实际 DOM，确认页面到底渲染了什么。
+> **核心原则：不要盲目重跑，不要猜选择器。** 任何 `locator.waitFor` 超时，第一步永远是抓取实际数据和 DOM，确认页面到底渲染了什么。
 >
-> 这是 `../nop-entropy/docs-for-ai/02-core-guides/e2e-testing-troubleshooting.md` §0 的方法论，适用于所有 E2E 调试场景。本仓库之前只在边界说明里"引用"了它，但没内化成本仓库自己的步骤——导致调试时容易退回"试 10 种 selector"的反模式。
+> **记录和清理**：所有诊断 spec 用 `_debug-*.spec.ts` 前缀，调试完立即删除，不要提交。
 
-### 为什么不能猜
+### Step 0: 拦截网络响应，读 error body（最重要）
 
-测试超时的根因可能完全不是选择器写错：
-
-- 后端返回了错误的 schema（`render-mode` 没切，见 §2.5）
-- 前端 JS 加载失败（CJS/ESM 互操作、module not found、external 包 host 没装）
-- React error boundary 吞掉了渲染错误（页面静默空白）
-- 登录/session 失效，页面停在登录页
-- 引擎选错（amis 页面用 FluxAdapter 测，或反之）
-
-**先看 DOM，5 秒定位真因；不看 DOM 瞎猜，可能耗一整天。**
-
-### 最小诊断 spec 模板
-
-写一个临时 spec（下划线前缀，跑完删除），**只做一件事：登录 → goto → 抓 DOM**：
+**不要只看 HTTP 状态码。后端返回的 JSON body 里才有真正的错误原因。**
 
 ```ts
-import { test } from '@nop-entropy/e2e-shared';
-import { login } from '@nop-entropy/e2e-shared';
-import { writeFileSync } from 'node:fs';
+test('check network error bodies', async ({ page }) => {
+  const errors: { url: string; status: number; body: string }[] = [];
+  page.on('response', async (resp) => {
+    if (resp.status() >= 400) {
+      const body = await resp.text().catch(() => '(no body)');
+      errors.push({
+        url: resp.url().replace(/\?.*/, '').split('/').pop() || resp.url(),
+        status: resp.status(),
+        body: body.slice(0, 2000),
+      });
+    }
+  });
 
-test('debug — page.content() first', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-  page.on('pageerror', (e) => errors.push(`PAGEERROR: ${e.message}`));
-  page.on('requestfailed', (r) => errors.push(`REQFAIL: ${r.url()} - ${r.failure()?.errorText}`));
-
-  await login(page, { username: 'nop', password: '123' });
+  await login(page, { ... });
   await page.goto('#/NopAuthUser-main');
   await page.waitForTimeout(5000);
 
-  // 1. dump 完整 HTML 到文件（可下载查看，搜索 error/ErrorBoundary 关键词）
-  writeFileSync('/tmp/debug.html', await page.content());
-
-  // 2. 统计关键 DOM 标记
-  const counts = await page.evaluate(() => ({
-    fluxSlots: document.querySelectorAll('[data-slot]').length,
-    nopCrud: document.querySelectorAll('.nop-crud').length,
-    cxdPage: document.querySelectorAll('.cxd-Page').length,
-    errBoundary: document.querySelectorAll('[class*="error" i], [class*="ErrorBoundary"]').length,
-  }));
-  console.log('DOM counts:', JSON.stringify(counts));
-
-  // 3. 看 main 区域的 innerHTML（精确定位渲染中断点 / error boundary 文案）
-  const mainHTML = await page.evaluate(() => {
-    const m = document.querySelector('#main-content, main, .nop-flux-root');
-    return m ? m.innerHTML.slice(0, 2000) : '(no main element)';
-  });
-  console.log('main innerHTML:', mainHTML);
-
-  // 4. console / pageerror / requestfailed（JS 加载与运行错误）
-  console.log('Errors:', errors.length ? errors.slice(0, 5) : '(none)');
+  for (const e of errors) {
+    console.log(`[${e.status}] ${e.url}: ${e.body}`);
+    // 示例输出: [500] NopAuthResource__findList: {"code":"nop.err.graphql.unknown-operation-arg","msg":"操作[...]没有定义参数[page]","status":-1}
+  }
 });
 ```
 
-跑（**只跑这一个 spec，不要跑全套**）：
+| 错误码 | 含义 |
+|--------|------|
+| `nop.err.graphql.unknown-operation-arg` | 请求带了后端不认识的参数（如 flux 的 `page`/`perPage` 参数名与 AMIS 不同） |
+| `nop.err.dao.sql.duplicate-key` | 重复键冲突（通常 `ensureDefaultSite` 的重复调用） |
+| `nop.err.commons.text_template` | scope 变量没解析到（如 `${id}` 找不到变量） |
 
-```bash
-SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 E2E_ENGINE=flux \
-  npx playwright test tests/_debug.spec.ts --reporter=list
+### Step 1: 检查页面 schema JSON（flux 模式必做）
+
+后端返回的页面 JSON 决定了前端渲染什么。**不要假设后端返回了正确的 schema。** 拦截 `/p/` 或 `/f/` 请求，看返回的 JSON：
+
+```ts
+test('check page schema', async ({ page }) => {
+  const schemaPromise = new Promise<string>((resolve) => {
+    page.on('response', async (resp) => {
+      if (resp.url().includes('/p/NopAuthUser-main')) {
+        resolve(await resp.text().catch(() => ''));
+      }
+    });
+    setTimeout(() => resolve('TIMEOUT'), 10000);
+  });
+
+  await login(page, { ... });
+  await page.goto('#/NopAuthUser-main');
+  await page.waitForTimeout(3000);
+
+  const schema = await schemaPromise;
+  console.log('Schema (first 2000 chars):', schema.slice(0, 2000));
+  // 确认 schema.type === 'page'，检查 body 中 crud/toolbar/buttons 等字段
+});
 ```
+
+检查清单：
+
+| 检查项 | 怎么看 | 异常含义 |
+|--------|--------|----------|
+| `schema.type` | `schema.type` 的值 | 应为 `"page"`，若为 `"amis-page"` 则后端没切 render-mode |
+| 返回值是 HTML 而非 JSON | body 以 `<!DOCTYPE` 开头 | 路由不对，返回了 index.html（前端 SPA fallback） |
+| toolbar buttons 的 onClick | `body[0].toolbar[0].onClick` | action 是否配了 `openDialog`？`args.body` 里有没有 `submitAction`？|
+| operation columns | `body[0].columns` 中 type=operation 的 buttons | 查看/编辑/删除按钮的 onClick 是什么 action？ |
+| query fields | `body[0].queryForm.body` 中字段的 `name` | 搜索表单的 filter 字段名是什么格式（`filter_userName` 还是 `userName`） |
+| 是否存在 `initAction` | form 节点下的 `initAction` 或 `loadAction` | **flux 中表单初始化用 `initAction`，不是 `loadAction`**（AMIS 用 `initApi`） |
+| form submit 和 closeSurface | `submitAction > onSubmitSuccess` | 提交成功后是否调用了 `closeSurface` + `refreshNearest`/`refreshSource` |
+| `submitScope: 'surface'` | form 节点上是否有此字段 | 对话框中的 form 必须标此字段，footer 按钮的 `submitForm` 才能找到它 |
+| action 按钮的 `onClick` | toolbar/operation button 节点的 `onClick` | 操作按钮（新增/编辑/删除）是 `openDialog` 还是直接 `ajax`？删除后有 `confirm` 吗？|
+
+### Step 2: 检查 Flux 编译开关
+
+```ts
+const fluxFlag = await page.evaluate(() => ({
+  hasNopFlux: !!(window as any).__NOP_FLUX__,
+  hasDebugger: !!(window as any).__NOP_DEBUGGER__,
+}));
+console.log('Flux flags:', fluxFlag);
+// 期望: { hasNopFlux: true }
+// 若 false: flux 运行时可能未正确编译/注入，所有 flux 渲染都会异常
+```
+
+### Step 3: 检查 DOM 结构（textContent vs innerHTML）
+
+当 `textContent` 返回空字符串时，用 `innerHTML` 看实际 DOM 结构：
+
+```ts
+const cellContent = await page.evaluate(() => {
+  const cell = document.querySelector('td'); // 或更具体的选择器
+  if (!cell) return 'NO CELL';
+  return {
+    textContent: cell.textContent,
+    innerHTML: cell.innerHTML.slice(0, 500),
+    childElementCount: cell.children.length,
+  };
+});
+```
+
+原因：textContent 返回所有后代文本节点的拼接，如果有元素是 `display:none` 或通过 React state 延迟渲染，textContent 可能为空。innerHTML 可以看到实际渲染的标签结构。
+
+### Step 4: 验证 form submit 的 onSubmitSuccess 是否触发
+
+当 form submit 后 CRUD 不刷新，需要确认 `onSubmitSuccess` 回调是否被调用：
+
+在 flux 中写单元测试验证：
+```ts
+// 见 nop-chaos-flux 中的 surface-lifecycle-hooks 测试
+// 关键是在 openDialog args 中配 onSubmitSuccess，然后验证回调被调用
+```
+
+### Step 5: 单一职责——跑一个，不跑全套
+
+调试时**只跑一个测试函数**（`-g "测试名"` 或单独 spec 文件），**不要跑整个 spec**。失败立即用上述诊断步骤查根因，分析清楚后再决定下一步。盲目重跑全套只会把同一个超时重复 N 遍。
 
 ### 判断矩阵
 
@@ -548,14 +604,13 @@ SKIP_WEBSERVER=true BASE_URL=http://localhost:4173 E2E_ENGINE=flux \
 | `fluxSlots > 0` 且 `nopCrud > 0` | Flux 渲染正常，选择器该能找到 | 检查测试代码本身（PO 选择器、等待时机） |
 | `fluxSlots > 0` 但 `nopCrud === 0` | Flux 渲染部分启动，CRUD 没出来 | 看 console errors（JS 错误中断了渲染链） |
 | `cxdPage > 0` | 后端没切 render-mode，页面是 amis | 检查后端 `-Dnop.web.render-mode=flux`（§2.5） |
+| `__NOP_FLUX__` 为 false | Flux 运行时未正确编译 | 检查 vite.config 的 `define` 和 flux tarball 是否正确安装 |
 | `errBoundary > 0` 或 mainHTML 含 `Error` | 渲染崩溃，error boundary 接管 | 看 innerHTML 找崩溃组件/信息 |
 | console 有 `Failed to resolve module "xxx"` | 前端依赖缺失（external 包 host 没装） | 检查 vite.config `external` 策略 + host 是否真的有该包 |
-| console 有 `Calling "require" for "react"` | flux dist 含 CJS polyfill | 见 `docs/bugs/26-flux-tarball-runtime-require-mismatch.md`（以及其变体） |
+| console 有 `Calling "require" for "react"` | flux dist 含 CJS polyfill | 见 `docs/bugs/26-flux-tarball-runtime-require-mismatch.md` |
 | `mainHTML` 显示登录页 | 登录/session 失效 | 检查 `login()` 是否真成功、token 是否设置 |
-
-### 单一职责：跑一个，不跑全套
-
-调试时**只跑一个测试函数**（`-g "测试名"` 或单独 spec 文件），**不要跑整个 spec**。失败立即用上述诊断 spec 抓 DOM，分析清楚根因后再决定下一步。盲目重跑全套只会把同一个 30s 超时重复 N 遍，浪费时间和信号。
+| RPC 返回 500 + `unknown-operation-arg` | 后端不认识请求参数 | 检查参数名是否匹配（AMIS 的 `page` vs flux 的 `offset`/`limit`） |
+| textContent 返回空但 innerHTML 有内容 | React 延迟渲染或 data-binding 未解析 | `waitForTimeout` 加长，或检查数据流是否通畅 |
 
 ---
 

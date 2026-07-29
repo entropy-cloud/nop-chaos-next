@@ -165,6 +165,7 @@ export async function ajaxQuery<T>(
 interface NopRpcRequestOptions {
   url: string;
   method?: string;
+  params?: Record<string, unknown>;
   data?: unknown;
   headers?: Record<string, string>;
   signal?: AbortSignal;
@@ -191,13 +192,23 @@ interface NopRpcResponse<T> {
  * 不是 HTTP status）；flux runtime 会按 status===0 计算 ok，业务控件用 response.data。
  */
 export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<NopRpcResponse<T>> {
-  const resolution = resolveNopRpcUrl(options.url, options.data, options.selection);
+  // 合并 params 到 data（@query:/@mutation: URL 的各参数会走 buildRpcParams 变换）
+  // flux 运行时在 api.params 中设置了 __autoPagination等参数，URL 中已有对应 query string，
+  // 但显式传入 params 时优先使用，确保数据完整性。
+  let mergedData = options.data;
+  if (options.params && typeof options.params === 'object' && !Array.isArray(options.params)) {
+    mergedData = typeof mergedData === 'object' && mergedData !== null && !Array.isArray(mergedData)
+      ? { ...(mergedData as Record<string, unknown>), ...options.params }
+      : { ...options.params };
+  }
+
+  const resolution = resolveNopRpcUrl(options.url, mergedData, options.selection);
   if (resolution) {
     // @query: / @mutation: URL 由 resolveNopRpcUrl 处理
     try {
       const response = await mainHttpClient.request<T>({
         url: resolution.url,
-        method: resolution.method,
+        method: options.method ?? resolution.method ?? 'POST',
         data: resolution.data,
         headers: options.headers,
         signal: options.signal,
@@ -274,7 +285,7 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
     }
   }
 
-  // 非 @query:/@mutation: URL，直接透传
+  // 非 @query:/@mutation:/r/ URL，直接透传
   const url = options.url;
   const method = options.method ?? 'GET';
   try {

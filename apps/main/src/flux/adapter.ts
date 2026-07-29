@@ -59,6 +59,7 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
       nopRpcRequest({
         url: api.url,
         method: api.method,
+        params: api.params,
         data: api.data,
         headers: api.headers,
         selection: api.selection || undefined,

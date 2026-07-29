@@ -1140,7 +1140,7 @@ packages:
     engines: {node: '>= 8'}
 
   '@nop-chaos/flux@file:libs/nop-chaos-flux-0.1.0.tgz':
-    resolution: {integrity: sha512-ONALjaNKyqpXdsgVd4yRCZwTt5JZ5CGIjRjMtF0SxrMDebhkAqxzn6RzFwBGK6KKFSCGQqJpISYNdFCycqa4yA==, tarball: file:libs/nop-chaos-flux-0.1.0.tgz}
+    resolution: {integrity: sha512-fgUF5n16VNLv9Z+gW0/arhFG4Cr8/bY5cTaOaHRCM4tCLpgoPCCArJTTxPq0k4iCdN0lCbnFYLqfewYvkjMP2w==, tarball: file:libs/nop-chaos-flux-0.1.0.tgz}
     version: 0.1.0
     peerDependencies:
       '@nop-chaos/ui': '*'

@@ -128,27 +128,6 @@ Mission Driver 工作流：
 - Duplicate code detection: `.jscpd.json`。
 - Vitest workspace: `vitest.workspace.ts` + `vitest.shared.ts`。
 
-## Commands
-
-```bash
-pnpm install                # install deps
-pnpm dev                    # starts dev server (turbo)
-pnpm dev:main               # starts main app only
-pnpm dev:plugin             # starts plugin demo only
-pnpm build                  # turbo run build (all packages)
-pnpm typecheck              # turbo run typecheck (all packages)
-pnpm test                   # turbo run test (all packages)
-pnpm lint                   # turbo run lint + src-artifacts check
-pnpm format                 # prettier --write .
-pnpm format:check           # prettier --check .
-pnpm audit:knip             # dead code analysis
-pnpm check:duplicates       # duplicate code analysis
-pnpm test:e2e               # playwright test
-pnpm test:e2e:headed        # playwright test --headed
-```
-
-Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run tests when relevant.
-
 ## Formatting
 
 - Prettier handles formatting automatically via `.prettierrc` and pre-commit hook.
@@ -165,21 +144,13 @@ Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run t
 
 ## TypeScript
 
-- Keep code strongly typed; avoid `any` except at unavoidable dynamic boundaries.
-- Prefer `unknown` for caught errors and untrusted external values.
-- Narrow values explicitly with guards.
 - Keep reusable pure logic in `packages/shared`.
 - Keep React-specific reusable logic in `packages/core`, `packages/ui`, or `packages/plugin-bridge`.
 - Export package API types from package entry points when they are part of the public surface.
-- Use non-null assertions only when the runtime guarantee is obvious.
 
 ## Naming
 
-- Components: PascalCase.
-- Hooks: `useX`.
 - Zustand stores: `useXStore`.
-- Utility functions: camelCase.
-- Interfaces and types: PascalCase.
 - Page entry files usually use `index.tsx`.
 - Dynamic route folders use bracket notation such as `[id]`.
 - Unit tests use `*.test.ts`.
@@ -187,24 +158,15 @@ Always run `typecheck`, `build`, and `lint` after making **CODE** changes. Run t
 
 ## React Patterns
 
-- Use function components only.
 - React 19 + React Compiler are the workspace baseline.
 - Prefer route-level lazy loading for larger pages.
-- Prefer plain render logic first. Do **not** add `useCallback` or `useMemo` by default.
+- Do **not** add `useCallback` or `useMemo` by default.
 - Prefer render-time derivation over `useEffect` + `setState` mirrors. Use `useEffect` only for external synchronization.
 - `useEffectEvent`, `startTransition`, and `useDeferredValue` are not mandatory syntax migrations; use them only when they solve a concrete problem.
 - Keep app-global state in Zustand stores under `apps/main/src/store`.
 - Keep async server-state in React Query for ordinary React pages.
 - Prefer narrow hooks over spreading raw store usage everywhere.
 - Preserve host/plugin coordination through `packages/plugin-bridge` rather than ad hoc globals.
-
-## Error Handling
-
-- Throw explicit `Error` objects for invalid config and impossible states.
-- In `catch` blocks, normalize `unknown` safely.
-- Preferred message pattern: `error instanceof Error ? error.message : 'Fallback message'`.
-- Surface user-facing failures with toast notifications where the surrounding UI already does so.
-- Only swallow errors for intentional best-effort behavior such as storage or optional browser APIs.
 
 ## Routing, Permissions, Plugins
 
@@ -256,31 +218,14 @@ When creating, revising, executing, or auditing a file under `docs/plans/`, you 
 
 ## Testing Expectations
 
-- Add or update colocated Vitest tests for shared logic changes.
 - Consider Playwright when changing visible cross-component flows.
 - For routing, permissions, theme, plugin loading, or shell changes, run the narrowest meaningful test first.
-- If you cannot run verification, state exactly what should be run manually.
 - Whenever unit tests and e2e tests both pass completely (full green), record that result in the daily dev log and include the verification status explicitly in the git commit message.
 
 ## Agent Habits
 
-- Keep changes package-aware and minimal.
-- Respect package boundaries.
-- Avoid broad refactors unless requested.
 - Check whether new logic belongs in `shared`, `core`, `ui`, or an app before adding files.
 - When adding runtime capabilities, think about host app, plugin demo, and bridge compatibility together.
-
-## Verification Checklist
-
-Before finishing any task:
-
-- [ ] `pnpm typecheck` passes
-- [ ] `pnpm build` passes
-- [ ] `pnpm lint` passes (if applicable)
-- [ ] `pnpm test` passes (if applicable)
-- [ ] Formatting handled by Husky pre-commit hook (no manual `format:check` needed)
-- [ ] `docs/logs/` updated (for significant changes)
-- [ ] Relevant architecture docs updated (if design changed)
 
 ## Bug Fix Test Coverage Rule
 
