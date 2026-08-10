@@ -101,6 +101,8 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    width: var(--field-label-width, auto);
+    overflow-wrap: break-word;
     padding-top: 6px;
   }
 
@@ -110,9 +112,20 @@
   }
 
   [data-slot='field-label'] {
-    font-size: 13px;
-    font-weight: 500;
-    color: hsl(var(--foreground));
+    /* AMIS parity: --Form-item-fontSize = 14px / weight 400 / muted-foreground
+       (was flux default 13px / 500 / foreground) */
+    font-size: 14px;
+    font-weight: 400;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.4;
+  }
+
+  /* Same as above but matching flux dist specificity (.nop-field [data-slot='field-label'])
+     so the parity values win over the upstream @layer base rule. */
+  .nop-field [data-slot='field-label'] {
+    font-size: 14px;
+    font-weight: 400;
+    color: hsl(var(--muted-foreground));
     line-height: 1.4;
   }
 
@@ -257,4 +270,198 @@
     font-size: 0.875rem;
     color: hsl(var(--destructive));
   }
+}
+
+/* ==========================================================================
+ * AMIS parity（CSS-only，scope: 所有 flux 页面）
+ * 详见 docs/analysis/2026-08-10-flux-amis-crud-style-parity-analysis.md
+ * 这些属性在上游没有对应 token 可改（flux ui 控件直接用 Tailwind 类 rounded-lg
+ * = 16px，或 .nop-table 没有外框变量），只能在 host CSS 用属性选择器覆盖到 AMIS
+ * 实测值。颜色类、间距、表头高度、操作按钮高度、弹窗圆角 / title 字号、必填色
+ * 等仍走 theme-tokens/src/styles.css 的变量。
+ *
+ * ⚠️ 不要在 packages/theme-tokens/src/styles.css 直接改这些值 —— 那是上游同步源，
+ * `pnpm refresh:flux` 会把上游副本覆盖回来（2026-08-10 实测被冲掉）。宿主 token
+ * 覆盖统一放下面这个 unlayered :root（后加载 + unlayered，压过 theme-tokens）。
+ * ========================================================================== */
+
+/* F-tokens: 宿主侧 AMIS 对齐 token 覆盖（unlayered :root，防 refresh:flux 冲掉） */
+:root {
+  /* F1: 表头高度/底色对齐 AMIS（44px / 中性浅灰 rgb(247,248,250)，amis 实测） */
+  --table-row-height: 44px;
+  --table-header-bg: rgb(247, 248, 250);
+  --table-header-separator-color: hsl(var(--border) / 0.4);
+  /* F3: hover 浓度 8% + 关渐变 */
+  --table-hover-bg: hsl(var(--primary) / 0.08);
+  --table-hover-bg-gradient: none;
+  /* F5: 操作按钮收窄（amis link 按钮 ~22px） */
+  --table-row-action-height: 24px;
+  /* F8: 表单项 gap 对齐 AMIS --Form-item-gap (24px) */
+  --space-form-item-gap: 24px;
+  /* F10: 必填/错误色对齐主题 danger（覆盖 flux 硬编码 fallback #b53b2c） */
+  --nop-field-error: hsl(var(--danger));
+}
+
+/* F4: 表格与 AMIS 对齐 —— AMIS `.cxd-Table-table` 实测 border 0、无外框（仅行间
+   横线分隔，见 F4b）。flux 无需额外外框；此前加的 1px border + radius 会造成
+   "表格+分页器被边框包裹"的观感，已移除。 */
+.nop-table {
+  background: hsl(var(--card));
+}
+
+/* F4b: 单元格只保留横线（border-bottom），去掉竖线 —— AMIS cxd-Table 默认无垂直分隔 */
+[data-slot='crud-table'] .nop-table thead th,
+[data-slot='crud-table'] .nop-table tbody td {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}
+/* thead 底部分隔线（弱白线，对齐 cxd 表头分隔） */
+[data-slot='crud-table'] .nop-table thead th {
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
+/* tbody 行间横线保留 */
+[data-slot='crud-table'] .nop-table tbody td {
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
+/* 末行去掉横线（外框已包住） */
+[data-slot='crud-table'] .nop-table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* F14: selection 列（checkbox）强制居中 —— 对齐 AMIS 的 checkable 列行为。
+   flux 默认 text-left 且 checkbox 是 flex 元素，需要 text-align + margin auto 双管齐下。 */
+[data-slot='crud-table'] .nop-table [data-slot='table-select-column'],
+[data-slot='crud-table'] .nop-table [data-slot='table-select-cell'] {
+  text-align: center;
+  vertical-align: middle;
+}
+[data-slot='crud-table'] .nop-table [data-slot='table-select-column'] [data-slot='checkbox'],
+[data-slot='crud-table'] .nop-table [data-slot='table-select-cell'] [data-slot='checkbox'] {
+  margin-inline: auto;
+}
+
+/* F14b: 表头首列与表行首列 padding 对齐。
+   表行 td:first-child 有 --table-edge-padding-x (16px) 左侧留白，表头 th 没有，
+   导致首列内容（checkbox 或文本）表头与表行水平错位（实测中心偏 4.5px）。 */
+[data-slot='crud-table'] .nop-table thead th:first-child {
+  padding-left: var(--table-edge-padding-x);
+}
+
+/* F14c: selection 列本身不套用 edge padding（那是给文本首列的视觉留白），
+   表头/表行统一用 --table-cell-padding-x (10px)，checkbox 才能真正居中。
+   注意用 th[data-slot] 提升特异性，压过上面 th:first-child 的 16px。 */
+[data-slot='crud-table'] .nop-table thead th[data-slot='table-select-column'],
+[data-slot='crud-table'] .nop-table tbody [data-slot='table-select-cell'] {
+  padding-left: var(--table-cell-padding-x);
+}
+
+/* F15: 序号列（type: 'index'）—— flux 上游已自带 text-center + data-slot='table-index-cell'，
+   这里只需保证列宽与 AMIS 一致（50px）即可，无需额外规则。 */
+
+/* F16: 空态最小高度对齐 AMIS（--Table-placeholder-height = 12.5rem = 200px）。
+   flux 空态是普通行（内容驱动，实测仅 80px）；消费已有 token --table-empty-height。 */
+[data-slot='crud-table'] .nop-table [data-slot='table-empty-cell'] {
+  height: var(--table-empty-height, 200px);
+  text-align: center;
+}
+
+/* F17: dialog/drawer 内表单按钮缺省靠右 —— 与 confirm 对话框（alert-dialog-footer
+   的 justify-content: flex-end）保持一致。flux form-actions 默认 justify normal（靠左）。
+   dialog-surface / drawer-surface 是 surface 根容器（内部含 form-body/form-actions），
+   后代选择器即覆盖全部场景，无需枚举 dialog-content 等内部 slot。 */
+[data-slot='dialog-surface'] [data-slot='form-actions'],
+[data-slot='drawer-surface'] [data-slot='form-actions'] {
+  justify-content: flex-end;
+}
+
+/* F17b: confirm（AlertDialog）按钮圆角与普通对话框按钮一致 —— 普通对话框按钮
+   已被 F6 对齐 amis 为 4px；alert-dialog 按钮不在 .nop-form 内，保持 flux 默认
+   rounded-lg=16px，这里统一为 4px。 */
+[data-slot='alert-dialog-content'] button {
+  border-radius: 4px;
+}
+
+/* F5: 操作列按钮对齐 AMIS link 按钮。
+   AMIS 实测（编辑/删除 link 按钮）：primary 蓝 rgb(36,104,242)、12px/400、
+   高 18px、padding 0、hover 亮蓝 rgb(82,142,255)、无背景/无下划线/无边框。
+   flux link variant 已是 primary 文字色，补齐 12px/400/紧凑尺寸/hover 亮蓝。 */
+[data-slot='crud-table'] [data-slot='table-actions'] {
+  gap: 4px;
+}
+[data-slot='crud-table'] [data-slot='table-actions'] button {
+  padding-inline: 4px;
+  min-height: 18px;
+  height: 18px;
+  font-size: 12px;
+  font-weight: 400;
+  color: hsl(var(--primary));
+  text-decoration: none;
+  background: transparent;
+  border-color: transparent;
+}
+[data-slot='crud-table'] [data-slot='table-actions'] button:hover {
+  color: hsl(var(--primary-light));
+  text-decoration: none;
+  background: transparent !important;
+}
+
+/* F9: 表单/弹窗内的 input/select/textarea 圆角对齐 AMIS（8px） */
+.nop-form input,
+.nop-form textarea,
+.nop-form [data-slot='select-trigger'],
+[data-slot='dialog-surface'] input,
+[data-slot='dialog-surface'] textarea,
+[data-slot='dialog-surface'] [data-slot='select-trigger'] {
+  border-radius: var(--radius-sm);
+}
+
+/* F6/F9: 工具栏 / 表单 / 弹窗内的按钮圆角对齐 AMIS（cxd --Button-borderRadius = 4px） */
+.nop-form button,
+[data-slot='dialog-surface'] button,
+[data-slot='crud-toolbar'] button,
+[data-slot='crud-list-actions'] button,
+[data-slot='crud-footer'] button {
+  border-radius: 4px;
+}
+
+/* F12: 分页按钮与 AMIS 对齐 —— AMIS 实测：普通页码无边框（border 0），
+   仅当前页有 `1px solid var(--primary)` 边框 + 4px 圆角。
+   flux ui PaginationLink 当前页带 `data-active="true"` / `aria-current="page"`。 */
+[data-slot='pagination-item'] [data-slot='pagination-link'],
+[data-slot='pagination'] button {
+  min-width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+[data-slot='pagination-item'] [data-slot='pagination-link'][data-active='true'],
+[data-slot='pagination-item'] [data-slot='pagination-link'][aria-current='page'] {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--card));
+}
+
+/* F12-extra: 分页栏与表格边缘的留白 —— AMIS 分页器为右对齐紧凑块，不与表格
+   边缘贴齐；flux TablePaginationBar 为左中右布局（pageSize 左/页码中/统计右），
+   加水平 padding 避免左右贴边。 */
+[data-slot='table-pagination'] {
+  padding: 0 16px;
+}
+
+/* F12-gap: 分页区与表格的间距 —— AMIS 实测 12px；父级 .nop-crud 用 gap-4 (16px)，
+   用 -4px 抵消到 12px。 */
+[data-slot='crud-footer'] {
+  margin-top: -4px;
+  padding: 0;
+}
+
+/* F11: queryForm 与 AMIS 对齐 —— AMIS filter 是页面背景上的普通区域（无卡片/无灰底，
+   实测 bg rgb(255,255,255)、padding 0）。flux 上游 .nop-crud-query 类自带
+   `bg-muted/30 border rounded-lg p-4`（30% 透明灰卡片），视觉偏灰；host 覆盖为
+   透明无边框，与 amis 一致。 */
+[data-slot='crud-query'],
+.nop-crud-query {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
 }

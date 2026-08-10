@@ -6,6 +6,7 @@ import { normalizeLanguageCode } from '../config/i18n/languages';
 import { confirmInApp } from '../services/confirm';
 import { nopRpcRequest } from '../services/http';
 import { withPageCache, withDictCache } from './cache';
+import { recordFluxDebug } from './fluxDebug';
 import { fetchFluxPage, fetchFluxDict } from './providers';
 
 // ── Schema 兼容性转换 ──
@@ -55,8 +56,9 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
     // signal 是冗余的带宽优化。但 mainHttpClient（client.ts:188）当前把无 reason 的
     // parent abort 误判为 timeout 并抛错，导致 crud loadAction 收到空结果。
     // 因此这里刻意不传 ctx.signal —— 让请求自然完成，由 flux cancelled flag 决定是否丢弃。
-    fetcher: (api: FluxApiRequest, _ctx: FluxApiRequestContext) =>
-      nopRpcRequest({
+    fetcher: async (api: FluxApiRequest, _ctx: FluxApiRequestContext) => {
+      recordFluxDebug({ phase: 'request', url: api.url, method: api.method, data: api.data });
+      const resp = await nopRpcRequest({
         url: api.url,
         method: api.method,
         params: api.params,
@@ -65,9 +67,26 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
         selection: api.selection || undefined,
         responseType: api.responseType,
         downloadFileName: api.downloadFileName,
-      }),
+      });
+      recordFluxDebug({
+        phase: 'response',
+        url: api.url,
+        ok: resp.ok,
+        status: resp.status,
+        dataPreview: JSON.stringify(resp.data ?? null).slice(0, 300),
+      });
+      return resp;
+    },
     monitor: {
       onError: (payload: { phase: string; error: unknown }) => {
+        recordFluxDebug({
+          phase: 'error',
+          url: payload.phase,
+          error:
+            payload.error instanceof Error
+              ? payload.error.message
+              : String(payload.error?.toString?.() ?? payload.error),
+        });
         console.warn(
           '[flux] error phase=' + payload.phase +
           ' err=' + (payload.error instanceof Error ? payload.error.message : String(payload.error?.toString?.() ?? payload.error)),
@@ -75,6 +94,7 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
       },
     },
     notify: (level: FluxNotifyLevel, message: string) => {
+      recordFluxDebug({ phase: 'notify', level, message });
       if (level === 'success') {
         toast.success(message);
         return;
@@ -93,7 +113,8 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
       toast(message);
     },
     navigate,
-    confirm: async (message: string) => confirmInApp(message),
+    confirm: async (message: string, title?: string) =>
+      confirmInApp(message, { title, className: 'flux-confirm-dialog' }),
     locale: normalizeLanguageCode(i18n.language),
     loadPage: (path: string, signal?: AbortSignal) =>
       withPageCache(normalizeLanguageCode(i18n.language), path, () =>

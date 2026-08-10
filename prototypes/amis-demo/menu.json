@@ -24,6 +24,15 @@
           "pageType": "amis",
           "schemaPath": "./system/roles.json",
           "sort": 120
+        },
+        {
+          "id": "products",
+          "title": "产品管理",
+          "path": "/system/products",
+          "icon": "package",
+          "pageType": "amis",
+          "schemaPath": "./system/products.json",
+          "sort": 130
         }
       ]
     },

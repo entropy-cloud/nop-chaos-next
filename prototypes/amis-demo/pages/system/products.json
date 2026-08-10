@@ -1,0 +1,222 @@
+{
+  "x:extends": "../_partials/crud-page.json",
+  "title": "产品管理",
+  "body": {
+    "api": {
+      "method": "get",
+      "url": "/api/mock/products"
+    },
+    "checkable": true,
+    "filter": {
+      "title": "",
+      "body": [
+        {
+          "type": "input-text",
+          "name": "keyword",
+          "label": "关键字",
+          "placeholder": "产品名称"
+        },
+        {
+          "type": "select",
+          "name": "category",
+          "label": "分类",
+          "clearable": true,
+          "options": [
+            { "label": "电子产品", "value": "electronics" },
+            { "label": "办公用品", "value": "office" },
+            { "label": "生活家居", "value": "home" }
+          ]
+        },
+        {
+          "type": "select",
+          "name": "status",
+          "label": "状态",
+          "clearable": true,
+          "options": [
+            { "label": "在售", "value": "active" },
+            { "label": "下架", "value": "disabled" }
+          ]
+        }
+      ]
+    },
+    "headerToolbar": [
+      {
+        "type": "button",
+        "label": "新增产品",
+        "level": "primary",
+        "actionType": "dialog",
+        "dialog": {
+          "title": "新增产品",
+          "body": {
+            "type": "form",
+            "api": {
+              "method": "post",
+              "url": "/api/mock/products"
+            },
+            "body": [
+              {
+                "type": "input-text",
+                "name": "name",
+                "label": "产品名称",
+                "required": true,
+                "placeholder": "请输入产品名称"
+              },
+              {
+                "type": "input-number",
+                "name": "price",
+                "label": "价格（元）",
+                "required": true,
+                "min": 0,
+                "precision": 2
+              },
+              {
+                "type": "select",
+                "name": "category",
+                "label": "分类",
+                "required": true,
+                "options": [
+                  { "label": "电子产品", "value": "electronics" },
+                  { "label": "办公用品", "value": "office" },
+                  { "label": "生活家居", "value": "home" }
+                ]
+              },
+              {
+                "type": "select",
+                "name": "status",
+                "label": "状态",
+                "options": [
+                  { "label": "在售", "value": "active" },
+                  { "label": "下架", "value": "disabled" }
+                ],
+                "value": "active"
+              },
+              {
+                "type": "textarea",
+                "name": "description",
+                "label": "描述",
+                "placeholder": "可选"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "columns-toggler",
+        "align": "right"
+      },
+      {
+        "type": "reload",
+        "align": "right",
+        "label": "刷新"
+      }
+    ],
+    "columns": [
+      { "type": "index", "label": "序号", "width": 50 },
+      { "name": "id", "label": "ID", "width": 60 },
+      { "name": "name", "label": "产品名称", "sortable": true },
+      {
+        "name": "price",
+        "label": "价格（元）",
+        "width": 120,
+        "sortable": true
+      },
+      {
+        "name": "category",
+        "label": "分类",
+        "width": 120,
+        "type": "mapping",
+        "map": {
+          "electronics": "电子产品",
+          "office": "办公用品",
+          "home": "生活家居"
+        }
+      },
+      {
+        "name": "status",
+        "label": "状态",
+        "width": 100,
+        "type": "mapping",
+        "map": {
+          "active": "<span class='label label-success'>在售</span>",
+          "disabled": "<span class='label label-danger'>下架</span>"
+        }
+      },
+      { "name": "createdAt", "label": "创建时间", "width": 140 },
+      {
+        "type": "operation",
+        "label": "操作",
+        "width": 140,
+        "buttons": [
+          {
+            "type": "button",
+            "label": "编辑",
+            "level": "link",
+            "actionType": "dialog",
+            "dialog": {
+              "title": "编辑产品",
+              "body": {
+                "type": "form",
+                "api": {
+                  "method": "put",
+                  "url": "/api/mock/products/${id}"
+                },
+                "body": [
+                  {
+                    "type": "input-text",
+                    "name": "name",
+                    "label": "产品名称",
+                    "required": true
+                  },
+                  {
+                    "type": "input-number",
+                    "name": "price",
+                    "label": "价格（元）",
+                    "required": true,
+                    "min": 0,
+                    "precision": 2
+                  },
+                  {
+                    "type": "select",
+                    "name": "category",
+                    "label": "分类",
+                    "required": true,
+                    "options": [
+                      { "label": "电子产品", "value": "electronics" },
+                      { "label": "办公用品", "value": "office" },
+                      { "label": "生活家居", "value": "home" }
+                    ]
+                  },
+                  {
+                    "type": "select",
+                    "name": "status",
+                    "label": "状态",
+                    "options": [
+                      { "label": "在售", "value": "active" },
+                      { "label": "下架", "value": "disabled" }
+                    ]
+                  },
+                  {
+                    "type": "textarea",
+                    "name": "description",
+                    "label": "描述"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "button",
+            "label": "删除",
+            "level": "link",
+            "confirmText": "确认删除该产品？",
+            "actionType": "ajax",
+            "api": {
+              "method": "delete",
+              "url": "/api/mock/products/${id}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

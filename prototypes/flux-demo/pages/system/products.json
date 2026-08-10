@@ -1,0 +1,392 @@
+{
+  "x:extends": "../_partials/crud-page.json",
+  "title": "产品管理",
+  "body": [
+    {
+      "type": "crud",
+      "id": "products-crud",
+      "name": "products-crud",
+      "loadAction": {
+        "action": "ajax",
+        "args": {
+          "url": "/api/mock/products",
+          "method": "get"
+        }
+      },
+      "rowKey": "id",
+      "selection": true,
+      "autoClearSelectionOnRefresh": true,
+      "queryForm": {
+        "layout": "horizontal",
+        "labelWidth": 80,
+        "columnCount": 3,
+        "gap": "sm",
+        "body": [
+          {
+            "type": "input-text",
+            "name": "keyword",
+            "label": "关键字"
+          },
+          {
+            "type": "select",
+            "name": "category",
+            "label": "分类",
+            "clearable": true,
+            "options": [
+              {
+                "label": "电子产品",
+                "value": "electronics"
+              },
+              {
+                "label": "办公用品",
+                "value": "office"
+              },
+              {
+                "label": "生活家居",
+                "value": "home"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "name": "status",
+            "label": "状态",
+            "clearable": true,
+            "options": [
+              {
+                "label": "在售",
+                "value": "active"
+              },
+              {
+                "label": "下架",
+                "value": "disabled"
+              }
+            ]
+          }
+        ]
+      },
+      "toolbar": [
+        {
+          "type": "button",
+          "label": "新增产品",
+          "variant": "default",
+          "onClick": {
+            "action": "openDialog",
+            "args": {
+              "title": "新增产品",
+              "size": "base",
+              "body": {
+                "type": "form",
+                "id": "createForm",
+                "submitScope": "surface",
+                "submitAction": {
+                  "action": "ajax",
+                  "args": {
+                    "url": "/api/mock/products",
+                    "method": "post",
+                    "includeScope": "*"
+                  },
+                  "messages": {
+                    "success": "创建成功"
+                  }
+                },
+                "body": [
+                  {
+                    "type": "input-text",
+                    "name": "name",
+                    "label": "产品名称",
+                    "required": true,
+                    "placeholder": "请输入产品名称"
+                  },
+                  {
+                    "type": "input-number",
+                    "name": "price",
+                    "label": "价格（元）",
+                    "required": true,
+                    "min": 0,
+                    "precision": 2
+                  },
+                  {
+                    "type": "select",
+                    "name": "category",
+                    "label": "分类",
+                    "required": true,
+                    "options": [
+                      {
+                        "label": "电子产品",
+                        "value": "electronics"
+                      },
+                      {
+                        "label": "办公用品",
+                        "value": "office"
+                      },
+                      {
+                        "label": "生活家居",
+                        "value": "home"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "select",
+                    "name": "status",
+                    "label": "状态",
+                    "options": [
+                      {
+                        "label": "在售",
+                        "value": "active"
+                      },
+                      {
+                        "label": "下架",
+                        "value": "disabled"
+                      }
+                    ],
+                    "value": "active"
+                  },
+                  {
+                    "type": "textarea",
+                    "name": "description",
+                    "label": "描述",
+                    "placeholder": "可选"
+                  }
+                ],
+                "actions": [
+                  {
+                    "type": "button",
+                    "label": "取消",
+                    "onClick": {
+                      "action": "closeSurface"
+                    },
+                    "variant": "outline"
+                  },
+                  {
+                    "type": "button",
+                    "label": "确认",
+                    "onClick": {
+                      "action": "submitForm",
+                      "then": {
+                        "action": "closeSurface"
+                      }
+                    },
+                    "variant": "default"
+                  }
+                ],
+                "onSubmitSuccess": {
+                  "action": "component:refresh",
+                  "componentId": "products-crud"
+                }
+              },
+              "onSubmitSuccess": {
+                "action": "refreshNearest"
+              },
+              "onClose": {
+                "action": "refreshNearest"
+              }
+            }
+          }
+        }
+      ],
+      "listActions": [],
+      "columns": [
+        {
+          "type": "index",
+          "name": "index",
+          "label": "序号",
+          "width": 50
+        },
+        {
+          "name": "id",
+          "label": "ID",
+          "width": 60
+        },
+        {
+          "name": "name",
+          "label": "产品名称",
+          "sortable": true
+        },
+        {
+          "name": "price",
+          "label": "价格（元）",
+          "width": 120,
+          "sortable": true
+        },
+        {
+          "name": "category",
+          "label": "分类",
+          "width": 120,
+          "type": "mapping",
+          "map": {
+            "electronics": "电子产品",
+            "office": "办公用品",
+            "home": "生活家居"
+          }
+        },
+        {
+          "name": "status",
+          "label": "状态",
+          "width": 100,
+          "type": "mapping",
+          "map": {
+            "active": "<span class='label label-success'>在售</span>",
+            "disabled": "<span class='label label-danger'>下架</span>"
+          }
+        },
+        {
+          "name": "createdAt",
+          "label": "创建时间",
+          "width": 140
+        },
+        {
+          "type": "operation",
+          "label": "操作",
+          "width": 140,
+          "buttons": [
+            {
+              "type": "button",
+              "label": "编辑",
+              "variant": "link",
+              "onClick": {
+                "action": "openDialog",
+                "args": {
+                  "title": "编辑产品",
+                  "size": "base",
+                  "data": {
+                    "id": "${id}",
+                    "name": "${name}",
+                    "price": "${price}",
+                    "category": "${category}",
+                    "status": "${status}",
+                    "description": "${description}"
+                  },
+                  "body": {
+                    "type": "form",
+                    "id": "editForm",
+                    "submitScope": "surface",
+                    "submitAction": {
+                      "action": "ajax",
+                      "args": {
+                        "url": "/api/mock/products/${id}",
+                        "method": "put",
+                        "includeScope": "*"
+                      },
+                      "messages": {
+                        "success": "保存成功"
+                      }
+                    },
+                    "body": [
+                      {
+                        "type": "input-text",
+                        "name": "name",
+                        "label": "产品名称",
+                        "required": true
+                      },
+                      {
+                        "type": "input-number",
+                        "name": "price",
+                        "label": "价格（元）",
+                        "required": true,
+                        "min": 0,
+                        "precision": 2
+                      },
+                      {
+                        "type": "select",
+                        "name": "category",
+                        "label": "分类",
+                        "required": true,
+                        "options": [
+                          {
+                            "label": "电子产品",
+                            "value": "electronics"
+                          },
+                          {
+                            "label": "办公用品",
+                            "value": "office"
+                          },
+                          {
+                            "label": "生活家居",
+                            "value": "home"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "select",
+                        "name": "status",
+                        "label": "状态",
+                        "options": [
+                          {
+                            "label": "在售",
+                            "value": "active"
+                          },
+                          {
+                            "label": "下架",
+                            "value": "disabled"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "textarea",
+                        "name": "description",
+                        "label": "描述"
+                      }
+                    ],
+                    "actions": [
+                      {
+                        "type": "button",
+                        "label": "取消",
+                        "onClick": {
+                          "action": "closeSurface"
+                        },
+                        "variant": "outline"
+                      },
+                      {
+                        "type": "button",
+                        "label": "确认",
+                        "onClick": {
+                          "action": "submitForm",
+                          "then": {
+                            "action": "closeSurface"
+                          }
+                        },
+                        "variant": "default"
+                      }
+                    ],
+                    "onSubmitSuccess": {
+                      "action": "component:refresh",
+                      "componentId": "products-crud"
+                    }
+                  },
+                  "onSubmitSuccess": {
+                    "action": "refreshNearest"
+                  },
+                  "onClose": {
+                    "action": "refreshNearest"
+                  }
+                }
+              }
+            },
+            {
+              "type": "button",
+              "label": "删除",
+              "variant": "link",
+              "onClick": {
+                "action": "confirm",
+                "args": {
+                  "message": "确认删除该产品？"
+                },
+                "then": {
+                  "action": "ajax",
+                  "args": {
+                    "url": "/api/mock/products/${id}",
+                    "method": "delete"
+                  },
+                  "then": {
+                    "action": "refreshNearest"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

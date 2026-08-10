@@ -2,7 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { cn } from '../../lib/utils.js';
 import { getTableRowClassName } from './table-row-class-name.js';
 function Table({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "table-container", className: "relative w-full overflow-x-auto", children: _jsx("table", { "data-slot": "table", className: cn('nop-table ', 'w-full caption-bottom text-sm', className), ...props }) }));
+    return (_jsx("div", { "data-slot": "table-container", className: "relative w-full overflow-x-auto", children: _jsx("table", { "data-slot": "table", className: cn('nop-table ', 'w-full caption-bottom', className), ...props }) }));
 }
 function TableHeader({ className, ...props }) {
     return _jsx("thead", { "data-slot": "table-header", className: cn('nop-table ', '[&_tr]:border-b', className), ...props });
@@ -17,10 +17,10 @@ function TableRow({ className, variant = 'default', ...props }) {
     return (_jsx("tr", { "data-slot": "table-row", className: cn('nop-table ', getTableRowClassName(variant), className), ...props }));
 }
 function TableHead({ className, ...props }) {
-    return (_jsx("th", { "data-slot": "table-head", className: cn('nop-table ', 'h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0', className), ...props }));
+    return (_jsx("th", { "data-slot": "table-head", className: cn('nop-table ', 'text-left align-middle whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0', className), ...props }));
 }
 function TableCell({ className, ...props }) {
-    return (_jsx("td", { "data-slot": "table-cell", className: cn('nop-table ', 'p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0', className), ...props }));
+    return (_jsx("td", { "data-slot": "table-cell", className: cn('nop-table ', 'align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0', className), ...props }));
 }
 function TableCaption({ className, ...props }) {
     return (_jsx("caption", { "data-slot": "table-caption", className: cn('nop-table ', 'mt-4 text-sm text-muted-foreground', className), ...props }));
