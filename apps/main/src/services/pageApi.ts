@@ -1,7 +1,7 @@
 import { isMockEnabled } from '../config/env';
 import i18n from '../config/i18n';
 import { normalizeLanguageCode } from '../config/i18n/languages';
-import { ajaxFetch, ajaxQuery } from './http';
+import { ajaxFetch, nopRpcRequest } from './http';
 import { loadSchemaAsset } from './schemaAsset';
 
 const PAGE_CACHE_MAX = 50;
@@ -59,6 +59,7 @@ export function clearAmisPageCache() {
 
 // 通用页面 schema 获取：三段式后端逻辑（mock/JSON → /p/ 直连 → PageProvider__getPage RPC）。
 // amis 和 flux provider 共用；后端在 -Dnop.web.render-mode=flux 时通过同一条路径返回 flux 格式 schema。
+// flux 模式（fetchFluxPage 调用方）走 nopRpcRequest（/r/ REST），不走 GraphQL。
 export async function fetchPageSchema(
   schemaPath: string,
   signal?: AbortSignal,
@@ -71,7 +72,15 @@ export async function fetchPageSchema(
     return ajaxFetch<unknown>(schemaPath, { method: 'GET', signal });
   }
 
-  return ajaxQuery<unknown>('@query:PageProvider__getPage', { path: schemaPath }, { signal });
+  const resp = await nopRpcRequest<unknown>({
+    url: '@query:PageProvider__getPage',
+    data: { path: schemaPath },
+    signal,
+  });
+  if (resp.status !== 0) {
+    throw new Error(resp.msg ?? '页面加载失败');
+  }
+  return resp.data;
 }
 
 export async function fetchAmisPage(schemaPath: string) {

@@ -203,7 +203,7 @@ describe('nopRpcRequest error handling', () => {
     });
     const { nopRpcRequest } = await import('./http');
     const result = await nopRpcRequest({ url: '@query:X__findPage' });
-    expect(result.ok).toBe(false);
+    expect(result.status).not.toBe(0);
     expect(result.msg).toBe('validation failed');
     expect(result.errors).toEqual({ name: 'required' });
   });
@@ -212,7 +212,7 @@ describe('nopRpcRequest error handling', () => {
     mockRequest.mockResolvedValue({ status: 502, data: null, headers: {} });
     const { nopRpcRequest } = await import('./http');
     const result = await nopRpcRequest({ url: '@query:X__findPage' });
-    expect(result.ok).toBe(false);
+    expect(result.status).not.toBe(0);
     expect(result.status).toBe(-1);
   });
 
@@ -220,7 +220,7 @@ describe('nopRpcRequest error handling', () => {
     mockRequest.mockRejectedValue(Object.assign(new Error('network fail'), { status: 500 }));
     const { nopRpcRequest } = await import('./http');
     const result = await nopRpcRequest({ url: '@query:X__findPage' });
-    expect(result.ok).toBe(false);
+    expect(result.status).not.toBe(0);
     expect(result.status).toBe(-1);
     expect(result.raw).toBeInstanceOf(Error);
   });
@@ -233,7 +233,7 @@ describe('nopRpcRequest error handling', () => {
     });
     const { nopRpcRequest } = await import('./http');
     const result = await nopRpcRequest({ url: '@query:X__get', method: 'POST' });
-    expect(result.ok).toBe(true);
+    expect(result.status).toBe(0);
     expect(result.data).toEqual({ id: 1 });
   });
 });

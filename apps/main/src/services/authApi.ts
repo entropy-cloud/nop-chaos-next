@@ -1,7 +1,7 @@
 import { getAuthConfig } from '@nop-chaos/shared';
 import type { AuthSession, AuthTokens, User } from '@nop-chaos/shared';
 import { isMockEnabled } from '../config/env';
-import { ajaxFetch, ajaxQuery } from './http';
+import { ajaxFetch, nopRpcRequest } from './http';
 import {
   fetchMockCurrentUser,
   mockLoginWithPassword,
@@ -83,18 +83,16 @@ export async function fetchCurrentUser(token?: string): Promise<User> {
     return fetchMockCurrentUser(token);
   }
 
-  const payload = await ajaxQuery<LegacyUserInfoResponse>(
-    '@query:LoginApi__getLoginUserInfo/username:userName,realname:nickName,roles:roleInfos{value:roleId,roleName}',
-    {
-      accessToken: token,
-    },
-    {
-      withAuth: token ? false : undefined,
-      headers: buildTokenHeaders(token),
-    },
-  );
+  const resp = await nopRpcRequest<LegacyUserInfoResponse>({
+    url: '@query:LoginApi__getLoginUserInfo/username:userName,realname:nickName,roles:roleInfos{value:roleId,roleName}',
+    data: { accessToken: token },
+    headers: buildTokenHeaders(token),
+  });
+  if (resp.status !== 0) {
+    throw new Error(resp.msg ?? '获取用户信息失败');
+  }
 
-  return normalizeUser(payload);
+  return normalizeUser(resp.data ?? {});
 }
 
 export async function loginWithPassword(username: string, password: string): Promise<AuthSession> {
@@ -176,14 +174,12 @@ export async function logoutRequest(token?: string): Promise<void> {
     return;
   }
 
-  await ajaxQuery<unknown>(
-    '@mutation:LoginApi__logout',
-    {
-      accessToken: token,
-    },
-    {
-      withAuth: false,
-      headers: buildTokenHeaders(token),
-    },
-  );
+  const resp = await nopRpcRequest<unknown>({
+    url: '@mutation:LoginApi__logout',
+    data: { accessToken: token },
+    headers: buildTokenHeaders(token),
+  });
+  if (resp.status !== 0) {
+    throw new Error(resp.msg ?? '退出登录失败');
+  }
 }

@@ -23,7 +23,9 @@ export function initializeI18n(): Promise<typeof i18n> {
           loadPath: '/locales/{{lng}}/translation.json',
         },
         detection: {
-          order: ['localStorage', 'navigator'],
+          // 只信任用户显式选择（localStorage），避免英文系统浏览器把 ERP 默认界面切到英文。
+          // navigator 检测已移除：ERP 界面与后端翻译默认中文（fallbackLng: zh-CN）。
+          order: ['localStorage'],
           lookupLocalStorage: 'nop-language:v1',
           convertDetectedLanguage: (language: string) => normalizeLanguageCode(language),
         },

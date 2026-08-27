@@ -27,15 +27,21 @@ function isSpecialKey(key: string): boolean {
   return key.startsWith('__') || key.startsWith('@') || key.startsWith('v_');
 }
 
-// ── 递归过滤 __/@/v_ 前缀的键（包括嵌套对象） ──
+// ── 递归过滤 __/@/v_ 前缀的键；顶层 $ 前缀为运行时系统参数（如 $form），一并过滤 ──
+// 内嵌的 $ 前缀（如 query.filter 中的 TreeBean 结构键 $body/$type）是业务数据结构，不处理。
 
 function removeSpecialKeys(data: unknown): unknown {
-  if (Array.isArray(data)) return data.map(removeSpecialKeys);
+  return removeSpecialKeysAtLevel(data, true);
+}
+
+function removeSpecialKeysAtLevel(data: unknown, isTopLevel: boolean): unknown {
+  if (Array.isArray(data)) return data.map((value) => removeSpecialKeysAtLevel(value, false));
   if (!isPlainObject(data)) return data;
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(data)) {
     if (isSpecialKey(key)) continue;
-    result[key] = removeSpecialKeys(value);
+    if (isTopLevel && key.startsWith('$')) continue;
+    result[key] = removeSpecialKeysAtLevel(value, false);
   }
   return result;
 }
@@ -136,15 +142,33 @@ function mergeFilter(a: unknown, b: unknown): unknown {
 
 // ── argQuery：findPage/findList/findFirst ──
 
+// flux 模式的 CRUD loadAction 会把 queryForm 原始字段名（filter_X__op）整体放进
+// data.query（scope 投影 includeScope:'*'），与 AMIS 顶层 filter_* 等价。
+// 这里对 data.query 内部嵌套的 filter_* 键做同样的 TreeBean 转换并从 query 中移除，
+// 保证到达后端的结构与 AMIS 一致（query.filter + 无残留 filter_* 键）。
+
+function normalizeNestedFilters(query: Record<string, unknown>): Record<string, unknown> | undefined {
+  const nested = toFilter(query);
+  if (nested) {
+    for (const key of Object.keys(query)) {
+      if (key.startsWith('filter_')) {
+        delete query[key];
+      }
+    }
+  }
+  return nested;
+}
+
 function argQuery(data: Record<string, unknown>, _arg: OperationArgDef): unknown {
   const q: Record<string, unknown> = { ...(isPlainObject(data.query) ? data.query : {}) };
+  const nestedFilter = normalizeNestedFilters(q);
   const rawLimit = q.limit ?? data.limit ?? data.pageSize ?? data.perPage ?? 0;
   q.limit = typeof rawLimit === 'number' ? rawLimit : Number(rawLimit) || 0;
   const pg = typeof data.page === 'number' ? data.page : Number(data.page || 0);
   const limit = q.limit as number;
   q.offset = q.offset ?? data.offset ?? (limit > 0 && pg > 0 ? limit * (pg - 1) : 0);
   q.orderBy = q.orderBy ?? toOrderBy(data.orderBy ?? data.orderField, data.orderDir);
-  q.filter = mergeFilter(q.filter, toFilter(data));
+  q.filter = mergeFilter(q.filter, mergeFilter(nestedFilter, toFilter(data)));
   q.cursor = q.cursor ?? data.cursor;
   q.timeout = q.timeout ?? data.timeout;
   return q;
@@ -185,6 +209,7 @@ const operationRegistry: Record<string, OperationDef> = {
   batchGet:   { arguments: [{ name: 'ids', type: '[String]' }] },
   batchDelete:{ arguments: [{ name: 'ids', type: '[String]' }] },
   batchModify:{ arguments: [{ name: 'data', type: '[Map]' }, { name: 'delIds', type: '[String]' }] },
+  logout:    { arguments: [{ name: 'accessToken', type: 'String' }] },
 };
 
 // ── RPC 参数构建 ──

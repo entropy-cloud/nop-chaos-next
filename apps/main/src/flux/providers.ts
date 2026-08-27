@@ -64,7 +64,7 @@ export async function fetchFluxDict(
     signal,
   });
 
-  if (!response.ok) {
+  if (response.status !== 0) {
     throw new Error(response.msg || `Dict fetch failed: ${response.status}`);
   }
 

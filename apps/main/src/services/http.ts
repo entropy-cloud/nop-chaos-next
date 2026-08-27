@@ -1,4 +1,5 @@
 import type { AmisRequestOptions } from '@nop-chaos/amis-core';
+import type { ApiResponse } from '@nop-chaos/flux';
 import {
   createHttpClient,
   getAccessToken,
@@ -174,16 +175,10 @@ interface NopRpcRequestOptions {
   downloadFileName?: string;
 }
 
-interface NopRpcResponse<T> {
-  ok: boolean;
-  status: number;
-  code?: string;
-  msg?: string;
-  data: T | null;
-  errors?: Record<string, string>;
-  headers: Record<string, string>;
-  raw: unknown;
-}
+// 直接复用 flux 契约类型 ApiResponse<T>，删除冗余的 NopRpcResponse<T>。
+// ApiResponse.data 是 `T | null`（错误路径 / 缺 envelope data 字段时为 null），
+// 调用方在 `status !== 0` 时不应读 .data。`ok` 字段已废弃，success 由 `status === 0` 判定。
+type NopRpcResponse<T> = ApiResponse<T>;
 
 /**
  * flux 模式的 RPC 请求：识别 nop 的 @query:/@mutation:/@rpc: 等 url，
@@ -225,7 +220,6 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
           };
           const errorStatus = Number(errorEnvelope.status ?? -1);
           return {
-            ok: errorStatus === 0,
             status: errorStatus,
             code: errorEnvelope.code,
             msg: errorEnvelope.msg,
@@ -251,7 +245,6 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
         });
         if (blobResult instanceof Blob) {
           return {
-            ok: true,
             status: 0,
             data: blobResult as T,
             headers: response.headers,
@@ -270,7 +263,6 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
       };
       const rpcStatus = envelope.status ?? -1;
       return {
-        ok: rpcStatus === 0,
         status: rpcStatus,
         code: envelope?.code,
         msg: envelope?.msg,
@@ -281,7 +273,7 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
       };
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
-      return { ok: false, status: -1, data: null, headers: {}, raw: error };
+      return { status: -1, data: null, headers: {}, raw: error };
     }
   }
 
@@ -301,9 +293,8 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
     };
     const hasEnvelope = body && typeof body === 'object' && 'status' in body;
     const rpcStatus = hasEnvelope ? (body.status ?? -1) : response.status;
-    const rpcData = (hasEnvelope ? body.data : body) as T;
+    const rpcData = (hasEnvelope ? body.data : body) as T | null;
     return {
-      ok: rpcStatus === 0,
       status: rpcStatus,
       code: body?.code,
       msg: body?.msg,
@@ -314,6 +305,6 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
     };
   } catch (err) {
     const error = err instanceof Error ? err : new Error(String(err));
-    return { ok: false, status: -1, data: null, headers: {}, raw: error };
+    return { status: -1, data: null, headers: {}, raw: error };
   }
 }

@@ -1,4 +1,4 @@
-import type { FluxApiRequest, FluxApiRequestContext, FluxRendererEnv } from '@nop-chaos/flux';
+import type { ApiResponse, FluxApiRequest, FluxApiRequestContext, FluxRendererEnv } from '@nop-chaos/flux';
 import { applyPageTransformers, registerPageTransformer } from '@nop-chaos/extension-host';
 import { toast } from '@nop-chaos/ui';
 import i18n from '../config/i18n';
@@ -56,9 +56,9 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
     // signal 是冗余的带宽优化。但 mainHttpClient（client.ts:188）当前把无 reason 的
     // parent abort 误判为 timeout 并抛错，导致 crud loadAction 收到空结果。
     // 因此这里刻意不传 ctx.signal —— 让请求自然完成，由 flux cancelled flag 决定是否丢弃。
-    fetcher: async (api: FluxApiRequest, _ctx: FluxApiRequestContext) => {
+    fetcher: async <T = unknown>(api: FluxApiRequest, _ctx: FluxApiRequestContext): Promise<ApiResponse<T>> => {
       recordFluxDebug({ phase: 'request', url: api.url, method: api.method, data: api.data });
-      const resp = await nopRpcRequest({
+      const resp = await nopRpcRequest<T>({
         url: api.url,
         method: api.method,
         params: api.params,
@@ -71,7 +71,6 @@ export function createMainFluxEnv({ navigate }: CreateMainFluxEnvOptions): FluxR
       recordFluxDebug({
         phase: 'response',
         url: api.url,
-        ok: resp.ok,
         status: resp.status,
         dataPreview: JSON.stringify(resp.data ?? null).slice(0, 300),
       });

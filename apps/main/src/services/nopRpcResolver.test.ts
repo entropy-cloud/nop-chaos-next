@@ -36,6 +36,15 @@ describe('route: /r/', () => {
     });
     expect(res.data).toEqual({ query: { filter: { userName: 'test' } } });
   });
+  it('filters $ prefixed runtime state fields (e.g. $form)', () => {
+    const res = result('/r/NopAuthResource__save', {
+      siteId: 'main',
+      resourceId: 'e2e_res_1',
+      $form: { id: 'add', name: 'add', submitting: true, valid: true },
+      $scope: { dirty: false },
+    });
+    expect(res.data).toEqual({ siteId: 'main', resourceId: 'e2e_res_1' });
+  });
   it('passes through non-special fields', () => {
     const res = result('/r/NopAuthResource__findList', {
       filter_displayName__contains: 'test',
@@ -60,6 +69,57 @@ describe('@query findPage', () => {
     expect(res.data).toMatchObject({
       query: { filter: { $body: [{ $type: 'contains', name: 'userName', value: 'john' }, { $type: 'eq', name: 'status', value: '1' }] } },
     });
+  });
+  it('converts filter_XX nested inside query (flux shape) to TreeBean and removes residual keys', () => {
+    const res = result('@query:NopAuthUser__findPage', {
+      query: {
+        filter_status__eq: '1',
+        filter_userName__contains: 'john',
+        filter_createdAt__between: '2026-01-01,2026-02-01',
+        limit: 10,
+      },
+      pagination: { currentPage: 1, pageSize: 10 },
+      sort: { column: 'userName', direction: 'asc' },
+      filters: {},
+      selection: [],
+    });
+    expect(res.data).toMatchObject({
+      query: {
+        limit: 10,
+        filter: {
+          $body: [
+            { $type: 'eq', name: 'status', value: '1' },
+            { $type: 'contains', name: 'userName', value: 'john' },
+            { $type: 'between', name: 'createdAt', min: '2026-01-01', max: '2026-02-01' },
+          ],
+        },
+      },
+    });
+    const query = (res.data as { query: Record<string, unknown> }).query;
+    expect(Object.keys(query)).not.toContain('filter_status__eq');
+    expect(Object.keys(query)).not.toContain('filter_userName__contains');
+    expect(Object.keys(query)).not.toContain('filter_createdAt__between');
+    expect(Object.keys(query)).toContain('filter');
+  });
+  it('merges nested query filter_XX with existing query.filter', () => {
+    const res = result('@query:NopAuthUser__findPage', {
+      query: {
+        filter: { $type: 'and', $body: [{ $type: 'eq', name: 'deptId', value: 10 }] },
+        filter_status__eq: '1',
+      },
+    });
+    expect(res.data).toMatchObject({
+      query: {
+        filter: {
+          $body: [
+            { $type: 'and', $body: [{ $type: 'eq', name: 'deptId', value: 10 }] },
+            { $type: 'and', $body: [{ $type: 'eq', name: 'status', value: '1' }] },
+          ],
+        },
+      },
+    });
+    const query = (res.data as { query: Record<string, unknown> }).query;
+    expect(Object.keys(query)).not.toContain('filter_status__eq');
   });
   it('merges existing query.filter with filter_XX', () => {
     const res = result('@query:NopAuthUser__findPage', {
