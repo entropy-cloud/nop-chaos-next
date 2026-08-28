@@ -47,6 +47,30 @@ function ensureLinkElement(rel: string) {
   return link
 }
 
+function normalizeStylesheetHref(href: string): string {
+  if (typeof URL === 'undefined' || typeof document === 'undefined') {
+    return href
+  }
+
+  try {
+    const base = document.baseURI && document.baseURI.length > 0
+      ? document.baseURI
+      : (typeof location !== 'undefined' ? location.href : 'about:blank')
+    return new URL(href, base).href
+  } catch {
+    return href
+  }
+}
+
+function collectPreInjectedStyleHrefs(source: { styleAssets?: string[] }): Set<string> {
+  const hrefs = source.styleAssets
+  if (!hrefs || hrefs.length === 0) {
+    return new Set()
+  }
+
+  return new Set(hrefs.map((href) => normalizeStylesheetHref(href)))
+}
+
 function applyDocumentBranding(loaded: LoadedExtension[]) {
   if (typeof document === 'undefined') {
     return
@@ -66,7 +90,7 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
 
   const extensionPlugins: PluginManifest[] = []
 
-  for (const { extension } of loaded) {
+  for (const { source, extension } of loaded) {
     if (extension.auth) {
       setAuthConfig(extension.auth)
       resetTokenStorage()
@@ -102,9 +126,16 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
       }
     }
 
+    const preInjectedStyleHrefs = collectPreInjectedStyleHrefs(source)
+
     for (const style of extension.styles ?? []) {
       if (style.scope === 'plugin') {
         logger.info(`Skip global injection for plugin-scoped style '${style.id}' from extension '${extension.id}'`)
+        continue
+      }
+
+      if (preInjectedStyleHrefs.has(normalizeStylesheetHref(style.href))) {
+        logger.info(`Skip re-injecting pre-rendered stylesheet '${style.href}' for extension '${extension.id}'`)
         continue
       }
 

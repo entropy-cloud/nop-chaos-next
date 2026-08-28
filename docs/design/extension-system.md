@@ -396,53 +396,94 @@ VITE_DEMO_EXTENSION_ALIAS_PATH=../external-extension/src/index.ts
 
 #### 7.4.2 部署目录结构
 
+Java 后端部署产物（`META-INF/resources/`）：
+
 ```
 META-INF/resources/
-  index.html                                    ← 宿主 HTML
+  index.html                                    ← 宿主 HTML（含 <!--NOP_EXTENSIONS_INJECT--> 占位符）
   assets/                                       ← 宿主资源
-  extension/
+  extensions/                                    ← 扩展根（复数，与 URL base path 对齐）
     {extension-name}/
-      extension.json                            ← 扩展清单
-      assets/                                   ← 扩展资源
+      extension.json                            ← 扩展清单（ExtensionManifest）
+      assets/                                   ← 扩展资源（Vite 产物）
+        index-COw24fxy.js                       ← entry
+        index-3Z9nCm1K.css                      ← styleAsset
 ```
+
+Java 端扫描根路径 = `nop.web.index-extensions-dir`（缺省 `/extensions`，VFS 绝对路径），URL 根路径 = `nop.web.index-extensions-base-path`（缺省 `/extensions`）。扩展子目录名必须与 `extension.json.id` 一致。
+
+静态资源部署在 `META-INF/resources/extensions/{id}/`。Spring/Quarkus 默认把 `classpath:/META-INF/resources/**` 暴露为 `/`，因此 HTTP `/extensions/{id}/...` 自动路由到 `META-INF/resources/extensions/{id}/...`，无需额外 `addResourceHandlers` 配置。
+
+`IndexHtmlProvider` 检索 `extension.json` 的优先级（`getExtensionResource()`）：
+
+1. **VFS**（`VirtualFileSystem.getResource(path, true)`）—— 允许通过 Delta 定制机制在 `_vfs/` 下覆盖扩展资源
+2. **classpath 静态资源**（`classpath:META-INF/resources/{path}`）—— VFS 中不存在时，直接读取生产部署在 `META-INF/resources/extensions/{id}/` 的清单
+3. **classpath 根**（`classpath:{path}`）—— 允许其它约定位置
+
+`extension.json` 内的路径字段（`entry` / `styleAssets` / `assets`）使用**相对 `extension.json` 自身**的相对路径，如 `./assets/index.js`。Java `IndexHtmlProvider` 拼接 URL 时去除 `./` 前缀（`normalizePath`），把 Vite build 产物（`dist/extension.json` + `dist/assets/...`）直接复制到 `META-INF/resources/extensions/{id}/` 即可由前端通过 `/extensions/{id}/...` URL 访问，无需任何路径重写。
 
 #### 7.4.3 服务端集成合同（Java / `IndexHtmlProvider`）
 
-Java 后端通过以下步骤实现 extension 注入：
+Java 后端（`nop-entropy-master/nop-frontend-support/nop-web/.../IndexHtmlProvider`）通过以下步骤实现 extension 注入：
 
-1. **扫描** `extension/*/extension.json`，读取每个扩展的清单
-2. **构建** `window.__NOP_EXTENSIONS__` 数组，每项为 `{ id, entry }` 对象
-   - `entry` 应拼接为相对于宿主根的完整路径，如 `./extension/{name}/{manifest.entry}`
-3. **替换** 宿主 HTML 中的 `<!--NOP_EXTENSIONS_INJECT-->` 注释为生成的 `<script>` 标签
+1. **扫描** `extensions/*/extension.json`（`nop.web.index-extensions-dir` 配置项控制根路径，缺省 `/extensions`；VFS 优先，classpath fallback）
+2. **白名单过滤** `nop.web.index-extension-names`（逗号分隔）— 只有被列出的扩展才会被加载
+3. **构建 HTML 片段**：
+   - 每个启用扩展的 `styleAssets` 依次渲染为 `<link rel="stylesheet" data-nop-extension data-nop-extension-id="<id>" href="{basePath}/{id}/{styleAsset}">`
+   - 每个启用扩展的 `entry` 渲染为 `<script type="module" data-nop-extension data-nop-extension-id="<id>" src="{basePath}/{id}/{entry}">`
+   - `basePath` 由 `nop.web.index-extensions-base-path` 控制（缺省 `/extensions`）
+4. **替换** 宿主 HTML 中的 `<!--NOP_EXTENSIONS_INJECT-->` 占位符为上述 HTML 片段
+5. **静态资源映射**由后端把 `/{basePath}/{id}/{asset}` 路由到 VFS `extension/{id}/{asset}`
+
+`data-nop-extension` 与 `data-nop-extension-id` 是前端 DOM 扫描的稳定锚点，由 Java `IndexHtmlProvider` 在注入时主动写入。前端 `apps/main/src/extensions/config.ts` 的 `getDomExtensionSources()` 通过这两个属性识别扩展并把每个扩展的 `styleAssets` 一并写入 `ExtensionSource.styleAssets`，避免 bootstrap 二次注入。
 
 示例注入结果：
 
 ```html
 <div id="root"></div>
-<script>
-  window.__NOP_EXTENSIONS__ = [
-    { "id": "example-extension-demo", "entry": "./extension/extension-demo/assets/index-COw24fxy.js" }
-  ];
-</script>
-<script type="module" crossorigin src="./assets/index-CaxDBImy.js"></script>
+<link rel="stylesheet" data-nop-extension data-nop-extension-id="example-extension-demo" href="/extensions/example-extension-demo/assets/index-3Z9nCm1K.css" />
+<script type="module" data-nop-extension data-nop-extension-id="example-extension-demo" src="/extensions/example-extension-demo/assets/index-COw24fxy.js"></script>
 ```
+
+> **当前 Java 实现状态**（截至 2026-08-28）：`IndexHtmlProvider` 已实现按 `extension.json` 扫描、按 `nop.web.index-extension-names` 白名单过滤、按顺序渲染 `<link>` / `<script type="module">` 注入占位符。`data-nop-extension` / `data-nop-extension-id` 属性的写入需要在 Java 端补一次补丁（计划在 `nop-entropy-master` 仓库单独拟 plan）；在该补丁落地前，前端 DOM 扫描虽然代码就绪，但生产环境实际不会匹配到任何 `<script>` 标签。Prototype 模式下不受影响：`vite-plugin-prototype-server` 仍然注入 `window.__NOP_EXTENSIONS__` 数组，前端 `getWindowExtensionSources()` 仍按原契约工作。
 
 #### 7.4.4 宿主发现优先级
 
-宿主通过 `apps/main/src/extensions/config.ts` 中的 `getExtensionSources()` 发现扩展：
+宿主通过 `apps/main/src/extensions/config.ts` 中的 `getExtensionSources()` 发现扩展，按以下顺序回退：
 
-1. **最高优先级**：`window.__NOP_EXTENSIONS__`（服务端注入）— 支持多扩展数组
-2. **次优先级**：环境变量 `VITE_DEMO_EXTENSION_ENTRY`（运行时入口路径）
-3. **开发模式**：`VITE_DEMO_EXTENSION_ALIAS_PATH`（构建时 alias 路径）
-4. **回退**：`VITE_ENABLE_DEMO_EXTENSION=true`（内置 demo 扩展）
+1. **最高优先级**：`window.__NOP_EXTENSIONS__`（prototype / 自定义 dev server 注入）— 支持多扩展数组；通过 `vite-plugin-prototype-server` 的 `transformIndexHtml` 写入
+2. **次优先级**：DOM 扫描 `<script type="module" data-nop-extension>`（Java `IndexHtmlProvider` 生产契约）— 每个扩展的 `styleAssets` 通过同 id 的 `<link rel="stylesheet" data-nop-extension>` 标签收集
+3. **回退一**：环境变量 `VITE_DEMO_EXTENSION_ENTRY`（运行时入口路径）
+4. **回退二**：开发 alias `VITE_DEMO_EXTENSION_ALIAS_PATH`（构建时 alias 路径；走 `load: () => import('@demo-extension')`）
+5. **最终回退**：`VITE_ENABLE_DEMO_EXTENSION=true`（内置 demo 扩展）
 
-`window.__NOP_EXTENSIONS__` 是生产环境的标准路径，支持多个扩展同时加载。
+两条契约并存关系：
 
-> **Prototype dev 模式**也走优先级 1：`vite-plugin-prototype-server` 在 `--mode amis-prototype` / `flux-prototype` 下通过 `transformIndexHtml` 注入 `window.__NOP_EXTENSIONS__`（`entry` 为指向 `examples/` 源码的 `/@fs/` URL）。宿主 `config.ts` 不含 prototype 专用静态 import，默认 `pnpm dev:main` 对 prototype 零引用。详见 [amis-flux-json-prototyping-demo.md](./amis-flux-json-prototyping-demo.md)。
+- **prototype / 独立 dev server**（`vite-plugin-prototype-server` 或自研 dev 工具）：注入 `window.__NOP_EXTENSIONS__` 数组；前端走优先级 1；适用于无 Java 后端的开发联调
+- **生产部署**（Java 后端打包扩展产物到 `META-INF/resources/extensions/`，复数与 URL base path `/extensions` 对齐）：`IndexHtmlProvider` 扫描 `extension.json` 后渲染 `<script type="module" data-nop-extension>`；前端走优先级 2；适用于多扩展静态产物集成
 
-#### 7.4.5 清单生成
+`window.__NOP_EXTENSIONS__` 与 DOM 扫描的 source 都包含 `styleAssets` 字段（前者恒为 undefined，后者由 DOM 收集），bootstrap 据此判断是否需要重复注入 CSS。两条契约共同走同一条 `bootstrapExtensions()` 流水线，扩展的 `ShellExtension` 字段（languages / themes / builtinPages / auth / plugins / userMenuItems / i18n 等）合并语义一致。
 
-每个扩展的 Vite 构建自动生成 `extension.json`。扩展需配置 `extensionManifestPlugin`（见 `examples/extension-demo/vite.config.ts`）：
+> 详细实现：apps/main/src/extensions/config.ts 中 `getWindowExtensionSources()` 与 `getDomExtensionSources()`，合并由 `getExtensionSources()` 完成。
+
+#### 7.4.5 清单生成与构建 pipeline
+
+每个扩展的 Vite 构建自动生成 `extension.json`。`examples/extension-demo/vite.config.ts` 是参考实现，包含两个关键配置：
+
+1. **Production build 用 library mode**，以 `src/index.ts` 为唯一入口（不是 `index.html`）。`pnpm build` 走 production config；`pnpm dev` / `pnpm preview` 走 dev config（HTML + standalone preview）：
+
+```ts
+export default defineConfig(({ command }) => {
+  if (command === 'serve') {
+    return devConfig; // SPA + HTML 入口走 src/standalone/main.tsx
+  }
+  return productionConfig; // library mode + src/index.ts 入口
+});
+```
+
+   关键：`build.rollupOptions.input = 'src/index.ts'`，`format: 'es'`，`entryFileNames: 'assets/index.js'`。这样打包产物是 ESM library (`export default extension`)，而不是 standalone React 页面。
+
+2. **`extensionManifestPlugin` 在 entry transform 中扫描 `new URL('./xxx', import.meta.url)` 字面量**，在 `closeBundle` 中把对应资源复制到 `dist/assets/`，并在 `writeBundle` 中写 `extension.json`：
 
 ```ts
 extensionManifestPlugin({
@@ -452,7 +493,37 @@ extensionManifestPlugin({
 })
 ```
 
-构建后自动在 `dist/` 目录下生成包含正确哈希文件名的 `extension.json`。
+构建后自动在 `dist/` 目录下生成包含正确哈希文件名的 `extension.json`：
+
+```json
+{
+  "id": "example-extension-demo",
+  "name": "Harbor Operations Suite",
+  "version": "0.0.1",
+  "entry": "./assets/index.js",
+  "styleAssets": ["./assets/harbor-xxx.css", "./assets/shell-xxx.css", "./assets/component-page-xxx.css"],
+  "assets": ["./assets/harbor-mark-xxx.svg"]
+}
+```
+
+字段语义：
+
+- `entry`：相对 `extension.json` 的 ESM 入口路径，模块必须 `export default extension`（或 `export const extension` / `getExtension()`）。
+- `styleAssets`：相对路径 CSS 资源，由 Java `IndexHtmlProvider` 注入 `<link rel="stylesheet">`。
+- `assets`：相对路径非 CSS 静态资源（SVG / 字体 / JSON 等）。这些由 `ShellExtension` 字段（`branding.logoUrl`、`themes[].cssHref`、`styles[].href`、`i18n.baseUrl` 等）通过 `new URL('./xxx', import.meta.url)` 引用；host 前端运行时把它们与 `data-nop-extension-id` 拼接后形成完整 URL。
+
+类型定义：`ExtensionManifest`（`packages/shared/src/types/extension.ts`）。
+
+Java `IndexHtmlProvider` 当前 `appendExtensionHtml()` 实现（截至 2026-08-27，commit `ff641f7dee`）已包含：
+
+- 按 `nop.web.index-extension-names` 白名单过滤
+- 把 `styleAssets` 渲染为 `<link rel="stylesheet" href="...">`
+- 把 `entry` 渲染为 `<script type="module" src="...">`
+- 按 `nop.web.index-extensions-base-path` + `id` + `path` 拼接完整 URL
+
+`data-nop-extension` 属性（用于前端 DOM 扫描锚点）的写入需在 Java 端补一次补丁（计划在 `nop-entropy-master` 仓库单独拟 plan）。一旦该补丁落地，生产部署链路上 Java 端会写入锚点属性，前端 DOM 扫描（见 §7.4.4）即可识别由 Java 注入的扩展资源。
+
+回归测试：`examples/extension-demo/src/build.test.ts` 跑一次完整 `pnpm build`，断言 `dist/extension.json` schema 与 `dist/assets/` 中每个 per-extension 资源的存在。
 
 ---
 

@@ -46,11 +46,13 @@ function stubBrowserGlobals() {
   vi.stubGlobal('document', {
     title: '',
     querySelector: vi.fn(() => null),
+    querySelectorAll: vi.fn(() => [] as Array<HTMLElement>),
     createElement: vi.fn(() => ({
       rel: '',
       href: '',
       dataset: {} as Record<string, string>
     })),
+    baseURI: 'http://127.0.0.1:4173/',
     head: {
       append: vi.fn((node: { href?: string; rel?: string; dataset?: Record<string, string> }) => {
         appendedNodes.push(node)
@@ -70,6 +72,51 @@ function stubBrowserGlobals() {
   }))
 
   return appendedNodes
+}
+
+function stubDocumentWithExtensionScript(
+  scriptEntries: Array<{ id: string; src: string }>,
+  styleEntriesById: Record<string, Array<{ href: string }>> = {}
+) {
+  const scriptNodes = scriptEntries.map(({ id, src }) => ({
+    type: 'module',
+    src,
+    dataset: { nopExtension: '', nopExtensionId: id }
+  }))
+  const styleNodes: Array<{ rel: string; href: string; dataset: Record<string, string> }> = []
+  for (const [id, styles] of Object.entries(styleEntriesById)) {
+    for (const { href } of styles) {
+      styleNodes.push({
+        rel: 'stylesheet',
+        href,
+        dataset: { nopExtension: '', nopExtensionId: id }
+      })
+    }
+  }
+
+  vi.stubGlobal('window', globalThis as typeof globalThis & Window)
+  vi.stubGlobal('document', {
+    title: '',
+    querySelector: vi.fn(() => null),
+    querySelectorAll: vi.fn((selector: string) => {
+      if (selector === 'script[type="module"][data-nop-extension]') {
+        return scriptNodes
+      }
+      if (selector === 'link[rel="stylesheet"][data-nop-extension]') {
+        return styleNodes
+      }
+      return []
+    }),
+    createElement: vi.fn(() => ({
+      rel: '',
+      href: '',
+      dataset: {} as Record<string, string>
+    })),
+    baseURI: 'http://127.0.0.1:4173/',
+    head: {
+      append: vi.fn()
+    }
+  })
 }
 
 describe('extension source resolution', () => {
@@ -143,6 +190,68 @@ describe('extension source resolution', () => {
     if (!('load' in sources[0])) {
       throw new Error('Expected local extension loader source')
     }
+  })
+
+  it('discovers extensions from server-injected <script data-nop-extension> tags', () => {
+    stubDocumentWithExtensionScript(
+      [
+        {
+          id: 'example-extension-demo',
+          src: '/extension/example-extension-demo/assets/index-abc.js'
+        }
+      ],
+      {
+        'example-extension-demo': [
+          { href: '/extension/example-extension-demo/assets/style-abc.css' }
+        ]
+      }
+    )
+
+    const sources = getExtensionSources()
+
+    expect(sources).toHaveLength(1)
+    expect(sources[0].id).toBe('example-extension-demo')
+
+    if (!('entry' in sources[0])) {
+      throw new Error('Expected entry-based extension source from DOM scan')
+    }
+
+    expect(sources[0].entry).toBe(
+      'http://127.0.0.1:4173/extension/example-extension-demo/assets/index-abc.js'
+    )
+    expect(sources[0].styleAssets).toEqual([
+      'http://127.0.0.1:4173/extension/example-extension-demo/assets/style-abc.css'
+    ])
+  })
+
+  it('prefers runtime window extensions over DOM-injected ones', () => {
+    stubDocumentWithExtensionScript([
+      {
+        id: 'dom-source',
+        src: '/extension/dom-source/index.js'
+      }
+    ])
+    setRuntimeExtensionSources([
+      {
+        id: 'window-source',
+        entry: '/window-extension.js'
+      }
+    ])
+
+    const sources = getExtensionSources()
+
+    expect(sources).toHaveLength(1)
+    expect(sources[0].id).toBe('window-source')
+  })
+
+  it('falls back to the demo extension when no DOM or window sources exist', () => {
+    stubDocumentWithExtensionScript([])
+    vi.stubEnv('VITE_ENABLE_DEMO_EXTENSION', 'true')
+
+    const sources = getExtensionSources()
+
+    expect(sources).toHaveLength(1)
+    expect(sources[0].id).toBe('demo-shell-extension')
   })
 })
 

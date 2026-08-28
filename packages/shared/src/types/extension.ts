@@ -153,6 +153,19 @@ export interface ExtensionModule {
 interface ExtensionSourceBase {
   id: string;
   enabled?: boolean;
+  /**
+   * CSS asset paths already pre-injected into the host `<head>` by the server-side
+   * `IndexHtmlProvider` (Java `nop.web` module). Present only under the production
+   * contract where `<link rel="stylesheet" data-nop-extension data-nop-extension-id="<id>">`
+   * tags are emitted as part of the `<!--NOP_EXTENSIONS_INJECT-->` replacement.
+   *
+   * Front-end bootstrap must NOT call `ensureStylesheet` again when this list contains
+   * the matching href — the browser has already loaded the stylesheet via the
+   * server-rendered `<link>`. Under the prototype / `window.__NOP_EXTENSIONS__`
+   * contract this field is omitted; CSS is loaded via `import()` inside the entry
+   * module's chunk graph.
+   */
+  styleAssets?: string[];
 }
 
 export interface ExtensionEntrySource extends ExtensionSourceBase {
@@ -256,5 +269,22 @@ export interface ExtensionManifest {
   version?: string;
   description?: string;
   entry: string;
+  /**
+   * CSS asset paths (relative to `entry`) that the extension wants the host
+   * shell to load before `entry`. Populated by
+   * `examples/extension-demo/vite.config.ts` `extensionManifestPlugin` from
+   * `new URL('./xxx.css', import.meta.url)` literals in the entry source.
+   */
   styleAssets?: string[];
+  /**
+   * Non-CSS static asset paths (relative to `entry`) that the extension
+   * references through `new URL('./xxx', import.meta.url)`. Includes SVGs,
+   * fonts, JSON, etc. The Java `IndexHtmlProvider` reads these and copies
+   * them alongside `extension.json` in production deploys. The host front-end
+   * does not load them directly; instead, the runtime `ShellExtension` field
+   * values (e.g. `branding.logoUrl`, `themes[*].cssHref`) point to these
+   * paths after the host prefixes them with the
+   * `data-nop-extension-id`-driven base path.
+   */
+  assets?: string[];
 }

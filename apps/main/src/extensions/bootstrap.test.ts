@@ -142,4 +142,37 @@ describe('bootstrapExtensions extension contract', () => {
     ]);
     expect(setPluginsMock).toHaveBeenCalledWith([pluginA, pluginB]);
   });
+
+  it('does not re-inject stylesheets already pre-rendered by the server', async () => {
+    const preInjectedHref = `${window.location.origin}/extension/server-injected/assets/style.css`;
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = preInjectedHref;
+    document.head.append(link);
+
+    const { loadExtensions } = await import('@nop-chaos/extension-host');
+    vi.mocked(loadExtensions).mockResolvedValue([
+      {
+        source: {
+          id: 'server-injected',
+          entry: `${window.location.origin}/extension/server-injected/assets/index.js`,
+          styleAssets: [preInjectedHref],
+        },
+        extension: {
+          id: 'server-injected',
+          styles: [{ id: 'main', href: preInjectedHref }],
+        },
+      },
+    ]);
+
+    const { bootstrapExtensions } = await import('./bootstrap');
+    await bootstrapExtensions();
+
+    const appended = document.head.querySelectorAll('link[data-extension-style]');
+    const reInjected = Array.from(appended).filter(
+      (node) => (node as HTMLLinkElement).href === preInjectedHref,
+    );
+    expect(reInjected).toHaveLength(0);
+  });
 });
