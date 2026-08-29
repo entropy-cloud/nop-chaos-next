@@ -71,6 +71,10 @@ When adding a new log entry for today:
 
 - [flux-sync/index.md](flux-sync/index.md) — Script-generated sync baseline records for `scripts/sync-flux-lib.sh`
 
+### 2026-08
+
+- [08-02](2026/08-02.md) — Sidebar 菜单渲染性能优化（方案 2）：`SidebarItem` 根加 `content-visibility: auto` + `contain-intrinsic-size`，跳过屏外菜单节点 layout/paint；改善滚动/交互卡顿，首屏挂载慢需升级方案 1（条件渲染）
+
 ### 2026-07
 
 - [07-21](2026/07-21.md) — Executed Plan 14 (Navigation Login Unification in nop-entropy-e2e), Plan 15 (nop-entropy-e2e test adaptation), Plan 16 (nop-app-erp shared lib sync and cleanup)
