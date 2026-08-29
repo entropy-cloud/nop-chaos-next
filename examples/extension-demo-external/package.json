@@ -1,0 +1,47 @@
+{
+  "name": "extension-external-demo",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Completely independent extension demo using only sdks/ (no workspace deps). Two dev modes: dev (real Java backend) and dev:mock (frontend mock APIs).",
+  "scripts": {
+    "setup": "node scripts/sync-sdks.mjs",
+    "preinstall": "node scripts/check-sdks.mjs",
+    "dev": "node scripts/check-host-dist.mjs && vite --config vite.config.ts",
+    "dev:mock": "node scripts/check-host-dist-mock.mjs && vite --config vite.mock.config.ts",
+    "dev:standalone": "vite --config vite.standalone.config.ts",
+    "verify:imports": "node scripts/verify-imports.mjs",
+    "build": "tsc -p tsconfig.json --noEmit && node node_modules/@nop-chaos/extension-dev/src/cli.mjs build --root . --id external-demo --name \"External Demo\" --version 0.0.1 --entry src/index.ts --out dist",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@nop-chaos/shared": "file:./sdks/nop-chaos-shared-0.1.0.tgz",
+    "@nop-chaos/plugin-bridge": "file:./sdks/nop-chaos-plugin-bridge-0.1.0.tgz",
+    "@nop-chaos/theme-tokens": "file:./sdks/nop-chaos-theme-tokens-0.1.0.tgz",
+    "@nop-chaos/tailwind-preset": "file:./sdks/nop-chaos-tailwind-preset-0.1.0.tgz",
+    "@nop-chaos/ui": "file:./sdks/nop-chaos-ui-0.1.0.tgz",
+    "@nop-chaos/extension-dev": "file:./sdks/nop-chaos-extension-dev-0.1.0.tgz",
+    "@nop-chaos/flux": "file:./sdks/nop-chaos-flux-0.1.0.tgz",
+    "amis": "file:./sdks/amis-6.13.1-fix.0.tgz",
+    "amis-core": "file:./sdks/amis-core-6.13.1-fix.0.tgz",
+    "amis-ui": "file:./sdks/amis-ui-6.13.1-fix.0.tgz",
+    "amis-formula": "file:./sdks/amis-formula-6.13.1-fix.0.tgz",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "peerDependencies": {
+    "@nop-chaos/shared": "*",
+    "@nop-chaos/ui": "*",
+    "@nop-chaos/plugin-bridge": "*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3"
+  }
+}

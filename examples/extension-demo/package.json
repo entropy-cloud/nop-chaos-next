@@ -5,13 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "dev:standalone": "vite --config vite.standalone.config.ts",
+    "build": "tsc -p tsconfig.json --noEmit && node ../../packages/extension-dev/src/cli.mjs build --root . --id example-extension-demo --name \"Harbor Operations Suite\" --version 0.0.1 --entry src/index.ts --out dist",
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "vitest run"
   },
   "devDependencies": {
+    "@nop-chaos/extension-dev": "workspace:*",
     "@nop-chaos/plugin-bridge": "workspace:*",
     "@nop-chaos/shared": "workspace:*",
     "@nop-chaos/tailwind-preset": "workspace:*",
