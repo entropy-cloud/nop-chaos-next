@@ -5,7 +5,7 @@ import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { t } from '../../lib/i18n.js';
 import { cn } from '../../lib/utils.js';
 import { Button } from './button.js';
-import { GripHorizontalIcon, XIcon } from 'lucide-react';
+import { XIcon } from 'lucide-react';
 import { useDialogDrag } from './use-dialog-drag.js';
 import { useGlobalZIndex } from '../../hooks/use-global-z-index.js';
 import { wrapSurfaceTabFocus } from './wrap-surface-tab-focus.js';
@@ -127,7 +127,12 @@ function DialogHeader({ className, ...props }) {
                 break;
         }
     };
-    return (_jsxs("div", { "data-slot": "dialog-header", className: cn('nop-dialog ', 'relative flex shrink-0 flex-col gap-2 p-4 pb-0', draggable && 'pl-12', draggable && 'cursor-grab select-none', className), ...restProps, children: [dragContext.enabled ? (_jsx(Button, { type: "button", variant: "ghost", size: "icon-sm", className: "absolute top-3 left-3 cursor-grab", "data-slot": "dialog-drag-handle", "aria-roledescription": t('flux.dialog.dragHandleRoleDescription'), "aria-label": t('flux.dialog.moveDialog'), "aria-describedby": dragContext.descriptionId, "aria-keyshortcuts": "ArrowLeft ArrowRight ArrowUp ArrowDown Home", onKeyDown: handleKeyDown, children: _jsx(GripHorizontalIcon, {}) })) : null, props.children] }));
+    return (_jsxs("div", { "data-slot": "dialog-header", className: cn('nop-dialog ', 'relative flex shrink-0 flex-col gap-2 p-4 pb-0', 
+        // AMIS parity: the whole header is the drag surface (no dedicated
+        // grip icon — a floating icon collides with the title in narrow
+        // dialogs); `cursor-grab` is the only drag affordance. Keyboard moves
+        // (arrows/Home) stay available when the header itself is focused.
+        draggable && 'cursor-grab select-none', className), role: dragContext.enabled ? 'toolbar' : undefined, "aria-orientation": dragContext.enabled ? 'horizontal' : undefined, tabIndex: dragContext.enabled ? 0 : undefined, onKeyDown: handleKeyDown, ...restProps, children: [dragContext.enabled ? (_jsx("p", { id: dragContext.descriptionId, className: "sr-only", children: t('flux.dialog.moveDialog') })) : null, props.children] }));
 }
 function DialogBody({ className, ...props }) {
     return (_jsx("div", { "data-slot": "dialog-body", className: cn('nop-dialog ', 'flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto px-[var(--dialog-body-padding-x)] py-4', className), ...props }));

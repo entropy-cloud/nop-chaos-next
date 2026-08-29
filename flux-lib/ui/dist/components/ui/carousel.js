@@ -58,9 +58,13 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, label, cl
     React.useEffect(() => {
         if (!api)
             return;
-        onSelect(api);
         api.on('reInit', onSelect);
         api.on('select', onSelect);
+        // Defer the initial sync via a microtask so the synchronous setState
+        // pattern from `onSelect` does not happen inside the effect body.
+        // Embla fires `reInit` shortly after mount, which is the canonical
+        // subscription path for state initialization.
+        queueMicrotask(() => onSelect(api));
         return () => {
             api?.off('reInit', onSelect);
             api?.off('select', onSelect);
