@@ -1,0 +1,40 @@
+# Local private registry config for SDK distribution validation.
+# Start:  pnpm dlx verdaccio --config <abs-path>/config.yaml
+# Registry: http://127.0.0.1:4873
+storage: ./storage
+plugins: ./plugins
+
+web:
+  enable: true
+  title: nop-chaos SDK registry (local)
+
+auth:
+  htpasswd:
+    file: ./htpasswd
+    max_users: 10
+
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+
+packages:
+  '@nop-chaos/*':
+    access: $all
+    publish: $all
+    unpublish: $all
+  '**':
+    access: $all
+    publish: $all
+    proxy: npmjs
+
+server:
+  keepAliveTimeout: 60000
+
+middlewares:
+  audit:
+    enabled: false
+
+logs:
+  - { type: stdout, format: pretty, level: http }
+
+listen: 127.0.0.1:4873

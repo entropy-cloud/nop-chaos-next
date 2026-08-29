@@ -1,0 +1,40 @@
+{
+  "name": "@nop-chaos/extension-dev",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Official dev tooling for building nop-chaos extensions without host source: dev-in-host proxy injection, static asset server, extension manifest plugin.",
+  "exports": {
+    ".": {
+      "types": "./src/types/index.d.ts",
+      "default": "./src/index.mjs"
+    },
+    "./manifest-plugin": {
+      "types": "./src/types/manifest-plugin.d.ts",
+      "default": "./src/manifest-plugin.mjs"
+    },
+    "./cli": "./src/cli.mjs",
+    "./templates/*": "./templates/*"
+  },
+  "bin": {
+    "nop-extension-dev": "./src/cli.mjs"
+  },
+  "files": [
+    "src",
+    "templates",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.mjs\"",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "rollup": "^4.60.1",
+    "rollup-plugin-esbuild": "^6.2.1"
+  },
+  "devDependencies": {
+    "@nop-chaos/shared": "workspace:*"
+  }
+}
