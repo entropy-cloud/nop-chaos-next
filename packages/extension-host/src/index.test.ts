@@ -77,6 +77,48 @@ describe('extension-host loadExtensions', () => {
     );
   });
 
+  it('loads .system.js entries through SystemJS to share host modules', async () => {
+    const extension = { id: 'system-ext' };
+    const systemImport = vi.fn(async () => ({ default: extension }));
+    (globalThis as typeof globalThis & { System?: { import: typeof systemImport } }).System = {
+      import: systemImport,
+    };
+
+    try {
+      const loaded = await loadExtensions({
+        sources: [{ id: 'system-ext', entry: '/extensions/system-ext/assets/index.system.js' }],
+        context: {
+          logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+        },
+      });
+
+      expect(loaded).toHaveLength(1);
+      expect(loaded[0].extension.id).toBe('system-ext');
+      expect(systemImport).toHaveBeenCalledWith(
+        'http://localhost/extensions/system-ext/assets/index.system.js',
+      );
+    } finally {
+      delete (globalThis as typeof globalThis & { System?: unknown }).System;
+    }
+  });
+
+  it('fails clearly when SystemJS is missing for .system.js entries', async () => {
+    const errorSpy = vi.fn();
+    delete (globalThis as typeof globalThis & { System?: unknown }).System;
+
+    const loaded = await loadExtensions({
+      sources: [{ id: 'sys-no-runtime', entry: '/extensions/x/index.system.js' }],
+      context: {
+        logger: { info: vi.fn(), warn: vi.fn(), error: errorSpy },
+      },
+    });
+
+    expect(loaded).toHaveLength(0);
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('SystemJS is required to load system-format extension entry'),
+    );
+  });
+
   it('resolves extension from mod.extension field', async () => {
     const extension: ShellExtension = { id: 'ext-field' };
     const loaded = await loadExtensions({

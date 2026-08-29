@@ -92,12 +92,44 @@ async function resolveExtensionExport(mod: ExtensionModule): Promise<unknown> {
   return undefined
 }
 
+interface SystemApi {
+  import<T = unknown>(url: string): Promise<T>
+}
+
+function getSystemApi(): SystemApi | undefined {
+  const system = (globalThis as typeof globalThis & { System?: SystemApi }).System
+  return system
+}
+
+/**
+ * `.system.js` entries are SystemJS bundles that consume the host's shared
+ * modules (react, @nop-chaos/ui, ...) through the host import map — the same
+ * mechanism as remote plugins. Loading them through `System.import` (instead
+ * of native ESM `import()`) guarantees every shared module is a single
+ * runtime instance shared with the host, avoiding duplicate-React breakage.
+ */
+async function loadSystemJsEntry(entry: string): Promise<ExtensionModule> {
+  const system = getSystemApi()
+
+  if (!system?.import) {
+    throw new Error(`SystemJS is required to load system-format extension entry: ${entry}`)
+  }
+
+  return system.import<ExtensionModule>(entry)
+}
+
 async function loadExtensionModule(source: ExtensionSource): Promise<ExtensionModule> {
   if ('load' in source) {
     return source.load()
   }
 
-  return import(/* @vite-ignore */ resolveSameOriginPath(source.entry).href) as Promise<ExtensionModule>
+  const entryUrl = resolveSameOriginPath(source.entry).href
+
+  if (source.entry.endsWith('.system.js')) {
+    return loadSystemJsEntry(entryUrl)
+  }
+
+  return import(/* @vite-ignore */ entryUrl) as Promise<ExtensionModule>
 }
 
 function normalizeExtension(raw: unknown, source: ExtensionSource): ShellExtension {
