@@ -195,6 +195,13 @@ export interface ShellExtension {
   /** Loading priority; lower values load first. */
   order?: number;
   /**
+   * Minimum host API version this extension requires to function correctly
+   * (see `HOST_API_VERSION`). Hosts that expose `window.__NOP_HOST_API_VERSION__`
+   * log a warning when the requirement is not satisfied; older hosts that do
+   * not know this field ignore it entirely.
+   */
+  minHostApiVersion?: string;
+  /**
    * Restrict this extension to a specific set of shell profile names (e.g. `['mobile']`).
    * When omitted, the extension loads under every profile. Matching is by the active
    * profile `name` (resolved from URL / window injection). Non-matching extensions are

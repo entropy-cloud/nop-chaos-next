@@ -16,6 +16,8 @@
  */
 
 import type { Page } from '@playwright/test';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -372,12 +374,6 @@ export async function dumpMenuConfig(page: Page): Promise<MenuDump> {
  */
 export async function dumpPageStructure(page: Page): Promise<PageStructureDump> {
   return page.evaluate(() => {
-    const pickAttrs = (el: Element, keys: string[]) => {
-      const out: Record<string, string | null> = {};
-      for (const k of keys) out[k] = el.getAttribute(k);
-      return out;
-    };
-
     // Forms
     const forms = Array.from(document.querySelectorAll('form')).map((form) => {
       const fields: PageFieldInfo[] = Array.from(
@@ -606,4 +602,280 @@ export function formatReport(report: DiagnosticReport): string {
   }
 
   return lines.join('\n');
+}
+
+// ─── Flux runtime debug recorder ────────────────────────────────────────────
+
+/**
+ * 手动开启 flux 调试记录器（`window.__FLUX_DEBUG__ = true`）。
+ *
+ * 注意：e2e-shared 的 `test` fixture 已默认开启（无需调用本函数）。
+ * 仅当使用 Playwright 原生 `test`（而非 `@nop-chaos/e2e-shared` 的 `test`）时，
+ * 需要手动调用，且必须在导航前（页面加载前）执行，因为 flux env 在首次渲染时创建。
+ *
+ * 用法：
+ *   import { enableFluxDebug, dumpFluxDebug, formatFluxDebug } from '@nop-chaos/e2e-shared';
+ *
+ *   test.beforeEach(async ({ page }) => {
+ *     await enableFluxDebug(page);
+ *   });
+ *
+ *   test('...', async ({ page }) => {
+ *     // ... 测试逻辑
+ *     if (hasError) console.log(formatFluxDebug(await dumpFluxDebug(page)));
+ *   });
+ */
+export async function enableFluxDebug(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    (window as any).__FLUX_DEBUG__ = true;
+  });
+}
+
+export interface FluxDebugEntryDump {
+  phase: string;
+  ts: number;
+  url?: string;
+  method?: string;
+  ok?: boolean;
+  status?: number;
+  error?: string;
+  level?: string;
+  message?: string;
+  dataPreview?: string;
+}
+
+export interface FluxDebugDump {
+  enabled: boolean;
+  entryCount: number;
+  entries: FluxDebugEntryDump[];
+  /** 过滤后的错误条目（phase=error 或 notify level=error） */
+  errors: FluxDebugEntryDump[];
+  /** 与给定 URL 片段匹配的请求/响应条目 */
+  requests: FluxDebugEntryDump[];
+}
+
+/**
+ * 从页面读取 flux 调试记录（`window.__fluxDebug`）。
+ * 若调试开关未开启，entries 为空且 enabled 为 false。
+ */
+export async function dumpFluxDebug(page: Page): Promise<FluxDebugDump> {
+  return page.evaluate(() => {
+    const w = window as any;
+    const list: unknown[] = w.__fluxDebug ?? [];
+    const toDump = (e: any): FluxDebugEntryDump => ({
+      phase: e?.phase,
+      ts: e?.ts,
+      url: e?.url,
+      method: e?.method,
+      ok: e?.ok,
+      status: e?.status,
+      error: e?.error,
+      level: e?.level,
+      message: e?.message,
+      dataPreview:
+        typeof e?.data === 'string'
+          ? e.data.slice(0, 300)
+          : e?.data != null
+            ? JSON.stringify(e.data).slice(0, 300)
+            : e?.dataPreview,
+    });
+    const entries = list.map(toDump);
+    return {
+      enabled: w.__FLUX_DEBUG__ === true,
+      entryCount: entries.length,
+      entries,
+      errors: entries.filter(
+        (e: FluxDebugEntryDump) => e.phase === 'error' || (e.phase === 'notify' && e.level === 'error'),
+      ),
+      requests: entries.filter((e: FluxDebugEntryDump) => e.phase === 'request' || e.phase === 'response'),
+    };
+  });
+}
+
+/**
+ * 按 URL 片段过滤 flux 调试记录（如 'NopAuthResource__update'）。
+ */
+export async function dumpFluxDebugFor(
+  page: Page,
+  urlFragment: string,
+): Promise<FluxDebugDump> {
+  const dump = await dumpFluxDebug(page);
+  return {
+    ...dump,
+    entries: dump.entries.filter((e) => (e.url ?? '').includes(urlFragment)),
+    errors: dump.errors.filter((e) => (e.url ?? '').includes(urlFragment)),
+    requests: dump.requests.filter((e) => (e.url ?? '').includes(urlFragment)),
+  };
+}
+
+/**
+ * 格式化 flux 调试记录为可读文本（console 输出用）。
+ */
+export function formatFluxDebug(dump: FluxDebugDump): string {
+  const lines: string[] = [];
+  lines.push(`=== Flux Debug (enabled: ${dump.enabled}, entries: ${dump.entryCount}) ===`);
+  for (const e of dump.entries) {
+    const t = new Date(e.ts).toISOString().slice(11, 23);
+    const detail =
+      e.phase === 'request'
+        ? `${e.method ?? 'POST'} ${e.url} data=${e.dataPreview ?? ''}`
+        : e.phase === 'response'
+          ? `${e.url} ok=${e.ok} status=${e.status} data=${e.dataPreview ?? ''}`
+          : e.phase === 'error'
+            ? `${e.url ?? ''} ${e.error ?? ''}`
+            : `${e.level} ${e.message}`;
+    lines.push(`  [${t}] ${e.phase}: ${detail}`);
+  }
+  if (dump.errors.length > 0) {
+    lines.push(`--- Errors (${dump.errors.length}) ---`);
+    for (const e of dump.errors) {
+      lines.push(`  [${e.level ?? 'error'}] ${e.url ?? ''} ${e.error ?? e.message ?? ''}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+// ─── Save-to-file helpers（诊断时保存完整数据到临时文件，便于离线细看）──────
+
+/**
+ * 解析诊断文件默认输出路径：`<项目根>/_tmp/e2e-debug/<fileName>`。
+ *
+ * 项目根取 `process.cwd()`（playwright 运行时为发起项目的根目录）。
+ * `_tmp/` 已在项目 `.gitignore` 中忽略，不会污染版本库。
+ * 目录会在首次调用时自动创建。
+ */
+function resolveDebugFile(fileName: string): string {
+  const dir = path.join(process.cwd(), '_tmp', 'e2e-debug');
+  fs.mkdirSync(dir, { recursive: true });
+  return path.join(dir, fileName);
+}
+
+export interface PageSchemaDump {
+  /** 保存的文件绝对路径 */
+  file: string;
+  /** schemaPath（传入的 page.yaml 路径） */
+  schemaPath: string;
+  /** 文件字节数 */
+  bytes: number;
+  /** 顶层键名 */
+  topKeys: string[];
+  /** RPC 返回的 code（null=成功） */
+  code: string | null;
+  /** RPC 错误消息（成功时为 null） */
+  msg: string | null;
+  /** body 区域内出现的所有 type（去重，便于快速判断含哪些渲染器） */
+  bodyTypes: string[];
+}
+
+/**
+ * 通过 RPC 拉取 PageProvider__getPage 返回的完整 page schema，保存到临时文件。
+ *
+ * 用于：在弹窗打不开、表单不渲染等问题上，把后端实际生成的完整 JSON 落盘，
+ * 离线对照节点结构（type / name / data-field / onClick 等），而不是靠猜测。
+ *
+ * 用法：
+ *   const dump = await dumpPageSchemaToFile(page, '/erp/pur/pages/ErpPurOrder/main.page.yaml');
+ *   console.log(dump.file);  // /tmp/e2e-page-schema-<ts>.json
+ *
+ * @param schemaPath page.yaml 的虚拟路径
+ * @param outFile    可选，自定义输出路径；默认 /tmp/e2e-page-schema-<时间戳>.json
+ */
+export async function dumpPageSchemaToFile(
+  page: Page,
+  schemaPath: string,
+  outFile?: string,
+): Promise<PageSchemaDump> {
+  const result = await probeRpc(page, 'PageProvider__getPage', { path: schemaPath });
+  const data = (result.data ?? {}) as Record<string, unknown>;
+  const file = outFile
+    ? path.resolve(outFile)
+    : resolveDebugFile(
+        `page-schema-${schemaPath.replace(/[^a-zA-Z0-9]/g, '_').slice(-60)}-${Date.now()}.json`,
+      );
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+
+  const bodyTypes = new Set<string>();
+  const walk = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      node.forEach(walk);
+      return;
+    }
+    if (node && typeof node === 'object') {
+      const obj = node as Record<string, unknown>;
+      if (typeof obj.type === 'string') bodyTypes.add(obj.type);
+      for (const v of Object.values(obj)) walk(v);
+    }
+  };
+  walk((data as { body?: unknown }).body);
+
+  const rpcWrapper = data as { code?: string | null; msg?: string | null };
+  return {
+    file,
+    schemaPath,
+    bytes: fs.statSync(file).size,
+    topKeys: Object.keys(data),
+    code: rpcWrapper.code ?? null,
+    msg: rpcWrapper.msg ?? null,
+    bodyTypes: Array.from(bodyTypes).sort(),
+  };
+}
+
+export interface InnerHTMLDump {
+  /** 保存的文件绝对路径 */
+  file: string;
+  /** innerHTML 字节数 */
+  bytes: number;
+  /** scope 范围内 data-slot 元素数（flux 语义锚点） */
+  slotCount: number;
+  /** scope 范围内 data-renderer 元素数 */
+  rendererCount: number;
+  /** scope 范围内 data-field 元素数（按字段名定位用） */
+  fieldCount: number;
+}
+
+/**
+ * 读取页面（或指定 scope）的 innerHTML 并保存到临时文件。
+ *
+ * 用于：按 name / id / data-field / data-renderer / data-slot / class 等稳定属性，
+ * 从真实 DOM 离线定位元素，而不是猜测 CSS selector。点击按钮、打开弹窗等
+ * 交互后调用，可对照渲染结果与 schema 期望。
+ *
+ * 用法：
+ *   // 全页
+ *   await dumpInnerHTMLToFile(page);
+ *   // 限定 dialog 范围
+ *   await dumpInnerHTMLToFile(page, '[data-slot="dialog-surface"]');
+ *
+ * @param page
+ * @param scopeSelector 可选 CSS selector 限定根元素；默认 document.body
+ * @param outFile       可选输出路径；默认 /tmp/e2e-innerhtml-<时间戳>.html
+ */
+export async function dumpInnerHTMLToFile(
+  page: Page,
+  scopeSelector?: string,
+  outFile?: string,
+): Promise<InnerHTMLDump> {
+  const data = await page.evaluate((sel) => {
+    const root = (sel ? document.querySelector(sel) : document.body) ?? document.body;
+    const html = root.innerHTML;
+    return {
+      html,
+      slotCount: root.querySelectorAll('[data-slot]').length,
+      rendererCount: root.querySelectorAll('[data-renderer]').length,
+      fieldCount: root.querySelectorAll('[data-field]').length,
+    };
+  }, scopeSelector);
+  const file = outFile
+    ? path.resolve(outFile)
+    : resolveDebugFile(
+        `innerhtml-${scopeSelector ? scopeSelector.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 30) + '-' : ''}${Date.now()}.html`,
+      );
+  fs.writeFileSync(file, data.html);
+  return {
+    file,
+    bytes: data.html.length,
+    slotCount: data.slotCount,
+    rendererCount: data.rendererCount,
+    fieldCount: data.fieldCount,
+  };
 }

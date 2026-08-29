@@ -85,6 +85,15 @@ export {
 export { validateMenuResponse } from './utils/menuConfig';
 
 export {
+  HOST_API_VERSION,
+  compareApiVersions,
+  isApiVersion,
+  satisfiesMinApiVersion,
+} from './version';
+
+export { SHARED_MODULE_NAMES } from './plugins/sharedModuleNames';
+
+export {
   matchMenuPath,
   flattenMenus,
   findMenuItemByPath,

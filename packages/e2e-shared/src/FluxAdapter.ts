@@ -18,11 +18,14 @@ export class FluxAdapter implements EngineAdapter {
     return page.locator('[data-slot="table-body"] tr[data-slot="table-row"]');
   }
 
-  async cellValue(row: Locator, fieldName: string, columnHeaders: string[]): Promise<string> {
-    const index = columnHeaders.indexOf(fieldName);
-    if (index === -1) return '';
-    const cell = row.locator(`td:nth-child(${index + 1})`);
-    return ((await cell.textContent()) ?? '').trim();
+  async cellValue(row: Locator, fieldName: string, _columnHeaders: string[]): Promise<string> {
+    // 契约（flux-guide 13-testing.md "字段定位契约"）：表格单元格 td[data-field="colName"]。
+    // 按列名直读，替代 td:nth-child(N) + 占位空表头的列索引偏移修正。
+    const cell = row.locator(`td[data-field="${fieldName}"]`).first();
+    if (await cell.count().then((c) => c > 0)) {
+      return ((await cell.textContent()) ?? '').trim();
+    }
+    return '';
   }
 
   addButton(page: Page): Locator {
@@ -40,12 +43,29 @@ export class FluxAdapter implements EngineAdapter {
   }
 
   async rowAction(row: Locator, actionNamePattern: RegExp): Promise<void> {
+    const page = row.page();
     const actionContainer = row.locator('[data-slot="table-actions"]').first();
     const button = actionContainer.getByRole('button').filter({ hasText: actionNamePattern }).first();
     if (await button.count().then((c) => c > 0)) {
       await button.click();
       return;
     }
+
+    // 操作在"更多"下拉菜单中 → 展开 dropdown，点击菜单项
+    const moreButton = row.getByRole('button').filter({ hasText: /更多|More/ }).first();
+    if (await moreButton.count().then((c) => c > 0)) {
+      await moreButton.click();
+      await page.waitForTimeout(300);
+      const menuItem = page
+        .locator('[data-slot="dropdown-menu-item"], [role="menuitem"]')
+        .filter({ hasText: actionNamePattern })
+        .first();
+      if (await menuItem.count().then((c) => c > 0)) {
+        await menuItem.click();
+        return;
+      }
+    }
+
     const fallback = row.getByRole('button').filter({ hasText: actionNamePattern }).first();
     await fallback.click();
   }
@@ -53,9 +73,12 @@ export class FluxAdapter implements EngineAdapter {
   // ── CRUD 搜索 ──
 
   searchField(page: Page, fieldName: string): Locator {
+    // 契约：查询表单字段也是 wrap 字段，带 data-field；回退旧结构
     return page
       .locator('[data-slot="crud-query"]')
-      .locator(`input[name="${fieldName}"], #${fieldName}-control`)
+      .locator(
+        `[data-field="${fieldName}"] input, [data-field="${fieldName}"] textarea, input[name="${fieldName}"], #${fieldName}-control`,
+      )
       .first();
   }
 
@@ -84,9 +107,16 @@ export class FluxAdapter implements EngineAdapter {
   }
 
   formField(dialog: Locator, fieldName: string): Locator {
-    return dialog.locator(
-      `input[name="${fieldName}"], textarea[name="${fieldName}"], #${fieldName}-control`,
-    );
+    // 契约（flux-guide 13-testing.md）：字段根 .nop-field[data-field="name"]，
+    // 含 checkbox/switch（它们的 ${name}-control id 不在 interactive 元素上）。
+    return dialog.locator(`[data-field="${fieldName}"]`).first();
+  }
+
+  /** 按字段根 data-renderer 读取控件类型（契约属性，确定性分派）。 */
+  private async fieldRendererType(field: Locator): Promise<string | undefined> {
+    if (await field.count().then((c) => c === 0)) return undefined;
+    const type = await field.getAttribute('data-renderer').catch(() => undefined);
+    return type ?? undefined;
   }
 
   async setFieldValue(
@@ -97,21 +127,69 @@ export class FluxAdapter implements EngineAdapter {
     const page = dialog.page();
     const strValue = String(value);
 
-    // 1. Boolean → Checkbox / Switch
+    // ── 主路径：字段根 [data-field] + data-renderer 分派（契约） ──
+    const field = this.formField(dialog, fieldName);
+    const rendererType = await this.fieldRendererType(field);
+
+    if (rendererType !== undefined) {
+      if (typeof value === 'boolean') {
+        // checkbox / switch：点击 interactive 元素切换 aria-checked
+        const toggle = field
+          .locator('[data-slot="checkbox"], [data-slot="switch"]')
+          .first();
+        if (await toggle.count().then((c) => c > 0)) {
+          const checked = await toggle.getAttribute('aria-checked');
+          if ((checked === 'true') !== value) {
+            await toggle.click();
+            await page.waitForTimeout(300);
+          }
+          return;
+        }
+      }
+
+      if (rendererType === 'select') {
+        // select：点击 trigger 展开，按 data-value 精确选择选项
+        await this.clickSelectOption(page, field, strValue);
+        return;
+      }
+
+      // 其余 input 类控件（input-text / textarea / input-number / ...）：
+      // fill 触发 React onChange → form store 更新
+      const input = field.locator('input:not([type="checkbox"]):not([type="radio"]), textarea').first();
+      if (await input.count().then((c) => c > 0)) {
+        await input.fill(strValue);
+        return;
+      }
+
+      // 无 input/textarea（如只读视图）→ 尝试 textContent 写入
+      await field.click().catch(() => {});
+      return;
+    }
+
+    // ── 回退路径：无 data-field（旧 bundle / 非 wrap 字段） ──
+    await this.setFieldValueLegacy(dialog, fieldName, value);
+  }
+
+  /** 旧 DOM 结构回退（data-slot / ${name}-control / combobox label 匹配）。 */
+  private async setFieldValueLegacy(
+    dialog: Locator,
+    fieldName: string,
+    value: string | boolean | number,
+  ): Promise<void> {
+    const page = dialog.page();
+    const strValue = String(value);
+
     if (typeof value === 'boolean') {
-      // Flux checkbox: button[data-slot="checkbox"] with id
-      const checkbox = dialog.locator(
-        `button[data-slot="checkbox"][id="${fieldName}-control"]`,
-      ).first();
+      const checkbox = dialog
+        .locator(`#${fieldName}-control-label [data-slot="checkbox"][role="checkbox"]`)
+        .first();
       if (await checkbox.count().then((c) => c > 0)) {
         const ariaChecked = await checkbox.getAttribute('aria-checked');
         if ((ariaChecked === 'true') !== value) await checkbox.click();
         return;
       }
-      // Flux switch: Base UI renders <span role="switch"> + hidden <input type="checkbox" id="name-control">
-      // The span has aria-checked; click toggles via synthetic event on hidden input
       const switchEl = dialog
-        .locator(`[data-slot="switch-wrapper"]:has(#${fieldName}-control) [role="switch"]`)
+        .locator(`#${fieldName}-control-label [data-slot="switch"][role="switch"]`)
         .first();
       if (await switchEl.count().then((c) => c > 0)) {
         const ariaChecked = await switchEl.getAttribute('aria-checked');
@@ -123,46 +201,111 @@ export class FluxAdapter implements EngineAdapter {
       }
     }
 
-    // 2. Native input / textarea (skip buttons and checkboxes)
-    const nativeField = this.formField(dialog, fieldName);
+    const nativeField = dialog
+      .locator(`input[name="${fieldName}"], textarea[name="${fieldName}"], #${fieldName}-control`)
+      .first();
     if (await nativeField.count().then((c) => c > 0)) {
       const tagName = await nativeField.evaluate((el: Element) => el.tagName);
       const inputType = await nativeField
         .evaluate((el: Element) => (el as HTMLInputElement).type)
         .catch(() => '');
-      if (tagName === 'INPUT' && inputType !== 'checkbox' && inputType !== 'radio') {
-        await nativeField.first().fill(strValue);
+      const isInsideCombobox = await nativeField
+        .evaluate((el: Element) => !!el.closest('[role="combobox"]'))
+        .catch(() => false);
+      if (tagName === 'INPUT' && inputType !== 'checkbox' && inputType !== 'radio' && !isInsideCombobox) {
+        await nativeField.fill(strValue);
         return;
       }
       if (tagName === 'TEXTAREA') {
-        await nativeField.first().fill(strValue);
+        await nativeField.fill(strValue);
         return;
       }
       if (tagName === 'SELECT') {
         await nativeField.selectOption({ label: strValue });
         return;
       }
-      // tagName === 'BUTTON' or input[type=checkbox/radio] → fall through to combobox
     }
 
-    // 3. Combobox (Flux Select)
-    const selectWrapper = dialog.locator(
-      `[data-slot="select-wrapper"]`,
-    ).filter({ has: page.locator(`#${fieldName}-control, [name="${fieldName}"]`) }).first();
-    const comboboxTrigger = selectWrapper.locator('[data-slot="combobox-trigger"]').first();
-    if (await comboboxTrigger.count().then((c) => c > 0)) {
-      await comboboxTrigger.click();
-      await page.waitForTimeout(300);
-      const option = page.locator('[data-slot="combobox-item"]').filter({ hasText: strValue }).first();
-      await option.click();
-      return;
+    const comboTrigger = dialog.locator(`#${fieldName}-control`).first();
+    if (await comboTrigger.count().then((c) => c > 0)) {
+      await comboTrigger.click();
+      await page.waitForTimeout(400);
+      if (await this.clickVisibleComboboxItem(page, strValue)) {
+        await page.waitForTimeout(300);
+        return;
+      }
+      await comboTrigger.click();
+      await page.waitForTimeout(400);
+      if (await this.clickVisibleComboboxItem(page, strValue)) {
+        await page.waitForTimeout(300);
+        return;
+      }
     }
 
-    // 4. Fallback: try fill on getByLabel
     const labelField = dialog.getByLabel(fieldName);
     if (await labelField.count().then((c) => c > 0)) {
       await labelField.fill(strValue).catch(() => {});
     }
+  }
+
+  /**
+   * 契约：select 选项 [data-slot="combobox-item"][data-value="..."]] 按 value 精确选择。
+   * 用原生 DOM click 绕过 Playwright 在 Base UI combobox-item 上的 actionability 超时。
+   */
+  private async clickSelectOption(page: Page, field: Locator, value: string): Promise<void> {
+    const trigger = field
+      .locator('[data-slot="combobox-trigger"], [role="combobox"]')
+      .first();
+    if (await trigger.count().then((c) => c === 0)) return;
+    await trigger.click();
+    await page.waitForTimeout(400);
+
+    const clicked = await page.evaluate((val: string) => {
+      const items = Array.from(
+        document.querySelectorAll('[data-slot="combobox-item"][data-value]'),
+      );
+      for (const it of items) {
+        const r = it.getBoundingClientRect();
+        if (r.width <= 0 || r.height <= 0) continue;
+        if (it.getAttribute('data-value') === val) {
+          (it as HTMLElement).click();
+          return true;
+        }
+      }
+      return false;
+    }, value);
+
+    if (!clicked) {
+      // 回退：按文本匹配（value-label 字典格式）
+      await this.clickVisibleComboboxItem(page, value);
+      await page.waitForTimeout(300);
+    }
+  }
+
+  /**
+   * 在已展开的 combobox 弹出层中，按 value 匹配**可见**的选项并原生 click。
+   *
+   * 真相（契约）：combobox-item 文本 = option.label（非 value），无 data-value。
+   * dict 选项文本常为 `value-label` 格式（如 "1-男"）。必须只点击真正可见（有非零尺寸）
+   * 的选项，跳过隐藏的 selected-value tracker。
+   *
+   * 匹配优先级：文本完全等于 value > 以 `${value}-` 开头（value-label 字典格式）> 包含 value。
+   * 用原生 DOM click 绕过 Playwright 在 Base UI combobox-item 上的 actionability 超时。
+   */
+  async clickVisibleComboboxItem(page: Page, value: string): Promise<boolean> {
+    return page.evaluate((val: string) => {
+      const items = Array.from(document.querySelectorAll('[data-slot="combobox-item"]'));
+      for (const it of items) {
+        const r = it.getBoundingClientRect();
+        if (r.width <= 0 || r.height <= 0) continue;
+        const text = (it.textContent || '').trim();
+        if (text === val || text.startsWith(`${val}-`) || text.includes(val)) {
+          (it as HTMLElement).click();
+          return true;
+        }
+      }
+      return false;
+    }, value);
   }
 
   submitButton(dialog: Locator): Locator {
@@ -180,6 +323,47 @@ export class FluxAdapter implements EngineAdapter {
       const fieldKey = fieldLabels[i];
       const optionText = optionTexts[i] ?? optionTexts[optionTexts.length - 1];
 
+      // 契约：按字段根 [data-field] + combobox-item 文本/值选择
+      const field = this.formField(dialog, fieldKey);
+      if (await field.count().then((c) => c > 0)) {
+        const trigger = field
+          .locator('[data-slot="combobox-trigger"], [role="combobox"]')
+          .first();
+        await trigger.click();
+        await page.waitForTimeout(300);
+
+        // 先按 data-value 精确匹配（契约），失败回退文本匹配
+        const clicked = await page.evaluate((val: string) => {
+          const items = Array.from(
+            document.querySelectorAll('[data-slot="combobox-item"][data-value]'),
+          );
+          for (const it of items) {
+            const r = it.getBoundingClientRect();
+            if (r.width <= 0 || r.height <= 0) continue;
+            if (it.getAttribute('data-value') === val) {
+              (it as HTMLElement).click();
+              return true;
+            }
+          }
+          return false;
+        }, optionText);
+
+        if (!clicked) {
+          const option = page
+            .locator('[data-slot="combobox-item"]')
+            .filter({ hasText: optionText })
+            .first();
+          await option.waitFor({ state: 'visible', timeout: 3000 });
+          await option.click();
+        }
+
+        if (i < fieldLabels.length - 1) {
+          await page.waitForTimeout(500);
+        }
+        continue;
+      }
+
+      // 回退：select-wrapper + #key-control
       const selectWrapper = dialog
         .locator('[data-slot="select-wrapper"]')
         .filter({ has: page.locator(`#${fieldKey}-control, [name="${fieldKey}"]`) })
@@ -208,9 +392,14 @@ export class FluxAdapter implements EngineAdapter {
   // ── 只读字段 ──
 
   async staticFieldValue(dialog: Locator, fieldName: string): Promise<string> {
-    const field = dialog.locator(`#${fieldName}-control`).first();
+    // 契约：字段根 [data-field]，只读视图字段渲染为静态文本
+    const field = dialog.locator(`[data-field="${fieldName}"]`).first();
     if (await field.count().then((c) => c > 0)) {
       return ((await field.textContent()) ?? '').trim();
+    }
+    const legacy = dialog.locator(`#${fieldName}-control`).first();
+    if (await legacy.count().then((c) => c > 0)) {
+      return ((await legacy.textContent()) ?? '').trim();
     }
     return '';
   }
