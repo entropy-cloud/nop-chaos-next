@@ -102,6 +102,29 @@ function argValue(data: Record<string, unknown>, arg: ArgumentDefinition) {
   return data[arg.name];
 }
 
+// flux 模式的 CRUD loadAction 会把 queryForm 原始字段名（filter_X__op）整体放进
+// data.query（scope 投影 includeScope:'*'），与顶层 filter_* 等价。
+// 这里对 data.query 内部嵌套的 filter_* 键做同样的 TreeBean 转换并从 query 中移除，
+// 保证到达后端的结构与顶层 filter_* 一致（query.filter + 无残留 filter_* 键）。
+// 与 apps/main/src/services/nopRpcResolver.ts 的 normalizeNestedFilters 保持同步。
+
+function normalizeNestedFilters(
+  query: Record<string, unknown>,
+  options: AmisRequestOptions,
+): Record<string, unknown> | undefined {
+  // options.filter（显式附加过滤）只在顶层 toFilter 中合并一次，避免嵌套转换时重复
+  const nestedOptions = { ...options, filter: undefined };
+  const nested = toFilter(query, nestedOptions);
+  if (nested) {
+    for (const key of Object.keys(query)) {
+      if (key.startsWith('filter_')) {
+        delete query[key];
+      }
+    }
+  }
+  return nested;
+}
+
 function argQuery(
   data: Record<string, unknown>,
   _arg: ArgumentDefinition,
@@ -110,6 +133,7 @@ function argQuery(
   const sourceQuery = isPlainObject(data.query) ? data.query : {};
   const query: Record<string, unknown> = { ...sourceQuery };
 
+  const nestedFilter = normalizeNestedFilters(query, options);
   query.limit = query.limit ?? data.limit ?? data.pageSize ?? data.perPage ?? 0;
 
   const limit = typeof query.limit === 'number' ? query.limit : Number(query.limit || 0);
@@ -117,7 +141,7 @@ function argQuery(
 
   query.offset = query.offset ?? data.offset ?? (limit > 0 && page > 0 ? limit * (page - 1) : 0);
   query.orderBy = query.orderBy ?? toOrderBy(data.orderBy ?? data.orderField, data.orderDir);
-  query.filter = mergeFilter(query.filter, toFilter(data, options));
+  query.filter = mergeFilter(query.filter, mergeFilter(nestedFilter, toFilter(data, options)));
   query.cursor = query.cursor ?? data.cursor;
   query.timeout = query.timeout ?? data.timeout;
 

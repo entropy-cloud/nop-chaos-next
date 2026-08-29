@@ -216,6 +216,56 @@ describe('defaultArgBuilders', () => {
       );
       expect(result).toMatchObject({ orderBy: [{ name: 'name', desc: true }] });
     });
+
+    it('converts filter_XX nested inside query (flux shape) to TreeBean and removes residual keys', () => {
+      const result = defaultArgBuilders.QueryBeanInput!(
+        {
+          query: {
+            filter_status__eq: '1',
+            filter_userName__contains: 'john',
+          },
+          limit: 10,
+        },
+        { name: 'query', type: 'QueryBeanInput' },
+        opts,
+      );
+      expect(result).toMatchObject({
+        limit: 10,
+        filter: {
+          $body: [
+            { $type: 'eq', name: 'status', value: '1' },
+            { $type: 'contains', name: 'userName', value: 'john' },
+          ],
+        },
+      });
+      const query = result as Record<string, unknown>;
+      expect(Object.keys(query)).not.toContain('filter_status__eq');
+      expect(Object.keys(query)).not.toContain('filter_userName__contains');
+      expect(Object.keys(query)).toContain('filter');
+    });
+
+    it('merges nested query filter_XX with existing query.filter', () => {
+      const result = defaultArgBuilders.QueryBeanInput!(
+        {
+          query: {
+            filter: { $type: 'and', $body: [{ $type: 'eq', name: 'deptId', value: 10 }] },
+            filter_status__eq: '1',
+          },
+        },
+        { name: 'query', type: 'QueryBeanInput' },
+        opts,
+      );
+      expect(result).toMatchObject({
+        filter: {
+          $body: [
+            { $type: 'and', $body: [{ $type: 'eq', name: 'deptId', value: 10 }] },
+            { $type: 'and', $body: [{ $type: 'eq', name: 'status', value: '1' }] },
+          ],
+        },
+      });
+      const query = result as Record<string, unknown>;
+      expect(Object.keys(query)).not.toContain('filter_status__eq');
+    });
   });
 });
 
