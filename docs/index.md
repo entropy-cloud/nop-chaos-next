@@ -27,6 +27,7 @@ This `docs/` tree is the durable memory and routing surface for `nop-chaos-next`
 | Start or review non-trivial execution                           | `docs/plans/00-plan-authoring-and-execution-guide.md` | the active plan and latest log entry                                         |
 | Understand mission-driven workflow                              | `docs/backlog/e2e-upgrade-roadmap.md`                 | `missions/e2e-upgrade.json`                                                   |
 | Review recent implementation history                            | `docs/logs/index.md`                                  | the latest dated log file                                                    |
+| Develop or debug an extension without host source               | `docs/design/extension-development-guide.md`          | `docs/design/extension-system.md`, `packages/extension-dev/README.md`        |
 | Look up a past subtle regression                                | `docs/bugs/00-bug-fix-note-writing-guide.md`          | the relevant file in `docs/bugs/`                                            |
 | Check build and setup workflow                                  | `docs/references/build-guide.md`                      | the relevant design/spec file                                                |
 | Record or review testing notes                                  | `docs/testing/index.md`                               | the relevant dated testing note                                              |

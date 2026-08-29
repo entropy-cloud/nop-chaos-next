@@ -344,7 +344,7 @@ Extension 可作为 workspace 包直接被宿主加载。
 
 有两种常用方式：
 
-- 远程 ESM 模式：`entry` 指向业务仓库 dev server 暴露的 ESM 地址
+- 远程 SystemJS/ESM 模式：`entry` 指向业务仓库暴露的产物地址（SystemJS bundle 或 ESM）
 - 本地 alias 模式：宿主通过 `VITE_DEMO_EXTENSION_ALIAS_PATH` 把 `@demo-extension` 指向外部目录源码入口
 
 示例：
@@ -363,9 +363,9 @@ VITE_DEMO_EXTENSION_ALIAS_PATH=../external-extension/src/index.ts
 
 ### 7.3 生产部署
 
-- Extension 输出稳定 ESM 文件
-- 插件页面继续输出 `*.system.js`
-- Source 列表来自静态配置或后端
+- Extension 构建为 **标准 ESM bundle**（`assets/index.js`），把 `SHARED_MODULE_NAMES` 全部 external（保留裸名 import）；宿主构建后由 `scripts/build-nop-shared.mjs` 生成原生 `<script type="importmap">` 与 `nop-shared/<name>.mjs` facade（转发 `__NOP_SHARED__` 宿主实例，导出构建期自动枚举），扩展经 `import()` 加载时共享名解析到宿主同一实例（避免双 React）。`.system.js` 旧入口仍被兼容（`packages/extension-host` 保留 SystemJS 分支）。
+- Source 列表来自静态配置或后端。
+- 完整的「无宿主源码」开发/调试/打包流程见 [extension-development-guide.md](./extension-development-guide.md)；生产构建统一使用官方工具 `nop-extension-dev build`（`packages/extension-dev`）。
 
 ### 7.4 Extension Manifest（`extension.json`）
 
@@ -553,12 +553,13 @@ Java `IndexHtmlProvider` 当前 `appendExtensionHtml()` 实现（截至 2026-08-
 | 文件                                         | 用途           |
 | -------------------------------------------- | -------------- |
 | `packages/shared/src/types/extension.ts`     | 类型定义       |
+| `packages/shared/src/version.ts`             | HOST_API_VERSION 契约 |
+| `packages/shared/src/plugins/sharedModuleNames.ts` | 共享模块名单（单一来源） |
 | `apps/main/src/extensions/config.ts`         | 扩展发现逻辑   |
-| `apps/main/src/extensions/loadExtensions.ts` | 加载逻辑       |
+| `packages/extension-host/src/loadExtensions.ts` | 加载逻辑（SystemJS/ESM 入口） |
 | `apps/main/src/extensions/bootstrap.ts`      | 启动引导       |
-| `apps/main/src/extensions/runtime.ts`        | 运行时配置     |
-| `apps/main/src/components/layout/SidebarUserMenu.tsx` | shell 外链消费 |
-| `apps/main/src/store/pluginStore.ts`         | extension plugin 合并后的宿主清单 |
-| `apps/main/src/extensions/demo/index.ts`     | 示例 extension |
-| `examples/extension-demo/vite.config.ts`     | 扩展构建配置（含 manifest 生成插件） |
+| `packages/extension-host/src/runtime.ts`     | 运行时配置     |
+| `packages/extension-dev`                     | 官方开发工具（构建/代理/静态服务/注入/userscript） |
+| `examples/extension-demo`                    | 示例 extension（SystemJS 构建） |
 | `scripts/sync-extension-demo.sh`             | 扩展产物同步脚本 |
+| `docs/design/extension-development-guide.md` | 无宿源码开发指南 |

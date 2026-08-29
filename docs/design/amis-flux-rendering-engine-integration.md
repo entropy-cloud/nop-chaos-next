@@ -342,6 +342,19 @@ import { createFluxSchemaRenderer, registerFluxRenderers } from '@nop-chaos/flux
 5. Flux CSS 应由 facade 输出为编译后的 CSS，由 `apps/main/src/flux/init.ts` 统一 import 一次；避免依赖主项目 Tailwind 扫描 Flux 源码。
 6. Flux 全局样式应限制在 `.flux` 根、CSS layer 或主题 token 范围内，避免影响 AMIS、Shell 和普通页面。
 
+### 8.1 Flux 主题变量契约（host 可覆盖的 CSS 变量）
+
+Flux 渲染器在样式基线中消费少量宿主可覆盖的 CSS 变量（`--space-*`、`--radius-*`、`--field-label-width` 等）。契约规则：
+
+| 变量 | 消费方（flux 上游） | 宿主定义位置 | 取值 |
+| --- | --- | --- | --- |
+| `--field-label-width` | `flux-react/src/default-spacing.css`：横向 label（`data-label-align='left'/'right'`）`width: var(--field-label-width, auto)` | `apps/main/src/styles/index.css` `:root` | `96px` |
+
+- fallback 为 `auto`：宿主未定义该变量时，label 宽度回退为 flex 自然宽度（与变量引入前行为一致）。
+- 宿主取值**不得**写入 `packages/theme-tokens/src/styles.css`——该目录会经 `scripts/sync-flux-lib.sh` 从 `nop-chaos-flux` 单向覆盖；宿主可覆盖值一律放 host 自有样式（如 `apps/main/src/styles/index.css`）。
+- 契约锁定测试：上游 `nop-chaos-flux/packages/flux-react/src/__tests__/default-spacing-contract.test.ts`（断言规则与 fallback）；宿主 `apps/main/src/styles/themeContract.test.ts`（断言 host 定义值 + bundle `dist/style.css` 与 `flux-spacing.css` 副本引用同一变量名）。
+- `flux-spacing.css` 是上游 `default-spacing.css` 的宿主侧同步副本，变量契约规则必须与上游保持一致，避免漂移。
+
 ---
 
 ## 9. `flux-lib` 处理策略
