@@ -410,6 +410,16 @@
     "allPublicMethods": true,
     "fields": [],
     "methods": [],
+    "name": "io.nop.api.core.exceptions.NopScriptError"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [],
     "name": "io.nop.api.core.json.IJsonString"
   },
   {
@@ -3452,6 +3462,21 @@
       }
     ],
     "name": "io.nop.core.resource.impl.DelegateResource"
+  },
+  {
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "fields": [],
+    "methods": [
+      {
+        "name": "internalObj",
+        "parameterTypes": []
+      }
+    ],
+    "name": "io.nop.core.resource.impl.URLResource"
   },
   {
     "allDeclaredConstructors": true,
