@@ -44,6 +44,20 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    files: ['packages/extension-dev/**/*.{js,mjs}'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      globals: {
+        ...globals.node,
+        fetch: 'readonly',
+      },
+    },
+    rules: {
+      // Tooling package is plain ESM JS (zero-build Node CLI); keep it light.
+      'no-console': 'off',
+    },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     settings: {
       react: {

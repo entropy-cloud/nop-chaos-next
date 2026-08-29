@@ -28,3 +28,12 @@ apps/*/src/**/*.d.ts
 apps/*/src/**/*.js.map
 _dump/
 pnpm-lock.yaml.bak
+
+# local SDK registry artifacts
+tools/verdaccio/storage/
+tools/verdaccio/htpasswd
+tools/verdaccio/plugins/
+
+# extension-dev local pack/output caches
+.cache/
+examples/extension-demo-external/sdks/
