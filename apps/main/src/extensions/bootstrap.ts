@@ -1,11 +1,15 @@
 import { resetTokenStorage, setAuthConfig, type PluginManifest } from '@nop-chaos/shared'
 import type { ExtensionLogger, LoadedExtension } from '@nop-chaos/shared'
+import {
+  HOST_API_VERSION,
+  satisfiesMinApiVersion
+} from '@nop-chaos/shared'
 import { loadExtensions, registerPageTransformer, resolveShellRuntimeConfig, setLoadedExtensions, setShellRuntimeConfig } from '@nop-chaos/extension-host'
 import i18n, { initializeI18n } from '../config/i18n'
 import { registerLanguages, resetLanguages, setDefaultLanguage } from '../config/i18n/languages'
 import { getShellProfile, applyExtensionProfileOverrides } from '../config/profile'
 import { registerThemes } from '../config/themeRegistry'
-import { registerHostSharedModules } from '../plugins/sharedModules'
+import { registerBaseSharedModules } from '../plugins/sharedModules'
 import { registerBuiltinPages } from '../router/pageRegistry'
 import { mainHttpClient } from '../services/http'
 import { mergePluginManifests, usePluginStore } from '../store/pluginStore'
@@ -85,12 +89,39 @@ function applyDocumentBranding(loaded: LoadedExtension[]) {
   }
 }
 
+/**
+ * Runtime hook for extension developers: `window.__NOP_HOST_API_VERSION__`
+ * exposes the host API contract version (see `HOST_API_VERSION`) so
+ * extensions and tooling can verify compatibility without host source.
+ */
+export const HOST_API_VERSION_GLOBAL = '__NOP_HOST_API_VERSION__'
+
+function exposeHostApiVersion(): void {
+  ;(globalThis as typeof globalThis & Record<string, unknown>)[HOST_API_VERSION_GLOBAL] =
+    HOST_API_VERSION
+}
+
+function verifyExtensionApiVersion(extension: { id: string; minHostApiVersion?: string }): void {
+  if (!extension.minHostApiVersion) {
+    return
+  }
+
+  if (!satisfiesMinApiVersion(HOST_API_VERSION, extension.minHostApiVersion)) {
+    logger.warn(
+      `[extensions] '${extension.id}' requires host API version >= ${extension.minHostApiVersion}, ` +
+        `but this host provides ${HOST_API_VERSION}. The extension may not work correctly.`
+    )
+  }
+}
+
 function applyExtensionDefinitions(loaded: LoadedExtension[]) {
   resetLanguages()
 
   const extensionPlugins: PluginManifest[] = []
 
   for (const { source, extension } of loaded) {
+    verifyExtensionApiVersion(extension)
+
     if (extension.auth) {
       setAuthConfig(extension.auth)
       resetTokenStorage()
@@ -205,7 +236,8 @@ export async function bootstrapExtensions(): Promise<LoadedExtension[]> {
   }
 
   bootstrapPromise = (async () => {
-  registerHostSharedModules()
+  registerBaseSharedModules()
+  exposeHostApiVersion()
 
   const sources = getExtensionSources()
 

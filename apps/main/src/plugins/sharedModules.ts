@@ -14,6 +14,16 @@ import * as SharedLib from '@nop-chaos/shared';
 import * as PluginBridgeLib from '@nop-chaos/plugin-bridge';
 import { registerSharedModules } from '@nop-chaos/core';
 import * as UiLib from '@nop-chaos/ui';
+// Rendering engines: extensions must reuse the host instances — the host flux
+// env is wired to the host http adapter/auth, and amis-core's renderer
+// registry is a global singleton (a second copy breaks custom renderers).
+import * as FluxLib from '@nop-chaos/flux';
+import * as AmisLib from 'amis';
+import * as AmisCoreLib from 'amis-core';
+import * as AmisUiLib from 'amis-ui';
+import * as AmisFormulaLib from 'amis-formula';
+
+const SHARED_MODULE_NAMES = SharedLib.SHARED_MODULE_NAMES;
 
 declare global {
   var __NOP_SHARED__: Record<string, unknown> | undefined;
@@ -22,7 +32,13 @@ declare global {
 const { setAuthConfig: _setAuthConfig, resetAuthConfig: _resetAuthConfig, setRefreshTokenFetcher: _setRefreshTokenFetcher, ...pluginSafeSharedLib } = SharedLib;
 const { setI18nGetter: _setI18nGetter, ...pluginSafeUiLib } = UiLib;
 
-const baseSharedModules = {
+/**
+ * Module namespace for every name in the canonical `SHARED_MODULE_NAMES`
+ * contract. Keys must match the contract exactly; drift is rejected at
+ * module initialization so the runtime registration can never disagree with
+ * the documented shared-module surface.
+ */
+const sharedModuleLibs: Record<string, unknown> = {
   react: ReactLib,
   'react-dom': ReactDOMLib,
   'react/jsx-dev-runtime': ReactJsxDevRuntimeLib,
@@ -37,7 +53,36 @@ const baseSharedModules = {
   'react-i18next': ReactI18NextLib,
   'lucide-react': LucideReactLib,
   sonner: SonnerLib,
+  '@nop-chaos/flux': FluxLib,
+  amis: AmisLib,
+  'amis-core': AmisCoreLib,
+  'amis-ui': AmisUiLib,
+  'amis-formula': AmisFormulaLib,
 };
+
+const baseSharedModules: Record<string, unknown> = {};
+
+for (const name of SHARED_MODULE_NAMES) {
+  const moduleRef = sharedModuleLibs[name];
+
+  if (moduleRef === undefined) {
+    throw new Error(
+      `Shared module '${name}' is missing from the host registration (contract drift: ` +
+        'every name in SHARED_MODULE_NAMES must be provided by the host)',
+    );
+  }
+
+  baseSharedModules[name] = moduleRef;
+}
+
+for (const name of Object.keys(sharedModuleLibs)) {
+  if (!SHARED_MODULE_NAMES.includes(name)) {
+    throw new Error(
+      `Shared module '${name}' is provided by the host but absent from SHARED_MODULE_NAMES ` +
+        '(contract drift: remove it from the host or extend the canonical list)',
+    );
+  }
+}
 
 let didRegisterBaseModules = false;
 let didRegisterPluginExtraModules = false;

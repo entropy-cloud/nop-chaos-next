@@ -23,6 +23,26 @@ vi.mock('../config/i18n', async () => {
   }
 })
 
+// Stub shared-module registration: the real implementation needs SystemJS +
+// window.location which the node test env does not provide. Seeding the
+// registry keeps the "shared modules registered before loading" assertions
+// meaningful.
+vi.mock('../plugins/sharedModules', () => {
+  function seedRegistry() {
+    const host = globalThis as typeof globalThis & { __NOP_SHARED__?: Record<string, unknown> }
+    host.__NOP_SHARED__ = {
+      ...(host.__NOP_SHARED__ ?? {}),
+      react: { __stubReact: true },
+      'react/jsx-runtime': { __stubJsxRuntime: true }
+    }
+  }
+
+  return {
+    registerHostSharedModules: vi.fn(seedRegistry),
+    registerBaseSharedModules: vi.fn(seedRegistry)
+  }
+})
+
 const { bootstrapExtensions } = await import('./bootstrap')
 
 function setRuntimeExtensionSources(sources?: ExtensionSource[]) {

@@ -90,4 +90,26 @@ describe('theme and styling contracts', () => {
     expect(itemsSection).toContain('getTableRowClassName');
     expect(existsSync(legacyHelperPath)).toBe(false);
   });
+
+  it('defines --field-label-width in host styles and consumes it in the flux bundle and host spacing copy', () => {
+    const indexCss = readRepoFile('apps', 'main', 'src', 'styles', 'index.css');
+    const hostSpacingCss = readRepoFile('apps', 'main', 'src', 'styles', 'flux-spacing.css');
+    const fluxBundleStyleCss = readRepoFile(
+      'apps',
+      'main',
+      'node_modules',
+      '@nop-chaos',
+      'flux',
+      'dist',
+      'style.css',
+    );
+
+    expect(indexCss).toContain('--field-label-width: 96px;');
+    expect(hostSpacingCss).toContain(
+      ".nop-field[data-label-align='left'] [data-slot='field-label']",
+    );
+    expect(hostSpacingCss).toContain('width: var(--field-label-width, auto);');
+    expect(hostSpacingCss).toContain('overflow-wrap: break-word;');
+    expect(fluxBundleStyleCss).toContain('width: var(--field-label-width, auto);');
+  });
 });

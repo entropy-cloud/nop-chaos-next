@@ -36,6 +36,7 @@
 }
 
 :root {
+  --field-label-width: 96px;
   --sidebar: hsl(var(--card));
   --sidebar-foreground: hsl(var(--foreground));
   --sidebar-primary: hsl(var(--primary));

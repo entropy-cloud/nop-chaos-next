@@ -6,6 +6,7 @@ const resetLanguagesMock = vi.fn();
 const setDefaultLanguageMock = vi.fn();
 const registerThemesMock = vi.fn();
 const registerHostSharedModulesMock = vi.fn();
+const registerBaseSharedModulesMock = vi.fn();
 const registerBuiltinPagesMock = vi.fn();
 const setPluginsMock = vi.fn();
 const getPluginsStateMock = vi.fn(() => []);
@@ -24,6 +25,7 @@ vi.mock('../config/themeRegistry', () => ({
 
 vi.mock('../plugins/sharedModules', () => ({
   registerHostSharedModules: () => registerHostSharedModulesMock(),
+  registerBaseSharedModules: () => registerBaseSharedModulesMock(),
 }));
 
 vi.mock('../router/pageRegistry', () => ({

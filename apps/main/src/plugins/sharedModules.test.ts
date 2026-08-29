@@ -1,5 +1,14 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+// The rendering engines (flux / amis family) touch browser globals at import
+// time; the tests below assert registration logic, not engine behaviour.
+vi.mock('@nop-chaos/flux', () => ({ __fluxStub: true }));
+vi.mock('amis', () => ({ __amisStub: true }));
+vi.mock('amis-core', () => ({ __amisCoreStub: true }));
+vi.mock('amis-ui', () => ({ __amisUiStub: true }));
+vi.mock('amis-formula', () => ({ __amisFormulaStub: true }));
+
 import {
   registerHostSharedModules,
   registerBaseSharedModules,
