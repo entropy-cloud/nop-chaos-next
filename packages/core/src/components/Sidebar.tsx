@@ -150,7 +150,10 @@ function SidebarItem({ item, activePath, expandedIds, collapsed, depth, onNaviga
   )
 
   return (
-    <div className="space-y-1" style={itemOffsetStyle}>
+    <div
+      className="space-y-1"
+      style={{ ...itemOffsetStyle, contentVisibility: 'auto', containIntrinsicSize: 'auto 2.5rem' }}
+    >
       <div className={buttonClassName}>
         {content}
         {hasChildren && !collapsed ? (
