@@ -197,6 +197,11 @@ function isIgnorableViolation(sourceChunk, importedChunk) {
     return true;
   }
 
+  // host-entry and host-runtime import main chunk for route registration
+  if (targetStem.startsWith('main-') && sourceStem.startsWith('host-')) {
+    return true;
+  }
+
   return false;
 }
 

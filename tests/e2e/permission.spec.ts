@@ -14,18 +14,18 @@ const restrictedSiteMapResponse = {
         meta: { sort: 1 },
       },
       {
-        id: 'plugins',
-        displayName: 'Plugins',
-        routePath: '/plugins',
-        component: 'plugins',
+        id: 'settings',
+        displayName: 'Settings',
+        routePath: '/settings',
+        component: 'settings',
         hidden: false,
         meta: { sort: 5 },
         children: [
           {
-            id: 'plugins-management',
-            displayName: 'Plugin Management',
-            routePath: '/plugins/management',
-            component: 'plugins/management',
+            id: 'settings-theme',
+            displayName: 'Theme Settings',
+            routePath: '/settings/theme',
+            component: 'settings/theme',
             hidden: false,
             meta: { roles: ['super-admin'] },
           },
@@ -48,21 +48,21 @@ const restrictedMenuResponse = {
       sort: 1,
     },
     {
-      id: 'plugins',
-      title: 'Plugins',
-      path: '/plugins',
-      icon: 'puzzle',
+      id: 'settings',
+      title: 'Settings',
+      path: '/settings',
+      icon: 'settings',
       pageType: 'builtin',
-      componentId: 'plugins-overview',
+      componentId: 'settings-home',
       sort: 5,
       children: [
         {
-          id: 'plugins-management',
-          title: 'Plugin Management',
-          path: '/plugins/management',
-          icon: 'plug-zap',
+          id: 'settings-theme',
+          title: 'Theme Settings',
+          path: '/settings/theme',
+          icon: 'palette',
           pageType: 'builtin',
-          componentId: 'plugins-management',
+          componentId: 'settings-theme',
           roles: ['super-admin'],
         },
       ],
@@ -95,12 +95,12 @@ test('permission routes hide restricted menus but reject direct URL access with 
 
   const navigation = page.locator('nav[aria-label="Primary navigation"]').first();
   await expect(navigation).toContainText('Dashboard');
-  await expect(navigation).toContainText('Plugins');
-  await expect(navigation).not.toContainText('Plugin Management');
+  await expect(navigation).toContainText('Settings');
+  await expect(navigation).not.toContainText('Theme Settings');
 
-  await page.goto('/#/plugins/management');
+  await page.goto('/#/settings/theme');
 
-  await expect(page).toHaveURL(/#\/plugins\/management$/);
+  await expect(page).toHaveURL(/#\/settings\/theme$/);
   await expect(page.getByText('Access denied')).toBeVisible();
   await expect(
     page.getByText('Your current role set does not permit access to this route.'),

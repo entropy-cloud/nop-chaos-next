@@ -192,7 +192,7 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     expect(titleStyle['font-size']).toBe('14px');
   });
 
-  test('ui primitives direct-consumption smoke (master-detail Table + AddressDialog, plugins DialogContent, flow-editor list)', async ({
+  test('ui primitives direct-consumption smoke (master-detail Table + AddressDialog, flow-editor list)', async ({
     page,
   }) => {
     await login(page, { username: 'admin', defaultPassword: '123456' });
@@ -209,19 +209,6 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     const addressDialog = page.locator('[data-slot="dialog-content"]');
     await expect(addressDialog).toBeVisible();
     await page.keyboard.press('Escape');
-
-    await page.getByRole('button', { name: /Plugin Management|插件管理/i }).click();
-    await expect(page).toHaveURL(/\/plugins\/management$/);
-    await expect(page.locator('main')).toBeVisible();
-    const pluginsDialogOpener = page
-      .locator('main')
-      .getByRole('button', { name: /New Plugin|新建/i })
-      .first();
-    if (await pluginsDialogOpener.isVisible().catch(() => false)) {
-      await pluginsDialogOpener.click();
-      await expect(page.locator('[data-slot="dialog-content"]').first()).toBeVisible();
-      await page.keyboard.press('Escape');
-    }
 
     await page.getByRole('button', { name: /Flow Library|流程列表/i }).first().click();
     await expect(page.locator('main')).toBeVisible();
