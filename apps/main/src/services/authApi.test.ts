@@ -16,6 +16,7 @@ describe('authApi', () => {
     vi.unstubAllEnvs();
     ajaxFetch.mockReset();
     ajaxQuery.mockReset();
+    nopRpcRequest.mockReset();
   });
 
   it('uses mock auth flow without backend HTTP when enabled', async () => {
@@ -73,19 +74,22 @@ describe('authApi', () => {
   });
 
   describe('real-path: fetchCurrentUser', () => {
-    it('calls ajaxQuery and normalizes the user', async () => {
+    it('calls nopRpcRequest and normalizes the user', async () => {
       vi.stubEnv('VITE_ENABLE_MOCK', 'false');
-      ajaxQuery.mockResolvedValue({
-        username: 'bob',
-        realname: 'Bob Real',
-        email: 'bob@test.com',
-        roles: [{ value: 'editor' }, { value: 'viewer' }],
+      nopRpcRequest.mockResolvedValue({
+        status: 0,
+        data: {
+          username: 'bob',
+          realname: 'Bob Real',
+          email: 'bob@test.com',
+          roles: [{ value: 'editor' }, { value: 'viewer' }],
+        },
       });
 
       const { fetchCurrentUser } = await import('./authApi');
       const user = await fetchCurrentUser('tok-123');
 
-      expect(ajaxQuery).toHaveBeenCalledOnce();
+      expect(nopRpcRequest).toHaveBeenCalledOnce();
       expect(user).toEqual({
         id: 'bob',
         username: 'bob',
@@ -98,10 +102,13 @@ describe('authApi', () => {
 
     it('normalizes user with userName and nickName fallbacks', async () => {
       vi.stubEnv('VITE_ENABLE_MOCK', 'false');
-      ajaxQuery.mockResolvedValue({
-        userName: 'u-name',
-        nickName: 'Nick',
-        roles: [],
+      nopRpcRequest.mockResolvedValue({
+        status: 0,
+        data: {
+          userName: 'u-name',
+          nickName: 'Nick',
+          roles: [],
+        },
       });
 
       const { fetchCurrentUser } = await import('./authApi');
@@ -114,7 +121,7 @@ describe('authApi', () => {
 
     it('normalizes user with unknown default when no username fields', async () => {
       vi.stubEnv('VITE_ENABLE_MOCK', 'false');
-      ajaxQuery.mockResolvedValue({ roles: [] });
+      nopRpcRequest.mockResolvedValue({ status: 0, data: { roles: [] } });
 
       const { fetchCurrentUser } = await import('./authApi');
       const user = await fetchCurrentUser('tok');
@@ -125,9 +132,12 @@ describe('authApi', () => {
 
     it('filters out falsy role values', async () => {
       vi.stubEnv('VITE_ENABLE_MOCK', 'false');
-      ajaxQuery.mockResolvedValue({
-        username: 'r',
-        roles: [{ value: 'admin' }, { value: '' }, { value: undefined }, { roleName: 'x' }],
+      nopRpcRequest.mockResolvedValue({
+        status: 0,
+        data: {
+          username: 'r',
+          roles: [{ value: 'admin' }, { value: '' }, { value: undefined }, { roleName: 'x' }],
+        },
       });
 
       const { fetchCurrentUser } = await import('./authApi');
@@ -138,7 +148,7 @@ describe('authApi', () => {
 
     it('returns empty roles when roles is not an array', async () => {
       vi.stubEnv('VITE_ENABLE_MOCK', 'false');
-      ajaxQuery.mockResolvedValue({ username: 'noroles' });
+      nopRpcRequest.mockResolvedValue({ status: 0, data: { username: 'noroles' } });
 
       const { fetchCurrentUser } = await import('./authApi');
       const user = await fetchCurrentUser('tok');
@@ -156,7 +166,7 @@ describe('authApi', () => {
         refreshToken: 'rt',
         refreshExpiresIn: 86400,
       });
-      ajaxQuery.mockResolvedValue({ username: 'deferred', roles: [] });
+      nopRpcRequest.mockResolvedValue({ status: 0, data: { username: 'deferred', roles: [] } });
 
       const { loginWithPassword } = await import('./authApi');
       const session = await loginWithPassword('deferred', 'pw');
@@ -217,20 +227,20 @@ describe('authApi', () => {
       const { logoutRequest } = await import('./authApi');
       await logoutRequest();
 
-      expect(ajaxQuery).not.toHaveBeenCalled();
+      expect(nopRpcRequest).not.toHaveBeenCalled();
     });
 
-    it('calls ajaxQuery with token when provided', async () => {
+    it('calls nopRpcRequest with token when provided', async () => {
       vi.stubEnv('VITE_ENABLE_MOCK', 'false');
-      ajaxQuery.mockResolvedValue(undefined);
+      nopRpcRequest.mockResolvedValue({ status: 0 });
 
       const { logoutRequest } = await import('./authApi');
       await logoutRequest('my-token');
 
-      expect(ajaxQuery).toHaveBeenCalledOnce();
-      const call = ajaxQuery.mock.calls[0];
-      expect(call[0]).toContain('logout');
-      expect(call[1]).toEqual({ accessToken: 'my-token' });
+      expect(nopRpcRequest).toHaveBeenCalledOnce();
+      const call = nopRpcRequest.mock.calls[0];
+      expect(call[0].url).toContain('logout');
+      expect(call[0].data).toEqual({ accessToken: 'my-token' });
     });
   });
 });

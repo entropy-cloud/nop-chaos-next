@@ -56,7 +56,7 @@ describe('fetchFluxDict', () => {
   it('calls nopRpcRequest with correct REST RPC endpoint in production mode', async () => {
     vi.stubEnv('VITE_ENABLE_MOCK', 'false');
     mockNopRpcRequest.mockResolvedValue({
-      ok: true,
+      status: 0,
       data: {
         name: 'role',
         options: [{ label: 'Admin', value: 'admin' }],

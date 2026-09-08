@@ -32,6 +32,7 @@ describe('pageApi', () => {
     mockI18n.language = 'zh-CN';
     mockAjaxFetch.mockReset();
     mockAjaxQuery.mockReset();
+    mockNopRpcRequest.mockReset();
     mockLoadSchemaAsset.mockReset();
 
     const { clearAmisPageCache } = await import('./pageApi');
@@ -39,36 +40,36 @@ describe('pageApi', () => {
   });
 
   it('caches backend page queries by locale and path', async () => {
-    mockAjaxQuery.mockResolvedValue({ type: 'page', body: [{ type: 'tpl', tpl: 'hello' }] });
+    mockNopRpcRequest.mockResolvedValue({ status: 0, data: { type: 'page', body: [{ type: 'tpl', tpl: 'hello' }] } });
     const { fetchAmisPage } = await import('./pageApi');
 
     const first = await fetchAmisPage('/pages/demo.page.yaml');
     const second = await fetchAmisPage('/pages/demo.page.yaml');
 
-    expect(mockAjaxQuery).toHaveBeenCalledTimes(1);
+    expect(mockNopRpcRequest).toHaveBeenCalledTimes(1);
     expect(first).toEqual(second);
     expect(first).not.toBe(second);
   });
 
   it('separates cached pages by locale', async () => {
-    mockAjaxQuery.mockResolvedValue({ type: 'page', body: [{ type: 'tpl', tpl: 'hello' }] });
+    mockNopRpcRequest.mockResolvedValue({ status: 0, data: { type: 'page', body: [{ type: 'tpl', tpl: 'hello' }] } });
     const { fetchAmisPage } = await import('./pageApi');
 
     await fetchAmisPage('/pages/demo.page.yaml');
     mockI18n.language = 'en-US';
     await fetchAmisPage('/pages/demo.page.yaml');
 
-    expect(mockAjaxQuery).toHaveBeenCalledTimes(2);
+    expect(mockNopRpcRequest).toHaveBeenCalledTimes(2);
   });
 
   it('does not keep failed backend queries in cache', async () => {
-    mockAjaxQuery.mockRejectedValueOnce(new Error('boom')).mockResolvedValueOnce({ type: 'page' });
+    mockNopRpcRequest.mockRejectedValueOnce(new Error('boom')).mockResolvedValueOnce({ status: 0, data: { type: 'page' } });
     const { fetchAmisPage } = await import('./pageApi');
 
     await expect(fetchAmisPage('/pages/demo.page.yaml')).rejects.toThrow('boom');
     await expect(fetchAmisPage('/pages/demo.page.yaml')).resolves.toEqual({ type: 'page' });
 
-    expect(mockAjaxQuery).toHaveBeenCalledTimes(2);
+    expect(mockNopRpcRequest).toHaveBeenCalledTimes(2);
   });
 
   it('caches direct /p page fetches', async () => {
