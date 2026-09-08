@@ -37,8 +37,6 @@ const builtinComponentIdMap = new Map<string, string>([
   ['data-management', 'data-management'],
   ['data-management/master-detail', 'master-detail'],
   ['data-management/master-detail/:id', 'master-detail-detail'],
-  ['plugins/management', 'plugins-management'],
-  ['plugins', 'plugins-overview'],
   ['settings/theme', 'settings-theme'],
   ['settings/language', 'settings-language'],
   ['settings/layout', 'settings-layout'],
@@ -68,10 +66,6 @@ function normalizeComponentKey(component?: string) {
 
 function toPageType(resource: LegacySiteMapResource): MenuItem['pageType'] {
   const componentKey = normalizeComponentKey(resource.component);
-
-  if (componentKey === 'plugin' && resource.url) {
-    return 'plugin';
-  }
 
   if (componentKey === 'FLUX') {
     return 'flux';
@@ -173,12 +167,9 @@ function mapLegacyResource(resource: LegacySiteMapResource): MenuItem {
   const path = toMenuPath(resource.routePath, resource.id);
   const pageType = toPageType(resource);
   const roles = extractRoles(resource);
-  const componentId =
-    pageType === 'plugin'
-      ? resource.id
-      : pageType === 'builtin'
-        ? toBuiltinComponentId(resource, path)
-        : undefined;
+  const componentId = pageType === 'builtin'
+    ? toBuiltinComponentId(resource, path)
+    : undefined;
 
   return {
     id: resource.id,
@@ -187,7 +178,6 @@ function mapLegacyResource(resource: LegacySiteMapResource): MenuItem {
     icon: toIcon(resource.icon),
     pageType,
     componentId,
-    pluginUrl: pageType === 'plugin' ? resource.url : undefined,
     schemaPath:
       pageType === 'amis'
         ? resource.url

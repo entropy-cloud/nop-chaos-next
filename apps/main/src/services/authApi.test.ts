@@ -2,10 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const ajaxFetch = vi.fn();
 const ajaxQuery = vi.fn();
+const nopRpcRequest = vi.fn();
 
 vi.mock('./http', () => ({
   ajaxFetch,
   ajaxQuery,
+  nopRpcRequest,
 }));
 
 describe('authApi', () => {

@@ -13,7 +13,7 @@ describe('SHARED_MODULE_NAMES', () => {
   });
 
   it('covers the core extension dependencies', () => {
-    for (const name of ['react', '@nop-chaos/shared', '@nop-chaos/ui', '@nop-chaos/plugin-bridge']) {
+    for (const name of ['react', '@nop-chaos/shared', '@nop-chaos/ui']) {
       expect(SHARED_MODULE_NAMES).toContain(name);
     }
   });

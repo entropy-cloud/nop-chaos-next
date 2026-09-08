@@ -51,20 +51,35 @@ function DrawerContent({ className, children, showMask = true, showCloseButton =
     const zIndex = useGlobalZIndex();
     const handleClassName = cn('pointer-events-auto absolute z-20 flex items-center justify-center bg-transparent transition-colors hover:bg-muted/40', direction === 'left' && 'right-0 top-0 h-full w-1 cursor-ew-resize', direction === 'right' && 'left-0 top-0 h-full w-1 cursor-ew-resize', direction === 'top' && 'bottom-0 left-0 w-full h-1 cursor-ns-resize', direction === 'bottom' && 'top-0 left-0 w-full h-1 cursor-ns-resize');
     const resolvedStyle = typeof style === 'function' ? undefined : style;
-    const resizeStyle = resizeController.sizeVar
+    // [G6-R3-视角6-01] the resize handle wrote `--drawer-resize-size` onto Content
+    // while the width/height classes live on Popup — the variable had zero
+    // consumers, so dragging changed nothing. Consume it directly on the Popup
+    // geometry (inline width/height + the CSS var as a stable consumer marker).
+    const isHorizontalResize = direction === 'left' || direction === 'right';
+    const popupResizeStyle = resizeController.sizeVar
         ? {
             ['--drawer-resize-size']: resizeController.sizeVar,
-            ...resolvedStyle,
+            ...(isHorizontalResize
+                ? { width: resizeController.sizeVar, maxWidth: resizeController.sizeVar }
+                : { height: resizeController.sizeVar, maxHeight: resizeController.sizeVar }),
         }
-        : resolvedStyle ?? {};
+        : undefined;
     const layers = (_jsxs(DrawerZIndexContext.Provider, { value: zIndex, children: [showMask && _jsx(DrawerOverlay, {}), _jsx(DrawerPrimitive.Viewport, { className: cn('inset-0 pointer-events-none', isContained ? 'absolute' : 'fixed'), style: { zIndex }, children: _jsx(DrawerPrimitive.Popup, { "data-slot": "drawer-popup", onKeyDown: (event) => {
                         wrapSurfaceTabFocus(event);
-                    }, className: cn('pointer-events-auto flex h-auto flex-col bg-popover text-sm text-popover-foreground outline-none', isContained ? 'absolute' : 'fixed', 'data-[swipe-direction=down]:inset-x-0 data-[swipe-direction=down]:bottom-0 data-[swipe-direction=down]:mt-24 data-[swipe-direction=down]:max-h-[80vh] data-[swipe-direction=down]:rounded-t-xl data-[swipe-direction=down]:border-t data-[swipe-direction=down]:translate-y-[calc(var(--drawer-snap-point-offset,0px)+var(--drawer-swipe-movement-y,0px))] data-[swipe-direction=down]:data-starting-style:translate-y-full data-[swipe-direction=down]:data-ending-style:translate-y-full', 'data-[swipe-direction=up]:inset-x-0 data-[swipe-direction=up]:top-0 data-[swipe-direction=up]:mb-24 data-[swipe-direction=up]:max-h-[80vh] data-[swipe-direction=up]:rounded-b-xl data-[swipe-direction=up]:border-b data-[swipe-direction=up]:-translate-y-[calc(var(--drawer-snap-point-offset,0px)+var(--drawer-swipe-movement-y,0px))] data-[swipe-direction=up]:data-starting-style:-translate-y-full data-[swipe-direction=up]:data-ending-style:-translate-y-full', 'data-[swipe-direction=left]:inset-x-0 data-[swipe-direction=left]:left-0 data-[swipe-direction=left]:w-3/4 data-[swipe-direction=left]:rounded-r-xl data-[swipe-direction=left]:border-r data-[swipe-direction=left]:sm:max-w-sm data-[swipe-direction=left]:-translate-x-[var(--drawer-swipe-movement-x,0px)] data-[swipe-direction=left]:data-starting-style:-translate-x-full data-[swipe-direction=left]:data-ending-style:-translate-x-full', 'data-[swipe-direction=right]:inset-y-0 data-[swipe-direction=right]:right-0 data-[swipe-direction=right]:w-3/4 data-[swipe-direction=right]:rounded-l-xl data-[swipe-direction=right]:border-l data-[swipe-direction=right]:sm:max-w-sm data-[swipe-direction=right]:translate-x-[var(--drawer-swipe-movement-x,0px)] data-[swipe-direction=right]:data-starting-style:translate-x-full data-[swipe-direction=right]:data-ending-style:translate-x-full', 'duration-300 data-open:animate-in data-closed:animate-out'), style: { ['--drawer-direction']: direction }, children: _jsxs(DrawerPrimitive.Content, { "data-slot": "drawer-content", "data-direction": direction, "data-resizable": resizable ? 'true' : undefined, className: cn('group/drawer-content flex h-full flex-col', className), style: resizeStyle, ...props, children: [_jsx("div", { className: "mx-auto mt-4 hidden h-1 w-[100px] shrink-0 rounded-full bg-muted group-data-[direction=bottom]/drawer-content:block" }), resizable && (_jsx("div", { "data-slot": "drawer-resize-handle", "data-direction": direction, className: handleClassName, onPointerDown: resizeController.onPointerDown, role: "separator", "aria-orientation": direction === 'left' || direction === 'right' ? 'vertical' : 'horizontal', "aria-label": t('flux.drawer.resize') })), children, showCloseButton && (_jsxs(DrawerPrimitive.Close, { "data-slot": "drawer-close", render: _jsx(Button, { variant: "ghost", size: "icon-sm", className: "absolute top-2 right-2 z-30" }), children: [_jsx(XIcon, {}), _jsx("span", { className: "sr-only", children: t('flux.drawer.close') })] }))] }) }) })] }));
+                    }, className: cn('pointer-events-auto flex h-auto flex-col bg-popover text-sm text-popover-foreground outline-none', isContained ? 'absolute' : 'fixed', 'data-[swipe-direction=down]:inset-x-0 data-[swipe-direction=down]:bottom-0 data-[swipe-direction=down]:mt-24 data-[swipe-direction=down]:max-h-[80vh] data-[swipe-direction=down]:rounded-t-xl data-[swipe-direction=down]:border-t data-[swipe-direction=down]:translate-y-[calc(var(--drawer-snap-point-offset,0px)+var(--drawer-swipe-movement-y,0px))] data-[swipe-direction=down]:data-starting-style:translate-y-full data-[swipe-direction=down]:data-ending-style:translate-y-full', 'data-[swipe-direction=up]:inset-x-0 data-[swipe-direction=up]:top-0 data-[swipe-direction=up]:mb-24 data-[swipe-direction=up]:max-h-[80vh] data-[swipe-direction=up]:rounded-b-xl data-[swipe-direction=up]:border-b data-[swipe-direction=up]:-translate-y-[calc(var(--drawer-snap-point-offset,0px)+var(--drawer-swipe-movement-y,0px))] data-[swipe-direction=up]:data-starting-style:-translate-y-full data-[swipe-direction=up]:data-ending-style:-translate-y-full', 'data-[swipe-direction=left]:inset-x-0 data-[swipe-direction=left]:left-0 data-[swipe-direction=left]:w-3/4 data-[swipe-direction=left]:rounded-r-xl data-[swipe-direction=left]:border-r data-[swipe-direction=left]:sm:max-w-sm data-[swipe-direction=left]:-translate-x-[var(--drawer-swipe-movement-x,0px)] data-[swipe-direction=left]:data-starting-style:-translate-x-full data-[swipe-direction=left]:data-ending-style:-translate-x-full', 'data-[swipe-direction=right]:inset-y-0 data-[swipe-direction=right]:right-0 data-[swipe-direction=right]:w-3/4 data-[swipe-direction=right]:rounded-l-xl data-[swipe-direction=right]:border-l data-[swipe-direction=right]:sm:max-w-sm data-[swipe-direction=right]:translate-x-[var(--drawer-swipe-movement-x,0px)] data-[swipe-direction=right]:data-starting-style:translate-x-full data-[swipe-direction=right]:data-ending-style:translate-x-full', 'duration-300 data-open:animate-in data-closed:animate-out'), style: { ['--drawer-direction']: direction, ...popupResizeStyle }, children: _jsxs(DrawerPrimitive.Content, { "data-slot": "drawer-content", "data-direction": direction, "data-resizable": resizable ? 'true' : undefined, className: cn('group/drawer-content flex h-full flex-col', className), style: resolvedStyle, ...props, children: [_jsx("div", { className: "mx-auto mt-4 hidden h-1 w-[100px] shrink-0 rounded-full bg-muted group-data-[direction=bottom]/drawer-content:block" }), resizable && (_jsx("div", { "data-slot": "drawer-resize-handle", "data-direction": direction, className: handleClassName, onPointerDown: resizeController.onPointerDown, role: "separator", "aria-orientation": direction === 'left' || direction === 'right' ? 'vertical' : 'horizontal', "aria-label": t('flux.drawer.resize') })), children, showCloseButton && (_jsxs(DrawerPrimitive.Close, { "data-slot": "drawer-close", render: _jsx(Button, { variant: "ghost", size: "icon-sm", className: "absolute top-2 right-2 z-30" }), children: [_jsx(XIcon, {}), _jsx("span", { className: "sr-only", children: t('flux.drawer.close') })] }))] }) }) })] }));
     return (_jsx(DrawerPortal, { children: isContained ? (_jsx("div", { "data-slot": "drawer-contained-root", className: "relative block size-full", children: layers })) : (layers) }));
 }
 function useDrawerResize(direction, enabled) {
     const [size, setSize] = React.useState(null);
     const dragStateRef = React.useRef(null);
+    // 06-01: the active drag's teardown, so an unmount mid-drag can detach the
+    // window listeners (same leak guard as use-dialog-drag's cleanup effect).
+    const teardownRef = React.useRef(null);
+    React.useEffect(() => {
+        return () => {
+            teardownRef.current?.();
+        };
+    }, []);
     const onPointerDown = React.useCallback((event) => {
         if (!enabled) {
             return;
@@ -89,9 +104,38 @@ function useDrawerResize(direction, enabled) {
         catch {
             // ignore — pointer capture is best-effort
         }
+        const releaseCapture = (pointerEvent) => {
+            try {
+                const target = pointerEvent.target;
+                target?.releasePointerCapture?.(pointerEvent.pointerId);
+            }
+            catch {
+                // ignore
+            }
+        };
+        // 06-01: single teardown shared by pointerup / pointercancel /
+        // lostpointercapture (use-dialog-drag hygiene) — a cancelled drag must
+        // not leave a ghost-resize window where stray pointermove events keep
+        // driving the size.
+        const teardown = () => {
+            dragStateRef.current = null;
+            teardownRef.current = null;
+            window.removeEventListener('pointermove', handleMove);
+            window.removeEventListener('pointerup', handleEnd);
+            window.removeEventListener('pointercancel', handleEnd);
+            window.removeEventListener('lostpointercapture', handleEnd);
+        };
         const handleMove = (moveEvent) => {
             const state = dragStateRef.current;
             if (!state || !state.target) {
+                return;
+            }
+            // Button-press validation (use-dialog-drag hygiene): a pointermove
+            // with no pressed button means the press was lost — stop resizing
+            // instead of ghost-following the pointer.
+            if (moveEvent.buttons === 0) {
+                releaseCapture(moveEvent);
+                teardown();
                 return;
             }
             const delta = direction === 'left'
@@ -101,23 +145,23 @@ function useDrawerResize(direction, enabled) {
                     : direction === 'top'
                         ? moveEvent.clientY - state.startY
                         : state.startY - moveEvent.clientY;
-            const next = Math.max(160, state.startSize + delta);
+            // Min/Max clamp (G6-R3-视角6-01): keep the drawer usable on both ends —
+            // never smaller than 160px, never larger than 90% of the viewport axis.
+            const viewportMax = (direction === 'left' || direction === 'right'
+                ? window.innerWidth
+                : window.innerHeight) * 0.9;
+            const next = Math.min(Math.max(160, state.startSize + delta), viewportMax);
             setSize(next);
         };
-        const handleUp = (event) => {
-            dragStateRef.current = null;
-            window.removeEventListener('pointermove', handleMove);
-            window.removeEventListener('pointerup', handleUp);
-            try {
-                const target = event.target;
-                target?.releasePointerCapture?.(event.pointerId);
-            }
-            catch {
-                // ignore
-            }
+        const handleEnd = (pointerEvent) => {
+            releaseCapture(pointerEvent);
+            teardown();
         };
+        teardownRef.current = teardown;
         window.addEventListener('pointermove', handleMove);
-        window.addEventListener('pointerup', handleUp);
+        window.addEventListener('pointerup', handleEnd);
+        window.addEventListener('pointercancel', handleEnd);
+        window.addEventListener('lostpointercapture', handleEnd);
     }, [direction, enabled]);
     const sizeVar = React.useMemo(() => {
         if (size === null) {
@@ -135,7 +179,10 @@ function DrawerFooter({ className, ...props }) {
     return (_jsx("div", { "data-slot": "drawer-footer", className: cn('mt-auto flex flex-col gap-2 p-4 pt-0', className), ...props }));
 }
 function DrawerBody({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "drawer-body", className: cn('flex flex-col gap-4 p-4', className), ...props }));
+    // [G6-R2-视角6-01] body scroll contract — same shape as DialogBody: flex-1 +
+    // min-h-0 + overflow-y-auto so long content scrolls inside the drawer instead
+    // of overflowing past max-h-[80vh]/h-full.
+    return (_jsx("div", { "data-slot": "drawer-body", className: cn('flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto p-4', className), ...props }));
 }
 function DrawerTitle({ className, ...props }) {
     return (_jsx(DrawerPrimitive.Title, { "data-slot": "drawer-title", className: cn('font-heading text-base font-medium text-foreground', className), ...props }));

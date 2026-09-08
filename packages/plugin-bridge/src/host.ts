@@ -1,1 +1,0 @@
-export { setPluginBridge } from './bridge';

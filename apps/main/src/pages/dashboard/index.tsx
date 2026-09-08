@@ -17,7 +17,6 @@ import { CalendarRange } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { MetricCard } from '../../components/common/MetricCard';
 import { PageHeader } from '../../components/common/PageHeader';
-import { PluginMountPanel } from '../../components/plugin/PluginMountPanel';
 import { fetchDashboardData, type DashboardRange } from '../../services/mockApi';
 import { TrendAreaChart } from './components/TrendAreaChart';
 import { EventsCard } from './components/EventsCard';
@@ -164,8 +163,6 @@ export default function DashboardPage() {
         <ChannelStackedChart stacked={data?.stacked ?? []} />
         <PerformanceRadarChart radar={data?.radar ?? []} />
       </div>
-
-      <PluginMountPanel />
     </div>
   );
 }

@@ -47,14 +47,14 @@ describe('tabStore', () => {
   });
 
   it('activates the next available tab when closing the current tab', () => {
-    useTabStore.getState().openTab({ path: '/plugins', title: 'Plugins', icon: 'puzzle', closable: true });
+    useTabStore.getState().openTab({ path: '/settings', title: 'Settings', icon: 'settings', closable: true });
     useTabStore.getState().openTab({ path: '/settings/theme', title: 'Theme', icon: 'palette', closable: true });
 
     const nextPath = useTabStore.getState().closeTab('/settings/theme');
 
-    expect(nextPath).toBe('/plugins');
-    expect(useTabStore.getState().activePath).toBe('/plugins');
-    expect(useTabStore.getState().tabs.map((tab) => tab.path)).toEqual(['/dashboard', '/plugins']);
+    expect(nextPath).toBe('/settings');
+    expect(useTabStore.getState().activePath).toBe('/settings');
+    expect(useTabStore.getState().tabs.map((tab) => tab.path)).toEqual(['/dashboard', '/settings']);
   });
 
   it('preserves the non-closable home tab when asked to close it', () => {
@@ -67,39 +67,39 @@ describe('tabStore', () => {
   });
 
   it('keeps only home and selected tab when closing other tabs', () => {
-    useTabStore.getState().openTab({ path: '/plugins', title: 'Plugins', icon: 'puzzle', closable: true });
+    useTabStore.getState().openTab({ path: '/settings', title: 'Settings', icon: 'settings', closable: true });
     useTabStore.getState().openTab({ path: '/settings/theme', title: 'Theme', icon: 'palette', closable: true });
 
-    useTabStore.getState().closeOtherTabs('/plugins');
+    useTabStore.getState().closeOtherTabs('/settings');
 
-    expect(useTabStore.getState().tabs.map((tab) => tab.path)).toEqual(['/dashboard', '/plugins']);
-    expect(useTabStore.getState().activePath).toBe('/plugins');
+    expect(useTabStore.getState().tabs.map((tab) => tab.path)).toEqual(['/dashboard', '/settings']);
+    expect(useTabStore.getState().activePath).toBe('/settings');
   });
 
   it('resets to the canonical home tab when closing all tabs', () => {
-    homePath.setCurrentHomePath('/plugins');
+    homePath.setCurrentHomePath('/settings');
     useTabStore.getState().openTab({ path: '/settings/theme', title: 'Theme', icon: 'palette', closable: true });
 
     useTabStore.getState().closeAllTabs();
 
     expect(useTabStore.getState().tabs).toEqual([
-      { path: '/plugins', title: 'Dashboard', icon: 'layout-dashboard', closable: false },
+      { path: '/settings', title: 'Dashboard', icon: 'layout-dashboard', closable: false },
     ]);
-    expect(useTabStore.getState().activePath).toBe('/plugins');
+    expect(useTabStore.getState().activePath).toBe('/settings');
   });
 
   it('replaces the legacy non-closable home tab when a new canonical home tab is opened', () => {
-    homePath.setCurrentHomePath('/plugins');
+    homePath.setCurrentHomePath('/settings');
 
     useTabStore.getState().openTab({
-      path: '/plugins',
-      title: 'Plugins',
-      icon: 'puzzle',
+      path: '/settings',
+      title: 'Settings',
+      icon: 'settings',
       closable: false,
     });
 
     expect(useTabStore.getState().tabs).toEqual([
-      { path: '/plugins', title: 'Plugins', icon: 'puzzle', closable: false },
+      { path: '/settings', title: 'Settings', icon: 'settings', closable: false },
     ]);
   });
 });

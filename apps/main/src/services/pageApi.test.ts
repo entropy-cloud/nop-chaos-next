@@ -2,12 +2,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockAjaxFetch = vi.fn();
 const mockAjaxQuery = vi.fn();
+const mockNopRpcRequest = vi.fn();
 const mockLoadSchemaAsset = vi.fn();
 const mockI18n = { language: 'zh-CN' };
 
 vi.mock('./http', () => ({
   ajaxFetch: (...args: unknown[]) => mockAjaxFetch(...args),
   ajaxQuery: (...args: unknown[]) => mockAjaxQuery(...args),
+  nopRpcRequest: (...args: unknown[]) => mockNopRpcRequest(...args),
 }));
 
 vi.mock('./schemaAsset', () => ({

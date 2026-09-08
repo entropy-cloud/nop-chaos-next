@@ -1,57 +1,32 @@
 import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import { ArrowRight, KeyRound, Layers3, ShieldCheck, User2 } from 'lucide-react';
-import {
-  getPluginBridge,
-  usePluginBridge,
-  usePluginI18n,
-  usePluginNotifications,
-} from '@nop-chaos/plugin-bridge';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import type { AuthSession } from '@nop-chaos/shared';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from '@nop-chaos/ui';
 
 import harborMarkHref from '../harbor-mark.svg';
 import { createDemoSession } from './demoSession';
 
-interface AuthStoreWithActions {
-  login: (payload: AuthSession) => void;
-}
-
-type BridgeAuthStore = {
-  getState: () => Partial<AuthStoreWithActions>;
-};
-
-function getAuthStoreActions() {
-  const bridge = getPluginBridge();
-
-  if (!bridge) {
-    return undefined;
-  }
-
-  const authStore = bridge.stores.authStore as BridgeAuthStore;
-  return authStore.getState();
-}
-
 export function ExtensionLoginPage() {
-  const bridge = usePluginBridge();
-  const i18n = usePluginI18n();
-  const notifications = usePluginNotifications();
+  const { t, i18n } = useTranslation();
   const [username, setUsername] = useState('harbor');
   const [submitting, setSubmitting] = useState(false);
   const featureCards = [
     {
-      title: i18n.t('extensionDemo.login.overrideFeatures.identity.title'),
-      description: i18n.t('extensionDemo.login.overrideFeatures.identity.description'),
+      title: t('extensionDemo.login.overrideFeatures.identity.title'),
+      description: t('extensionDemo.login.overrideFeatures.identity.description'),
       icon: ShieldCheck,
     },
     {
-      title: i18n.t('extensionDemo.login.overrideFeatures.systemPage.title'),
-      description: i18n.t('extensionDemo.login.overrideFeatures.systemPage.description'),
+      title: t('extensionDemo.login.overrideFeatures.systemPage.title'),
+      description: t('extensionDemo.login.overrideFeatures.systemPage.description'),
       icon: Layers3,
     },
     {
-      title: i18n.t('extensionDemo.login.overrideFeatures.sharedRuntime.title'),
-      description: i18n.t('extensionDemo.login.overrideFeatures.sharedRuntime.description'),
+      title: t('extensionDemo.login.overrideFeatures.sharedRuntime.title'),
+      description: t('extensionDemo.login.overrideFeatures.sharedRuntime.description'),
       icon: KeyRound,
     },
   ] as const;
@@ -67,22 +42,15 @@ export function ExtensionLoginPage() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const authActions = getAuthStoreActions();
-
-    if (!bridge || typeof authActions?.login !== 'function') {
-      notifications.error(i18n.t('extensionDemo.login.messages.bridgeNotReady'));
-      return;
-    }
-
     try {
       setSubmitting(true);
-
-      authActions.login(createDemoSession(username));
-      notifications.success(i18n.t('extensionDemo.login.messages.loginSuccess'));
-      bridge.navigate('/', { replace: true });
+      const session = createDemoSession(username);
+      toast.success(t('extensionDemo.login.messages.loginSuccess'));
+      // In extension context, navigate using hash
+      window.location.hash = '#/';
     } catch (error) {
-      notifications.error(
-        error instanceof Error ? error.message : i18n.t('extensionDemo.login.messages.loginFailed'),
+      toast.error(
+        error instanceof Error ? error.message : t('extensionDemo.login.messages.loginFailed'),
       );
     } finally {
       setSubmitting(false);
@@ -100,22 +68,22 @@ export function ExtensionLoginPage() {
               </div>
               <div>
                 <div className="eyebrow-text tracking-[0.22em] text-slate-600">
-                  {i18n.t('extensionDemo.login.heroEyebrow')}
+                  {t('extensionDemo.login.heroEyebrow')}
                 </div>
                 <div className="text-2xl font-semibold text-slate-950">
-                  {i18n.t('extensionDemo.login.heroProduct')}
+                  {t('extensionDemo.login.heroProduct')}
                 </div>
               </div>
             </div>
             <div className="space-y-4">
               <div className="eyebrow-text tracking-[0.24em] text-teal-700">
-                {i18n.t('extensionDemo.login.heroBadge')}
+                {t('extensionDemo.login.heroBadge')}
               </div>
               <h1 className="max-w-2xl text-5xl font-semibold leading-tight text-slate-950">
-                {i18n.t('extensionDemo.login.heroTitle')}
+                {t('extensionDemo.login.heroTitle')}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-600">
-                {i18n.t('extensionDemo.login.heroDescription')}
+                {t('extensionDemo.login.heroDescription')}
               </p>
             </div>
           </div>
@@ -147,22 +115,22 @@ export function ExtensionLoginPage() {
               </div>
               <div>
                 <div className="eyebrow-text tracking-[0.24em] text-teal-700">
-                  {i18n.t('extensionDemo.login.signInEyebrow')}
+                  {t('extensionDemo.login.signInEyebrow')}
                 </div>
                 <CardTitle className="text-3xl text-slate-950">
-                  {i18n.t('extensionDemo.login.signInTitle')}
+                  {t('extensionDemo.login.signInTitle')}
                 </CardTitle>
               </div>
             </div>
             <CardDescription className="text-base leading-7 text-slate-600">
-              {i18n.t('extensionDemo.login.signInDescription')}
+              {t('extensionDemo.login.signInDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form className="space-y-5" onSubmit={handleSubmit}>
               <label className="block space-y-2">
                 <span className="text-sm font-medium text-slate-900">
-                  {i18n.t('extensionDemo.login.username')}
+                  {t('extensionDemo.login.username')}
                 </span>
                 <div className="relative">
                   <User2 className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -175,7 +143,7 @@ export function ExtensionLoginPage() {
                 </div>
               </label>
               <div className="rounded-[1.25rem] border border-dashed border-teal-200 bg-teal-50/70 px-4 py-3 text-sm text-slate-600">
-                {i18n.t('extensionDemo.login.demoCredentials')}
+                {t('extensionDemo.login.demoCredentials')}
               </div>
               {canChangeLanguage && languageOptions.length > 1 ? (
                 <div className="flex flex-wrap gap-2">
@@ -193,8 +161,8 @@ export function ExtensionLoginPage() {
               ) : null}
               <Button className="w-full justify-center" disabled={submitting} type="submit">
                 {submitting
-                  ? i18n.t('extensionDemo.login.submitting')
-                  : i18n.t('extensionDemo.login.submit')}
+                  ? t('extensionDemo.login.submitting')
+                  : t('extensionDemo.login.submit')}
                 <ArrowRight className="size-4" />
               </Button>
             </form>

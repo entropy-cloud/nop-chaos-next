@@ -11,7 +11,6 @@ import * as ReactI18NextLib from 'react-i18next';
 import * as LucideReactLib from 'lucide-react';
 import * as SonnerLib from 'sonner';
 import * as SharedLib from '@nop-chaos/shared';
-import * as PluginBridgeLib from '@nop-chaos/plugin-bridge';
 import { registerSharedModules } from '@nop-chaos/core';
 import * as UiLib from '@nop-chaos/ui';
 // Rendering engines: extensions must reuse the host instances — the host flux
@@ -46,7 +45,6 @@ const sharedModuleLibs: Record<string, unknown> = {
   'react-router-dom': ReactRouterDomLib,
   zustand: ZustandLib,
   '@tanstack/react-query': ReactQueryLib,
-  '@nop-chaos/plugin-bridge': PluginBridgeLib,
   '@nop-chaos/shared': pluginSafeSharedLib,
   '@nop-chaos/ui': pluginSafeUiLib,
   i18next: I18NextLib,

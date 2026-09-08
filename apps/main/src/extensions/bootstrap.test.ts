@@ -8,8 +8,6 @@ const registerThemesMock = vi.fn();
 const registerHostSharedModulesMock = vi.fn();
 const registerBaseSharedModulesMock = vi.fn();
 const registerBuiltinPagesMock = vi.fn();
-const setPluginsMock = vi.fn();
-const getPluginsStateMock = vi.fn(() => []);
 const setLoadedExtensionsMock = vi.fn();
 const setShellRuntimeConfigMock = vi.fn();
 
@@ -30,19 +28,6 @@ vi.mock('../plugins/sharedModules', () => ({
 
 vi.mock('../router/pageRegistry', () => ({
   registerBuiltinPages: (...args: unknown[]) => registerBuiltinPagesMock(...args),
-}));
-
-vi.mock('../store/pluginStore', () => ({
-  mergePluginManifests: (currentPlugins: unknown[], extensionPlugins: unknown[]) => [
-    ...currentPlugins,
-    ...extensionPlugins,
-  ],
-  usePluginStore: {
-    getState: () => ({
-      plugins: getPluginsStateMock(),
-      setPlugins: setPluginsMock,
-    }),
-  },
 }));
 
 vi.mock('@nop-chaos/extension-host', () => ({
@@ -79,39 +64,11 @@ describe('bootstrapExtensions extension contract', () => {
     registerThemesMock.mockReset();
     registerHostSharedModulesMock.mockReset();
     registerBuiltinPagesMock.mockReset();
-    setPluginsMock.mockReset();
-    getPluginsStateMock.mockReset();
-    getPluginsStateMock.mockReturnValue([]);
     setLoadedExtensionsMock.mockReset();
     setShellRuntimeConfigMock.mockReset();
   });
 
-  it('merges supported languages and extension plugins during bootstrap', async () => {
-    const pluginA = {
-      id: 'plugin-a',
-      name: 'Plugin A',
-      icon: 'puzzle',
-      description: 'A',
-      version: '1.0.0',
-      author: 'test',
-      source: 'ext',
-      enabled: true,
-      url: '/plugin-a.js',
-      updatedAt: '2026-05-18',
-    };
-    const pluginB = {
-      id: 'plugin-b',
-      name: 'Plugin B',
-      icon: 'puzzle',
-      description: 'B',
-      version: '1.0.0',
-      author: 'test',
-      source: 'ext',
-      enabled: true,
-      url: '/plugin-b.js',
-      updatedAt: '2026-05-18',
-    };
-
+  it('merges supported languages during bootstrap', async () => {
     const { loadExtensions } = await import('@nop-chaos/extension-host');
     vi.mocked(loadExtensions).mockResolvedValue([
       {
@@ -119,7 +76,6 @@ describe('bootstrapExtensions extension contract', () => {
         extension: {
           id: 'one',
           supportedLanguages: [{ code: 'fr-FR', labelKey: 'settings.languageOptions.frFR' }],
-          plugins: [pluginA],
         },
       },
       {
@@ -127,7 +83,6 @@ describe('bootstrapExtensions extension contract', () => {
         extension: {
           id: 'two',
           supportedLanguages: [{ code: 'ja-JP', labelKey: 'settings.languageOptions.ja' }],
-          plugins: [pluginB],
         },
       },
     ]);
@@ -142,7 +97,6 @@ describe('bootstrapExtensions extension contract', () => {
     expect(registerLanguagesMock).toHaveBeenCalledWith([
       { code: 'ja-JP', labelKey: 'settings.languageOptions.ja' },
     ]);
-    expect(setPluginsMock).toHaveBeenCalledWith([pluginA, pluginB]);
   });
 
   it('does not re-inject stylesheets already pre-rendered by the server', async () => {

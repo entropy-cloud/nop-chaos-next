@@ -28,7 +28,6 @@ export const SHARED_MODULE_NAMES = Object.freeze([
   'react-router-dom',
   'zustand',
   '@tanstack/react-query',
-  '@nop-chaos/plugin-bridge',
   '@nop-chaos/shared',
   '@nop-chaos/ui',
   'i18next',

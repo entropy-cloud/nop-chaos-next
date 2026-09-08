@@ -48,21 +48,6 @@ describe('mapLegacySiteMapToMenuResponse', () => {
   });
 
   describe('toPageType branches', () => {
-    it('returns plugin when component is "plugin" and url is set', () => {
-      const result = mapLegacySiteMapToMenuResponse({
-        resources: [{ id: 'p1', component: 'plugin', url: 'http://example.com/plugin.js' }],
-      });
-      expect(result.items[0].pageType).toBe('plugin');
-      expect(result.items[0].pluginUrl).toBe('http://example.com/plugin.js');
-    });
-
-    it('returns builtin when component is "plugin" but no url', () => {
-      const result = mapLegacySiteMapToMenuResponse({
-        resources: [{ id: 'p2', component: 'plugin' }],
-      });
-      expect(result.items[0].pageType).toBe('builtin');
-    });
-
     it('returns flux when component is "FLUX"', () => {
       const result = mapLegacySiteMapToMenuResponse({
         resources: [{ id: 'f1', component: 'FLUX', meta: { schemaPath: '/schema.json' } }],
@@ -242,14 +227,7 @@ describe('mapLegacySiteMapToMenuResponse', () => {
       expect(result.items[0].componentId).toBe('dashboard');
     });
 
-    it('plugin pageType uses resource.id as componentId', () => {
-      const result = mapLegacySiteMapToMenuResponse({
-        resources: [{ id: 'my-plugin', component: 'plugin', url: 'http://cdn/plugin.js' }],
-      });
-      expect(result.items[0].componentId).toBe('my-plugin');
-    });
-
-    it('non-builtin non-plugin pageType has no componentId', () => {
+    it('non-builtin pageType has no componentId', () => {
       const result = mapLegacySiteMapToMenuResponse({
         resources: [{ id: 'a1', component: 'AMIS', url: '/schema.json' }],
       });
@@ -355,15 +333,15 @@ describe('mapLegacySiteMapToMenuResponse', () => {
             children: [
               {
                 id: 'child',
-                component: 'plugin',
-                url: 'http://cdn/c.js',
+                component: 'AMIS',
+                url: 'http://cdn/schema.json',
                 children: [{ id: 'grandchild', displayName: 'GC' }],
               },
             ],
           },
         ],
       });
-      expect(result.items[0].children![0].pageType).toBe('plugin');
+      expect(result.items[0].children![0].pageType).toBe('amis');
       expect(result.items[0].children![0].children!).toHaveLength(1);
       expect(result.items[0].children![0].children![0].title).toBe('GC');
     });

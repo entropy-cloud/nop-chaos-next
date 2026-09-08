@@ -17,8 +17,6 @@ const HelpGuidePage = lazy(() => import('../pages/help/guide'));
 const HelpHomePage = lazy(() => import('../pages/help'));
 const MasterDetailPage = lazy(() => import('../pages/data-management/master-detail'));
 const MasterDetailDetailPage = lazy(() => import('../pages/data-management/master-detail/[id]'));
-const PluginsManagementPage = lazy(() => import('../pages/plugins/management'));
-const PluginsHomePage = lazy(() => import('../pages/plugins'));
 const SettingsLanguagePage = lazy(() => import('../pages/settings/language'));
 const SettingsLayoutPage = lazy(() => import('../pages/settings/layout'));
 const SettingsThemePage = lazy(() => import('../pages/settings/theme'));
@@ -34,8 +32,6 @@ export const builtinPageRegistry: Record<string, BuiltinPage> = {
   'help-home': HelpHomePage,
   'master-detail': MasterDetailPage,
   'master-detail-detail': MasterDetailDetailPage,
-  'plugins-management': PluginsManagementPage,
-  'plugins-overview': PluginsHomePage,
   'settings-home': SettingsHomePage,
   'settings-language': SettingsLanguagePage,
   'settings-layout': SettingsLayoutPage,

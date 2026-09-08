@@ -14,22 +14,20 @@
   },
   "devDependencies": {
     "@nop-chaos/extension-dev": "workspace:*",
-    "@nop-chaos/plugin-bridge": "workspace:*",
     "@nop-chaos/shared": "workspace:*",
     "@nop-chaos/tailwind-preset": "workspace:*",
     "@nop-chaos/theme-tokens": "workspace:*",
     "@nop-chaos/ui": "workspace:*",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.1.1",
     "lucide-react": "^1.7.0",
     "react-router-dom": "^7.14.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
-    "vite": "^8.0.3"
+    "vite": "^8.2.2"
   },
   "peerDependencies": {
-    "@nop-chaos/plugin-bridge": "workspace:*",
     "@nop-chaos/shared": "workspace:*",
     "lucide-react": "^1.7.0",
     "@nop-chaos/ui": "workspace:*",

@@ -1,11 +1,9 @@
 import { Suspense, useMemo } from 'react';
 import type { MenuItem } from '@nop-chaos/shared';
-import { ErrorBoundary, PluginSlot, usePermissionGuard } from '@nop-chaos/core';
+import { ErrorBoundary, usePermissionGuard } from '@nop-chaos/core';
 import { Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
-import { ensurePluginSharedModules } from '../plugins/sharedModules';
-import { usePluginStore } from '../store/pluginStore';
 import { ForbiddenPage, ServerErrorPage, getBuiltinPage } from './pageRegistry';
 import { AmisRouteEntry } from './AmisRouteEntry';
 import { FluxRouteEntry } from './FluxRouteEntry';
@@ -16,18 +14,6 @@ interface RouteRendererProps {
   item: MenuItem;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function resolvePluginManifest(
-  item: MenuItem,
-  plugins: Array<{ id: string; url: string; enabled: boolean }>,
-) {
-  return (
-    plugins.find((plugin) => plugin.id === item.componentId) ??
-    plugins.find((plugin) => plugin.id === item.id) ??
-    plugins.find((plugin) => plugin.url === item.pluginUrl)
-  );
-}
-
 // RouteRenderer is the route-level permission guard (layer 2 of the two-layer model).
 // Layer 1 (menu filtering) already hides unauthorized items from the sidebar, but this
 // guard ensures that direct URL navigation to a restricted route still results in a
@@ -35,7 +21,6 @@ export function resolvePluginManifest(
 export function RouteRenderer({ item }: RouteRendererProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const plugins = usePluginStore((state) => state.plugins);
   const allowed = usePermissionGuard(user?.roles ?? [], item.roles);
   const title = item.title ?? t('common.loading');
   const Page = useMemo(() => getBuiltinPage(item.componentId), [item.componentId]);
@@ -54,28 +39,6 @@ export function RouteRenderer({ item }: RouteRendererProps) {
       // ForbiddenPage is shown when the route render guard denies access.
       // This is the safety net for direct URL navigation to restricted routes.
       return <ForbiddenPage />;
-    }
-
-    if (item.pageType === 'plugin' && item.pluginUrl) {
-      const manifest = resolvePluginManifest(item, plugins);
-
-      if (!manifest?.enabled) {
-        return (
-          <Card className="theme-card overflow-hidden border-dashed">
-            <CardHeader className="pb-3">
-              <CardTitle>{item.title ?? t('common.loading')}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <div className="rounded-xl border border-dashed border-[hsl(var(--border))] bg-surface-secondary p-4 backdrop-blur-xl">
-                {t('route.pluginNotEnabled')}
-              </div>
-              <div>{t('route.pluginStatusDisabled')}</div>
-            </CardContent>
-          </Card>
-        );
-      }
-
-      return <PluginSlot beforeLoad={ensurePluginSharedModules} title={title} url={item.pluginUrl} />;
     }
 
     if (item.pageType === 'amis' && item.schemaPath) {

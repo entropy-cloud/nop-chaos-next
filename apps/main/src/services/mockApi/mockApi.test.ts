@@ -239,49 +239,6 @@ describe('mockApi/flow', () => {
   });
 });
 
-describe('mockApi/plugins', () => {
-  const seedPlugins = [
-    {
-      id: 'plugins-demo',
-      name: 'Plugin Demo',
-      icon: 'blocks',
-      description: 'Test plugin',
-      version: '0.3.2',
-      author: 'Team',
-      source: 'Internal',
-      enabled: true,
-      url: '/plugins/plugin-demo.system.js',
-      updatedAt: '2026-03-15',
-      configSchema: [],
-      settings: {},
-    },
-  ];
-
-  beforeEach(() => {
-    vi.resetModules();
-    vi.mocked(readStoredJson).mockReturnValue(structuredClone(seedPlugins));
-  });
-
-  it('fetchPluginList returns seeded manifests', async () => {
-    const { fetchPluginList } = await import('./plugins');
-    const plugins = await fetchPluginList();
-    expect(plugins).toHaveLength(1);
-    expect(plugins[0].id).toBe('plugins-demo');
-  });
-
-  it('getPluginSeeds returns default seeds', async () => {
-    const { getPluginSeeds } = await import('./plugins');
-    const seeds = getPluginSeeds();
-    expect(seeds[0].enabled).toBe(true);
-  });
-
-  it('persistPluginSeeds writes to storage', async () => {
-    const { persistPluginSeeds } = await import('./plugins');
-    persistPluginSeeds(seedPlugins);
-    expect(writeStoredJson).toHaveBeenCalled();
-  });
-});
-
 describe('mockApi/aiWorkbench', () => {
   it('createMockAiReply returns general prefix for default assistant', async () => {
     const { createMockAiReply } = await import('./aiWorkbench');

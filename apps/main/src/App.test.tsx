@@ -2,34 +2,28 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import App from './App';
 
-type StoreSelector<T, U> = (value: T) => U;
-type StoreHook<T> = {
-  <U>(selector: StoreSelector<T, U>): U;
-  getState: () => T;
-  subscribe: (listener: () => void) => () => void;
-  setState: (nextState: T) => void;
-};
-
-type ThemeStoreState = {
-  themeConfig: { themeId: string; displayMode: 'light' | 'dark' | 'system' };
-};
-
 const {
-  setPluginBridgeMock,
   registerBaseSharedModulesMock,
   useThemeStoreMock,
-  useAuthStoreMock,
-  usePluginStoreMock,
 } = vi.hoisted(() => {
+  type ThemeStoreState = {
+    themeConfig: { themeId: string; displayMode: 'light' | 'dark' | 'system' };
+  };
+
   function createStoreHook<T>(initialState: T) {
     let state = initialState;
     const listeners = new Set<() => void>();
 
-    const hook = ((selector: (value: T) => unknown) => selector(state)) as StoreHook<T>;
+    const hook = ((selector: (value: T) => unknown) => selector(state)) as {
+      <U>(selector: (value: T) => U): U;
+      getState: () => T;
+      subscribe: (listener: () => void) => () => void;
+      setState: (nextState: T) => void;
+    };
 
     hook.getState = () => state;
     hook.subscribe = (listener: () => void) => {
@@ -49,26 +43,12 @@ const {
   }
 
   return {
-    setPluginBridgeMock: vi.fn(),
     registerBaseSharedModulesMock: vi.fn(),
     useThemeStoreMock: createStoreHook<ThemeStoreState>({
       themeConfig: { themeId: 'classic', displayMode: 'light' as const },
     }),
-    useAuthStoreMock: createStoreHook({ user: null, isAuthenticated: false }),
-    usePluginStoreMock: createStoreHook({ plugins: [] as Array<never> }),
   };
 });
-
-vi.mock('@nop-chaos/ui', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}));
-
-vi.mock('@nop-chaos/plugin-bridge/host', () => ({
-  setPluginBridge: (bridge: unknown) => setPluginBridgeMock(bridge),
-}));
 
 vi.mock('./router/AppRoutes', () => ({
   AppRoutes: () => null,
@@ -94,35 +74,15 @@ vi.mock('./store/themeStore', () => ({
   useThemeStore: useThemeStoreMock,
 }));
 
-vi.mock('./store/authStore', () => ({
-  useAuthStore: useAuthStoreMock,
-}));
-
-vi.mock('./store/pluginStore', () => ({
-  usePluginStore: usePluginStoreMock,
-}));
-
-function RouteAdvanceButton() {
-  const navigate = useNavigate();
-
-  return (
-    <button type="button" onClick={() => navigate('/next')}>
-      next
-    </button>
-  );
-}
-
-describe('App plugin bridge wiring', () => {
+describe('App', () => {
   let container: HTMLDivElement;
   let root: ReturnType<typeof createRoot>;
 
   beforeEach(() => {
-    setPluginBridgeMock.mockReset();
     registerBaseSharedModulesMock.mockReset();
     useThemeStoreMock.setState({
       themeConfig: { themeId: 'classic', displayMode: 'light' },
     });
-    usePluginStoreMock.setState({ plugins: [] as Array<never> });
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
@@ -137,33 +97,7 @@ describe('App plugin bridge wiring', () => {
     container?.remove();
   });
 
-  it('keeps the same bridge instance across route changes while updating current path getter', async () => {
-    await act(async () => {
-      root.render(
-        <MemoryRouter initialEntries={['/start']}>
-          <App />
-          <RouteAdvanceButton />
-        </MemoryRouter>,
-      );
-    });
-
-    expect(setPluginBridgeMock).toHaveBeenCalledTimes(1);
-    const bridge = setPluginBridgeMock.mock.calls[0][0] as { getCurrentPath: () => string };
-    expect(bridge.getCurrentPath()).toBe('/start');
-
-    await act(async () => {
-      container.querySelector('button')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
-
-    expect(setPluginBridgeMock).toHaveBeenCalledTimes(1);
-    expect(bridge.getCurrentPath()).toBe('/next');
-  });
-
-  it('publishes the resolved theme config to the plugin bridge snapshot', async () => {
-    useThemeStoreMock.setState({
-      themeConfig: { themeId: 'missing-theme', displayMode: 'dark' as const },
-    });
-
+  it('registers shared modules on mount', async () => {
     await act(async () => {
       root.render(
         <MemoryRouter initialEntries={['/start']}>
@@ -172,36 +106,6 @@ describe('App plugin bridge wiring', () => {
       );
     });
 
-    const bridge = setPluginBridgeMock.mock.calls[0][0] as { getThemeConfig: () => { themeId: string; displayMode: string } };
-    expect(bridge.getThemeConfig()).toEqual({ themeId: 'classic', displayMode: 'dark' });
-  });
-
-  it('publishes extension-registered plugin manifests through getPluginManifest', async () => {
-    const pluginManifest = {
-      id: 'plugin-demo',
-      name: 'Plugin Demo',
-      icon: 'puzzle',
-      description: 'Demo plugin',
-      version: '1.0.0',
-      author: 'NOP',
-      source: 'extension',
-      enabled: true,
-      url: '/plugins/plugin-demo.system.js',
-      updatedAt: '2026-05-18',
-    };
-    usePluginStoreMock.setState({ plugins: [pluginManifest] as Array<never> });
-
-    await act(async () => {
-      root.render(
-        <MemoryRouter initialEntries={['/start']}>
-          <App />
-        </MemoryRouter>,
-      );
-    });
-
-    const bridge = setPluginBridgeMock.mock.calls[0][0] as {
-      getPluginManifest: (pluginId: string) => unknown;
-    };
-    expect(bridge.getPluginManifest('plugin-demo')).toEqual(pluginManifest);
+    expect(registerBaseSharedModulesMock).toHaveBeenCalledTimes(1);
   });
 });

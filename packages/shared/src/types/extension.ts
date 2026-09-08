@@ -1,5 +1,4 @@
 import type { MenuItem } from './menu';
-import type { PluginManifest } from './plugin';
 import type { PageTransformerRegistration } from './pageTransformer';
 import type { ComponentType, LazyExoticComponent } from 'react';
 
@@ -234,8 +233,6 @@ export interface ShellExtension {
   styles?: ExtensionStyleAsset[];
   /** Page components registered as built-in routes. */
   builtinPages?: ExtensionBuiltinPage[];
-  /** Remote plugin manifests to register. */
-  plugins?: PluginManifest[];
   /** Deprecated: host navigation menus are backend-owned. Use backend site map data instead. */
   menus?: MenuItem[];
   /** Deprecated: host navigation menus are backend-owned. */

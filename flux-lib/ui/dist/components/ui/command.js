@@ -1,13 +1,14 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Command as CommandPrimitive } from 'cmdk';
 import { cn } from '../../lib/utils.js';
+import { t } from '../../lib/i18n.js';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './dialog.js';
 import { InputGroup, InputGroupAddon } from './input-group.js';
 import { SearchIcon, CheckIcon } from 'lucide-react';
 function Command({ className, ...props }) {
     return (_jsx(CommandPrimitive, { "data-slot": "command", className: cn('nop-command ', 'flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground', className), ...props }));
 }
-function CommandDialog({ title = 'Command Palette', description = 'Search for a command to run...', children, className, showCloseButton = false, ...props }) {
+function CommandDialog({ title = t('flux.command.title'), description = t('flux.command.searchPlaceholder'), children, className, showCloseButton = false, ...props }) {
     return (_jsxs(Dialog, { ...props, children: [_jsxs(DialogHeader, { className: "sr-only", children: [_jsx(DialogTitle, { children: title }), _jsx(DialogDescription, { children: description })] }), _jsx(DialogContent, { className: cn('nop-command ', 'top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0', className), showCloseButton: showCloseButton, children: children })] }));
 }
 function CommandInput({ className, ...props }) {
@@ -16,8 +17,8 @@ function CommandInput({ className, ...props }) {
 function CommandList({ className, ...props }) {
     return (_jsx(CommandPrimitive.List, { "data-slot": "command-list", className: cn('nop-command ', 'no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none', className), ...props }));
 }
-function CommandEmpty({ className, ...props }) {
-    return (_jsx(CommandPrimitive.Empty, { "data-slot": "command-empty", className: cn('nop-command ', 'py-6 text-center text-sm', className), ...props }));
+function CommandEmpty({ className, children, ...props }) {
+    return (_jsx(CommandPrimitive.Empty, { "data-slot": "command-empty", className: cn('nop-command ', 'py-6 text-center text-sm', className), ...props, children: _jsx("span", { role: "status", "aria-live": "polite", children: children }) }));
 }
 function CommandGroup({ className, ...props }) {
     return (_jsx(CommandPrimitive.Group, { "data-slot": "command-group", className: cn('nop-command ', 'overflow-hidden p-1 text-foreground **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground', className), ...props }));

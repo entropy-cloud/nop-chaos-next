@@ -148,7 +148,8 @@ describe('@query findPage', () => {
       perPage: 10,
     };
     const res = result('@query:NopAuthUser__findPage?page=1&perPage=10', data);
-    expect(res.data).toMatchObject({ query: { offset: 0, limit: 10, filter: { $body: [{ $type: 'eq', name: 'userName', value: 'test' }] } } });
+    // filter 对象保持原样，不会被转换为 TreeBean 格式
+    expect(res.data).toMatchObject({ query: { offset: 0, limit: 10, filter: { userName: 'test' } } });
   });
 });
 

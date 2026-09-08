@@ -1,38 +1,31 @@
 import { Compass, LifeBuoy, MapPinned } from 'lucide-react';
-import { getPluginBridge, usePluginI18n } from '@nop-chaos/plugin-bridge';
+import { useTranslation } from 'react-i18next';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@nop-chaos/ui';
 
 import harborMarkHref from '../harbor-mark.svg';
 
 function navigateTo(path: string) {
-  const bridge = getPluginBridge();
-
-  if (!bridge) {
-    window.location.hash = `#${path}`;
-    return;
-  }
-
-  bridge.navigate(path);
+  window.location.hash = `#${path}`;
 }
 
 export function ExtensionNotFoundPage() {
-  const i18n = usePluginI18n();
+  const { t } = useTranslation();
   const quickLinks = [
     {
-      title: i18n.t('extensionDemo.notFound.quickLinks.home.title'),
-      description: i18n.t('extensionDemo.notFound.quickLinks.home.description'),
+      title: t('extensionDemo.notFound.quickLinks.home.title'),
+      description: t('extensionDemo.notFound.quickLinks.home.description'),
       path: '/',
     },
     {
-      title: i18n.t('extensionDemo.notFound.quickLinks.page.title'),
-      description: i18n.t('extensionDemo.notFound.quickLinks.page.description'),
+      title: t('extensionDemo.notFound.quickLinks.page.title'),
+      description: t('extensionDemo.notFound.quickLinks.page.description'),
       path: '/examples/extension-harbor',
     },
   ] as const;
   const reasons = [
-    i18n.t('extensionDemo.notFound.reasons.loginOverride'),
-    i18n.t('extensionDemo.notFound.reasons.notFoundOverride'),
-    i18n.t('extensionDemo.notFound.reasons.sharedShell'),
+    t('extensionDemo.notFound.reasons.loginOverride'),
+    t('extensionDemo.notFound.reasons.notFoundOverride'),
+    t('extensionDemo.notFound.reasons.sharedShell'),
   ];
 
   return (
@@ -44,17 +37,17 @@ export function ExtensionNotFoundPage() {
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-3 rounded-full border border-teal-200/70 bg-white/80 px-4 py-2 text-sm font-medium text-teal-700">
                   <Compass className="size-4" />
-                  {i18n.t('extensionDemo.notFound.badge')}
+                  {t('extensionDemo.notFound.badge')}
                 </div>
                 <div className="space-y-3">
                   <div className="eyebrow-text tracking-[0.24em] text-teal-700">
-                    {i18n.t('extensionDemo.notFound.eyebrow')}
+                    {t('extensionDemo.notFound.eyebrow')}
                   </div>
                   <CardTitle className="max-w-3xl text-4xl leading-tight text-slate-950">
-                    {i18n.t('extensionDemo.notFound.title')}
+                    {t('extensionDemo.notFound.title')}
                   </CardTitle>
                   <p className="max-w-3xl text-base leading-7 text-slate-600">
-                    {i18n.t('extensionDemo.notFound.description')}
+                    {t('extensionDemo.notFound.description')}
                   </p>
                 </div>
               </div>
@@ -64,10 +57,10 @@ export function ExtensionNotFoundPage() {
                 </div>
                 <div>
                   <div className="text-sm font-medium text-slate-500">
-                    {i18n.t('extensionDemo.notFound.activeApplicationLabel')}
+                    {t('extensionDemo.notFound.activeApplicationLabel')}
                   </div>
                   <div className="text-2xl font-semibold text-slate-950">
-                    {i18n.t('extensionDemo.notFound.activeApplicationValue')}
+                    {t('extensionDemo.notFound.activeApplicationValue')}
                   </div>
                 </div>
               </div>
@@ -78,7 +71,7 @@ export function ExtensionNotFoundPage() {
               <div className="flex items-center gap-3 text-slate-900">
                 <MapPinned className="size-5 text-teal-700" />
                 <span className="text-lg font-semibold">
-                  {i18n.t('extensionDemo.notFound.suggestedRoutes')}
+                  {t('extensionDemo.notFound.suggestedRoutes')}
                 </span>
               </div>
               <div className="mt-5 grid gap-4">
@@ -99,7 +92,7 @@ export function ExtensionNotFoundPage() {
               <div className="flex items-center gap-3">
                 <LifeBuoy className="size-5 text-emerald-300" />
                 <span className="text-lg font-semibold">
-                  {i18n.t('extensionDemo.notFound.whyThisMatters')}
+                  {t('extensionDemo.notFound.whyThisMatters')}
                 </span>
               </div>
               <div className="mt-5 space-y-3 text-sm leading-7 text-slate-300">
@@ -111,7 +104,7 @@ export function ExtensionNotFoundPage() {
                 className="mt-6 w-full justify-center bg-emerald-400 text-slate-950 hover:bg-emerald-300"
                 onClick={() => navigateTo('/')}
               >
-                {i18n.t('extensionDemo.notFound.returnToWorkspace')}
+                {t('extensionDemo.notFound.returnToWorkspace')}
               </Button>
             </div>
           </CardContent>

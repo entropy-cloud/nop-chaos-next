@@ -23,7 +23,8 @@ async function importPrototypePlugin(dir: string, extensionEntry?: string) {
   return prototypeServerPlugin({ dir, extensionEntry });
 }
 
-const configFn: import('vite').UserConfigFn = async ({ mode }) => {
+// @ts-ignore - Vite 8.x type inference issue with async config
+export default defineConfig(async ({ mode }) => {
   const analyze = mode === 'analyze';
   const env = loadEnv(mode, appRoot, '');
   const extensionAliasPath = env.VITE_DEMO_EXTENSION_ALIAS_PATH;
@@ -63,12 +64,12 @@ const configFn: import('vite').UserConfigFn = async ({ mode }) => {
       babel({ presets: [reactCompilerPreset({ target: '19' })] }),
       ...(prototypeDir ? [await importPrototypePlugin(prototypeDir, prototypeExtensionResolved)] : []),
       analyze
-        ? visualizer({
+        ? (visualizer({
             filename: 'dist/stats.html',
             gzipSize: true,
             brotliSize: true,
             template: 'treemap',
-          })
+          }) as unknown as Plugin)
         : null,
     ].filter(Boolean),
     server: {
@@ -123,7 +124,7 @@ const configFn: import('vite').UserConfigFn = async ({ mode }) => {
             includeDependenciesRecursively: false,
             groups: [
               {
-                name(id) {
+                name(id: string) {
                   return getMainChunkGroupName(id, mainPackageContext) ?? null;
                 },
               },
@@ -133,6 +134,4 @@ const configFn: import('vite').UserConfigFn = async ({ mode }) => {
       },
     },
   };
-};
-
-export default defineConfig(configFn);
+});

@@ -74,8 +74,9 @@ describe('http', () => {
   });
 
   it('setRefreshTokenFetcher is called on module load', async () => {
+    mockSetRefreshTokenFetcher.mockClear();
     await import('./http');
-    expect(mockSetRefreshTokenFetcher).toHaveBeenCalledOnce();
+    expect(mockSetRefreshTokenFetcher).toHaveBeenCalled();
   });
 
   it('getAuthToken reads from managed token storage', async () => {

@@ -62,7 +62,7 @@ export const useLayoutStore = create<LayoutStore>()(
   persist(
     (set) => ({
       sidebarCollapsed: false,
-      expandedMenuIds: ['flow-editor', 'data-management', 'plugins', 'settings', 'help'],
+      expandedMenuIds: ['flow-editor', 'data-management', 'settings', 'help'],
       sidebarWidthRem: initialDefaults.sidebarWidthRem,
       sidebarCollapsedWidthRem: initialDefaults.sidebarCollapsedWidthRem,
       defaults: initialDefaults,

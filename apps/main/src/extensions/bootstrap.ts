@@ -1,4 +1,4 @@
-import { resetTokenStorage, setAuthConfig, type PluginManifest } from '@nop-chaos/shared'
+import { resetTokenStorage, setAuthConfig } from '@nop-chaos/shared'
 import type { ExtensionLogger, LoadedExtension } from '@nop-chaos/shared'
 import {
   HOST_API_VERSION,
@@ -12,7 +12,6 @@ import { registerThemes } from '../config/themeRegistry'
 import { registerBaseSharedModules } from '../plugins/sharedModules'
 import { registerBuiltinPages } from '../router/pageRegistry'
 import { mainHttpClient } from '../services/http'
-import { mergePluginManifests, usePluginStore } from '../store/pluginStore'
 import { getExtensionSources } from './config'
 
 const logger: ExtensionLogger = {
@@ -117,8 +116,6 @@ function verifyExtensionApiVersion(extension: { id: string; minHostApiVersion?: 
 function applyExtensionDefinitions(loaded: LoadedExtension[]) {
   resetLanguages()
 
-  const extensionPlugins: PluginManifest[] = []
-
   for (const { source, extension } of loaded) {
     verifyExtensionApiVersion(extension)
 
@@ -135,10 +132,6 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
       registerLanguages(extension.supportedLanguages)
     } else if (extension.languages) {
       registerLanguages(extension.languages)
-    }
-
-    if (extension.plugins?.length) {
-      extensionPlugins.push(...extension.plugins)
     }
 
     if (extension.themes) {
@@ -182,11 +175,6 @@ function applyExtensionDefinitions(loaded: LoadedExtension[]) {
         registerPageTransformer(registration)
       }
     }
-  }
-
-  if (extensionPlugins.length) {
-    const currentPlugins = usePluginStore.getState().plugins
-    usePluginStore.getState().setPlugins(mergePluginManifests(currentPlugins, extensionPlugins))
   }
 }
 

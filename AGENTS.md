@@ -5,8 +5,7 @@
 - Apply these rules to the entire repository.
 - This repo is a PNPM workspace monorepo.
 - Primary host app: `apps/main`.
-- Remote demo plugin: `examples/plugin-demo`.
-- Shared packages: `packages/shared`, `packages/ui`, `packages/core`, `packages/plugin-bridge`.
+- Shared packages: `packages/shared`, `packages/ui`, `packages/core`.
 - AMIS framework reference: `amis-guide/` (repo-root sibling of `docs/`).
 - Mission driver available at `tools/mission-driver.sh` — see `missions/` for active mission configs.
 
@@ -43,11 +42,9 @@ Mission Driver 工作流：
 ## Workspace Layout
 
 - `apps/main`: host React shell, routes, stores, pages, theme, i18n.
-- `examples/plugin-demo`: remote plugin example for SystemJS and ESM loading.
 - `packages/shared`: shared types and pure utilities.
 - `packages/ui`: reusable UI components, styles, and `cn()` helper.
 - `packages/core`: shell components, permission helpers, SystemJS utilities.
-- `packages/plugin-bridge`: host-to-plugin bridge state and hooks.
 - `tests/e2e`: Playwright tests.
 - `docs`: project documentation.
 - `amis-guide/`: AMIS (百度低代码 JSON-to-React 框架) 开发参考，面向 AI 的精简指南。查 AMIS 组件字段、表达式、API、事件、设计模式时先看这里。包含 `README.md`(架构与类型索引)、`01-quickstart.md`(常用代码段)、`02-reference.md`(核心机制)、`amis-types/*.d.ts`(组件 TypeScript 接口，字段知识源)、`design-patterns/`(业务场景 cookbook)。
@@ -64,7 +61,6 @@ Mission Driver 工作流：
 - `pnpm install`
 - `pnpm dev`
 - `pnpm dev:main`
-- `pnpm dev:plugin`
 - `pnpm build`
 - `pnpm typecheck`
 - `pnpm lint`
@@ -75,12 +71,9 @@ Mission Driver 工作流：
 ## Package Commands
 
 - `pnpm --filter @nop-chaos/main dev|build|preview|typecheck|lint|test`
-- `pnpm --filter @nop-chaos/plugin-demo dev|build|preview|typecheck|lint|test`
 - `pnpm --filter @nop-chaos/core build|typecheck|lint|test`
 - `pnpm --filter @nop-chaos/shared build|typecheck|lint|test`
 - `pnpm --filter @nop-chaos/ui build|typecheck|lint|test`
-- `pnpm --filter @nop-chaos/plugin-bridge build|typecheck|lint|test`
-- Building `@nop-chaos/main` triggers a prebuild of `@nop-chaos/plugin-demo`.
 
 ## Single-Test Commands
 
@@ -88,18 +81,15 @@ Mission Driver 工作流：
 
 - `pnpm --filter @nop-chaos/main exec vitest run src/pages/ai-workbench/index.test.ts`
 - `pnpm --filter @nop-chaos/main exec vitest run src/pages/flow-editor/[id]/index.test.ts`
-- `pnpm --filter @nop-chaos/plugin-bridge exec vitest run src/index.test.ts`
 
 ### Vitest: one test name
 
 - `pnpm --filter @nop-chaos/main exec vitest run -t "parses unordered lists, ordered lists, and code blocks"`
-- `pnpm --filter @nop-chaos/plugin-bridge exec vitest run -t "stores and returns the active bridge"`
 
 ### Playwright: one spec
 
 - `pnpm test:e2e -- tests/e2e/login.spec.ts`
 - `pnpm test:e2e -- tests/e2e/flow-editor.spec.ts`
-- `pnpm test:e2e:headed -- tests/e2e/plugin-demo.spec.ts`
 
 ### Playwright: one test name
 
@@ -145,7 +135,7 @@ Mission Driver 工作流：
 ## TypeScript
 
 - Keep reusable pure logic in `packages/shared`.
-- Keep React-specific reusable logic in `packages/core`, `packages/ui`, or `packages/plugin-bridge`.
+- Keep React-specific reusable logic in `packages/core` or `packages/ui`.
 - Export package API types from package entry points when they are part of the public surface.
 
 ## Naming
@@ -166,16 +156,12 @@ Mission Driver 工作流：
 - Keep app-global state in Zustand stores under `apps/main/src/store`.
 - Keep async server-state in React Query for ordinary React pages.
 - Prefer narrow hooks over spreading raw store usage everywhere.
-- Preserve host/plugin coordination through `packages/plugin-bridge` rather than ad hoc globals.
 
-## Routing, Permissions, Plugins
+## Routing, Permissions, Extensions
 
 - Current menu model supports `pageType: 'builtin' | 'plugin'`.
 - Builtin pages resolve through `apps/main/src/router/pageRegistry.tsx`.
-- Plugin pages resolve through `PluginSlot` and runtime remote loading.
 - Permission checks happen both in menu filtering and route rendering; preserve both layers.
-- Avoid bundling duplicate React/runtime dependencies into remote plugins.
-- Shared plugin dependencies are registered from the host via SystemJS import maps.
 
 ## Styling
 
@@ -206,7 +192,6 @@ After completing any significant **CODE CHANGE**, you MUST:
 1. **Update the daily dev log** at `docs/logs/{year}/{month}-{day}.md` (reverse chronological, see `docs/logs/index.md` for format).
 2. **Update relevant design docs** when changing:
    - Package boundaries or ownership → `docs/design/`
-   - Plugin system or bridge logic → `docs/design/plugin-system.md`
    - Routing, permissions, or shell behavior → relevant doc under `docs/design/`
    - E2E infrastructure or cross-project testing → `docs/testing/`
 
@@ -219,13 +204,12 @@ When creating, revising, executing, or auditing a file under `docs/plans/`, you 
 ## Testing Expectations
 
 - Consider Playwright when changing visible cross-component flows.
-- For routing, permissions, theme, plugin loading, or shell changes, run the narrowest meaningful test first.
+- For routing, permissions, theme, or shell changes, run the narrowest meaningful test first.
 - Whenever unit tests and e2e tests both pass completely (full green), record that result in the daily dev log and include the verification status explicitly in the git commit message.
 
 ## Agent Habits
 
 - Check whether new logic belongs in `shared`, `core`, `ui`, or an app before adding files.
-- When adding runtime capabilities, think about host app, plugin demo, and bridge compatibility together.
 
 ## Bug Fix Test Coverage Rule
 
