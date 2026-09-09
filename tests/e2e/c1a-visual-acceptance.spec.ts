@@ -121,6 +121,8 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     await expect(table.locator('tbody tr').first()).toBeVisible();
 
     const headStyle = await readStyles(table.locator('thead th').first(), ['font-size', 'height']);
+    // First column is the selection (checkbox) column: F14c in flux-spacing.css
+    // normalizes it to --table-cell-padding-x (10px) so the checkbox centers.
     const firstCell = table.locator('tbody td').first();
     const cellStyle = await readStyles(firstCell, [
       'font-size',
@@ -135,7 +137,7 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     expect(cellStyle['font-size']).toBe('12px');
     expect(cellStyle['padding-top']).toBe('11px');
     expect(cellStyle['padding-bottom']).toBe('11px');
-    expect(cellStyle['padding-left']).toBe('16px');
+    expect(cellStyle['padding-left']).toBe('10px');
     expect(lastCellStyle['padding-right']).toBe('16px');
   });
 
@@ -163,8 +165,9 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     const actionButton = table.locator("[data-slot='table-actions'] button").first();
     await expect(actionButton).toBeVisible();
     const actionStyle = await readStyles(actionButton, ['height']);
-    // AMIS parity: link-style action button ~24px (was 32px which inflated rows)
-    expect(actionStyle.height).toBe('24px');
+    // AMIS parity: F5 in flux-spacing.css pins link-style action buttons to
+    // 18px (AMIS cxd link button measured height).
+    expect(actionStyle.height).toBe('18px');
   });
 
   test('flux dialog parity on host page (500px, top 60px, overlay 0.7, title 14px)', async ({

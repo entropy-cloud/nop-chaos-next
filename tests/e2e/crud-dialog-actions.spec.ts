@@ -1,6 +1,10 @@
 import { expect } from '@playwright/test';
 import { test, mockLogin as login } from '@nop-chaos/e2e-shared';
 
+// Requires the flux-prototype dev server (prototype menu '系统管理/产品管理'
+// and the 4177 mock API) — run via `pnpm test:e2e:flux-prototype`.
+test.skip(() => (process.env.PLAYWRIGHT_APP_MODE ?? '') !== 'flux-prototype', 'flux-prototype only');
+
 test('edit submit full flow: PUT body -> refresh -> renamed row visible', async ({ page }) => {
   await login(page, { username: 'proto', mockMenuRoutes: false });
   const nav = page.getByRole('navigation', { name: 'Primary navigation' }).first();

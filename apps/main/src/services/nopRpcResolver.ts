@@ -175,10 +175,7 @@ function argQuery(data: Record<string, unknown>, _arg: OperationArgDef): unknown
 }
 
 // ── argDataMap：save/update/delete 等，过滤特殊键 + 递归 ──
-
-function argDataMap(data: Record<string, unknown>, _arg: OperationArgDef): unknown {
-  return removeSpecialKeys(data);
-}
+// （实现见上方 builders.argDataMap，操作注册表统一引用该 builder。）
 
 // ── 默认 Builder 映射表（按 arg.type 查找） ──
 

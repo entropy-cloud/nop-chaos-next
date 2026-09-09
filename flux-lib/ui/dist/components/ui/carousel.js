@@ -58,10 +58,14 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, label, cl
     React.useEffect(() => {
         if (!api)
             return;
-        onSelect(api);
+        // Defer the initial state sync by one frame: calling onSelect (which
+        // setState) synchronously in the effect body triggers a cascading render
+        // (react-hooks/set-state-in-effect); the frame delay is imperceptible.
+        const identity = requestAnimationFrame(() => onSelect(api));
         api.on('reInit', onSelect);
         api.on('select', onSelect);
         return () => {
+            cancelAnimationFrame(identity);
             api?.off('reInit', onSelect);
             api?.off('select', onSelect);
         };

@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
 
+// Manual diagnostic script: hard-codes port 4173 and the live Chinese login
+// form. Run explicitly with RUN_DIAGNOSTIC=1 against a matching server.
+test.skip(() => !process.env.RUN_DIAGNOSTIC, 'manual diagnostic script');
+
 const BASE = 'http://localhost:4173';
 
 test('diagnostic: auth-resource page DOM', async ({ page }) => {

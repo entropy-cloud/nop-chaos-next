@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import { ArrowRight, KeyRound, Layers3, ShieldCheck, User2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import type { AuthSession } from '@nop-chaos/shared';
+import { setTokens } from '@nop-chaos/shared';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from '@nop-chaos/ui';
 
 import harborMarkHref from '../harbor-mark.svg';
@@ -45,9 +45,25 @@ export function ExtensionLoginPage() {
     try {
       setSubmitting(true);
       const session = createDemoSession(username);
+      // Without the plugin bridge the extension cannot call the host auth
+      // store directly, so it seeds the same persisted auth state the host
+      // login flow would produce (zustand persist key `auth:v2`, mirrored to
+      // both storages since the active scope is config-driven), then reloads
+      // so the host auth bootstrap restores the session.
+      setTokens(session.token, session.tokens?.refreshToken);
+      const persistedAuth = JSON.stringify({
+        state: {
+          user: session.user,
+          isAuthenticated: true,
+          token: session.token,
+        },
+        version: 0,
+      });
+      sessionStorage.setItem('auth:v2', persistedAuth);
+      localStorage.setItem('auth:v2', persistedAuth);
       toast.success(t('extensionDemo.login.messages.loginSuccess'));
-      // In extension context, navigate using hash
       window.location.hash = '#/';
+      window.location.reload();
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : t('extensionDemo.login.messages.loginFailed'),

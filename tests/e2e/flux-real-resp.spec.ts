@@ -32,8 +32,15 @@ test('host mock + 真实后端响应：edit 提交值验证', async ({ page }) =
   await page.waitForTimeout(1500);
 
   const data = (updateBody as { data?: { roleName?: string } } | undefined)?.data;
+  // After OK the dialog is closed and the input is removed from the DOM — a
+  // locator.evaluate here would block until the test-level timeout kills the
+  // test (its .catch never runs). Query the DOM directly instead.
+  const domAfterFill = await page.evaluate(() => {
+    const el = document.querySelector("[data-slot='dialog-surface'] input[name='roleName']");
+    return el ? (el as HTMLInputElement).value : '(closed)';
+  });
   writeFileSync('/tmp/real-resp.txt', JSON.stringify({
-    domAfterFill: await input.evaluate((el) => (el as HTMLInputElement).value).catch(() => '(closed)'),
+    domAfterFill,
     updateRoleName: data?.roleName,
     updateBody,
   }, null, 2));

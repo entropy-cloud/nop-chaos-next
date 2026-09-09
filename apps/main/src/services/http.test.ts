@@ -73,23 +73,6 @@ describe('http', () => {
     expect(capturedConfig.getTimeoutMs()).toBe(15_000);
   });
 
-  it('setRefreshTokenFetcher is called on module load', async () => {
-    // Reset the mock before importing the module
-    mockSetRefreshTokenFetcher.mockReset();
-    mockCreateHttpClient.mockReset();
-    mockCreateHttpClient.mockImplementation((config: Record<string, unknown>) => ({
-      request: vi.fn().mockResolvedValue({ status: 200, data: { data: {} } }),
-    }));
-    
-    // Import the module - this should trigger setRefreshTokenFetcher
-    const httpModule = await import('./http');
-    
-    // The mock should have been called when the module was loaded
-    // Note: Due to vi.resetModules(), the mock may not be called if the module was already loaded
-    // So we just verify the mock was set up correctly
-    expect(mockSetRefreshTokenFetcher).toBeDefined();
-  });
-
   it('getAuthToken reads from managed token storage', async () => {
     await import('./http');
     useAuthStore.getState().setUser({ id: '1', username: 'test', roles: [] });
@@ -188,5 +171,15 @@ describe('http', () => {
     await import('./http');
     const url = capturedConfig.getBaseUrl();
     expect(typeof url).toBe('string');
+  });
+
+  it('setRefreshTokenFetcher is called on module load', async () => {
+    // vitest 5 clears mock call records between tests, so re-execute the
+    // module body to observe the module-load side effect. This test must stay
+    // LAST in the file: resetModules() creates a fresh http module instance,
+    // which would invalidate `capturedConfig` for any test that follows.
+    vi.resetModules();
+    await import('./http');
+    expect(mockSetRefreshTokenFetcher).toHaveBeenCalled();
   });
 });

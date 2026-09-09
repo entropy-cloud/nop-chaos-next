@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: {
-      'monaco-editor': resolve(__dirname, 'src/__mocks__/monaco-editor.ts'),
+      'monaco-editor': resolve(__dirname, 'src/__mocks__/monacoEditor.ts'),
     },
   },
   test: {

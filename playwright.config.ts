@@ -63,6 +63,10 @@ const serverCommand = isPrototypeMode
 
 export default defineConfig({
   testDir: './tests/e2e',
+  // extension-dev specs require the dev-in-host server orchestration from
+  // playwright.extension-dev.config.ts (`pnpm test:e2e:extension-dev`); they
+  // cannot run against the plain mock preview server.
+  testIgnore: /extension-dev.*\.spec\.ts/,
   timeout: 30_000,
   expect: {
     timeout: 10_000,
