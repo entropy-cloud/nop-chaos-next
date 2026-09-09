@@ -21,7 +21,7 @@ const inputGroupAddonVariants = cva("flex h-auto cursor-text items-center justif
     },
 });
 function InputGroupAddon({ className, align = 'inline-start', ...props }) {
-    return (_jsx("div", { role: "group", tabIndex: 0, "data-slot": "input-group-addon", "data-align": align, className: cn('nop-input-group ', inputGroupAddonVariants({ align }), className), onClick: (e) => {
+    return (_jsx("div", { role: "group", tabIndex: 0, "data-slot": "input-group-addon", "data-align": align, className: cn(inputGroupAddonVariants({ align }), className), onClick: (e) => {
             if (e.target.closest('button')) {
                 return;
             }
@@ -47,15 +47,15 @@ const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm shadow-non
     },
 });
 function InputGroupButton({ className, type = 'button', variant = 'ghost', size = 'xs', ...props }) {
-    return (_jsx(Button, { type: type, "data-size": size, variant: variant, className: cn('nop-input-group ', inputGroupButtonVariants({ size }), className), ...props }));
+    return (_jsx(Button, { type: type, "data-size": size, variant: variant, className: cn(inputGroupButtonVariants({ size }), className), ...props }));
 }
 function InputGroupText({ className, ...props }) {
-    return (_jsx("span", { className: cn('nop-input-group ', "flex items-center gap-2 text-sm text-muted-foreground [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", className), ...props }));
+    return (_jsx("span", { className: cn("flex items-center gap-2 text-sm text-muted-foreground [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4", className), ...props }));
 }
 function InputGroupInput({ className, ...props }) {
-    return (_jsx(Input, { "data-slot": "input-group-control", className: cn('nop-input-group ', 'flex-1 rounded-none border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent', className), ...props }));
+    return (_jsx(Input, { "data-slot": "input-group-control", className: cn('flex-1 rounded-none border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent', className), ...props }));
 }
 function InputGroupTextarea({ className, ...props }) {
-    return (_jsx(Textarea, { "data-slot": "input-group-control", className: cn('nop-input-group ', 'flex-1 resize-none rounded-none border-0 bg-transparent py-2 shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent', className), ...props }));
+    return (_jsx(Textarea, { "data-slot": "input-group-control", className: cn('flex-1 resize-none rounded-none border-0 bg-transparent py-2 shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent', className), ...props }));
 }
 export { InputGroup, InputGroupAddon, InputGroupButton, InputGroupText, InputGroupInput, InputGroupTextarea, };

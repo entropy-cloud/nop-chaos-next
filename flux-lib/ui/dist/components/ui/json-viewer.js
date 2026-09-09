@@ -4,7 +4,7 @@ import { JsonView, allExpanded, defaultStyles } from 'react-json-view-lite';
 import { stringify } from 'yaml';
 import { Tabs, TabsList, TabsTrigger } from './tabs.js';
 import { cn } from '../../lib/utils.js';
-function JsonViewer({ data, defaultExpand = true, expandLevel, className, }) {
+function JsonViewer({ data, defaultExpand = true, expandLevel, className }) {
     const shouldExpandNode = typeof expandLevel === 'number'
         ? (level) => level < expandLevel
         : defaultExpand

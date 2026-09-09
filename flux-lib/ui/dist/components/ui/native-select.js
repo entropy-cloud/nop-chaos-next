@@ -8,6 +8,6 @@ function NativeSelectOption({ ...props }) {
     return _jsx("option", { "data-slot": "native-select-option", ...props });
 }
 function NativeSelectOptGroup({ className, ...props }) {
-    return _jsx("optgroup", { "data-slot": "native-select-optgroup", className: cn('nop-native-select ', className), ...props });
+    return (_jsx("optgroup", { "data-slot": "native-select-optgroup", className: cn('nop-native-select ', className), ...props }));
 }
 export { NativeSelect, NativeSelectOptGroup, NativeSelectOption };

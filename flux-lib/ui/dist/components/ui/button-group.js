@@ -31,6 +31,6 @@ function ButtonGroupText({ className, render, ...props }) {
     });
 }
 function ButtonGroupSeparator({ className, orientation = 'vertical', ...props }) {
-    return (_jsx(Separator, { "data-slot": "button-group-separator", orientation: orientation, className: cn('nop-button-group ', 'relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto', className), ...props }));
+    return (_jsx(Separator, { "data-slot": "button-group-separator", orientation: orientation, className: cn('relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto', className), ...props }));
 }
 export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants };

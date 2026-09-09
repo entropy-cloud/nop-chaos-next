@@ -147,9 +147,8 @@ function useDrawerResize(direction, enabled) {
                         : state.startY - moveEvent.clientY;
             // Min/Max clamp (G6-R3-视角6-01): keep the drawer usable on both ends —
             // never smaller than 160px, never larger than 90% of the viewport axis.
-            const viewportMax = (direction === 'left' || direction === 'right'
-                ? window.innerWidth
-                : window.innerHeight) * 0.9;
+            const viewportMax = (direction === 'left' || direction === 'right' ? window.innerWidth : window.innerHeight) *
+                0.9;
             const next = Math.min(Math.max(160, state.startSize + delta), viewportMax);
             setSize(next);
         };

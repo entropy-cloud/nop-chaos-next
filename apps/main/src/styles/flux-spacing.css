@@ -305,9 +305,9 @@
 /* F4: 表格与 AMIS 对齐 —— AMIS `.cxd-Table-table` 实测 border 0、无外框（仅行间
    横线分隔，见 F4b）。flux 无需额外外框；此前加的 1px border + radius 会造成
    "表格+分页器被边框包裹"的观感，已移除。
-   注意：flux 上游把 'nop-table' class 同时挂在容器、tr、td 上，因此必须用
-   :not() 限定只给容器（table/div）上底色，否则会覆盖 tr 的 hover 背景。 */
-.nop-table:not(tr):not(td):not(th) {
+   （上游 flux 已将 family class 收敛为仅挂渲染根，元素选择器安全；见
+   nop-chaos-flux docs/plans/2026-09-09-0001-ui-family-class-nesting-cleanup-plan.md） */
+.nop-table {
   background: hsl(var(--card));
 }
 
