@@ -20,17 +20,17 @@
     "@nop-chaos/ui": "workspace:*",
     "@vitejs/plugin-react": "^6.1.1",
     "lucide-react": "^1.7.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "react-router-dom": "^7.14.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^4.2.2",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.2",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   },
   "peerDependencies": {
     "@nop-chaos/shared": "workspace:*",
-    "lucide-react": "^1.7.0",
     "@nop-chaos/ui": "workspace:*",
+    "lucide-react": "^1.7.0",
     "react": "^19.0.0"
   }
 }

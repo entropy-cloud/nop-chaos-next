@@ -1,5 +1,5 @@
 'use client';
-import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { cn } from '../../lib/utils.js';
 import { CheckIcon, MinusIcon } from 'lucide-react';

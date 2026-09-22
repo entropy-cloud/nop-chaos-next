@@ -16,32 +16,32 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@nop-chaos/shared": "file:./sdks/nop-chaos-shared-0.1.0.tgz",
-    "@nop-chaos/plugin-bridge": "file:./sdks/nop-chaos-plugin-bridge-0.1.0.tgz",
-    "@nop-chaos/theme-tokens": "file:./sdks/nop-chaos-theme-tokens-0.1.0.tgz",
-    "@nop-chaos/tailwind-preset": "file:./sdks/nop-chaos-tailwind-preset-0.1.0.tgz",
-    "@nop-chaos/ui": "file:./sdks/nop-chaos-ui-0.1.0.tgz",
     "@nop-chaos/extension-dev": "file:./sdks/nop-chaos-extension-dev-0.1.0.tgz",
     "@nop-chaos/flux": "file:./sdks/nop-chaos-flux-0.1.0.tgz",
+    "@nop-chaos/plugin-bridge": "file:./sdks/nop-chaos-plugin-bridge-0.1.0.tgz",
+    "@nop-chaos/shared": "file:./sdks/nop-chaos-shared-0.1.0.tgz",
+    "@nop-chaos/tailwind-preset": "file:./sdks/nop-chaos-tailwind-preset-0.1.0.tgz",
+    "@nop-chaos/theme-tokens": "file:./sdks/nop-chaos-theme-tokens-0.1.0.tgz",
+    "@nop-chaos/ui": "file:./sdks/nop-chaos-ui-0.1.0.tgz",
     "amis": "file:./sdks/amis-6.13.1-fix.0.tgz",
     "amis-core": "file:./sdks/amis-core-6.13.1-fix.0.tgz",
-    "amis-ui": "file:./sdks/amis-ui-6.13.1-fix.0.tgz",
     "amis-formula": "file:./sdks/amis-formula-6.13.1-fix.0.tgz",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "amis-ui": "file:./sdks/amis-ui-6.13.1-fix.0.tgz",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "peerDependencies": {
+    "@nop-chaos/plugin-bridge": "*",
     "@nop-chaos/shared": "*",
     "@nop-chaos/ui": "*",
-    "@nop-chaos/plugin-bridge": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "typescript": "^6.0.2",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   }
 }
