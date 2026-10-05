@@ -182,4 +182,83 @@ describe('http', () => {
     await import('./http');
     expect(mockSetRefreshTokenFetcher).toHaveBeenCalled();
   });
+
+  // ── nopRpcRequest 透传分支 blob 处理（plan 2026-10-06-0508-1，flux download Form 1 契约）──
+
+  it('passthrough blob: 2xx non-JSON Blob returned as-is with responseType forwarded', async () => {
+    const { mainHttpClient, nopRpcRequest } = await import('./http');
+    const blob = new Blob([new Uint8Array([0x50, 0x4b, 0x03, 0x04])], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const requestSpy = vi.fn().mockResolvedValue({
+      status: 200,
+      data: blob,
+      headers: { 'content-disposition': 'attachment; filename="a.xlsx"' },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (mainHttpClient as any).request = requestSpy;
+
+    const resp = await nopRpcRequest({
+      url: '/p/ErpCrmReport__download',
+      method: 'post',
+      responseType: 'blob',
+    });
+
+    expect(requestSpy.mock.calls[0][0].responseType).toBe('blob');
+    expect(resp.status).toBe(0);
+    expect(resp.data).toBe(blob);
+    expect(resp.headers?.['content-disposition']).toContain('a.xlsx');
+  });
+
+  it('passthrough blob: JSON error envelope is not returned as a fake download', async () => {
+    const { mainHttpClient, nopRpcRequest } = await import('./http');
+    const blob = new Blob([JSON.stringify({ status: -1, msg: 'bad report param' })], {
+      type: 'application/json',
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (mainHttpClient as any).request = vi.fn().mockResolvedValue({ status: 200, data: blob, headers: {} });
+
+    const resp = await nopRpcRequest({
+      url: '/p/ErpCrmReport__download',
+      method: 'post',
+      responseType: 'blob',
+    });
+
+    expect(resp.status).toBe(-1);
+    expect(resp.msg).toBe('bad report param');
+    expect(resp.data).toBeNull();
+  });
+
+  it('passthrough blob: non-2xx binary maps to status -1 (no fake success)', async () => {
+    const { mainHttpClient, nopRpcRequest } = await import('./http');
+    const blob = new Blob([new Uint8Array([0x00])], { type: 'application/octet-stream' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (mainHttpClient as any).request = vi.fn().mockResolvedValue({ status: 500, data: blob, headers: {} });
+
+    const resp = await nopRpcRequest({
+      url: '/p/ErpCrmReport__download',
+      method: 'post',
+      responseType: 'blob',
+    });
+
+    expect(resp.status).toBe(-1);
+    expect(resp.data).toBeNull();
+  });
+
+  it('passthrough without responseType keeps legacy envelope behavior', async () => {
+    const { mainHttpClient, nopRpcRequest } = await import('./http');
+    const requestSpy = vi.fn().mockResolvedValue({
+      status: 200,
+      data: { status: 0, data: { x: 1 } },
+      headers: {},
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (mainHttpClient as any).request = requestSpy;
+
+    const resp = await nopRpcRequest({ url: '/p/some-endpoint', method: 'post' });
+
+    expect(requestSpy.mock.calls[0][0].responseType).toBeUndefined();
+    expect(resp.status).toBe(0);
+    expect(resp.data).toEqual({ x: 1 });
+  });
 });

@@ -283,7 +283,45 @@ export async function nopRpcRequest<T>(options: NopRpcRequestOptions): Promise<N
   try {
     const response = await mainHttpClient.request<T>({
       url, method, data: options.data, headers: options.headers, signal: options.signal,
+      responseType: options.responseType,
     });
+    // blob 透传（/p/ 二进制端点 → flux download 动作 Form 1 契约要求
+    // {status:0, data:Blob, headers}——由 flux 动作按 content-disposition 命名保存，
+    // 此处不得消费 blob（normalizeBlobData 的自动下载语义仅属 @query:/@mutation: 分支）。
+    // 2xx 门禁前置 + JSON-in-blob 错误恢复：错误 envelope 不得作为成功 Blob 返回（假下载吞错）。
+    if (options.responseType === 'blob' && response.data instanceof Blob) {
+      const is2xx = response.status >= 200 && response.status < 300;
+      const contentType = response.data.type || '';
+      if (!is2xx || contentType.includes('json')) {
+        let parsed: unknown;
+        try {
+          parsed = JSON.parse(await response.data.text());
+        } catch {
+          parsed = undefined;
+        }
+        const envelope = parsed as
+          | { status?: number; code?: string; msg?: string; errors?: Record<string, string> }
+          | undefined;
+        if (envelope && typeof envelope === 'object' && typeof envelope.status === 'number') {
+          return {
+            status: envelope.status,
+            code: envelope.code,
+            msg: envelope.msg,
+            data: null,
+            errors: envelope.errors,
+            headers: response.headers,
+            raw: response,
+          };
+        }
+        if (!is2xx) {
+          const error = new Error(`Request failed: ${response.status}`) as Error & { status?: number };
+          error.status = response.status;
+          throw error;
+        }
+        // 2xx 的非 envelope JSON（合法 JSON 文件下载）落到下方原样返回
+      }
+      return { status: 0, data: response.data as T, headers: response.headers, raw: response };
+    }
     const body = response.data as unknown as {
       status?: number;
       code?: string;
