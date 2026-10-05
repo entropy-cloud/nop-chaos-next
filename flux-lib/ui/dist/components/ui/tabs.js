@@ -6,7 +6,11 @@ import { cn } from '../../lib/utils.js';
 function Tabs({ className, orientation = 'horizontal', ...props }) {
     return (_jsx(TabsPrimitive.Root, { "data-slot": "tabs", "data-orientation": orientation, className: cn(orientation === 'horizontal' ? 'group/tabs flex flex-col gap-2' : 'group/tabs flex gap-2', className), ...props }));
 }
-const tabsListVariants = cva('group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none', {
+const tabsListVariants = cva(
+// [G1-R6-视角8-01] `min-w-0 max-w-full` lets the `w-fit` list shrink inside a
+// constrained flex parent so a consumer's overflow-x scroll contract can
+// actually engage instead of the list overflowing its container.
+'group/tabs-list inline-flex w-fit min-w-0 max-w-full items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none', {
     variants: {
         variant: {
             default: 'bg-muted',

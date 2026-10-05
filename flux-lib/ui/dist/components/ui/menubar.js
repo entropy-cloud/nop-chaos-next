@@ -17,7 +17,10 @@ function MenubarPortal({ ...props }) {
     return _jsx(DropdownMenuPortal, { "data-slot": "menubar-portal", ...props });
 }
 function MenubarTrigger({ className, ...props }) {
-    return (_jsx(DropdownMenuTrigger, { "data-slot": "menubar-trigger", className: cn('nop-menubar ', 'flex items-center rounded-sm px-1.5 py-[2px] text-sm font-medium outline-hidden select-none hover:bg-muted aria-expanded:bg-muted', className), ...props }));
+    return (_jsx(DropdownMenuTrigger, { "data-slot": "menubar-trigger", className: cn(
+        // [G6-R2-视角3-02] outline-hidden erases the default focus ring, so a
+        // focus-visible replacement is required for keyboard traversal.
+        'flex items-center rounded-sm px-1.5 py-[2px] text-sm font-medium outline-hidden select-none hover:bg-muted aria-expanded:bg-muted focus-visible:bg-muted focus-visible:outline-1 focus-visible:outline-ring', className), ...props }));
 }
 function MenubarContent({ className, align = 'start', alignOffset = -4, sideOffset = 8, ...props }) {
     return (_jsx(DropdownMenuContent, { "data-slot": "menubar-content", align: align, alignOffset: alignOffset, sideOffset: sideOffset, className: cn('nop-menubar ', 'min-w-36 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95', className), ...props }));
@@ -26,13 +29,18 @@ function MenubarItem({ className, inset, variant = 'default', ...props }) {
     return (_jsx(DropdownMenuItem, { "data-slot": "menubar-item", "data-inset": inset, "data-variant": variant, className: cn("group/menubar-item gap-1.5 rounded-md px-1.5 py-1 text-sm focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-inset:pl-7 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 data-disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 data-[variant=destructive]:*:[svg]:text-destructive!", className), ...props }));
 }
 function MenubarCheckboxItem({ className, children, checked, inset, ...props }) {
-    return (_jsxs(MenuPrimitive.CheckboxItem, { "data-slot": "menubar-checkbox-item", "data-inset": inset, className: cn('relative flex cursor-default items-center gap-1.5 rounded-md py-1 pr-1.5 pl-7 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground data-inset:pl-7 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0', className), checked: checked, ...props, children: [_jsx("span", { className: "pointer-events-none absolute left-1.5 flex size-4 items-center justify-center [&_svg:not([class*='size-'])]:size-4", children: _jsx(MenuPrimitive.CheckboxItemIndicator, { children: _jsx(CheckIcon, {}) }) }), children] }));
+    return (_jsxs(MenuPrimitive.CheckboxItem, { "data-slot": "menubar-checkbox-item", "data-inset": inset, className: cn(
+        // [G6-视角10-01] indicator placement follows the DropdownMenu /
+        // ContextMenu / Select / Combobox family: trailing (right) check slot.
+        'relative flex cursor-default items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground data-inset:pl-7 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg:not([class*=\'size-\'])]:size-4 data-[variant=destructive]:*:[svg]:text-destructive!', className), checked: checked, ...props, children: [_jsx("span", { className: "pointer-events-none absolute right-2 flex items-center justify-center [&_svg:not([class*='size-'])]:size-4", children: _jsx(MenuPrimitive.CheckboxItemIndicator, { children: _jsx(CheckIcon, {}) }) }), children] }));
 }
 function MenubarRadioGroup({ ...props }) {
     return _jsx(DropdownMenuRadioGroup, { "data-slot": "menubar-radio-group", ...props });
 }
 function MenubarRadioItem({ className, children, inset, ...props }) {
-    return (_jsxs(MenuPrimitive.RadioItem, { "data-slot": "menubar-radio-item", "data-inset": inset, className: cn("relative flex cursor-default items-center gap-1.5 rounded-md py-1 pr-1.5 pl-7 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground data-inset:pl-7 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", className), ...props, children: [_jsx("span", { className: "pointer-events-none absolute left-1.5 flex size-4 items-center justify-center [&_svg:not([class*='size-'])]:size-4", children: _jsx(MenuPrimitive.RadioItemIndicator, { children: _jsx(CheckIcon, {}) }) }), children] }));
+    return (_jsxs(MenuPrimitive.RadioItem, { "data-slot": "menubar-radio-item", "data-inset": inset, className: cn(
+        // [G6-视角10-01] trailing (right) indicator slot, matching DropdownMenu.
+        "relative flex cursor-default items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground data-inset:pl-7 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4", className), ...props, children: [_jsx("span", { className: "pointer-events-none absolute right-2 flex items-center justify-center [&_svg:not([class*='size-'])]:size-4", children: _jsx(MenuPrimitive.RadioItemIndicator, { children: _jsx(CheckIcon, {}) }) }), children] }));
 }
 function MenubarLabel({ className, inset, ...props }) {
     return (_jsx(DropdownMenuLabel, { "data-slot": "menubar-label", "data-inset": inset, className: cn('px-1.5 py-1 text-sm font-medium data-inset:pl-7', className), ...props }));

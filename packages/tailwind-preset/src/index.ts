@@ -45,6 +45,7 @@ const baseThemeExtension: TailwindThemeExtension = {
       border: 'hsl(var(--sidebar-border, var(--border)))',
       ring: 'hsl(var(--sidebar-ring, var(--ring)))',
     },
+      // dual-track alias (variant-vocabulary.md): danger <-> destructive are deliberate schema-facing/shadcn-facing aliases.
     destructive: {
       DEFAULT: 'hsl(var(--destructive, var(--danger)))',
       foreground: 'hsl(var(--destructive-foreground, var(--primary-foreground)))',
@@ -136,7 +137,10 @@ export function createNopTailwindPreset(
   extension?: HostTailwindThemeExtension,
 ): Partial<Config> {
   return {
-    darkMode: ['class', '.dark'],
+    // Single dark trigger for the whole repo: the data-mode attribute set by
+    // theme-tokens consumers (plan 471 V1-F2). The former ['.dark'] class
+    // trigger was never activated by any host code path.
+    darkMode: ['selector', '[data-mode="dark"]'],
     theme: {
       extend: mergeThemeExtension(baseThemeExtension, extension),
     },

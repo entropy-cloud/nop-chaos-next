@@ -10,12 +10,35 @@
   background: var(--table-header-bg);
 }
 
+/* ux-r12e：fixed 粘性列必须不透明——透明底会透出下方液态列内容。
+   宿主需定义 --table-fixed-bg（深浅主题各自取值）；未定义时回退表头 token。 */
+.nop-table [data-fixed] {
+  background: var(--table-fixed-bg, var(--table-header-bg, var(--table-striped-bg)));
+}
+
 .nop-table thead th + th {
   border-left: 1px solid var(--table-header-separator-color);
 }
 
 .nop-table tbody td {
   padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+}
+
+/* Density tiers (L4.1): the root only emits data-density for non-default
+   tiers. Row height drives both header and body cells; the body-cell vertical
+   padding zeroes so the height minimum actually governs (stripe ladder
+   precedent: height + vertical padding 0 + cell vertical-align centering). */
+.nop-table[data-density='compact'] {
+  --table-row-height: var(--table-row-height-compact);
+}
+
+.nop-table[data-density='relaxed'] {
+  --table-row-height: var(--table-row-height-relaxed);
+}
+
+.nop-table[data-density] tbody td {
+  height: var(--table-row-height);
+  padding-block: 0;
 }
 
 .nop-table tbody td:first-child {

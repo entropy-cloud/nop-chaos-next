@@ -43,16 +43,16 @@ function Calendar({ className, classNames, showOutsideDays = true, captionLayout
             ...classNames,
         }, components: {
             Root: ({ className, rootRef, ...props }) => {
-                return (_jsx("div", { "data-slot": "calendar", ref: rootRef, className: cn('nop-calendar ', className), ...props }));
+                return (_jsx("div", { "data-slot": "calendar", ref: rootRef, className: className, ...props }));
             },
             Chevron: ({ className, orientation, ...props }) => {
                 if (orientation === 'left') {
-                    return (_jsx(ChevronLeftIcon, { className: cn('nop-calendar ', 'size-4', className), ...props }));
+                    return _jsx(ChevronLeftIcon, { className: cn('size-4', className), ...props });
                 }
                 if (orientation === 'right') {
-                    return (_jsx(ChevronRightIcon, { className: cn('nop-calendar ', 'size-4', className), ...props }));
+                    return _jsx(ChevronRightIcon, { className: cn('size-4', className), ...props });
                 }
-                return (_jsx(ChevronDownIcon, { className: cn('nop-calendar ', 'size-4', className), ...props }));
+                return _jsx(ChevronDownIcon, { className: cn('size-4', className), ...props });
             },
             DayButton: ({ ...props }) => _jsx(CalendarDayButton, { locale: locale, ...props }),
             WeekNumber: ({ children, ...props }) => {

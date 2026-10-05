@@ -9,10 +9,15 @@ function Command({ className, ...props }) {
     return (_jsx(CommandPrimitive, { "data-slot": "command", className: cn('nop-command ', 'flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground', className), ...props }));
 }
 function CommandDialog({ title = t('flux.command.title'), description = t('flux.command.searchPlaceholder'), children, className, showCloseButton = false, ...props }) {
-    return (_jsxs(Dialog, { ...props, children: [_jsxs(DialogHeader, { className: "sr-only", children: [_jsx(DialogTitle, { children: title }), _jsx(DialogDescription, { children: description })] }), _jsx(DialogContent, { className: cn('nop-command ', 'top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0', className), showCloseButton: showCloseButton, children: children })] }));
+    return (_jsxs(Dialog, { ...props, children: [_jsxs(DialogHeader, { className: "sr-only", children: [_jsx(DialogTitle, { children: title }), _jsx(DialogDescription, { children: description })] }), _jsx(DialogContent, { className: cn('top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0', className), showCloseButton: showCloseButton, children: children })] }));
 }
 function CommandInput({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "command-input-wrapper", className: "p-1 pb-0", children: _jsxs(InputGroup, { className: "h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!", children: [_jsx(CommandPrimitive.Input, { "data-slot": "command-input", className: cn('w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50', className), ...props }), _jsx(InputGroupAddon, { children: _jsx(SearchIcon, { className: "size-4 shrink-0 opacity-50" }) })] }) }));
+    return (_jsx("div", { "data-slot": "command-input-wrapper", className: "p-1 pb-0", children: _jsxs(InputGroup, { className: "h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!", children: [_jsx(CommandPrimitive.Input
+                // [G6-R4-视角3-01] slot fix: the group-level focus ring matches
+                // [data-slot=input-group-control]:focus-visible — the previous
+                // "command-input" marker never matched, so keyboard focus was
+                // invisible inside the ⌘K palette.
+                , { "data-slot": "input-group-control", className: cn('w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50', className), ...props }), _jsx(InputGroupAddon, { children: _jsx(SearchIcon, { className: "size-4 shrink-0 opacity-50" }) })] }) }));
 }
 function CommandList({ className, ...props }) {
     return (_jsx(CommandPrimitive.List, { "data-slot": "command-list", className: cn('no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none', className), ...props }));
@@ -27,7 +32,7 @@ function CommandSeparator({ className, ...props }) {
     return (_jsx(CommandPrimitive.Separator, { "data-slot": "command-separator", className: cn('-mx-1 h-px bg-border', className), ...props }));
 }
 function CommandItem({ className, children, ...props }) {
-    return (_jsxs(CommandPrimitive.Item, { "data-slot": "command-item", className: cn('nop-command ', "group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted data-selected:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-foreground", className), ...props, children: [children, _jsx(CheckIcon, { className: "ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" })] }));
+    return (_jsxs(CommandPrimitive.Item, { "data-slot": "command-item", className: cn("group/command-item relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-accent data-selected:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-accent-foreground", className), ...props, children: [children, _jsx(CheckIcon, { className: "ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" })] }));
 }
 function CommandShortcut({ className, ...props }) {
     return (_jsx("span", { "data-slot": "command-shortcut", className: cn('ml-auto text-xs tracking-widest text-muted-foreground group-data-selected/command-item:text-foreground', className), ...props }));

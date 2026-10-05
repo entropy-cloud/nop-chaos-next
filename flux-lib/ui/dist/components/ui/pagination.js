@@ -12,8 +12,8 @@ function PaginationContent({ className, ...props }) {
 function PaginationItem({ ...props }) {
     return _jsx("li", { "data-slot": "pagination-item", ...props });
 }
-function PaginationLink({ className, isActive, size = 'icon', ...props }) {
-    return (_jsx(Button, { variant: isActive ? 'outline' : 'ghost', size: size, className: cn(className), nativeButton: false, render: _jsx("a", { "aria-current": isActive ? 'page' : undefined, "data-slot": "pagination-link", "data-active": isActive, ...props }) }));
+function PaginationLink({ className, isActive, size = 'icon', disabled, ...props }) {
+    return (_jsx(Button, { variant: isActive ? 'outline' : 'ghost', size: size, "aria-disabled": disabled || undefined, className: cn('aria-disabled:pointer-events-none aria-disabled:opacity-50', className), nativeButton: false, render: _jsx("a", { "aria-current": isActive ? 'page' : undefined, "data-slot": "pagination-link", "data-active": isActive, ...props }) }));
 }
 function PaginationPrevious({ className, title, text = t('flux.pagination.previous'), ...props }) {
     return (_jsx(PaginationLink, { "aria-label": text, title: title ?? text, size: "default", className: cn('pl-1.5!', className), ...props, children: _jsx(ChevronLeftIcon, { "data-icon": "inline-start" }) }));

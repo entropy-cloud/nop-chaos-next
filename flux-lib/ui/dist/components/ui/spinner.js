@@ -1,7 +1,8 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { cn } from '../../lib/utils.js';
+import { t } from '../../lib/i18n.js';
 import { Loader2Icon } from 'lucide-react';
-function Spinner({ className, ...props }) {
-    return (_jsx(Loader2Icon, { role: "status", "aria-label": "Loading", className: cn('nop-spinner ', 'size-4 animate-spin', className), ...props }));
+function Spinner({ className, 'aria-label': ariaLabel, ...props }) {
+    return (_jsx(Loader2Icon, { role: "status", "aria-label": ariaLabel ?? t('flux.common.loading'), className: cn('nop-spinner ', 'size-4 animate-spin', className), ...props }));
 }
 export { Spinner };

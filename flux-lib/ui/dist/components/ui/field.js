@@ -5,13 +5,13 @@ import { cn } from '../../lib/utils.js';
 import { Label } from './label.js';
 import { Separator } from './separator.js';
 function FieldSet({ className, ...props }) {
-    return (_jsx("fieldset", { "data-slot": "field-set", className: cn('nop-field-ui ', 'flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3', className), ...props }));
+    return (_jsx("fieldset", { "data-slot": "field-set", className: cn('flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3', className), ...props }));
 }
 function FieldLegend({ className, variant = 'legend', ...props }) {
     return (_jsx("legend", { "data-slot": "field-legend", "data-variant": variant, className: cn('mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base', className), ...props }));
 }
 function FieldGroup({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "field-group", className: cn('nop-field-ui ', 'group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4', className), ...props }));
+    return (_jsx("div", { "data-slot": "field-group", className: cn('group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4', className), ...props }));
 }
 const fieldVariants = cva('group/field flex w-full gap-2 data-[invalid=true]:text-destructive', {
     variants: {

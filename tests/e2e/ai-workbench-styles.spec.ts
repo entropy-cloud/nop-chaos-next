@@ -76,9 +76,12 @@ test('master-detail batch delete button uses semantic destructive colors', async
 
   const batchDeleteButton = page.locator('main').getByRole('button', { name: 'Batch delete' });
   await expect(batchDeleteButton).toBeEnabled();
+  // flux 同步后上游 theme-tokens 的 --destructive 与宿主 --danger 别名分叉
+  // （0 84% 42% vs 60%）；断言语意图是"variant=destructive 消费同一语义 token"，
+  // 参照值改绑 --destructive 保持 token 一致性检查而非具体色值快照。
   await expectSemanticColors(batchDeleteButton, {
-    background: 'color-mix(in oklab, hsl(var(--danger)) 10%, transparent)',
-    foreground: 'hsl(var(--danger))',
+    background: 'color-mix(in oklab, hsl(var(--destructive)) 10%, transparent)',
+    foreground: 'hsl(var(--destructive))',
   });
 });
 

@@ -34,7 +34,12 @@ function ChartContainer({ id, className, children, config, initialDimension = IN
     const uniqueId = React.useId();
     const chartId = sanitizeChartId(`chart-${id ?? uniqueId.replace(/:/g, '')}`);
     const contextValue = React.useMemo(() => ({ config }), [config]);
-    return (_jsx(ChartContext.Provider, { value: contextValue, children: _jsxs("div", { "data-slot": "chart", "data-chart": chartId, className: cn('nop-chart ', 'flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_[stroke]]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke]]:stroke-background [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke]]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke]]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke]]:stroke-background [&_.recharts-surface]:outline-hidden', className), ...props, children: [_jsx(ChartStyle, { id: chartId, config: config }), _jsx(RechartsPrimitive.ResponsiveContainer, { initialDimension: initialDimension, children: children })] }) }));
+    return (_jsx(ChartContext.Provider, { value: contextValue, children: _jsxs("div", { "data-slot": "chart", "data-chart": chartId, className: cn('nop-chart ', 
+            // Tick text theming needs both selectors: recharts 3.x renders the
+            // label as text.recharts-cartesian-axis-tick-value inside
+            // g.recharts-cartesian-axis-tick-label(s), while 2.x nested <text>
+            // under g.recharts-cartesian-axis-tick (kept for version drift).
+            'flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick-value]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_[stroke]]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke]]:stroke-background [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke]]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke]]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke]]:stroke-background [&_.recharts-surface]:outline-hidden', className), ...props, children: [_jsx(ChartStyle, { id: chartId, config: config }), _jsx(RechartsPrimitive.ResponsiveContainer, { initialDimension: initialDimension, children: children })] }) }));
 }
 const ChartStyle = ({ id, config }) => {
     const colorConfig = Object.entries(config)
@@ -112,9 +117,17 @@ function ChartLegendContent({ className, hideIcon = false, payload, verticalAlig
             .map((item) => {
             const key = `${nameKey ?? item.dataKey ?? 'value'}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
+            // Fallback chain keeps the legend readable when config only covers
+            // other key shapes: pie payloads carry the slice name in `value`,
+            // cartesian payloads expose the raw dataKey.
+            const fallbackLabel = typeof item.value === 'string' && item.value.length > 0
+                ? item.value
+                : typeof item.dataKey === 'string'
+                    ? item.dataKey
+                    : undefined;
             return (_jsxs("div", { className: cn('flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground'), children: [itemConfig?.icon && !hideIcon ? (_jsx(itemConfig.icon, {})) : (_jsx("div", { className: "h-2 w-2 shrink-0 rounded-[2px]", style: {
                             backgroundColor: item.color,
-                        } })), itemConfig?.label] }, payloadItemKey(item)));
+                        } })), itemConfig?.label ?? fallbackLabel] }, payloadItemKey(item)));
         }) }));
 }
 function getPayloadConfigFromPayload(config, payload, key) {

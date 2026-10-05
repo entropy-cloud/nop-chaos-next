@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils.js';
 import { Separator } from './separator.js';
 function ItemGroup({ className, ...props }) {
-    return (_jsx("div", { role: "list", "data-slot": "item-group", className: cn('nop-item ', 'group/item-group flex w-full flex-col gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2', className), ...props }));
+    return (_jsx("div", { role: "list", "data-slot": "item-group", className: cn('group/item-group flex w-full flex-col gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2', className), ...props }));
 }
 function ItemSeparator({ className, ...props }) {
     return (_jsx(Separator, { "data-slot": "item-separator", orientation: "horizontal", className: cn('nop-item ', 'my-2', className), ...props }));
@@ -32,7 +32,7 @@ function Item({ className, variant = 'default', size = 'default', render, ...pro
     return useRender({
         defaultTagName: 'div',
         props: mergeProps({
-            className: cn(itemVariants({ variant, size, className })),
+            className: cn('nop-item ', itemVariants({ variant, size, className })),
         }, props),
         render,
         state: {

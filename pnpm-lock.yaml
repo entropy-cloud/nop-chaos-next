@@ -241,7 +241,7 @@ importers:
         version: link:../../packages/extension-host
       '@nop-chaos/flux':
         specifier: file:../../libs/nop-chaos-flux-0.1.0.tgz
-        version: file:libs/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(i18next@26.0.5(typescript@6.0.3))(lucide-react@1.27.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3))(react@19.3.0)(recharts@3.10.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react-is@19.2.8)(react@19.3.0)(redux@5.0.1))(zustand@5.0.14(@types/react@19.3.0)(immer@11.1.15)(react@19.3.0)(use-sync-external-store@1.6.0(react@19.3.0)))
+        version: file:libs/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(echarts@5.5.1)(i18next@26.0.5(typescript@6.0.3))(lucide-react@1.27.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3))(react@19.3.0)(recharts@3.10.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react-is@19.2.8)(react@19.3.0)(redux@5.0.1))(zustand@5.0.14(@types/react@19.3.0)(immer@11.1.15)(react@19.3.0)(use-sync-external-store@1.6.0(react@19.3.0)))
       '@nop-chaos/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1160,10 +1160,11 @@ packages:
       zustand: ^5.0.12
 
   '@nop-chaos/flux@file:libs/nop-chaos-flux-0.1.0.tgz':
-    resolution: {integrity: sha512-5MVdg7vX7/Z0K+d/yJZP7dSSOnOc+XnYC400YrRg2TiaF69638Yl0QjUG1v+m8sLu0mcEUHXqF0gMammTvG2gg==, tarball: file:libs/nop-chaos-flux-0.1.0.tgz}
+    resolution: {integrity: sha512-F6Zujr14uvaTdbRDrkEureTHAG0wpM3edXz174C7CYWbO1CuD0t82mlMb/4tkin0paDa+4Cd2ELuI+uKsFhEPQ==, tarball: file:libs/nop-chaos-flux-0.1.0.tgz}
     version: 0.1.0
     peerDependencies:
       '@nop-chaos/ui': '*'
+      echarts: ^6.0.0
       i18next: ^26.0.0
       lucide-react: ^1.17.0
       react: ^19.0.0
@@ -6294,9 +6295,10 @@ snapshots:
       recharts: 3.10.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react-is@19.2.8)(react@19.3.0)(redux@5.0.1)
       zustand: 5.0.14(@types/react@19.3.0)(immer@11.1.15)(react@19.3.0)(use-sync-external-store@1.6.0(react@19.3.0))
 
-  '@nop-chaos/flux@file:libs/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(i18next@26.0.5(typescript@6.0.3))(lucide-react@1.27.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3))(react@19.3.0)(recharts@3.10.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react-is@19.2.8)(react@19.3.0)(redux@5.0.1))(zustand@5.0.14(@types/react@19.3.0)(immer@11.1.15)(react@19.3.0)(use-sync-external-store@1.6.0(react@19.3.0)))':
+  '@nop-chaos/flux@file:libs/nop-chaos-flux-0.1.0.tgz(@nop-chaos/ui@flux-lib+ui)(echarts@5.5.1)(i18next@26.0.5(typescript@6.0.3))(lucide-react@1.27.0(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react-i18next@17.0.4(i18next@26.0.5(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3))(react@19.3.0)(recharts@3.10.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react-is@19.2.8)(react@19.3.0)(redux@5.0.1))(zustand@5.0.14(@types/react@19.3.0)(immer@11.1.15)(react@19.3.0)(use-sync-external-store@1.6.0(react@19.3.0)))':
     dependencies:
       '@nop-chaos/ui': link:flux-lib/ui
+      echarts: 5.5.1
       i18next: 26.0.5(typescript@6.0.3)
       lucide-react: 1.27.0(react@19.3.0)
       react: 19.3.0

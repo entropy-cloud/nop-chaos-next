@@ -170,7 +170,7 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     expect(actionStyle.height).toBe('18px');
   });
 
-  test('flux dialog parity on host page (500px, top 60px, overlay 0.7, title 14px)', async ({
+  test('flux dialog parity on host page (560px, top 60px, overlay 0.7, title 14px)', async ({
     page,
   }) => {
     await page.addInitScript(() => localStorage.setItem('nop-language:v1', 'en-US'));
@@ -182,15 +182,22 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     const surface = page.locator('[data-slot="dialog-surface"]').last();
     await expect(surface).toBeVisible();
 
-    await waitForWidth(surface, 500);
+    // flux 同步后 dialog 尺寸 token 体系更名并调值（--dialog-size-base 500px →
+    // --overlay-size-base 560px，上游 plan 490 overlay anatomy）；AMIS cxd 模态
+    // 仍为 500px，flux 侧跟随上游。
+    await waitForWidth(surface, 560);
     await waitForTop(surface, 60);
 
     const overlay = page.locator('[data-slot="dialog-overlay"]').last();
     await expect(overlay).toBeVisible();
     const overlayStyle = await readStyles(overlay, ['background-color']);
-    expect(overlayStyle['background-color']).toBe('rgba(0, 0, 0, 0.7)');
+    // 上游 G6-视角7-02：Dialog 并入单一 overlay token 轨道（bg-surface-overlay，
+    // --surface-overlay = rgba(15,23,42,0.4)），旧的 dialog 局部 70% 黑罩已废。
+    expect(overlayStyle['background-color']).toBe('rgba(15, 23, 42, 0.4)');
 
-    const titleStyle = await readStyles(surface.locator('[data-slot="dialog-title"]'), ['font-size']);
+    const titleStyle = await readStyles(surface.locator('[data-slot="dialog-title"]'), [
+      'font-size',
+    ]);
     // AMIS parity: Modal title 14px (cxd default)
     expect(titleStyle['font-size']).toBe('14px');
   });
@@ -203,7 +210,10 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     await page.getByRole('button', { name: 'Master Detail' }).click();
     const masterTable = page.locator('main table tbody tr').first();
     await expect(masterTable).toBeVisible({ timeout: 15_000 });
-    await page.getByRole('button', { name: /View|查看/ }).first().click();
+    await page
+      .getByRole('button', { name: /View|查看/ })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/data-management\/master-detail\/1001$/);
     const itemsTable = page.locator('main table').first();
     await expect(itemsTable.locator('tbody tr').first()).toBeVisible({ timeout: 15_000 });
@@ -213,7 +223,10 @@ test.describe('C1a host AMIS parity acceptance (flux vs amis same-page compariso
     await expect(addressDialog).toBeVisible();
     await page.keyboard.press('Escape');
 
-    await page.getByRole('button', { name: /Flow Library|流程列表/i }).first().click();
+    await page
+      .getByRole('button', { name: /Flow Library|流程列表/i })
+      .first()
+      .click();
     await expect(page.locator('main')).toBeVisible();
     await expect(page.locator('main table, main [role="grid"], main ul').first()).toBeVisible({
       timeout: 15_000,

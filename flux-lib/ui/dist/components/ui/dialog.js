@@ -7,6 +7,7 @@ import { cn } from '../../lib/utils.js';
 import { Button } from './button.js';
 import { XIcon } from 'lucide-react';
 import { useDialogDrag } from './use-dialog-drag.js';
+import { useDialogInitialFocusFallback } from './use-dialog-initial-focus.js';
 import { useGlobalZIndex } from '../../hooks/use-global-z-index.js';
 import { wrapSurfaceTabFocus } from './wrap-surface-tab-focus.js';
 const DialogContext = React.createContext({
@@ -45,7 +46,11 @@ function DialogOverlay({ className, ...props }) {
     const { containerElement } = React.useContext(DialogContext);
     const zIndex = React.useContext(DialogZIndexContext);
     const isContained = containerElement != null;
-    return (_jsx(DialogPrimitive.Backdrop, { "data-slot": "dialog-overlay", className: cn('nop-dialog ', 'isolate bg-[var(--dialog-overlay-bg)] duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', isContained ? 'absolute inset-0' : 'fixed inset-0', className), style: zIndex === undefined ? undefined : { zIndex }, ...props }));
+    return (_jsx(DialogPrimitive.Backdrop, { "data-slot": "dialog-overlay", className: cn('nop-dialog ', 
+        // [G6-视角7-02] single overlay token track: Sheet/Drawer/AlertDialog all
+        // consume --surface-overlay; Dialog now does too (was the lone
+        // --dialog-overlay-bg consumer with a 70% black mask).
+        'isolate bg-surface-overlay duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', isContained ? 'absolute inset-0' : 'fixed inset-0', className), style: zIndex === undefined ? undefined : { zIndex }, ...props }));
 }
 const DialogContent = React.forwardRef(function DialogContent({ className, children, showCloseButton = true, offsetRef, baseTransform, size = 'default', topAnchored = false, ...props }, ref) {
     const { draggable, noOverlay, noCenter, containerElement } = React.useContext(DialogContext);
@@ -60,26 +65,32 @@ const DialogContent = React.forwardRef(function DialogContent({ className, child
                 ? 'translate(-50%, -50%)'
                 : (baseTransform ?? 'translate(-50%, -50%)');
     const sizeVar = size === 'xs'
-        ? 'var(--dialog-size-xs)'
+        ? 'var(--overlay-size-xs)'
         : size === 'sm'
-            ? 'var(--dialog-size-sm)'
+            ? 'var(--overlay-size-sm)'
             : size === 'base' || size === 'default'
-                ? 'var(--dialog-size-base)'
+                ? 'var(--overlay-size-base)'
                 : size === 'md'
-                    ? 'var(--dialog-size-md)'
+                    ? 'var(--overlay-size-md)'
                     : size === 'lg'
-                        ? 'var(--dialog-size-lg)'
+                        ? 'var(--overlay-size-lg)'
                         : size === 'xl'
-                            ? 'var(--dialog-size-xl)'
+                            ? 'var(--overlay-size-xl)'
                             : undefined;
     const { contentRef, handlePointerDown, moveBy, resetPosition } = useDialogDrag({ enabled: draggable, offsetRef, baseTransform: effectiveBaseTransform }, ref);
+    const popupElementRef = React.useRef(null);
+    const setPopupElement = React.useCallback((node) => {
+        popupElementRef.current = node;
+        contentRef(node);
+    }, [contentRef]);
+    useDialogInitialFocusFallback(popupElementRef);
     const dragContextValue = React.useMemo(() => ({
         enabled: draggable,
         descriptionId,
         moveBy,
         resetPosition,
     }), [descriptionId, draggable, moveBy, resetPosition]);
-    return (_jsx(DialogPortal, { "data-slot": "dialog-portal", container: containerElement ?? undefined, children: _jsxs(DialogZIndexContext.Provider, { value: zIndex, children: [!noOverlay && _jsx(DialogOverlay, {}), _jsxs(DialogPrimitive.Popup, { ref: contentRef, "data-slot": "dialog-content", "data-size": size, className: cn('nop-dialog ', 'flex w-full max-w-[calc(100%-2rem)] flex-col rounded-[var(--dialog-content-border-radius)] bg-popover text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', 'max-h-[calc(100dvh-2rem)]', isContained ? 'absolute' : 'fixed', noCenter
+    return (_jsx(DialogPortal, { "data-slot": "dialog-portal", container: containerElement ?? undefined, children: _jsxs(DialogZIndexContext.Provider, { value: zIndex, children: [!noOverlay && _jsx(DialogOverlay, {}), _jsxs(DialogPrimitive.Popup, { ref: setPopupElement, "data-slot": "dialog-content", "data-size": size, className: cn('nop-dialog ', 'flex w-full max-w-[calc(100%-2rem)] flex-col rounded-[var(--overlay-anatomy-content-border-radius)] bg-popover text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0', 'max-h-[calc(100dvh-2rem)]', isContained ? 'absolute' : 'fixed', noCenter
                         ? ''
                         : topAnchored
                             ? 'top-[var(--dialog-top-offset)] left-[50%]'
@@ -141,16 +152,17 @@ function DialogHeader({ className, ...props }) {
         // grip icon — a floating icon collides with the title in narrow
         // dialogs); `cursor-grab` is the only drag affordance. Keyboard moves
         // (arrows/Home) stay available when the header itself is focused.
-        draggable && 'cursor-grab select-none', className), role: dragContext.enabled ? 'toolbar' : undefined, "aria-orientation": dragContext.enabled ? 'horizontal' : undefined, tabIndex: dragContext.enabled ? 0 : undefined, onKeyDown: handleKeyDown, ...restProps, children: [dragContext.enabled ? (_jsx("p", { id: dragContext.descriptionId, className: "sr-only", children: t('flux.dialog.moveDialog') })) : null, props.children] }));
+        // [G6-R2-视角3-01] a focusable (tabIndex=0) surface must show focus.
+        draggable && 'cursor-grab select-none focus-visible:outline-1 focus-visible:outline-ring', className), role: dragContext.enabled ? 'toolbar' : undefined, "aria-orientation": dragContext.enabled ? 'horizontal' : undefined, tabIndex: dragContext.enabled ? 0 : undefined, onKeyDown: handleKeyDown, ...restProps, children: [dragContext.enabled ? (_jsx("p", { id: dragContext.descriptionId, className: "sr-only", children: t('flux.dialog.moveDialog') })) : null, props.children] }));
 }
 function DialogBody({ className, ...props }) {
-    return (_jsx("div", { "data-slot": "dialog-body", className: cn('flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto px-[var(--dialog-body-padding-x)] py-4', className), ...props }));
+    return (_jsx("div", { "data-slot": "dialog-body", className: cn('flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto px-[var(--overlay-anatomy-body-padding-x)] py-4', className), ...props }));
 }
 function DialogFooter({ className, showCloseButton = false, children, ...props }) {
-    return (_jsxs("div", { "data-slot": "dialog-footer", className: cn('mt-auto flex shrink-0 flex-col-reverse gap-[var(--dialog-footer-gap)] p-4 [&_button]:min-w-[var(--dialog-footer-button-min-width)] sm:flex-row sm:justify-end', className), ...props, children: [children, showCloseButton && (_jsx(DialogPrimitive.Close, { render: _jsx(Button, { variant: "outline" }), children: t('flux.common.close') }))] }));
+    return (_jsxs("div", { "data-slot": "dialog-footer", className: cn('mt-auto flex shrink-0 flex-col-reverse gap-[var(--overlay-anatomy-footer-gap)] p-4 [&_button]:min-w-[var(--overlay-anatomy-footer-button-min-width)] sm:flex-row sm:justify-end', className), ...props, children: [children, showCloseButton && (_jsx(DialogPrimitive.Close, { render: _jsx(Button, { variant: "outline" }), children: t('flux.common.close') }))] }));
 }
 function DialogTitle({ className, ...props }) {
-    return (_jsx(DialogPrimitive.Title, { "data-slot": "dialog-title", className: cn('font-heading text-[length:var(--dialog-title-font-size)] leading-none font-medium', className), ...props }));
+    return (_jsx(DialogPrimitive.Title, { "data-slot": "dialog-title", className: cn('font-heading text-[length:var(--overlay-anatomy-title-font-size)] leading-none font-medium', className), ...props }));
 }
 function DialogDescription({ className, ...props }) {
     return (_jsx(DialogPrimitive.Description, { "data-slot": "dialog-description", className: cn('text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground', className), ...props }));

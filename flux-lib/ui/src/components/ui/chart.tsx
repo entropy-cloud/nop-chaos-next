@@ -87,7 +87,11 @@ function ChartContainer({
         data-chart={chartId}
         className={cn(
           'nop-chart ',
-          'flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_[stroke]]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke]]:stroke-background [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke]]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke]]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke]]:stroke-background [&_.recharts-surface]:outline-hidden',
+          // Tick text theming needs both selectors: recharts 3.x renders the
+          // label as text.recharts-cartesian-axis-tick-value inside
+          // g.recharts-cartesian-axis-tick-label(s), while 2.x nested <text>
+          // under g.recharts-cartesian-axis-tick (kept for version drift).
+          'flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick-value]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_[stroke]]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke]]:stroke-background [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke]]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke]]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke]]:stroke-background [&_.recharts-surface]:outline-hidden',
           className,
         )}
         {...props}
@@ -310,6 +314,15 @@ function ChartLegendContent({
         .map((item) => {
           const key = `${nameKey ?? item.dataKey ?? 'value'}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
+          // Fallback chain keeps the legend readable when config only covers
+          // other key shapes: pie payloads carry the slice name in `value`,
+          // cartesian payloads expose the raw dataKey.
+          const fallbackLabel =
+            typeof item.value === 'string' && item.value.length > 0
+              ? item.value
+              : typeof item.dataKey === 'string'
+                ? item.dataKey
+                : undefined;
 
           return (
             <div
@@ -328,7 +341,7 @@ function ChartLegendContent({
                   }}
                 />
               )}
-              {itemConfig?.label}
+              {itemConfig?.label ?? fallbackLabel}
             </div>
           );
         })}
