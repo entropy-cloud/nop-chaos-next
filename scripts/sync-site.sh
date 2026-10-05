@@ -15,6 +15,19 @@ if [ ! -d "$SOURCE" ]; then
     exit 1
 fi
 
+# Guard: the deployable must be a production build. `pnpm test:e2e` builds
+# apps/main/dist with --mode mock (VITE_ENABLE_MOCK=true: mock auth + static
+# menu-config, no import map) — deploying that bundle breaks backend-connected
+# shells (login/siteMap never reach the server; every dynamic page 404s).
+# The production build is identifiable by the nop-shared import map injected
+# by scripts/build-nop-shared.mjs.
+if ! grep -q "nop-shared-import-map" "$SOURCE/index.html"; then
+    echo "Error: $SOURCE/index.html lacks the nop-shared import map."
+    echo "The dist is likely a mock/e2e build (vite build --mode mock)."
+    echo "Run a clean production build first: env -u VITE_ENABLE_MOCK pnpm build"
+    exit 1
+fi
+
 echo "Cleaning target: $TARGET"
 rm -rf "$TARGET"
 
